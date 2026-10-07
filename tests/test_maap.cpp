@@ -172,6 +172,35 @@ TEST(MaapCore, ReverseOctetPriority) {
     EXPECT_EQ(equal.core.conflicts, 1u) << "equal MAC is not lower";
 }
 
+// R528-1-F3: each octet must decide after all later octets tie.
+TEST(MaapCore, PriorityAfterTiedOctets) {
+    constexpr std::uint64_t local = 0x024040404080ULL;
+    for (unsigned octet = 0; octet < 6; ++octet) {
+        for (bool wins : {false, true}) {
+            CoreRig r;
+            ASSERT_TRUE(maap_init(&r.core, &r.ports, 3, local, 8));
+            r.begin();
+            const auto step = std::uint64_t{octet == 0 ? 2u : 1u} << (8 * (5 - octet));
+            const auto peer = wins ? local + step : local - step;
+            r.receive(pdu(1, kBase, 8, peer));
+            EXPECT_EQ(r.core.conflicts, wins ? 0u : 1u)
+                << "every reversed octet decides, including first: " << octet;
+        }
+    }
+}
+
+TEST(MaapCore, RestartDrawsNewRange) {
+    CoreRig r; r.acquire();
+    r.receive(pdu(3));
+    EXPECT_EQ(r.core.conflicts, 1u);
+    EXPECT_NE(r.core.base, kBase) << "fixed seed Restart draws a new range";
+    EXPECT_GE(r.core.base, MAAP_POOL_BASE);
+    EXPECT_LE(r.core.base + 8, MAAP_POOL_BASE + MAAP_POOL_SIZE);
+    ASSERT_EQ(r.frames.size(), 6u);
+    EXPECT_EQ(field(r.frames.back(), 26, 6), r.core.base);
+    EXPECT_EQ(r.frames.back()[15], 1u);
+}
+
 TEST(MaapCore, UniformDrawRejectsIncompleteBucket) {
     CoreRig r;
     // Inverse xorshift seed: the first word is UINT32_MAX, outside the
@@ -273,6 +302,26 @@ TEST(MaapCore, ReleaseLossAndRetry) {
     maap_timer_expired(&r.core); EXPECT_EQ(r.core.stale_expiries, 1u);
     auto n = r.frames.size(); maap_port_operational(&r.core, true);
     EXPECT_EQ(r.frames.size(), n) << "released instance stays idle";
+}
+
+// R528-1-F1: Table B.7 note a survives the normal link-down boot order.
+TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
+    CoreRig r;
+    maap_port_operational(&r.core, false);
+    r.begin();
+    EXPECT_TRUE(r.frames.empty());
+    EXPECT_FALSE(maap_begin(&r.core, MAAP_POOL_BASE - 1));
+    maap_port_operational(&r.core, true);
+    ASSERT_EQ(r.frames.size(), 1u);
+    EXPECT_EQ(r.core.base, kBase) << "Begin supplied range survives port down";
+    EXPECT_EQ(r.frames[0], pdu(1, kBase, 8, kMac));
+    r.receive(pdu(2));
+    EXPECT_NE(r.core.base, kBase) << "saved range consumed before conflict Restart";
+    maap_release(&r.core);
+    maap_port_operational(&r.core, false);
+    ASSERT_TRUE(maap_begin(&r.core, 0));
+    maap_port_operational(&r.core, true);
+    EXPECT_NE(r.core.base, kBase) << "new Begin without preferred range draws";
 }
 
 TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
