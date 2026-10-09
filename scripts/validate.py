@@ -63,6 +63,7 @@ def main():
         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
         ('test-inventory', 'test_inventory.py', ['--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
         ('coverage-controls', 'coverage_selftest.py', []),
+        ('privacy-selftest', 'check_privacy.py', ['--selftest']),
         ('privacy', 'check_privacy.py', [])):
         results.append(command(name, [python, 'scripts/' + script, *switches]))
     if not any(r['rc'] for r in results):
