@@ -15,20 +15,134 @@ END = '<!-- requirements-port:end -->'
 
 
 def source_ids():
-    """The complete numbered row inventory at the cited source commit."""
-    counts = {
-        'FR-DISC': 5, 'FR-ENUM': 2, 'FR-CTRL': 6, 'FR-MVU': 3,
-        'FR-CONN': 4, 'FR-MAAP': 1, 'FR-SRP': 3, 'FR-CLK': 5,
-        'FR-STR': 5, 'FR-QOS': 3, 'FR-MGT': 2, 'NFR-PERF': 2,
-        'NFR-LAT': 2, 'NFR-DET': 1, 'NFR-TIME': 3, 'NFR-SCUP': 4,
-        'NFR-SCOUT': 8, 'NFR-RES': 1, 'NFR-REL': 2, 'NFR-OBS': 1,
-        'NFR-MAINT': 1, 'NFR-PORT': 1, 'NFR-SEC': 1, 'REQ-CSR': 5,
-        'REQ-PTP': 9, 'REQ-CBS': 8, 'REQ-CLS': 10, 'REQ-MAC': 8, 'REQ-VER': 6,
+    """Pinned file line numbers and IDs, without upstream requirement text."""
+    line_ids = {
+        'docs/reference/FR_NFR.md': {
+            187: 'FR-DISC-01',
+            188: 'FR-DISC-02',
+            189: 'FR-DISC-03',
+            190: 'FR-DISC-04',
+            191: 'FR-DISC-05',
+            196: 'FR-ENUM-01',
+            197: 'FR-ENUM-02',
+            198: 'FR-CTRL-01',
+            199: 'FR-CTRL-02',
+            200: 'FR-CTRL-03',
+            201: 'FR-CTRL-04',
+            202: 'FR-CTRL-05',
+            203: 'FR-CTRL-06',
+            208: 'FR-MVU-01',
+            209: 'FR-MVU-02',
+            210: 'FR-MVU-03',
+            215: 'FR-CONN-01',
+            216: 'FR-CONN-02',
+            217: 'FR-CONN-03',
+            218: 'FR-CONN-04',
+            223: 'FR-MAAP-01',
+            224: 'FR-SRP-01',
+            225: 'FR-SRP-02',
+            226: 'FR-SRP-03',
+            250: 'FR-CLK-01',
+            251: 'FR-CLK-02',
+            252: 'FR-CLK-03',
+            253: 'FR-CLK-04',
+            254: 'FR-CLK-05',
+            269: 'FR-STR-01',
+            270: 'FR-STR-02',
+            271: 'FR-STR-03',
+            272: 'FR-STR-03a',
+            273: 'FR-STR-03b',
+            274: 'FR-STR-04',
+            275: 'FR-STR-05',
+            280: 'FR-QOS-01',
+            281: 'FR-QOS-02',
+            282: 'FR-QOS-03',
+            287: 'FR-MGT-01',
+            288: 'FR-MGT-02',
+            297: 'NFR-PERF-01',
+            298: 'NFR-PERF-02',
+            299: 'NFR-LAT-01',
+            300: 'NFR-LAT-02',
+            301: 'NFR-DET-01',
+            306: 'NFR-TIME-01',
+            307: 'NFR-TIME-02',
+            308: 'NFR-TIME-03',
+            313: 'NFR-SCUP-01',
+            314: 'NFR-SCUP-02',
+            315: 'NFR-SCUP-03',
+            316: 'NFR-SCUP-04',
+            321: 'NFR-SCOUT-01',
+            322: 'NFR-SCOUT-02',
+            323: 'NFR-SCOUT-03',
+            324: 'NFR-SCOUT-04',
+            325: 'NFR-SCOUT-05',
+            326: 'NFR-SCOUT-06',
+            327: 'NFR-SCOUT-07',
+            328: 'NFR-SCOUT-08',
+            464: 'NFR-RES-01',
+            465: 'NFR-REL-01',
+            466: 'NFR-REL-02',
+            467: 'NFR-OBS-01',
+            468: 'NFR-MAINT-01',
+            469: 'NFR-PORT-01',
+            470: 'NFR-SEC-01',
+        },
+        'REQUIREMENTS.md': {
+            128: 'REQ-CSR-01',
+            132: 'REQ-CSR-02',
+            135: 'REQ-CSR-03',
+            138: 'REQ-CSR-04',
+            140: 'REQ-CSR-05',
+            146: 'REQ-PTP-01',
+            148: 'REQ-PTP-02',
+            150: 'REQ-PTP-03',
+            152: 'REQ-PTP-04',
+            154: 'REQ-PTP-05',
+            156: 'REQ-PTP-06',
+            165: 'REQ-PTP-07',
+            167: 'REQ-PTP-08',
+            170: 'REQ-PTP-09',
+            241: 'REQ-CBS-01',
+            243: 'REQ-CBS-02',
+            245: 'REQ-CBS-03',
+            247: 'REQ-CBS-04',
+            249: 'REQ-CBS-05',
+            251: 'REQ-CBS-06',
+            253: 'REQ-CBS-07',
+            255: 'REQ-CBS-08',
+            265: 'REQ-CLS-01',
+            267: 'REQ-CLS-02',
+            268: 'REQ-CLS-03',
+            270: 'REQ-CLS-04',
+            272: 'REQ-CLS-05',
+            274: 'REQ-CLS-06',
+            276: 'REQ-CLS-07',
+            278: 'REQ-CLS-08',
+            280: 'REQ-CLS-09',
+            282: 'REQ-CLS-10',
+            288: 'REQ-MAC-01',
+            290: 'REQ-MAC-02',
+            292: 'REQ-MAC-03',
+            294: 'REQ-MAC-04',
+            297: 'REQ-MAC-05',
+            298: 'REQ-MAC-06',
+            300: 'REQ-MAC-07',
+            302: 'REQ-MAC-08',
+            307: 'REQ-VER-01',
+            309: 'REQ-VER-02',
+            311: 'REQ-VER-03',
+            314: 'REQ-VER-04',
+            317: 'REQ-VER-05',
+            322: 'REQ-VER-06',
+        },
     }
-    return {'milan-fpga ' + prefix + f'-{i:02d}'
-            for prefix, count in counts.items() for i in range(1, count + 1)} | {
-                'milan-fpga FR-STR-03a', 'milan-fpga FR-STR-03b',
-                'milan-fpga #665 memory', 'milan-fpga #665 testing'}
+    origins = {'milan-fpga ' + rid: SOURCE_BASE + filename + f'#L{line}'
+               for filename, rows in line_ids.items() for line, rid in rows.items()}
+    origins.update({
+        'milan-fpga #665 memory': 'https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815',
+        'milan-fpga #665 testing': 'https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-6008744385',
+    })
+    return origins
 
 
 def method(record):
@@ -63,7 +177,8 @@ def validate(requirements, catalog):
         errors.append('source commit differs from the reviewed inventory')
     rows = catalog.get('rows', [])
     origins = [r.get('origin') for r in rows]
-    if len(origins) != len(set(origins)) or set(origins) != source_ids():
+    pinned = source_ids()
+    if len(origins) != len(set(origins)) or set(origins) != set(pinned):
         errors.append('source inventory is incomplete, duplicated or unknown')
     by_origin = {r.get('origin'): r for r in rows}
     by_id = {r['id']: r for r in requirements}
@@ -105,12 +220,8 @@ def validate(requirements, catalog):
             errors.append('source disposition needs a reason: ' + origin)
         if not valid_link({'text': origin, 'url': row.get('url')}):
             errors.append('source disposition needs a link: ' + origin)
-        elif ' #665 ' not in origin:
-            filename = 'REQUIREMENTS.md' if ' REQ-' in origin else 'docs/reference/FR_NFR.md'
-            if not re.fullmatch(re.escape(SOURCE_BASE + filename) + r'#L[1-9][0-9]*', row['url']):
-                errors.append('source row must link to the pinned file and line: ' + origin)
-        elif not re.fullmatch(r'https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-[0-9]+', row['url']):
-            errors.append('decision must link to its source comment: ' + origin)
+        elif row['url'] != pinned.get(origin):
+            errors.append('source row must link to its pinned ID anchor: ' + origin)
         if len(ids) != len(set(ids)) or any(i not in by_id for i in ids):
             errors.append('source row has duplicate or unknown local IDs: ' + origin)
             continue
@@ -183,6 +294,7 @@ def selftest(requirements, catalog):
         ('unknown source', lambda r, c: c['rows'][0].update(origin='milan-fpga FR-UNKNOWN-01')),
         ('changed pin', lambda r, c: c.update(source_commit='0' * 40)),
         ('moving source link', lambda r, c: c['rows'][0].update(url=SOURCE_BASE.replace(SOURCE_COMMIT, 'dev') + 'REQUIREMENTS.md#L1')),
+        ('moved source anchor', lambda r, c: c['rows'][0].update(url=c['rows'][1]['url'])),
         ('missing origin', lambda r, c: r[tested].pop('origin')),
         ('different origin', lambda r, c: r[tested].update(origin=r[port]['origin'])),
         ('missing target', lambda r, c: r[tested]['targets'].pop()),

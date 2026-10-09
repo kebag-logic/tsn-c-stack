@@ -368,6 +368,31 @@
     }
   },
   {
+    "id": "MFENTITY-03",
+    "origin": "milan-fpga NFR-SEC-01",
+    "text": "Supply entity_capabilities with AEM_AUTHENTICATION_REQUIRED cleared. The application owns safe handling of unauthenticated control requests.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.9 and Table 6-2",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "The no-required-authentication policy comes from the source product. ADP encodes caller capabilities. The library implements neither AECP authentication nor application authorization.",
+      "evidence": [
+        {
+          "text": "Entity configuration contract",
+          "url": "PORTING.md#entity-configuration"
+        }
+      ]
+    }
+  },
+  {
     "id": "MFCONN-01",
     "origin": "milan-fpga FR-CONN-01",
     "text": "Serve Milan listener bind, unbind and state commands. Serve talker probe and state commands with their status and flag rules.",

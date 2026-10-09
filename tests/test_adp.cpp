@@ -543,7 +543,7 @@ TEST(AdpCore, A3toA5DiscoverAndDiscard) {
 TEST(AdpCore, A6toA8DeferredSends) {
     core_deferred();
 }
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-01
 TEST(AdpCore, A9DrawKinds) {
     core_draws();
 }

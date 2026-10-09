@@ -513,9 +513,11 @@
     {
       "origin": "milan-fpga NFR-SEC-01",
       "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L470",
-      "disposition": "excluded",
-      "requirements": [],
-      "reason": "AEM authentication and advertisement policy belong to the entity configuration and AECP owner."
+      "disposition": "port obligation",
+      "requirements": [
+        "MFENTITY-03"
+      ],
+      "reason": "Moved advertisement authentication policy to the caller-supplied entity configuration. Safe unauthenticated AECP behavior remains with the application; AECP is outside these cores."
     },
     {
       "origin": "milan-fpga REQ-CSR-01",

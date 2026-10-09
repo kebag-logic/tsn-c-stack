@@ -4964,5 +4964,45 @@
         "needle": "advertisement bytes match the independent entity vector"
       }
     ]
+  },
+  {
+    "name": "acmp-peer-loss-clears-binding",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->bound = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller"
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.DepartingRetainsBindingAndReprobes",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+    ]
+  },
+  {
+    "name": "acmp-peer-loss-stops-discovery",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->disc_running = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay"
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.DepartingRetainsBindingAndReprobes",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+    ]
   }
 ]

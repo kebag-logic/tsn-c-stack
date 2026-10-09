@@ -143,6 +143,48 @@ class AcmpCore : public ::testing::Test {
         return v;
     }
 
+    // Milan v1.2 5.5.1.2; Milan v1.2 5.5.2.6
+    // Milan v1.2 5.6.4.5.3; Milan v1.2 5.6.4.5.4
+    void peer_loss_recovery(bool expired) {
+        bind(0);
+        ASSERT_EQ(fk.sent.size(), 2u) << "peer loss setup sends a bind response and initial probe";
+        const auto first_sequence = last().seq;
+        adp(Adp{});
+        ASSERT_TRUE(a.sinks[0].discovered && a.sinks[0].adp_armed)
+            << "peer loss setup discovers the bound talker and arms aging";
+        fk.clear();
+        if (expired) {
+            fire_adp(0);
+        } else {
+            Adp gone;
+            gone.msg = spec::ADPDU_ENTITY_DEPARTING;
+            adp(gone);
+        }
+        const auto retained = view(0);
+        EXPECT_TRUE(retained.bound && retained.binding.talker_entity_id == kTkA &&
+                    retained.binding.talker_unique_id == 1u && retained.binding.controller_entity_id == kCtl1)
+            << "peer loss retains the binding and its talker, stream and controller";
+        EXPECT_TRUE(!a.sinks[0].discovered && !a.sinks[0].adp_armed &&
+                    retained.state == ACMP_PRB_W_AVAIL)
+            << "peer loss waits for a new advertisement with aging stopped";
+        EXPECT_TRUE(fk.sent.empty()) << "peer loss sends no stale probe before rediscovery";
+        Adp back;
+        back.index = 2;
+        adp(back);
+        ASSERT_TRUE(a.sinks[0].discovered && a.sinks[0].state == ACMP_PRB_W_DELAY &&
+                    a.sinks[0].timer == ACMP_TIMER_DELAY)
+            << "returning talker remains discoverable and starts a fresh probe delay";
+        fire(0);
+        ASSERT_EQ(fk.sent.size(), 1u) << "rediscovery sends exactly one fresh probe";
+        const auto probe = last();
+        EXPECT_TRUE(probe.msg == spec::MSG_PROBE_TX_COMMAND && probe.talker == kTkA &&
+                    probe.talker_uid == 1u && probe.listener == kOwn && probe.listener_uid == 0u &&
+                    probe.controller == kCtl1 && probe.seq != first_sequence)
+            << "rediscovery probes the retained binding with a new sequence";
+        EXPECT_TRUE(view(0).bound && view(0).state == ACMP_PRB_W_RESP)
+            << "rediscovery keeps the sink bound while awaiting the new response";
+    }
+
     acmp_config cfg{};
     acmp a{};
 };
@@ -1234,6 +1276,16 @@ TEST_F(AcmpCore, A22DepartingAndAging) {
     fire_adp(0);
     EXPECT_TRUE(!a.sinks[0].discovered && !a.sinks[0].adp_armed && a.sinks[0].state == ACMP_PRB_W_AVAIL)
         << "A22 TMR_NO_ADP: TK_NOT_DISCOVERED and EVT_TK_DEPARTED (5.6.4.5.4)";
+}
+
+// REQ: ACMP-06, MFCONN-03, MFRECOVERY-01
+TEST_F(AcmpCore, DepartingRetainsBindingAndReprobes) {
+    peer_loss_recovery(false);
+}
+
+// REQ: ACMP-06, MFCONN-03, MFRECOVERY-01
+TEST_F(AcmpCore, AdpTimeoutRetainsBindingAndReprobes) {
+    peer_loss_recovery(true);
 }
 
 // REQ: ACMP-06

@@ -344,6 +344,13 @@ They are not a substitute for the static entity fields.
 Check consistency under [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/)
 and [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/).
 
+The [authentication configuration obligation](REQUIREMENTS.md#mfentity-03) retains the source product policy.
+Clear `AEM_AUTHENTICATION_REQUIRED` in the supplied `entity_capabilities` before enabling ADP.
+Check the emitted capability field on Linux and bare-metal RV32.
+[IEEE 1722.1-2021 6.2.2.9 and Table 6-2](https://standards.ieee.org/ieee/1722.1/6670/) define the field and flag.
+The application must handle unauthenticated requests safely.
+AECP authentication and application authorization remain outside this library.
+
 The [stable identity obligation](REQUIREMENTS.md#mfentity-02) retains the source product's MAC-derived EUI-64 policy.
 Derive and store that identity outside the cores. Supply the same identity to ADP and ACMP after restart.
 [IEEE 1722.1-2021 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/) permits MAC derivation; it does not require that particular derivation.
