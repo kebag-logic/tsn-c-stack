@@ -1,0 +1,11 @@
+[ 76%] Building CXX object CMakeFiles/port_tests.dir/tests/test_port.cpp.o
+[ 79%] Building CXX object CMakeFiles/port_tests.dir/tests/main.cpp.o
+In file included from <scratch>/vclone/tests/main.cpp:3:
+In file included from <scratch>/gtest-gcc-prefix/include/gmock/gmock.h:56:
+In file included from <scratch>/gtest-gcc-prefix/include/gmock/gmock-actions.h:137:
+In file included from /usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/algorithm:62:
+In file included from /usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/bits/stl_algobase.h:66:
+/usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/bits/stl_iterator.h:1337:19: error: member access into incomplete type 'const __normal_iterator<const char *, basic_string<char>>'
+ 1337 |         -> decltype(__lhs.base() - __rhs.base())
+      |                          ^
+/usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/bits/basic_string.h:4018:37: note: in instantiation of template class '__gnu_cxx::__normal_iterator<const char *, std::basic_string<cha

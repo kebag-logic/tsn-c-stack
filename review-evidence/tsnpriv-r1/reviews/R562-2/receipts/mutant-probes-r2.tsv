@@ -1,0 +1,22 @@
+mutant	selftest_rc	badarg_rc	published_history_rc	foreign-noreply	reversed	case-variant	holder+github	webflow-multiline	holder-multiline	foreign-pair	caught_by_selftest	caught_by_any
+none (control)	0	1	0	1	1	1	1	1	1	1	NO	NO
+accept-any-noreply-author-with-github-committer	1	1	0	0	1	0	1	1	1	1	yes	yes
+order-insensitive-pair	1	1	0	1	0	1	1	1	1	1	yes	yes
+case-insensitive-pair	1	1	0	1	1	0	1	1	1	1	yes	yes
+webflow-checks-committer-only	1	1	0	0	1	0	0	1	1	1	yes	yes
+webflow-checks-author-only	1	1	0	1	1	1	1	1	1	1	yes	yes
+accept-everything	1	1	0	0	0	0	0	1	1	0	yes	yes
+main-keeps-old-holder-only-rule	1	1	1	1	1	1	1	1	1	1	yes	yes
+webflow-exempt-from-one-line-rule	1	1	0	1	1	1	1	0	1	1	yes	yes
+owner-squash-exception-widened-to-webflow	1	1	0	1	1	1	1	0	1	1	yes	yes
+holder-exempt-from-one-line-rule	1	1	0	1	1	1	1	1	0	1	yes	yes
+one-line-rule-dropped	1	1	0	1	1	1	1	0	0	1	yes	yes
+owner-exception-by-prefix	0	1	0	1	1	1	1	1	1	1	NO	NO
+owner-exception-dropped	1	1	0	1	1	1	1	1	1	1	yes	yes
+selftest-always-passes	0	1	0	1	1	1	1	1	1	1	NO	NO
+main-skips-commit-errors	0	1	0	0	0	0	0	0	0	0	NO	yes
+main-uses-identity-only	0	1	0	1	1	1	1	0	0	1	NO	yes
+unknown-args-run-main	0	0	0	1	1	1	1	1	1	1	NO	yes
+accept-empty-message	0	1	0	1	1	1	1	1	1	1	NO	NO
+restored: True
+rc 0

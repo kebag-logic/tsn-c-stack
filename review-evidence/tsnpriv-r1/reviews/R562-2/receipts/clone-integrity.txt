@@ -1,0 +1,14 @@
+HEAD b7c6b7ba0007aaa5791df68d30296423127b003e tree 611e16d1d01f6fe901ceb2eb0c07b7be4acaa284
+status --porcelain --ignored entries: 0
+index vs HEAD tree (diff-index --cached): 0 entries
+worktree vs index (diff-files): 0 entries
+index tree == HEAD tree: yes
+gitlinks (mode 160000) in HEAD tree: 0
+.gitmodules present: no
+privacy selftest: 11 commit controls pass
+selftest rc 0
+privacy: 6 commits, 122 historical blobs, 74 current files; pass
+gate rc 0
+usage: check_privacy.py [--selftest]
+bogus-arg rc 1
+tracked entries: 74; index oid == HEAD oid == work-tree raw-byte oid and mode match for all: True (mismatches 0)
