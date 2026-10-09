@@ -1,0 +1,154 @@
+{
+  "head": "663f14de4a07bb1a777282fdfc83d30fd03843d4",
+  "tree": "cff76b8564bc21ff16a57c2e32f4abe1b6d3e3e9",
+  "aggregate": "PASS",
+  "validate_gate_count": 25,
+  "gates": [
+    {
+      "gate": "boundary",
+      "rc": 0
+    },
+    {
+      "gate": "needles",
+      "rc": 0
+    },
+    {
+      "gate": "assertion-templates",
+      "rc": 0
+    },
+    {
+      "gate": "dependencies",
+      "rc": 0
+    },
+    {
+      "gate": "comments",
+      "rc": 0
+    },
+    {
+      "gate": "conditionals",
+      "rc": 0
+    },
+    {
+      "gate": "port-contracts",
+      "rc": 0
+    },
+    {
+      "gate": "registration-controls",
+      "rc": 0
+    },
+    {
+      "gate": "license",
+      "rc": 0
+    },
+    {
+      "gate": "traceability",
+      "rc": 0
+    },
+    {
+      "gate": "test-inventory",
+      "rc": 0
+    },
+    {
+      "gate": "coverage-controls",
+      "rc": 0
+    },
+    {
+      "gate": "privacy-selftest",
+      "rc": 0
+    },
+    {
+      "gate": "privacy",
+      "rc": 0
+    },
+    {
+      "gate": "gcc-configure",
+      "rc": 0
+    },
+    {
+      "gate": "gcc-build",
+      "rc": 0
+    },
+    {
+      "gate": "gcc-test",
+      "rc": 0
+    },
+    {
+      "gate": "coverage",
+      "rc": 0
+    },
+    {
+      "gate": "clang-sanitizers-configure",
+      "rc": 0
+    },
+    {
+      "gate": "clang-sanitizers-build",
+      "rc": 0
+    },
+    {
+      "gate": "clang-sanitizers-test",
+      "rc": 0
+    },
+    {
+      "gate": "mutation",
+      "rc": 0
+    },
+    {
+      "gate": "static-analysis",
+      "rc": 0
+    },
+    {
+      "gate": "mutation-controls",
+      "rc": 0
+    },
+    {
+      "gate": "graphs",
+      "rc": 0
+    }
+  ],
+  "baremetal": [
+    {
+      "configuration": "Debug",
+      "rc": 0,
+      "elf_sha256": "d322f7fc3ff901f35f366549698882316d01a1eeb28624eca604cd10f6a4463f",
+      "elf_bytes": 103316,
+      "core_objects": {
+        "adp.c": "21630c06c909127ffdfb059fc9caf9311523c3bd6242fc6f7172213e8ba1e3bb",
+        "acmp.c": "906d1b2f0a40ab025e8bd7860d3924aee525e9e419bc6a018ffdd0e69f6bf3d9",
+        "maap.c": "7c54016d94f12f1fd9008b2bd4f6ec919e3e9df2b5c3ea7cb8d60b75e6423bd1"
+      },
+      "core_imports": [
+        "__mulsi3",
+        "__umodsi3",
+        "ctrl_reentry_assert",
+        "memcpy",
+        "memset",
+        "port_assert_failed"
+      ],
+      "unresolved_final": [],
+      "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+    },
+    {
+      "configuration": "Release",
+      "rc": 0,
+      "elf_sha256": "1505b5a1c1da924abe7855fc7c4e71e19b72cbc1937cc5c301e58bdf1a0db1f0",
+      "elf_bytes": 36264,
+      "core_objects": {
+        "adp.c": "31e8d3486aa9fc1bb52bd8e54828f039ae96b2fd04f61f7800daa8377d922425",
+        "acmp.c": "56b0c8d698c884ebc9b0732a24edd1f269473e5e0610a0170c647726f218413f",
+        "maap.c": "f04b053968b267848c4752d65f1675fca061d9f8aed7e9165885f2b097be0ce8"
+      },
+      "core_imports": [
+        "__umodsi3",
+        "ctrl_reentry_assert",
+        "memcpy",
+        "memset"
+      ],
+      "unresolved_final": [],
+      "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+    }
+  ],
+  "postcommit_privacy_rc": 0,
+  "probe_driver_rc": 0,
+  "peak_sampled_memory_bytes": 4083994624,
+  "service_memory_peak_bytes": 6208724992
+}
