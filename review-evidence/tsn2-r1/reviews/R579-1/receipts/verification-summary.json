@@ -1,0 +1,26 @@
+{
+  "gates": 27,
+  "all_gates_zero": true,
+  "caught": 330,
+  "named_assertions_verified": 359,
+  "entity_plants": [
+    {
+      "name": "entity-wrong-count",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1
+    },
+    {
+      "name": "entity-swapped-interface",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1
+    },
+    {
+      "name": "entity-dropped-field",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1
+    }
+  ]
+}

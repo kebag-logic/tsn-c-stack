@@ -1,0 +1,28 @@
+{
+  "prior_head": "0a1a14a1cc0e8cc99cb7a21ed43c391f7001dc6d",
+  "new_base": "51870377c5012766a8ea1d9798e3c499ca1060a3",
+  "tested_tree": "f1adface0d762b1b3a456a6159d750c50cf623f1",
+  "prior_plants": 327,
+  "main_plants": 327,
+  "merged_plants": 330,
+  "all_names_preserved": true,
+  "all_main_plants_exact": true,
+  "entity_plants_exact": true,
+  "shared_plant_updates_from_main": [
+    "own-discover-discarded"
+  ],
+  "core_and_public_headers_match_main": true,
+  "golden_entities_match_prior_head": true,
+  "all_suppressions_preserved": true,
+  "suppressions": [
+    "--checks=-*,clang-analyzer-*,bugprone-*,performance-*,-bugprone-signed-bitwise,-bugprone-easily-swappable-parameters,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling",
+    "--suppress=constParameterCallback:examples/adp_port.c:32",
+    "--suppress=constParameterCallback:examples/adp_port.c:40",
+    "--suppress=constParameterCallback:examples/adp_port.c:46",
+    "--suppress=constParameterPointer:src/maap.c:262",
+    "--suppress=redundantAssignment:examples/rv32/smoke.c:<merged-line>"
+  ],
+  "rv32_suppression_line": 137,
+  "test_declarations": 117,
+  "test_instances": 391
+}

@@ -1,0 +1,77 @@
+{
+  "revision": "942742507d7b8d794d51ebfc4164e559661d60b6",
+  "verified": [
+    {
+      "file": "author/evidence/ARCHITECTURE-0.svg",
+      "sha256": "7a4e44af723a9a4a76e774e48ab1f32a11b34620fdfe44c1a41126b98641ee96"
+    },
+    {
+      "file": "author/evidence/ARCHITECTURE-1.svg",
+      "sha256": "506dc37c416bc178085a1f668ca0a0b5cd3ce1688968e07af45fd6463fced846"
+    },
+    {
+      "file": "author/evidence/ENTITY_YAML-0.svg",
+      "sha256": "73c27bd24a2c9708dd99455fe1c50226d4a613441c1306122f1321f8d6152695"
+    },
+    {
+      "file": "author/evidence/README-0.svg",
+      "sha256": "6719b759f17bbc8798a1772c848cb056a0c5e5bbbcdf195e6be21f81c22a1a25"
+    },
+    {
+      "file": "author/evidence/clang-sanitizers-test.log",
+      "sha256": "85322719b4a81a2e107582b2d5f5d57b128e765f86b560547a93f98fb04aab14"
+    },
+    {
+      "file": "author/evidence/conditionals.json",
+      "sha256": "de9b7cf2287212636579f4a26fd734d2a965e3291c4e7107947952a2aaa91f6b"
+    },
+    {
+      "file": "author/evidence/coverage.txt",
+      "sha256": "d3dc4ca00bf75b805d8f55575b0be343728d2dfda2130d9f161b6ceb422a0059"
+    },
+    {
+      "file": "author/evidence/entity-controls.log",
+      "sha256": "ac323527304bff41871851240101615fafa9e0ebc3cca999cb9ea35fcb7d0e3d"
+    },
+    {
+      "file": "author/evidence/gates.json",
+      "sha256": "306c77cb2686214d8b38ec13330643b695be55687d390c5e04f9261a15ecb8a1"
+    },
+    {
+      "file": "author/evidence/gcc-test.log",
+      "sha256": "243b6ec9e8c6970523b821482aad97d69efbea136a3a31344d6ec5f5b9e509a6"
+    },
+    {
+      "file": "author/evidence/live-mapping.json",
+      "sha256": "44a64f752babe351b76b230ac5fa958d48b473583154c86aba04a0079e266067"
+    },
+    {
+      "file": "author/evidence/manifest.json",
+      "sha256": "a5e144bbdacb206b52e00389703143d8792210f3cd8c6c77fa19c449f9f6a492"
+    },
+    {
+      "file": "author/evidence/merge-audit.json",
+      "sha256": "d7bdecf063c830e0531f36a5b8552ffd94e4a825611540615f3f97dafaaa92cf"
+    },
+    {
+      "file": "author/evidence/mutation-plants.json",
+      "sha256": "8283bc92263475fb42b06b859a6fb89f62e001cea1e1f3eecccd39958ecac78f"
+    },
+    {
+      "file": "author/evidence/mutation-summary.json",
+      "sha256": "6c0073ad671b02acdc86eb5431fdbd72be731287a77e410820b675099a4a05be"
+    },
+    {
+      "file": "author/evidence/postcommit-privacy.log",
+      "sha256": "95b2689b7079f103eecf0275a868720ccea77ab3e308ac2055e1b403331c3a5b"
+    },
+    {
+      "file": "author/evidence/rv32-results.json",
+      "sha256": "e7ae660a44abd279453cd881e0697329f86aaf0b87378c60e02c6b70b34b4498"
+    }
+  ],
+  "excluded": [
+    "author/HANDOFF.md",
+    "author/PR-BODY.md"
+  ]
+}
