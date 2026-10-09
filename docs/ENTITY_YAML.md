@@ -166,6 +166,7 @@ python3 scripts/entity_selftest.py --work build-entity-controls --select mapper_
 | `firmware-rev-negative` | A negative `firmware_rev` is accepted. | `test_mapping_refuse_firmware_rev_negative` |
 | `firmware-version-pointer` | `firmware_version` gets the generic unknown-key refusal. | `test_mapping_refuse_firmware_version` |
 | `unknown-key-generic` | The unknown-key refusal no longer names the key. | `test_mapping_refuse_unknown_entity_key` |
+
 The [quality workflow](../.github/workflows/quality.yml) runs regeneration and all host checks.
 The [RV32 gate](../scripts/baremetal.py) checks each generated object has no imports and only permitted freestanding headers.
 The existing [coverage denominator](VERIFICATION.md#measurement-and-limits) stays unchanged and must remain at 100%.
