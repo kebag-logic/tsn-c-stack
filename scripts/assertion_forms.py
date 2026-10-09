@@ -19,7 +19,8 @@ def errors(text):
     for kind, value, *_ in raw_tokens(text, 'c++'):
         if kind == 'hashhash':
             found.add('token pasting is forbidden in tests')
-        if kind == 'raw_identifier' and value in refused:
+        if kind == 'raw_identifier' and value not in ALLOWED and (
+                value in refused or value.startswith(('EXPECT_', 'ASSERT_', 'GTEST_'))):
             found.add(f'unsupported assertion form: {value}')
     return sorted(found)
 
@@ -31,9 +32,17 @@ def package_flags(*options):
 
 def refused_macros():
     require_version()
+    headers = set()
+    for package in ('gtest', 'gmock'):
+        include = Path(subprocess.check_output(
+            ['pkg-config', '--variable=includedir', package], text=True).strip())
+        public = sorted((include / package).glob('*.h'))
+        if not public:
+            raise RuntimeError('pinned package has no public headers: ' + package)
+        headers.update(path.relative_to(include).as_posix() for path in public)
     result = subprocess.run([os.environ.get('CXX', 'g++'), '-std=c++20',
                              *package_flags('--cflags'), '-x', 'c++', '-dM', '-E', '-'],
-                            input='#include <gtest/gtest.h>\n#include <gmock/gmock.h>\n',
+                            input=''.join('#include <' + name + '>\n' for name in sorted(headers)),
                             text=True, capture_output=True, check=True)
     names = set(re.findall(r'^#define ([A-Za-z_]\w*)\(', result.stdout, re.M))
     public = {name for name in names if not name.endswith('_') and

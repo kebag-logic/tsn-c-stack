@@ -29,7 +29,9 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
    `EXPECT_EQ`, `ASSERT_EQ`, `EXPECT_NE`, `ASSERT_NE`, `EXPECT_LE`, `ASSERT_LE`,
    `EXPECT_GE`, `ASSERT_GE`, `EXPECT_EXIT` and `EXPECT_CALL`.
    The [assertion gate](../scripts/needle_audit.py) refuses other forms, including `EXPECT_NEAR`.
-   Refused public macros are generated from the pinned headers with `-dM -E`.
+   Refused public macros are generated from every public header in the pinned install with `-dM -E`.
+   Every identifier beginning `EXPECT_`, `ASSERT_` or `GTEST_` outside the allowlist is also refused.
+   This includes internal names ending in an underscore.
    Token pasting (`##`) is forbidden in tests.
    Assertion lexing uses C++20. Literal comment text is not an assertion.
    Needles have at least eight characters and occur in exactly one owned message literal.

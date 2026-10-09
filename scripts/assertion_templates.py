@@ -95,11 +95,21 @@ def selftest(work, generated):
             raise RuntimeError('generated default text accepted: ' + name)
     if errors('TEST(Control, Allowed) { EXPECT_TRUE(false) << "owned diagnostic"; }'):
         raise RuntimeError('allowed assertion refused')
-    for name, definition, statement, expected in (
-            ('alias', '', 'GTEST_ASSERT_LT(2, 1);', 'unsupported assertion form: GTEST_ASSERT_LT'),
-            ('failure', '', 'GTEST_FAIL();', 'unsupported assertion form: GTEST_FAIL'),
+    for name, definition, statement, expected, failures in (
+            ('alias', '', 'GTEST_ASSERT_LT(2, 1);', 'unsupported assertion form: GTEST_ASSERT_LT', 1),
+            ('failure', '', 'GTEST_FAIL();', 'unsupported assertion form: GTEST_FAIL', 1),
+            ('internal', '', 'GTEST_NONFATAL_FAILURE_("owned failure");',
+             'unsupported assertion form: GTEST_NONFATAL_FAILURE_', 1),
+            *((form.lower(), '#include <gtest/gtest-spi.h>\n',
+               form + '(' + assertion + '(false) << "owned failure", "owned failure");',
+               'unsupported assertion form: ' + form, 0)
+              for form, assertion in (
+                  ('EXPECT_NONFATAL_FAILURE', 'EXPECT_TRUE'),
+                  ('EXPECT_FATAL_FAILURE', 'ASSERT_TRUE'),
+                  ('EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS', 'EXPECT_TRUE'),
+                  ('EXPECT_FATAL_FAILURE_ON_ALL_THREADS', 'ASSERT_TRUE'))),
             ('pasted', '#define JOIN(a, b) a##b\n', 'JOIN(EXPE, CT_NEAR)(1.0, 2.0, 0.1);',
-             'token pasting is forbidden in tests')):
+             'token pasting is forbidden in tests', 1)):
         source = '#include <gtest/gtest.h>\n' + definition + 'TEST(Control, Probe) { ' + statement + ' }\n'
         path = work / (name + '.cpp')
         path.write_text(source)
@@ -110,11 +120,17 @@ def selftest(work, generated):
         report.unlink(missing_ok=True)
         result = subprocess.run([str(binary), '--gtest_output=xml:' + str(report)],
                                 capture_output=True, env=environment(), timeout=30)
-        if result.returncode != 1 or int(ET.parse(report).getroot().get('failures', '0')) != 1:
-            raise RuntimeError(name + ': control did not execute its failing assertion')
+        doc = ET.parse(report).getroot()
+        if result.returncode != failures or int(doc.get('failures', '-1')) != failures or int(doc.get('tests', '0')) != 1:
+            raise RuntimeError(name + ': control did not execute with the expected assertion result')
         if errors(source) != [expected]:
             raise RuntimeError(name + ': unsupported assertion accepted')
-        print('assertion control ' + name + ': compiled, failed at runtime and refused by source gate')
+        print('assertion control ' + name + ': compiled, executed with ' + str(failures) +
+              ' failures and refused by source gate')
+    for prefix in ('EXPECT_', 'ASSERT_', 'GTEST_'):
+        name = prefix + 'UNLISTED_'
+        if errors(name + '(false);') != ['unsupported assertion form: ' + name]:
+            raise RuntimeError('unknown prefixed assertion accepted: ' + name)
     if errors('// GTEST_FAIL() ##\nconst char *text = "GTEST_FAIL ##";'):
         raise RuntimeError('literal assertion text refused')
     print('assertion controls: EXPECT_NEAR compiles and is refused; all 14 generated defaults are refused')

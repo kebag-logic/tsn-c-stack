@@ -85,10 +85,14 @@ The assertion gate refuses token pasting (`##`) and scans the named macros in al
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
 CMake requires the exact package-config version and does not fall back to an unversioned library search.
 The mutation driver uses the compile and link flags from the same `pkg-config` packages whose versions it checks.
-The same generator preprocesses `gtest/gtest.h` and `gmock/gmock.h` with `-dM -E`.
+The same generator preprocesses every public header in the installed `gtest/` and `gmock/` directories with `-dM -E`.
+This includes `gtest/gtest-spi.h` and its failure-capturing assertions.
 It records public assertion and result macros outside the fourteen allowed forms.
 This includes `EXPECT_*`, `ASSERT_*`, `GTEST_*`, `FAIL*`, `SUCCEED` and `ADD_FAILURE*`.
 CI regenerates both the refused names and the diagnostics.
+The gate also refuses every identifier beginning `EXPECT_`, `ASSERT_` or `GTEST_` outside the allowlist, including trailing-underscore internals.
+The four failure-capturing controls compile and pass at runtime, then fail the source gate.
+The `GTEST_NONFATAL_FAILURE_` control compiles, fails at runtime and fails the source gate.
 Templates record one failing instance of each permitted form, including an unmet mock expectation.
 Streamed messages are removed. Only source line numbers are normalized.
 The template list does not claim to enumerate every value-dependent diagnostic variation.
