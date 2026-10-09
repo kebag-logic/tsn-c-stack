@@ -880,5 +880,30 @@
         }
       ]
     }
+  },
+  {
+    "id": "ENTITY-01",
+    "origin": "tsn-c-stack issue 2",
+    "targets": ["Linux", "bare-metal RV32"],
+    "verification": {"method": "test"},
+    "text": "Generate consistent const configuration from versioned YAML. Validate and regenerate examples. Exercise each core on both targets.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2, 7.2.1, 7.2.6 and 7.2.8",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.2",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3.2 and B.4",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      },
+      {
+        "text": "Entity schema 1.0.0 and host validation controls",
+        "url": "ENTITY_YAML.md"
+      }
+    ]
   }
 ]

@@ -19,7 +19,7 @@ from assertion_messages import instrument
 from assertion_forms import package_flags, require_version
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
+SOURCES = {"entity": "test_entity.cpp", "port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
            "adp_debug": "test_adp_reentry.cpp", "adp_release": "test_adp_reentry.cpp", "maap_debug": "test_maap_debug.cpp"}
 HEADER_SLOTS = threading.Semaphore(3)
 MESSAGE_MARKERS = ('TSN_MESSAGE_BEGIN_' + secrets.token_hex(16),
@@ -129,9 +129,28 @@ def main():
         raise RuntimeError('baseline example port build failed: ' + ''.join(log))
     def extra(arm):
         return [str(baseline / "port_extra.o")] if arm == "port" else []
+    entity_sources = ['src/adp.c', 'src/acmp.c', 'src/maap.c', 'examples/entity_roundtrip.c'] + [
+        f'examples/entities/{persona}/entity_config.c' for persona in ('listener', 'talker', 'duplex', 'ax7101')]
+    entity_objects = {path: baseline / ('entity_' + str(index) + '.o')
+                      for index, path in enumerate(entity_sources)}
     def prepare(arm):
         module = "adp" if arm == "port" else arm.split("_")[0]
         local = []
+        if arm == 'entity':
+            commands = [[cc, *cflags(arm), '-I' + str(ROOT / 'include'), '-I' + str(ROOT / 'examples'),
+                         '-c', str(ROOT / path), '-o', str(obj)] for path, obj in entity_objects.items()]
+            commands += [[cxx, *cppflags(arm), *test_cflags, '-I' + str(ROOT / 'examples'),
+                          '-c', str(test_sources / SOURCES[arm]), '-o', str(baseline / 'entity.cpp.o')],
+                         [cxx, *map(str, entity_objects.values()), str(baseline / 'entity.cpp.o'),
+                          str(baseline / 'main.o'), *test_ldflags, '-o', str(baseline / arm)]]
+            for cmd in commands:
+                if run(cmd, local) != 0:
+                    raise RuntimeError('entity baseline build failed: ' + ''.join(local))
+            rc, failures, count = execute(baseline / arm, baseline / (arm + '.xml'), local)
+            (baseline / (arm + '.log')).write_text(''.join(local))
+            if rc != 0 or failures or count == 0:
+                raise RuntimeError('entity baseline tests failed')
+            return
         commands = [
             [cc, *cflags(arm), "-I" + str(ROOT / "include"), "-c", str(ROOT / f"src/{module}.c"), "-o", str(baseline / (arm + ".c.o"))],
             [cxx, *cppflags(arm), *test_cflags, "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
@@ -160,7 +179,7 @@ def main():
             errors = validate_needles([m], messages)
             if errors:
                 raise RuntimeError('\n'.join(errors))
-            for name in ("src", "include"):
+            for name in ("src", "include", "examples"):
                 shutil.copytree(ROOT / name, directory / name, dirs_exist_ok=True)
             target = directory / m["path"]
             source = target.read_text()
@@ -175,6 +194,24 @@ def main():
             for arm in arms:
                 kills = [k for k in m["kills"] if k.get("arm", default_arm) == arm]
                 obj = directory / (arm + ".o")
+                if arm == 'entity':
+                    if m['path'] not in entity_objects:
+                        raise RuntimeError('unsupported entity plant target')
+                    rc = run([cc, *cflags(arm), '-I' + str(directory / 'include'),
+                              '-I' + str(directory / 'examples'), '-c', str(target), '-o', str(obj)], local)
+                    if rc != 0:
+                        raise RuntimeError('entity mutant build failed')
+                    objects = [str(obj if path == m['path'] else original)
+                               for path, original in entity_objects.items()]
+                    binary = directory / arm
+                    rc = run([cxx, *objects, str(baseline / 'entity.cpp.o'), str(baseline / 'main.o'),
+                              *test_ldflags, '-o', str(binary)], local)
+                    if rc != 0:
+                        raise RuntimeError('entity mutant link failed')
+                    rc, failures, count = execute(binary, directory / (arm + '.xml'), local, kills)
+                    failures_all.update(failures)
+                    all_caught = all_caught and rc == 1 and count > 0 and all(matches(k, failures) for k in kills)
+                    continue
                 rc = run([cc, *cflags(arm), "-I" + str(directory / "include"), "-c", str(directory / f"src/{module}.c"), "-o", str(obj)], local)
                 if rc != 0:
                     raise RuntimeError("mutant build failed")

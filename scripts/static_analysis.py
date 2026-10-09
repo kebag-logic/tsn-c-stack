@@ -7,8 +7,8 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 files = sorted(str(p.relative_to(ROOT)) for directory in ("src", "examples") for p in (ROOT / directory).rglob("*.c"))
-commands = [["cppcheck", "--enable=warning,style,performance,portability", "--error-exitcode=1", "--std=c11", "--suppress=constParameterPointer:src/maap.c:262", "--suppress=constParameterCallback:examples/adp_port.c:32", "--suppress=constParameterCallback:examples/adp_port.c:40", "--suppress=constParameterCallback:examples/adp_port.c:46", "--suppress=redundantAssignment:examples/rv32/smoke.c:136", "-Iinclude", "-j16", *files]]
-commands += [["clang-tidy", "--warnings-as-errors=*", "--checks=-*,clang-analyzer-*,bugprone-*,performance-*,-bugprone-signed-bitwise,-bugprone-easily-swappable-parameters,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling", file, "--", "-std=c11", "-Iinclude", "-DNDEBUG"] for file in files]
+commands = [["cppcheck", "--enable=warning,style,performance,portability", "--error-exitcode=1", "--std=c11", "--suppress=constParameterPointer:src/maap.c:262", "--suppress=constParameterCallback:examples/adp_port.c:32", "--suppress=constParameterCallback:examples/adp_port.c:40", "--suppress=constParameterCallback:examples/adp_port.c:46", "--suppress=redundantAssignment:examples/rv32/smoke.c:137", "-Iinclude", "-Iexamples", "-j16", *files]]
+commands += [["clang-tidy", "--warnings-as-errors=*", "--checks=-*,clang-analyzer-*,bugprone-*,performance-*,-bugprone-signed-bitwise,-bugprone-easily-swappable-parameters,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling", file, "--", "-std=c11", "-Iinclude", "-Iexamples", "-DNDEBUG"] for file in files]
 
 
 def run(command):

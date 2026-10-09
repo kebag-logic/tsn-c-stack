@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: MIT
+schema_version: 1.0.0
+identity:
+  entity_id: mac-derived
+  model_id: 7816428161859587
+  name: Example duplex
+  vendor_name: Example vendor
+  serial_number: EXAMPLE-0001
+  group_name: ''
+capabilities:
+  entity: 50568
+  identify_control_index: 0
+interfaces:
+- mac: 02:00:00:00:00:01
+- mac: 02:00:00:00:00:02
+inputs:
+- name: Audio input
+  interface: 1
+  kind: audio
+- name: Clock input
+  interface: 0
+  kind: clock
+outputs:
+- name: Audio output
+  interface: 0
+  kind: audio
+- name: Clock output
+  interface: 1
+  kind: clock
+maap:
+- interface: 0
+  preferred: 160395285233680
+- interface: 1
+  preferred: 160395285233696

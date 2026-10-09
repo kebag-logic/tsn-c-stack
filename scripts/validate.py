@@ -51,6 +51,8 @@ def main():
     results = []
     # Fail fast on source/metadata gates before compiling independent configurations.
     for name, script, switches in (
+        ('entity-golden', 'entity_yaml.py', ['--examples', '--check']),
+        ('entity-controls', 'entity_selftest.py', ['--work', str(work / 'entity-controls')]),
         ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
         ('needles', 'needle_audit.py', ['--selftest']),
         ('assertion-templates', 'assertion_templates.py', ['--check', '--selftest', '--work', str(work / 'assertion-templates')]),

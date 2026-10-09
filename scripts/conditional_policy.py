@@ -9,7 +9,13 @@ GUARDS = {'include/adp.h': 'ADP_H', 'include/acmp.h': 'ACMP_H',
           'include/maap.h': 'CTRL_MAAP_H', 'include/wire.h': 'CTRL_WIRE_H',
           'tests/acmp_fake.hpp': 'ACMP_FAKE_HPP', 'examples/adp_port.h': 'EXAMPLE_ADP_PORT_H',
           'examples/rv32/include/assert.h': 'TSN_PORT_ASSERT_H',
-          'examples/rv32/include/string.h': 'TSN_PORT_STRING_H'}
+          'examples/rv32/include/string.h': 'TSN_PORT_STRING_H',
+          'examples/entity_roundtrip.h': 'EXAMPLE_ENTITY_ROUNDTRIP_H',
+          'examples/entities/listener/entity_config.h': 'LISTENER_ENTITY_CONFIG_V1_0_0_H',
+          'examples/entities/talker/entity_config.h': 'TALKER_ENTITY_CONFIG_V1_0_0_H',
+          'examples/entities/duplex/entity_config.h': 'DUPLEX_ENTITY_CONFIG_V1_0_0_H',
+          'examples/entities/ax7101/entity_config.h': 'AX7101_ENTITY_CONFIG_V1_0_0_H',
+          }
 DIRECTIVES = {'define', 'undef', 'include', 'ifdef', 'ifndef', 'else', 'endif',
               'if', 'elif', 'elifdef', 'elifndef', 'pragma', 'error', 'warning', 'line'}
 

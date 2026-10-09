@@ -1,6 +1,8 @@
 # Porting
 
-For an integrator, start with the [headers](../include/) and the compiled
+For an integrator, describe the entity with the [YAML schema](ENTITY_YAML.md).
+Generate its const C configuration before building either target.
+Then connect the [headers](../include/) and the compiled
 [ADP example](../examples/adp_port.c). Its [test](../tests/test_port.cpp) checks
 queued expiry and blocked output. It uses one static frame slot and no OS API.
 It is an adapter example, not a network driver.
@@ -339,6 +341,12 @@ For a tester, the [verification guide](VERIFICATION.md) covers malformed input,
 backpressure, timer wrap and deliberate callback violations.
 
 ## Entity configuration
+
+The primary integration path is the [entity generator](ENTITY_YAML.md#integration).
+It derives shared counts, identity, MACs and interface mapping from one document.
+Use the generated ADP and ACMP records directly. Pass generated MAAP arguments to its initialization and begin calls.
+The [round-trip example](../examples/entity_roundtrip.c) runs on both supported targets.
+Hand-written structs remain a low-level option. Their caller must perform the same schema and consistency checks.
 
 The [imported identity requirements](REQUIREMENTS.md#mfentity-01) apply to both targets.
 Populate advertisement values from the same entity description used by the application.

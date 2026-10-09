@@ -12,7 +12,7 @@ Its [FR/NFR register](https://github.com/kebag-logic/milan-fpga/blob/5603c353137
 [product contract](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md),
 [memory decision](https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815) and
 [testing decision](https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-6008744385) are the origin authorities.
-The first table retains the import baseline. The generated tables add narrower, individually traced source obligations.
+The first table retains the import baseline. The generated tables add local issue requirements and narrower, individually traced source obligations.
 Build, memory and testing policies are local decisions. They have source links rather than invented standard clauses.
 
 | ID | Required behavior | Clause |
@@ -99,6 +99,14 @@ The [traceability gate](../scripts/traceability.py) checks the complete pinned i
 It refuses missing tests for tested requirements. It also refuses undocumented inspection and port exemptions.
 
 <!-- requirements-port:start -->
+
+## Local requirements
+
+These requirements originate in repository issues. Each applies to Linux and bare-metal RV32.
+
+| ID | Origin | Required behavior | Authority | Verification |
+|---|---|---|---|---|
+| <a id="entity-01"></a>ENTITY-01 | [tsn-c-stack issue 2](https://github.com/kebag-logic/tsn-c-stack/issues/2) | Generate consistent const configuration from versioned YAML. Validate and regenerate examples. Exercise each core on both targets. | [IEEE 1722.1-2021 6.2.2, 7.2.1, 7.2.6 and 7.2.8](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3.2 and B.4](https://standards.ieee.org/ieee/1722/5979/); [Entity schema 1.0.0 and host validation controls](ENTITY_YAML.md) | Tested through the linked declarations. |
 
 ## Imported requirements
 
