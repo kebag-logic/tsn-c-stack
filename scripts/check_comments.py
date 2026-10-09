@@ -40,7 +40,7 @@ def comment_errors(value, line):
     return errors
 
 
-def check(text, assembly=False, language='c++', path=None, fragment=False):
+def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
     if any(ord(c) not in (9, 10) and not 32 <= ord(c) <= 126 for c in text):
         return ['only printable ASCII, tab and LF are permitted']
     errors = []
@@ -72,6 +72,12 @@ def check(text, assembly=False, language='c++', path=None, fragment=False):
                 errors.append(f'line {token[4]}: assembler conditional or macro is forbidden')
     errors += inspect(tokens, path, fragment)[0]
     return errors
+
+
+def check(text, assembly=False, language='c++', path=None, fragment=False):
+    modes = ('c', 'c++') if path and Path(path).suffix in ('.h', '.hpp') else (language,)
+    return [mode + ': ' + error for mode in modes
+            for error in check_mode(text, assembly, mode, path, fragment)]
 
 
 def check_file(path, root=ROOT):
@@ -109,7 +115,7 @@ def main():
     for plant in json.loads((ROOT / 'tests/mutations.json').read_text()):
         for field in ('old', 'new'):
             errors += [plant['name'] + '/' + field + ': ' + e
-                       for e in check(plant[field], language='c', fragment=True)]
+                       for e in check(plant[field], language='c', path=plant['path'], fragment=True)]
     print('\n'.join(errors) if errors else f'comments: {files} code files and all mutation fragments pass')
     return bool(errors)
 

@@ -34,7 +34,8 @@ See [verification](VERIFICATION.md) for coverage and mutation obligations.
 Document static-analysis suppressions in the [suppression register](STATIC_ANALYSIS.md).
 
 The [comment gate](../scripts/check_comments.py) uses the Clang 18 lexer.
-C and C++ use their respective language modes. Each comment token is checked.
+C uses C11; C++ uses C++20. Every `.h` and `.hpp` is lexed in both modes.
+Header mutation fragments use both modes too. Each comment token under these rules is checked.
 Assembly forbids single quotes, conditional directives, macros and repeats.
 Every assembly `#` after a preprocessor directive marker starts a checked comment.
 Use numeric character values. Keep `#` out of assembly strings.

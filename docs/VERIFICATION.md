@@ -44,7 +44,9 @@ Install [GoogleTest and GMock](https://github.com/google/googletest),
 The graph check needs [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli).
 The hosted [workflow](../.github/workflows/quality.yml) installs these dependencies.
 Comment and assertion lexing use Clang 18 (`clang-18`), pinned by the package name.
-The lexer runs `-cc1 -dump-raw-tokens`, with C11 for `.c` and `.h`, and C++20 for `.cpp` and `.hpp`.
+The lexer runs `-cc1 -dump-raw-tokens`, with C11 for `.c` and C++20 for `.cpp`.
+All `.h` and `.hpp` files and their mutation fragments use both C11 and C++20.
+This includes every header consumed by a C++ test unit. A compiling digit-separator control checks both modes.
 Set `TSN_CLANG` to a Clang 18 executable when it is outside the command search path.
 The comment controls also need the RV32 cross compiler listed below.
 The gate reads source bytes without newline conversion. Only printable ASCII, tab and LF pass.

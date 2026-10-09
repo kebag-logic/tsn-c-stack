@@ -64,6 +64,20 @@ def selftest(work):
         if check_file(included, directory) != ['unscanned file suffix is forbidden']:
             raise RuntimeError('included unscanned suffix accepted')
         print('comment control included-suffix: compiled; refused')
+        header = '#define IGNORE(a) 0\nenum { value = IGNORE(1\'2 // prose \'\n) };\n'
+        for suffix in ('.h', '.hpp'):
+            path = directory / ('control' + suffix)
+            path.write_text(header)
+            for language, standard in (('c', 'c11'), ('c++', 'c++20')):
+                subprocess.run([compiler(), '-x', language, '-std=' + standard,
+                                '-Wall', '-Wextra', '-Werror', '-c', str(path),
+                                '-o', str(directory / 'header.o')], check=True)
+            for fragment in (False, True):
+                if not check(header, path='include/control' + suffix, fragment=fragment):
+                    raise RuntimeError('header comment hidden from C++ accepted')
+                if check('// REQ: PORT-01\n', path='include/control' + suffix, fragment=fragment):
+                    raise RuntimeError('header tracing refused')
+            print('comment control header' + suffix + ': C11 and C++20 compiled; source and fragment refused; tracing passes')
         for label, (language, source, refused) in cases.items():
             path = directory / (label + ('.S' if language == 'asm' else '.c'))
             path.write_text(source)
