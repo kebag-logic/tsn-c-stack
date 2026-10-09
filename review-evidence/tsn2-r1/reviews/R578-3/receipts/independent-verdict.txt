@@ -1,0 +1,8 @@
+2026-10-09T20:10:59Z
+Independent pass over 6f4ecc90..64888e91 completed before reading any prior public review finding text at this round.
+Provisional verdict: POSITIVE.
+Conformance CLEAN: firmware_rev rule equals the pinned source rule over a 37-form YAML corpus except 4 pathological 59+-digit revisions (source refuses via derived 63-byte string; gateware VERSION needed) -> SUGGESTION S1. Accepted key set equals the source's entity keys.
+RTL CLEAN (not applicable: no RTL or C in the delta; generated C and goldens unchanged).
+Robustness CLEAN: non-mapping, null, bool, float, string, negative, list, mapping refused with field-specific messages; unknown keys named; firmware_version precedence.
+Tests CLEAN: 196 selftests; 13 registered plants pass; 5 item-1 reverts + 7 extra item-1 mutants + 3 original-eight mutants + 3 meta mutants all caught by named assertion failure.
+Docs CLEAN with RESIDUE R1 ("keys read by the source entity loader": three keys are read outside _load_entity).

@@ -1,0 +1,43 @@
+extracted from source: ['EUI64_MAX', 'HEX_TEXT', 'MAC48_MAX', 'MAC_OCTETS', '_hex_text', '_mac48']
+hex scalar cases: 160244, divergent: 0
+mac cases: 60084, divergent: 0
+E1 entity.firmware_rev: 1 (source-valid optional key, builder line 3727)
+  source builder: valid (respin revision; AEM firmware_version only)
+  mapper: ACCEPTED identity={"name": "Milan FPGA 1x1 TDM8", "serial_number": "<device-serial>", "entity_id": "mac-derived", "vendor_name": "Kebag Logic", "group_name": "", "model_id": 7817259562603489}
+E2 entity.firmware_rev: 0 (source default value stated explicitly)
+  source builder: valid
+  mapper: ACCEPTED identity={"name": "Milan FPGA 1x1 TDM8", "serial_number": "<device-serial>", "entity_id": "mac-derived", "vendor_name": "Kebag Logic", "group_name": "", "model_id": 7817259562603489}
+E3 entity.firmware_version: "1.0.0" (source refuses)
+  source builder: refused: firmware_version derived from gateware
+  mapper: REFUSED: milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev
+E4 entity.locale: "en" (source-valid)
+  source builder: valid
+  mapper: ACCEPTED identity={"name": "Milan FPGA 1x1 TDM8", "serial_number": "<device-serial>", "entity_id": "mac-derived", "vendor_name": "Kebag Logic", "group_name": "", "model_id": 7817259562603489}
+E5 entity.locale: 5 (source refuses: non-empty string)
+  source builder: refused by _aem_string
+  mapper: ACCEPTED identity={"name": "Milan FPGA 1x1 TDM8", "serial_number": "<device-serial>", "entity_id": "mac-derived", "vendor_name": "Kebag Logic", "group_name": "", "model_id": 7817259562603489}
+E6 entity.vendor_name: null (explicit null)
+  source builder: accepted by ent.get (value None); documented: null does not request a default
+  mapper: REFUSED: identity.vendor_name: expected UTF-8 string of 0..64 bytes without controls
+E7 entity_id "0" (source accepts; portable range 1..2^64-2)
+  source builder: valid _fmt64
+  mapper: REFUSED: identity.entity_id: expected integer in 1..18446744073709551614
+E8 entity_id "FFFFFFFFFFFFFFFF"
+  source builder: valid _fmt64
+  mapper: REFUSED: identity.entity_id: expected integer in 1..18446744073709551614
+E9 entity_id "MAC-DERIVED" (case variant)
+  source builder: refused by _fmt64 (not hex)
+  mapper: REFUSED: milan.entity.entity_id: expected hexadecimal digits with optional 0x and single underscores between digits; no sign or whitespace
+E10 entity_model_id "HASH-DERIVED" (case variant)
+  source builder: refused by _model_id (not hex)
+  mapper: REFUSED: milan.entity.entity_model_id: expected hexadecimal digits with optional 0x and single underscores between digits; no sign or whitespace
+E11 name 64 ASCII bytes
+  source builder: refused: exceeds 63 bytes
+  mapper: ACCEPTED identity={"name": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "serial_number": "<device-serial>", "entity_id": "mac-derived", "vendor_name": "Kebag Logic", "group_name": "", "model_id": 7817259562603489}
+Y1 unquoted 0x1234 entity_id: safe_load -> int 4660; mapper Loader -> int 4660; same=True
+Y2 unquoted 1_000 entity_id: safe_load -> int 1000; mapper Loader -> int 1000; same=True
+Y3 unquoted 020000FFFE000001: safe_load -> str '020000FFFE000001'; mapper Loader -> str '020000FFFE000001'; same=True
+Y4 unquoted 1234567890123456: safe_load -> int 1234567890123456; mapper Loader -> int 1234567890123456; same=True
+Y5 unquoted 0123: safe_load -> int 83; mapper Loader -> int 83; same=True
+Y6 unquoted 1e3: safe_load -> str '1e3'; mapper Loader -> str '1e3'; same=True
+Y7 unquoted 12:34: safe_load -> int 754; mapper Loader -> int 754; same=True

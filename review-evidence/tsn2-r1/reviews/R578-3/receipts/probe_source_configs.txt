@@ -1,0 +1,5 @@
+endstation_arty_4x4.yaml: ACCEPTED entity keys=['entity_id', 'entity_model_id', 'group_name', 'name', 'serial_number', 'vendor_name'] mac=02:00:00:00:00:02 inputs=5 outputs=5 entity_id=mac-derived
+endstation_arty_8ch.yaml: ACCEPTED entity keys=['entity_id', 'entity_model_id', 'group_name', 'name', 'serial_number', 'vendor_name'] mac=02:00:00:00:00:02 inputs=5 outputs=5 entity_id=mac-derived
+endstation_arty_current.yaml: ACCEPTED entity keys=['entity_id', 'entity_model_id', 'group_name', 'model_id_pin', 'name', 'serial_number', 'vendor_name'] mac=02:00:00:00:00:02 inputs=2 outputs=1 entity_id=mac-derived
+endstation_ax7101_1x1_tdm8.yaml: ACCEPTED entity keys=['entity_id', 'entity_model_id', 'group_name', 'name', 'serial_number', 'vendor_name'] mac=02:00:00:00:00:01 inputs=2 outputs=2 entity_id=mac-derived
+endstation_ax7101_8x8.yaml: ACCEPTED entity keys=['entity_id', 'entity_model_id', 'group_name', 'name', 'serial_number', 'vendor_name'] mac=02:00:00:00:00:01 inputs=9 outputs=9 entity_id=mac-derived

@@ -1,0 +1,49 @@
+pinned RTL VERSION 0x00020060 -> firmware_version prefix "2.96."
+extracted source statements:
+  if 'firmware_version' in ent:
+  rev = ent.get('firmware_rev', 0)
+  if isinstance(rev, bool) or not isinstance(rev, int) or rev < 0:
+same      firmware_rev: (omitted)                    source=accept mapper=accept projection == golden
+same      firmware_rev: 0                            source=accept mapper=accept projection == golden
+same      firmware_rev: 1                            source=accept mapper=accept projection == golden
+same      firmware_rev: 2                            source=accept mapper=accept projection == golden
+same      firmware_rev: 00                           source=accept mapper=accept projection == golden
+same      firmware_rev: 007                          source=accept mapper=accept projection == golden
+same      firmware_rev: 0x10                         source=accept mapper=accept projection == golden
+same      firmware_rev: 0o17                         source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: 0b101                        source=accept mapper=accept projection == golden
+same      firmware_rev: 1_000                        source=accept mapper=accept projection == golden
+same      firmware_rev: +5                           source=accept mapper=accept projection == golden
+same      firmware_rev: -0                           source=accept mapper=accept projection == golden
+same      firmware_rev: -1                           source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: 1:30                         source=accept mapper=accept projection == golden
+same      firmware_rev: 1.0                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: 1e3                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: .inf                         source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: true                         source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: false                        source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: yes                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: on                           source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: null                         source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: ~                            source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: "1"                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: '0'                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: []                           source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: {}                           source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: [1]                          source=refuse mapper=refuse milan.entity.firmware_rev: expected a non-negative integer
+same      firmware_rev: 9223372036854775807          source=accept mapper=accept projection == golden
+same      firmware_rev: 18446744073709551616         source=accept mapper=accept projection == golden
+same      firmware_rev: 1000000000...(58 chars)      source=accept mapper=accept projection == golden
+same      firmware_rev: 9999999999...(58 chars)      source=accept mapper=accept projection == golden
+BOUND     firmware_rev: 1000000000...(59 chars)      source=refuse mapper=accept projection == golden
+BOUND     firmware_rev: 9999999999...(59 chars)      source=refuse mapper=accept projection == golden
+BOUND     firmware_rev: 1000000000...(81 chars)      source=refuse mapper=accept projection == golden
+BOUND     firmware_rev: 0xFFFFFFFF...(66 chars)      source=refuse mapper=accept projection == golden
+same      keys ['firmware_version'] -> milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev
+same      keys ['firmware_rev', 'firmware_version'] -> milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev
+same      keys ['zz_typo'] -> milan.entity.zz_typo: unknown field
+same      keys ['Name'] -> milan.entity.Name: unknown field
+same      keys ['firmware_revision'] -> milan.entity.firmware_revision: unknown field
+same      keys ['a', 'b'] -> milan.entity.a: unknown field
+same      keys ['model_id'] -> milan.entity.model_id: unknown field
+divergent: 0; bound-class (59+ decimal digits with prefix "2.96."): 4
