@@ -306,20 +306,8 @@
         "needle": "A4 a DISCOVER for this entity stops TMR_ADVERTISE and enters DELAY (5.6.3.5.4)"
       },
       {
-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0",
-        "needle": "inherited discovery enters DELAY"
-      },
-      {
-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1",
-        "needle": "inherited discovery enters DELAY"
-      },
-      {
-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2",
-        "needle": "inherited discovery enters DELAY"
-      },
-      {
-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3",
-        "needle": "inherited discovery enters DELAY"
+        "test": "AllStates/AdpInputControl.ValidDiscovery/4",
+        "needle": "valid discovery enters DELAY from WAITING"
       }
     ],
     "original_tests": [
@@ -5003,6 +4991,90 @@
     "original_tests": [
       "AcmpCore.DepartingRetainsBindingAndReprobes",
       "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+    ]
+  },
+  {
+    "name": "adp-unsupported-version-accepted",
+    "path": "src/adp.c",
+    "old": "\t    (frame[ADP_HEADER_BYTES + 1u] & 0x70u) != 0u ||\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/4",
+        "needle": "malformed discovery increments discarded exactly once"
+      }
+    ]
+  },
+  {
+    "name": "adp-short-frame-accepted",
+    "path": "src/adp.c",
+    "old": "len < ADP_FRAME_BYTES ||",
+    "new": "len < ADP_HEADER_BYTES + 12u ||",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortFrame/0",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortFrame/1",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortFrame/2",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortFrame/3",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortFrame/4",
+        "needle": "malformed discovery increments discarded exactly once"
+      }
+    ]
+  },
+  {
+    "name": "adp-wrong-control-length-accepted",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/4",
+        "needle": "malformed discovery increments discarded exactly once"
+      }
     ]
   }
 ]

@@ -17,7 +17,7 @@ Build, memory and testing policies are local decisions. They have source links r
 
 | ID | Required behavior | Clause |
 |---|---|---|
-| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble, target and input shorter than 26 bytes. Preserve the [DEV-08 input limits](DEVIATIONS.md). | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) |
+| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls. | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) |
 | ADP-02 | Follow advertise, discover, link, grandmaster and shutdown transitions. | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) |
 | ADP-03 | Keep refused departures ordered before an advertisement. Bound storage and count coalescing. | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) |
 | PORT-01 | Serialize input. Refuse synchronous callback re-entry. Preserve state on refusal. | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) |
@@ -35,15 +35,23 @@ Build, memory and testing policies are local decisions. They have source links r
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
 
-## ADP input limit
+## ADP input validation
 
-ADP-01 records the inherited receiver checks. It does not promise complete ADPDU validation.
-In WAITING, a matching discovery with AVTP version 1, length 26 bytes, or `control_data_length` zero enters DELAY.
-Each restarts its timer and leaves `discarded` zero. A valid discovery has the same effect.
-The [input controls](../tests/test_adp.cpp) pin all four cases.
-The [porting obligations](PORTING.md#adp-input-validation) and [DEV-08](DEVIATIONS.md) explain the integration boundary.
-The [round 2 decision](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074721212) preserves this behavior.
-The protocol correction is tracked in [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3).
+ADP-01 applies before target parsing in every receive state, including disabled input.
+Each refused frame increments `discarded` once. Other core storage and all port callbacks remain unchanged.
+
+| Refused input | Authority |
+|---|---|
+| AVTP version 1 through 7 | [IEEE 1722.1-2021 6.2.2.3](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4](https://standards.ieee.org/ieee/1722/5979/) |
+| Fewer than 82 bytes, including the 14-byte untagged Ethernet header and 68-byte ADPDU | [IEEE 1722.1-2021 Figure 6-1 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/) |
+| Any 11-bit `control_data_length` other than 56, including zero | [IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) |
+
+A complete valid discovery for zero or the local entity enters DELAY from WAITING.
+Other states preserve their timers and pending output under [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
+Trailing buffer bytes are permitted. The adapter supplies the actual readable length and untagged layout.
+The [hosted input controls](../tests/test_adp.cpp) and [RV32 smoke checks](../examples/rv32/smoke.c) cover these rules.
+The [porting contract](PORTING.md#adp-input-validation) retains framing and interface duties.
+This resolves the inherited input deviation under the [issue 3 assignment](https://github.com/kebag-logic/tsn-c-stack/issues/3#issuecomment-6085285119).
 
 ## Clause checks
 
@@ -62,7 +70,7 @@ They are not established by a successful library build.
 In particular, neither target's test suite proves the 10 ms service bound, wire deadlines, cold-power persistence or complete recovery counters.
 The integration must supply that evidence before claiming those requirements are met.
 No core behavior change is needed for this mapping.
-The inherited [ADP input limit](#adp-input-limit) remains explicit.
+The [ADP input validation](#adp-input-validation) is enforced by the core on both targets.
 
 The unnumbered [product ownership and protocol table](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#1-product-ownership) has this disposition:
 
