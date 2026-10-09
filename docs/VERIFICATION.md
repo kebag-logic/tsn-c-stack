@@ -63,7 +63,17 @@ assembler conditionals, macros and repeats are refused. Direct tracing remains a
 Compiling controls include plain and spliced directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
-The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract.
+The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract:
+
+| Rule | Accepted subset | Compiling control |
+|---|---|---|
+| Character set | Printable ASCII, tab and LF in every file under `src/`, `include/`, `tests/` and `examples/`. | CR, form feed, vertical tab, another control byte and non-ASCII are refused. |
+| Suffixes | `.c`, `.h`, `.cpp`, `.hpp`, `.S`, `.ld`; data exceptions are [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet). | An included `.inc` is refused. |
+| Header modes | C11 and C++20 for every `.h`, `.hpp` and header plant fragment. | A digit separator hiding a C++ comment is refused; tracing passes. |
+| Linker scripts | No single quotes; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
+| Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp` or `.irpc`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
+| Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
+
 The assertion gate scans the named macros in all C and C++ files below `tests/`.
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
 CMake requires the same version; the mutation driver checks it too.
