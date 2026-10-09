@@ -1,0 +1,12 @@
+mutant	selftest_rc	published_history_rc	foreign-noreply	reversed	case-variant	holder+github	webflow-multiline	caught_by_selftest	caught_by_any
+none (control)	0	0	1	1	1	1	1	NO	NO
+accept-any-noreply-author-with-github-committer	0	0	0	1	0	1	1	NO	NO (synthetic only)
+order-insensitive-pair	0	0	1	0	1	1	1	NO	NO (synthetic only)
+case-insensitive-pair	0	0	1	1	0	1	1	NO	NO (synthetic only)
+webflow-checks-committer-only	1	0	0	1	0	0	1	yes	yes
+webflow-checks-author-only	1	0	1	1	1	1	1	yes	yes
+accept-everything	1	0	0	0	0	0	1	yes	yes
+main-keeps-old-holder-only-rule	0	1	1	1	1	1	1	NO	yes
+webflow-exempt-from-one-line-rule	0	0	1	1	1	1	0	NO	NO (synthetic only)
+owner-squash-exception-widened-to-webflow	0	0	1	1	1	1	0	NO	NO (synthetic only)
+restored: True

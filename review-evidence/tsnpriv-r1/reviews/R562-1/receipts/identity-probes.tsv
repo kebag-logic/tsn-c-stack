@@ -1,0 +1,28 @@
+case	rc	output
+head-as-published	0	privacy: 4 commits, 118 historical blobs, 74 current files; pass 
+hackerman-kl <hackerman-kl@kebag-logic.com> / hackerman-kl <hackerman-kl@kebag-logic.com>	holder-pair-one-line	0	privacy: 5 commits, 118 historical blobs, 74 current files; pass 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / GitHub <noreply@github.com>	webflow-pair-one-line	0	privacy: 5 commits, 118 historical blobs, 74 current files; pass 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / GitHub <noreply@github.com>	webflow-pair-commit-list-body	1	<sha>: commit message must be one line 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / GitHub <noreply@github.com>	webflow-pair-coauthor-trailer	1	<sha>: commit message must be one line 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / hackerman-kl <hackerman-kl@kebag-logic.com>	mixed-noreply-author-holder-committer	1	<sha>: unexpected identity 
+hackerman-kl <hackerman-kl@kebag-logic.com> / GitHub <noreply@github.com>	mixed-holder-author-github-committer-rebase-merge	1	<sha>: unexpected identity 
+hackerman-kl <99999999+someone-else@users.noreply.github.com> / GitHub <noreply@github.com>	foreign-noreply-same-name	1	<sha>: unexpected identity 
+someone-else <99999999+someone-else@users.noreply.github.com> / GitHub <noreply@github.com>	foreign-noreply-other-name	1	<sha>: unexpected identity 
+Mister-M-alt <161579364+Mister-M-alt@users.noreply.github.com> / GitHub <noreply@github.com>	same-noreply-other-name	1	<sha>: unexpected identity 
+hackerman-kl <161579364+mister-m-alt@users.noreply.github.com> / GitHub <noreply@github.com>	noreply-uppercase-variant	1	<sha>: unexpected identity 
+hackerman-kl <Mister-M-alt@users.noreply.github.com> / GitHub <noreply@github.com>	legacy-noreply-form	1	<sha>: unexpected identity 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / GitHub <web-flow@github.com>	github-committer-other-email	1	<sha>: unexpected identity 
+GitHub <noreply@github.com> / hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>	reversed-pair	1	<sha>: unexpected identity 
+hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com> / hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>	noreply-both-roles	1	<sha>: unexpected identity 
+GitHub <noreply@github.com> / GitHub <noreply@github.com>	github-both-roles	1	<sha>: unexpected identity 
+merge-webflow-github-default-message	1	<sha>: commit message must be one line 
+merge-webflow-one-line-message	0	privacy: 6 commits, 118 historical blobs, 74 current files; pass 
+merge-webflow-one-line-foreign-side-commit	1	<sha>: unexpected identity 
+foreign-pair-with-mailmap-to-webflow	1	<sha>: unexpected identity 
+raw-hidden-path-holder	0	privacy: 5 commits, 118 historical blobs, 74 current files; pass 
+  raw-object-lines-with-path-holder: 2
+raw-hidden-path-webflow	0	privacy: 5 commits, 118 historical blobs, 74 current files; pass 
+  raw-object-lines-with-path-webflow: 2
+privacy selftest: 6 identity controls pass
+selftest rc 0
+misspelled-switch rc 0 -> privacy: <runs main gate>
