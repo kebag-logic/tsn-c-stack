@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "name": "rv32-evidence",
+      "id": 11616746723,
+      "run_id": 37932096604,
+      "head": "61fb7c9a523b89cb96d493c5baf9f7f866ebed85",
+      "sha256": "41cd8147339398e7db94181a844c46a9ef6028625e973acadf10cdb696f3d21b",
+      "digest_match": true
+    },
+    {
+      "name": "quality-evidence",
+      "id": 11616207481,
+      "run_id": 37932096604,
+      "head": "61fb7c9a523b89cb96d493c5baf9f7f866ebed85",
+      "sha256": "a73c95a4b7ce91cc5b56574fe5a6cfff9bc260dc816f335f2e7dcae205265e50",
+      "digest_match": true
+    }
+  ],
+  "author_gates": 24,
+  "hosted_gates": 25,
+  "all_rc_zero": true,
+  "hosted_mutations_caught": 311,
+  "hosted_rv32": {
+    "Debug": "pass",
+    "Release": "pass"
+  },
+  "hosted_checks": "four successful; none skipped"
+}

@@ -1,0 +1,54 @@
+[R563] NEGATIVE - exact head 61fb7c9a523b89cb96d493c5baf9f7f866ebed85
+
+The executable change satisfies the scoped identity, message, scanning and selftest requirements. One MINOR finding remains: the import guide contradicts the accepted identity policy. Conformance and Docs are UNCLEAN; RTL, Robustness and Tests are CLEAN. No executable-policy change is requested.
+
+Reviewed tree: `adbb235a09246169ab95756fba0a7f163131924d`. Base: `18d737832c376f32660eb21fe2796e0b611507e3`. This is one commit changing four files, with 21 insertions and two deletions. The [public review start](https://github.com/kebag-logic/tsn-c-stack/pull/17#issuecomment-6081162562) binds this round to that head.
+
+**Scope and authorities.** Reconstruction began with the supplied repository instructions, CONTRIBUTING.md and README.md, followed by the [issue body](https://github.com/kebag-logic/tsn-c-stack/issues/14), [assignment](https://github.com/kebag-logic/tsn-c-stack/issues/14#issuecomment-6080704899), [reported base failure](https://github.com/kebag-logic/tsn-c-stack/issues/14#issuecomment-6081068576), and [manager ruling](https://github.com/kebag-logic/tsn-c-stack/issues/14#issuecomment-6081168071). The issue's six requirements-port acceptance items remain assigned to the separate requirements lane; PR #17 repairs its failing base privacy gate. The `dev-linux` branch is outside this review.
+
+The requirements, coding, architecture, porting, import and verification documents establish the portable-core boundary. Linked upstream requirements were inspected at public revision `5603c353137e90c1fa95429f6d00ef7a2298d9ee`, together with the public Mark II issue body. This diff introduces no protocol or standard-clause claim. The diff and reachable history were reviewed before executable evidence. The independent verdict and five-lens ledger were written in [independent-verdict.md](receipts/independent-verdict.md) before checking prior public findings. No other reviewer's report or private author material was read.
+
+**R563-1-F1 — MINOR — OPEN.** Attributable lenses: **Conformance, Docs**. Location: [docs/IMPORT.md:136](https://github.com/kebag-logic/tsn-c-stack/blob/61fb7c9a523b89cb96d493c5baf9f7f866ebed85/docs/IMPORT.md#L136).
+
+- **Evidence:** the paragraph accepts the hosted pair at lines 134–135, then states, “Every new commit must use the configured holder identity and one-line subject.” The predicate at [scripts/check_privacy.py:24–25](https://github.com/kebag-logic/tsn-c-stack/blob/61fb7c9a523b89cb96d493c5baf9f7f866ebed85/scripts/check_privacy.py#L24) accepts both complete pairs. Both controls pass in [review-probes.log](receipts/review-probes.log).
+- **Authority:** this round requires IMPORT.md and VERIFICATION.md to describe the two-pair rule accurately; PR #17 also claims that outcome. The round's RESIDUE definition excludes defects touching a privacy rule. This contradictory identity-policy instruction is therefore MINOR despite requiring only a prose edit.
+- **Impact:** the contributor-facing instruction forbids new hosted squash commits that the preceding text and executable gate deliberately permit.
+- **Required outcome / exact fix:** replace the last sentence with: “Every new commit must use one of these two identity pairs and a one-line subject.” Preserve the preceding content-scanning sentence and exact historical exception.
+- **Verification:** read the complete paragraph against both accepted-pair controls, then rerun `scripts/check_privacy.py` and its `--selftest`. Both must pass with no widening of the accepted pairs.
+
+No BLOCKER, MAJOR, RESIDUE or SUGGESTION finding is recorded.
+
+**Independent executable results.** The [portable probes](scripts/review_probes.py) and their [raw receipt](receipts/review-probes.log) establish:
+
+- 363 ordered identity-pair/message-tail combinations and three short inputs accept only holder/holder and the exact account-author/hosted-committer pair. Another noreply account, changed account ID, changed login, changed display name, mixed pairs and foreign pairs fail. Expected identities are independent literals, not values derived from implementation constants.
+- All six shipped selftest controls pass. Seven disposable predicate defects are caught: reject everything, accept everything, reject either accepted pair, allow identities independently, accept any author with the hosted committer, and accept matching foreign identities.
+- Twenty-three integration fixtures cover both pairs, foreign and mixed pairs, empty messages, bodies, attribution trailers, blank padding, merge-style subjects, the exact and near-match exceptions, metadata, historical deleted blobs, and tracked/untracked current content. Controlled repository responses are used; no commits are created and no real merge execution is claimed.
+- Structural comparison confirms unchanged patterns, scanning helper and complete main routine except the identity predicate. The exact exception remains `ae982af85ec97286bd35b39403926d8f0eaec81d`; its metadata and historical content remain scanned. Message checking still counts nonblank lines, as before.
+- The real head passes: four commits, 118 historical blobs and 74 current files. The base implementation run against this same history/current tree rejects `18d73783`. This is not a separate base-checkout validation run.
+- [Dispatch fixtures](receipts/validator-wiring.log) confirm separate selftest/content commands, preservation of the selftest return code, and validator failure before build campaigns when that selftest fails. These are orchestration fixtures, not full-bank receipts.
+
+**Merge semantics.** The gate never queries parent count. A merge commit with either accepted pair and one nonblank message line can pass if all reachable metadata and content pass. A multiline merge body fails the message check; foreign-identity ancestors are rejected individually. Acceptance is defined by identity, message and content, not squash topology, so a conforming merge should pass. Matching metadata establishes permitted identity strings, not cryptographic proof of authorship.
+
+**Published and hosted evidence.** All five files in the [published author packet](https://github.com/kebag-logic/tsn-c-stack/tree/deca7adccf7675959ec4320971c85357b8f8f15e/review-evidence/tsnpriv-r1) match its published SHA-256 manifest. Its receipts record 24/24 gates passing; graph rendering is an additional hosted gate. These are author source-validation receipts, not a manager source bank.
+
+The [PR workflow run](https://github.com/kebag-logic/tsn-c-stack/actions/runs/37932096604) has successful executed `quality` and `bare-metal` jobs at the exact head. The push run also has both jobs successful. [Final check records](receipts/pr-checks-final.json) contain four successful contexts and none skipped. Checkout logs identify the reviewed SHA; the workflow selects the PR head, not a synthetic merge ref. Both downloaded artifact archives match their API-published digests, recorded in [evidence-verification.json](receipts/evidence-verification.json).
+
+The [hosted gate table](receipts/hosted/quality-evidence/gates.json) records 25/25 zero return codes. Retained receipts show Clang 18.1.3, GoogleTest/GMock 1.14.0 packages, seven passing test executables in each native configuration, 100% lines and branches after unchanged exclusions, 311 plants caught with zero escapes/errors, and three rendered graphs. The [RV32 results](receipts/hosted/rv32-evidence/results.json) and Debug/Release smoke logs show successful build/link/execution and no unresolved final symbols. Skipped contexts are not counted as execution evidence.
+
+| lens | CLEAN/UNCLEAN | examined artifacts | covering round | exact head |
+|---|---|---|---|---|
+| Conformance | UNCLEAN | Issue #14 ruling; PR #17 acceptance; check_privacy.py:15–17,24–25,42–68; unchanged scans/exception; IMPORT.md:136 (F1) | R563-1 | 61fb7c9a523b89cb96d493c5baf9f7f866ebed85 |
+| RTL | CLEAN | Complete diff; unchanged src/, include/, RV32 examples, CMakeLists.txt, baremetal.py and quality.yml; zero RTL/constraint files and gitlinks; hosted RV32 receipts | R563-1 | 61fb7c9a523b89cb96d493c5baf9f7f866ebed85 |
+| Robustness | CLEAN | Pair matrix and different-account controls; 23 metadata/content fixtures; message/exception probes; seven predicate plants; real-head scan | R563-1 | 61fb7c9a523b89cb96d493c5baf9f7f866ebed85 |
+| Tests | CLEAN | check_privacy.py:28–34; validate.py:53–76; dispatch/failure fixtures; author 24-gate and hosted 25-gate receipts; mutation results; both target jobs | R563-1 | 61fb7c9a523b89cb96d493c5baf9f7f866ebed85 |
+| Docs | UNCLEAN | CONTRIBUTING.md; README.md; requirements/interface authorities; IMPORT.md:128–136 (F1); VERIFICATION.md:39–40,43–55,110–142; evidence claims/limits | R563-1 | 61fb7c9a523b89cb96d493c5baf9f7f866ebed85 |
+
+**Prior findings.** The paginated public inventory was checked after the independent verdict: four issue comments, two PR review-start comments, zero submitted PR reviews and zero inline comments. No prior public FINDINGS on PR #17 existed at the recorded scan time; none require retention or resolution. See [reconciliation receipt](receipts/prior-findings-reconciliation.txt). No additional manager execution-evidence comment was present; the supplied public author packet was inspected directly.
+
+**Limits and pending manager duties.** Local execution was confined to focused privacy, mutation-sensitivity and dispatch probes. Full native and RV32 acceptance relies on inspected exact-head public receipts; those campaigns were not rerun locally. No parent integration, builder, protocol-processor, timing-protocol or synthesis banks were run. There are no RTL changes to simulate. No shared installation, hardware access, source edit, commit, push or public write was performed.
+
+No manager source bank exists or is inferred at this head. The manager owns final hosted/local-workflow acceptance and validation of the current-dev merge candidate, using source base `18d737832c376f32660eb21fe2796e0b611507e3` and designated live dev `5603c353137e90c1fa95429f6d00ef7a2298d9ee`, including builder/native receipts linked at the merge turn. Source validation is distinct from that final candidate. Physical calibration **NOT RUN**; field skips and simulated smoke tests are not hardware proof. The manager must resolve F1, obtain the required independent positive reviews for the resulting head, and publish this packet after terminal execution.
+
+[Checkout integrity](receipts/checkout-integrity.txt) confirms all 74 tracked blob bytes and executable modes, the initial index and expected tree, a clean detached checkout, and zero required submodule gitlinks. Disposable fixtures stay under `scratch/`, excluded from publication. [MANIFEST.sha256](MANIFEST.sha256) lists publishable files; [replay instructions](REPLAY.md) describe the reviewer-owned scripts.
+
+R563-1 FINISHED

@@ -1,0 +1,117 @@
+[
+  {
+    "case": "holder-single-line",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "web-flow-single-line",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "different-noreply-account",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: unexpected identity\n"
+  },
+  {
+    "case": "mixed-holder-web",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: unexpected identity\n"
+  },
+  {
+    "case": "mixed-web-holder",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: unexpected identity\n"
+  },
+  {
+    "case": "foreign-pair",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: unexpected identity\n"
+  },
+  {
+    "case": "holder-body",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "holder-trailer",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "holder-empty",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "holder-blank-padding",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "holder-merge-subject",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "web-body",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "web-trailer",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "web-empty",
+    "rc": 1,
+    "output": "1111111111111111111111111111111111111111: commit message must be one line\n"
+  },
+  {
+    "case": "web-blank-padding",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "web-merge-subject",
+    "rc": 0,
+    "output": "privacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "exact-exception",
+    "rc": 0,
+    "output": "privacy: exact owner squash metadata exception; content scanning remains enabled\nprivacy: 1 commits, 2 historical blobs, 2 current files; pass\n"
+  },
+  {
+    "case": "near-exception",
+    "rc": 1,
+    "output": "ae982af85ec97286bd35b39403926d8f0eaec810: unexpected identity\nae982af85ec97286bd35b39403926d8f0eaec810: commit message must be one line\n"
+  },
+  {
+    "case": "exception-metadata-scan",
+    "rc": 1,
+    "output": "privacy: exact owner squash metadata exception; content scanning remains enabled\nae982af85ec97286bd35b39403926d8f0eaec81d: restricted content\n"
+  },
+  {
+    "case": "exception-historical-scan",
+    "rc": 1,
+    "output": "privacy: exact owner squash metadata exception; content scanning remains enabled\n2222222222222222222222222222222222222222: restricted content\n"
+  },
+  {
+    "case": "historical-deleted-blob",
+    "rc": 1,
+    "output": "2222222222222222222222222222222222222222: restricted content\n"
+  },
+  {
+    "case": "tracked-tree-content",
+    "rc": 1,
+    "output": "tracked.txt: restricted content\n"
+  },
+  {
+    "case": "untracked-tree-content",
+    "rc": 1,
+    "output": "untracked.txt: restricted content\n"
+  }
+]

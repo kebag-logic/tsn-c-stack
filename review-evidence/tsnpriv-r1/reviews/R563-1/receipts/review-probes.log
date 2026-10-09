@@ -1,0 +1,39 @@
+PASS: exact constants, patterns, scan helper and complete main except identity predicate unchanged
+PASS: 363 ordered pair/tail cases plus three short inputs; only two exact pairs accepted
+privacy selftest: 6 identity controls pass
+PASS: shipped selftest detects predicate plant reject-all
+PASS: shipped selftest detects predicate plant accept-all
+PASS: shipped selftest detects predicate plant reject-web-flow
+PASS: shipped selftest detects predicate plant reject-holder
+PASS: shipped selftest detects predicate plant independent-allowlists
+PASS: shipped selftest detects predicate plant any-author-with-web-committer
+PASS: shipped selftest detects predicate plant matching-foreign-pair
+PASS: integration fixture holder-single-line rc 0
+PASS: integration fixture web-flow-single-line rc 0
+PASS: integration fixture different-noreply-account rc 1
+PASS: integration fixture mixed-holder-web rc 1
+PASS: integration fixture mixed-web-holder rc 1
+PASS: integration fixture foreign-pair rc 1
+PASS: integration fixture holder-body rc 1
+PASS: integration fixture holder-trailer rc 1
+PASS: integration fixture holder-empty rc 1
+PASS: integration fixture holder-blank-padding rc 0
+PASS: integration fixture holder-merge-subject rc 0
+PASS: integration fixture web-body rc 1
+PASS: integration fixture web-trailer rc 1
+PASS: integration fixture web-empty rc 1
+PASS: integration fixture web-blank-padding rc 0
+PASS: integration fixture web-merge-subject rc 0
+PASS: integration fixture exact-exception rc 0
+PASS: integration fixture near-exception rc 1
+PASS: integration fixture exception-metadata-scan rc 1
+PASS: integration fixture exception-historical-scan rc 1
+PASS: integration fixture historical-deleted-blob rc 1
+PASS: integration fixture tracked-tree-content rc 1
+PASS: integration fixture untracked-tree-content rc 1
+Merge result is a metadata-fixture check: no parent-count query exists; no merge or commit was created.
+EXACT HEAD: privacy: exact owner squash metadata exception; content scanning remains enabled
+privacy: 4 commits, 118 historical blobs, 74 current files; pass
+BASE IMPLEMENTATION ON EXACT-HEAD HISTORY/TREE: privacy: exact owner squash metadata exception; content scanning remains enabled
+18d737832c376f32660eb21fe2796e0b611507e3: unexpected identity
+PASS: all independent review probes

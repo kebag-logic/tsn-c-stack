@@ -1,0 +1,3 @@
+PASS: privacy selftest dispatched exactly once with --selftest; separate content scan dispatched; injected selftest rc 0 produces validator rc 0 and 25 gate rows
+PASS: privacy selftest dispatched exactly once with --selftest; separate content scan dispatched; injected selftest rc 1 produces validator rc 1 and 14 gate rows
+These are orchestration fixtures, not validation-bank receipts.
