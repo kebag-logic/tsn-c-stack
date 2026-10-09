@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Host-only violating ports: debug assertions and release refusal on the same calls.
 
 #include <gtest/gtest.h>
 
@@ -17,15 +16,12 @@ void __gcov_dump(void);
 #endif
 }
 
-
-
 namespace {
 enum class Port { Send, Start, Stop, Gptp, Link, Seed };
 enum class Entry { Init, Enable, Configuration, Rx, Timer, Link, Gm, Poll, Build, Count };
 
 #ifndef ADP_TEST_RELEASE
-// Preserve the assertion's real stderr diagnostic and terminate the child.
-// gcov normally loses an aborting child's counters; flush them for coverage.
+
 void assertion_exit(int) {
 #ifdef ADP_TEST_COVERAGE
     __gcov_dump();
@@ -57,7 +53,7 @@ struct Rig {
         if (!inject || port != selected) {
             return;
         }
-        inject = false;  // a missing guard must not recurse indefinitely
+        inject = false;
         ++callbacks;
         adp* target = cross_instance ? &other : &a;
         std::array<unsigned char, sizeof(adp)> before{};
@@ -109,8 +105,7 @@ struct Rig {
     static std::uint32_t seed(void* ctx) {
         auto& r = *static_cast<Rig*>(ctx);
         r.callback(Port::Seed);
-        // Force the next xorshift state to 1: its upper sixteen bits are 4,
-        // which draws exactly zero milliseconds for the startup timer.
+
         return r.a.rng ^ 1u;
     }
     void expire() {
@@ -133,8 +128,6 @@ struct Rig {
     }
 };
 
-// Both original inline-expiry probes also prove the corresponding valid,
-// deferred expiry still advances the machine after the violating call.
 // REQ: PORT-01
 TEST(AdpReentry, AdvertiseInlineExpiry) {
     Rig r;
@@ -211,7 +204,7 @@ TEST_P(AdpPortEntry, RefusesBeforeTouchingState) {
     EXPECT_EXIT({ std::signal(SIGABRT, assertion_exit); r.trigger(); },
                 ::testing::ExitedWithCode(86), "!port_active") << "each port callback asserts";
 #endif
-    // All entry points must work again once the outer port returns.
+
     r.inject = false;
     const auto after = adp_reentry_count();
     adp_init(&r.a, &r.entity, &r.ports, 0, 0);
@@ -228,4 +221,4 @@ INSTANTIATE_TEST_SUITE_P(AllPorts, AdpPortEntry,
                        ::testing::Values(Entry::Init, Entry::Enable, Entry::Configuration, Entry::Rx,
                                          Entry::Timer, Entry::Link, Entry::Gm, Entry::Poll, Entry::Build, Entry::Count),
                        ::testing::Bool()));
-}  // namespace
+}

@@ -1,14 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Kebag Logic
 // SPDX-License-Identifier: MIT
-//
-// acmp_fake.hpp - the ACMP core's ports as a test's fakes, the frames a test
-// sends it and the fields it reads back (#665 lane F3).
-//
-// Every port call is logged in order (Call), so a test can say what came
-// before what: a response before its notification (#653), a persist before
-// nothing in particular, a timer arm after the frame it times. A test can
-// also make one port call back into the core (Fake::hook), which is what the
-// no-callback rule (#678) forbids and the core's guard must refuse.
 
 #ifndef ACMP_FAKE_HPP
 #define ACMP_FAKE_HPP
@@ -23,25 +14,22 @@
 #include "acmp.h"
 #include "wire.h"
 
-// The standards' numbers, spelled here and never read from acmp.h, so a
-// wrong constant in the firmware fails a test instead of moving its
-// expectation with it.
 namespace spec {
 constexpr std::uint16_t ETHERTYPE = 0x22F0u;                 // IEEE 1722-2016 Table 5
-constexpr std::uint8_t SUBTYPE = 0xFCu;                      // IEEE 1722-2016 Table 6: ACMP
-constexpr std::uint8_t ADPDU_SUBTYPE = 0xFAu;                  // and ADP
+constexpr std::uint8_t SUBTYPE = 0xFCu;                      // IEEE 1722-2016 Table 6
+constexpr std::uint8_t ADPDU_SUBTYPE = 0xFAu;
 constexpr std::uint64_t MULTICAST_MAC = 0x91E0F0010000ull;   // IEEE 1722.1-2021 Table B.1
-constexpr unsigned HEADER_BYTES = 14u;                       // untagged Ethernet header
-constexpr unsigned FRAME_BYTES = 70u;                        // + Milan v1.2 5.5.2.2's 56-byte ACMPDU
-constexpr unsigned CONTROL_DATA_LENGTH = 44u;                // that PDU less its 12-byte header
-constexpr unsigned ADPDU_FRAME_BYTES = 82u;                    // + IEEE 1722.1-2021 Figure 6-1's 68 bytes
-constexpr unsigned BINDING_BYTES = 20u;                      // the processor's BINDING payload
+constexpr unsigned HEADER_BYTES = 14u;
+constexpr unsigned FRAME_BYTES = 70u;                        // Milan v1.2 5.5.2.2
+constexpr unsigned CONTROL_DATA_LENGTH = 44u;
+constexpr unsigned ADPDU_FRAME_BYTES = 82u;                    // IEEE 1722.1-2021 Figure 6-1
+constexpr unsigned BINDING_BYTES = 20u;
 constexpr std::uint32_t TMR_NO_RESP_MS = 200u;               // Milan v1.2 Table 5.26
 constexpr std::uint32_t TMR_RETRY_MS = 4000u;                // Milan v1.2 Table 5.29
 constexpr std::uint32_t TMR_DELAY_MAX_MS = 1000u;
 constexpr std::uint32_t TMR_NO_TK_MS = 10000u;
 constexpr std::uint32_t VALID_TIME_UNIT_MS = 2000u;          // IEEE 1722.1-2021 6.2.2.5
-// IEEE 1722.1-2021 Table 8-2, Milan v1.2 5.5.2.2's names
+// IEEE 1722.1-2021 Table 8-2; Milan v1.2 5.5.2.2
 constexpr std::uint8_t MSG_PROBE_TX_COMMAND = 0u;
 constexpr std::uint8_t MSG_PROBE_TX_RESPONSE = 1u;
 constexpr std::uint8_t MSG_DISCONNECT_TX_COMMAND = 2u;
@@ -65,7 +53,7 @@ constexpr std::uint8_t STATUS_LISTENER_TALKER_TIMEOUT = 7u;
 constexpr std::uint8_t STATUS_CONTROLLER_NOT_AUTHORIZED = 16u;
 constexpr std::uint8_t STATUS_INCOMPATIBLE_REQUEST = 17u;
 constexpr std::uint8_t STATUS_NOT_SUPPORTED = 31u;
-// IEEE 1722.1-2021 Table 8-4 (bit 15 the least significant), Milan v1.2 Table 5.23
+// IEEE 1722.1-2021 Table 8-4; Milan v1.2 Table 5.23
 constexpr std::uint16_t FLAG_FAST_CONNECT = 0x0002u;
 constexpr std::uint16_t FLAG_STREAMING_WAIT = 0x0008u;
 constexpr std::uint16_t FLAG_REGISTERING_FAILED = 0x0040u;
@@ -73,42 +61,40 @@ constexpr std::uint16_t FLAG_REGISTERING_FAILED = 0x0040u;
 constexpr std::uint8_t ADPDU_ENTITY_AVAILABLE = 0u;
 constexpr std::uint8_t ADPDU_ENTITY_DEPARTING = 1u;
 constexpr std::uint8_t ADPDU_ENTITY_DISCOVER = 2u;
-}  // namespace spec
+}
 
 namespace acmp_test {
 
-constexpr std::uint64_t kOwn = 0x0A0B0C0D0E0F1011ull;          // this entity
+constexpr std::uint64_t kOwn = 0x0A0B0C0D0E0F1011ull;
 constexpr std::uint64_t kMac0 = 0x001B92000A01ull;
 constexpr std::uint64_t kMac1 = 0x001B92000A02ull;
-constexpr std::uint64_t kCtl1 = 0x0011223344556677ull;         // controllers
+constexpr std::uint64_t kCtl1 = 0x0011223344556677ull;
 constexpr std::uint64_t kCtl2 = 0x0099AABBCCDDEEFFull;
-constexpr std::uint64_t kTkA = 0x00221100AABBCCDDull;          // talkers
+constexpr std::uint64_t kTkA = 0x00221100AABBCCDDull;
 constexpr std::uint64_t kTkB = 0x00221100AABBCC55ull;
 constexpr std::uint64_t kGm0 = 0xA1A2A3A4A5A6A7A8ull;
 constexpr std::uint64_t kSid = 0x5544332211002233ull;
 constexpr std::uint64_t kDa = 0x91E0F0004455ull;
 
-// One port call.
 struct Call {
     enum Kind { SEND, TIMER, GPTP, NOW, SEED, LOCKED, SOURCE, SRP, PERSIST, CHANGED, ADMIT } kind;
-    unsigned index;             // the interface, sink or source (ADMIT: the sink)
-    bool flag;                  // TIMER: armed; SRP: a stream (not NULL); SEND: taken; ADMIT: bound
-    std::uint32_t value;        // TIMER: the deadline; ADMIT: the interface
-    acmp_stream stream;         // SRP
-    std::uint64_t talker = 0;   // ADMIT
+    unsigned index;
+    bool flag;
+    std::uint32_t value;
+    acmp_stream stream;
+    std::uint64_t talker = 0;
 };
 
 struct Sent {
     unsigned interface;
     std::array<std::uint8_t, spec::FRAME_BYTES> bytes;
-    std::uint32_t at = 0;       // the clock once the port has taken it
+    std::uint32_t at = 0;
 };
 
 struct Fake {
     bool room = true;
     std::uint32_t now = 50000;
-    // the clock moves this much inside each send the port takes, as a send
-    // that stalls on the bus moves it (R531-2-F1)
+
     std::uint32_t send_ms = 0;
     std::uint64_t gm[ACMP_MAX_INTERFACES] = {kGm0, kGm0, kGm0, kGm0};
     std::uint8_t domain[ACMP_MAX_INTERFACES] = {};
@@ -120,8 +106,7 @@ struct Fake {
     std::vector<Call> calls;
     bool armed[ACMP_MAX_INTERFACES] = {};
     std::uint32_t at[ACMP_MAX_INTERFACES] = {};
-    // one call back into the core, made from inside the port named by
-    // hook_kind, then cleared
+
     Call::Kind hook_kind = Call::SEND;
     std::function<void()> hook;
 
@@ -139,7 +124,7 @@ struct Fake {
         }
         return n;
     }
-    // The position in the log of the n-th call of a kind (from 0), or -1.
+
     int position(Call::Kind kind, unsigned n = 0) const {
         for (std::size_t i = 0; i < calls.size(); ++i) {
             if (calls[i].kind == kind && n-- == 0u) {
@@ -231,8 +216,6 @@ inline void f_admit(void*, unsigned interface, unsigned sink, bool bound, std::u
 inline const acmp_ports kPorts = {nullptr, f_send, f_now, f_timer, f_gptp, f_seed, f_admit};
 inline const acmp_env kEnv = {nullptr, f_locked, f_source, f_srp, f_persist, f_changed};
 
-// ---- frames -------------------------------------------------------------------------
-
 struct Pdu {
     std::uint8_t msg = 0;
     std::uint8_t status = 0;
@@ -249,7 +232,7 @@ struct Pdu {
     std::uint16_t vlan = 0;
 };
 
-// An ACMP frame (IEEE 1722.1-2021 Figure 8-1) as a controller or a talker sends it.
+// IEEE 1722.1-2021 Figure 8-1
 inline std::array<std::uint8_t, spec::FRAME_BYTES> acmpdu(const Pdu& p, std::uint64_t src = 0x0202DEADBEEFull) {
     std::array<std::uint8_t, spec::FRAME_BYTES> f{};
     std::uint8_t* b = f.data();
@@ -273,7 +256,6 @@ inline std::array<std::uint8_t, spec::FRAME_BYTES> acmpdu(const Pdu& p, std::uin
     return f;
 }
 
-// A frame's ACMPDU, read back.
 inline Pdu read(const std::uint8_t* b) {
     Pdu p;
     p.msg = b[15] & 0x0Fu;
@@ -299,7 +281,7 @@ inline bool same(const Pdu& x, const Pdu& y) {
            x.flags == y.flags && x.vlan == y.vlan;
 }
 
-// An ADP frame (IEEE 1722.1-2021 Figure 6-1) from a talker.
+// IEEE 1722.1-2021 Figure 6-1
 struct Adp {
     std::uint8_t msg = spec::ADPDU_ENTITY_AVAILABLE;
     std::uint64_t entity = kTkA;
@@ -327,6 +309,6 @@ inline std::array<std::uint8_t, spec::ADPDU_FRAME_BYTES> adpdu(const Adp& a) {
     return f;
 }
 
-}  // namespace acmp_test
+}
 
-#endif  // ACMP_FAKE_HPP
+#endif

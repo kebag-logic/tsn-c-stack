@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include "maap.h"
 
-
 // REQ: PORT-01
 TEST(MaapDebug, SynchronousExpiryAsserts) {
     maap core{};
@@ -18,7 +17,7 @@ TEST(MaapDebug, SynchronousExpiryAsserts) {
     ports.send = [](void*, unsigned, const std::uint8_t*, std::size_t) { return true; };
     ASSERT_TRUE(maap_init(&core, &ports, 0, 0x020000000001ULL, 8));
     EXPECT_EXIT({
-        // The expected child abort must not invoke the tally's crash reporter.
+
         std::signal(SIGABRT, SIG_DFL);
         (void)maap_begin(&core, MAAP_POOL_BASE);
         std::_Exit(0);

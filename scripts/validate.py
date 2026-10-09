@@ -46,14 +46,22 @@ def main():
     tasks = [lambda: build('gcc', 'gcc', 'g++', ['-DTSN_COVERAGE=ON']),
              lambda: build('clang-sanitizers', 'clang', 'clang++', ['-DTSN_SANITIZERS=ON']),
              lambda: [command('mutation', [python, 'scripts/mutation.py', '--work', str(work / 'mutations'), '--jobs', str(args.jobs)])],
-             lambda: [command('static-analysis', [python, 'scripts/static_analysis.py'])]]
+             lambda: [command('static-analysis', [python, 'scripts/static_analysis.py'])],
+             lambda: [command('mutation-controls', [python, 'scripts/mutation_selftest.py', '--work', str(work / 'mutation-controls'), '--jobs', str(args.jobs)])]]
     results = []
     # Fail fast on source/metadata gates before compiling independent configurations.
     for name, script, switches in (
-        ('boundary', 'check_boundary.py', ['--selftest']),
+        ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
+        ('needles', 'needle_audit.py', ['--selftest']),
+        ('assertion-templates', 'assertion_templates.py', ['--check', '--selftest', '--work', str(work / 'assertion-templates')]),
+        ('dependencies', 'dependency_selftest.py', ['--work', str(work / 'dependency-controls'), '--jobs', str(args.jobs)]),
+        ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
+        ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
+        ('port-contracts', 'check_port_contracts.py', ['--selftest']),
+        ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
         ('license', 'check_license.py', ['--selftest']),
-        ('traceability', 'traceability.py', ['--selftest']),
-        ('test-inventory', 'test_inventory.py', []),
+        ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+        ('test-inventory', 'test_inventory.py', ['--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
         ('coverage-controls', 'coverage_selftest.py', []),
         ('privacy', 'check_privacy.py', [])):
         results.append(command(name, [python, 'scripts/' + script, *switches]))

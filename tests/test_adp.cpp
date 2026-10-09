@@ -1,7 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Kebag Logic
 // SPDX-License-Identifier: MIT
-//
-// ADP core cases over fake ports.
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -14,7 +12,6 @@
 
 #include "adp.h"
 #include "wire.h"
-
 
 namespace {
 
@@ -35,8 +32,8 @@ struct fake {
     bool link;
     unsigned sends;
     uint8_t last[ADP_FRAME_BYTES];
-    uint8_t msg[16];     // message_type of each frame taken, in order
-    uint32_t index[16];  // and its available_index
+    uint8_t msg[16];
+    uint32_t index[16];
     unsigned starts;
     uint32_t last_delay;
     unsigned stops;
@@ -219,10 +216,10 @@ void core_deferred(void) {
     EXPECT_EQ(fk.sends, sends) << "A8 SHUTDOWN in DOWN sends nothing (Table 5.51)";
 }
 
-// IEEE 1722.1-2021 6.2.2.15 with Figures 6-2 and 6-3 and 6.2.5.2.2 (the
-// ruling on PR #668, comment 5994972330): ENTITY_DEPARTING carries the
-// CURRENT available_index, and the first ENTITY_AVAILABLE after a restart
-// carries 0. Every value below is read off the frame the port was given.
+// IEEE 1722.1-2021 6.2.2.15
+// IEEE 1722.1-2021 Figure 6-2 and 6-3
+// IEEE 1722.1-2021 6.2.5.2.2
+
 uint32_t wire_index(void) {
     return wire_be32(fk.last + 50);
 }
@@ -278,13 +275,10 @@ void core_departing_index(void) {
         << "A14 SHUTDOWN after the wrap: ENTITY_DEPARTING carries the current index, 1";
 }
 
-// The frame the fake took k-th is `msg` carrying `index`.
 bool took(unsigned k, uint8_t msg, uint32_t index) {
     return k < fk.sends && k < 16u && fk.msg[k] == msg && fk.index[k] == index;
 }
 
-// One ENTITY_AVAILABLE sent (index 0, so 1 is current), then SHUTDOWN behind
-// a full transmit path: ENTITY_DEPARTING owed with index 1. Then a restart.
 void advertise_then_depart_owed(struct adp* a) {
     fresh(a, true);
     adp_set_enable(a, true);
@@ -294,8 +288,6 @@ void advertise_then_depart_owed(struct adp* a) {
     adp_set_enable(a, true);
 }
 
-// R497-2-F1: an owed ENTITY_DEPARTING is never lost to a restart. It keeps
-// its SHUTDOWN index and leaves before the restart's ENTITY_AVAILABLE.
 void core_owed_departing(void) {
     struct adp a;
     advertise_then_depart_owed(&a);
@@ -327,7 +319,6 @@ void core_owed_departing(void) {
         << "A15 the schedule runs on: the next ENTITY_AVAILABLE carries 1";
 }
 
-// A second SHUTDOWN while the first DEPARTING is owed queues its own.
 void core_owed_second_shutdown(void) {
     struct adp a;
     advertise_then_depart_owed(&a);
@@ -348,7 +339,6 @@ void core_owed_second_shutdown(void) {
         << "A16 its ENTITY_AVAILABLE, with index 0, leaves at its TMR_DELAY expiry; WAITING";
 }
 
-// Room returns, and the restart's TMR_DELAY expires before any poll.
 void core_owed_room_first(void) {
     struct adp a;
     advertise_then_depart_owed(&a);
@@ -363,8 +353,6 @@ void core_owed_room_first(void) {
         << "A17 the polls then send DEPARTING with index 1 and AVAILABLE with index 0, in that order";
 }
 
-// R496-3-F2: the legs of the owed-frame rule (adp.h) A15 to A17 leave open.
-// A link loss while the restart runs, before and after its TMR_DELAY expiry.
 void core_owed_link_loss(void) {
     struct adp a;
     advertise_then_depart_owed(&a);
@@ -391,8 +379,8 @@ void core_owed_link_loss(void) {
         << "A18 then the new run's ENTITY_AVAILABLE, index 0, at its TMR_DELAY expiry; WAITING";
 }
 
-// Inputs that leave an owed ENTITY_AVAILABLE owed: Milan v1.2 Table 5.51
-// ignores GM_CHANGE and RCV_ADP_DISCOVER in DELAY, and a stray is no input.
+// Milan v1.2 Table 5.51
+
 void core_owed_inputs_ignored(void) {
     struct adp a;
     uint8_t f[ADP_FRAME_BYTES];
@@ -418,7 +406,6 @@ void core_owed_inputs_ignored(void) {
         << "A19 the next poll with room sends it, index 0, then WAITING with TMR_ADVERTISE 5 s";
 }
 
-// A link loss itself drops an owed ENTITY_AVAILABLE, with no poll between.
 void core_owed_link_loss_drops(void) {
     struct adp a;
     fresh(&a, true);
@@ -439,8 +426,6 @@ void core_owed_link_loss_drops(void) {
         << "A20 whose expiry sends the ENTITY_AVAILABLE, index 0; WAITING";
 }
 
-// R497-3-F1: at most ADP_DEPARTING_OWED_MAX DEPARTINGs are owed; a SHUTDOWN
-// beyond them is coalesced into the queued one and counted (adp.h).
 void core_departing_capacity(void) {
     struct adp a;
     advertise_then_depart_owed(&a);
@@ -494,9 +479,6 @@ void core_draws(void) {
     EXPECT_TRUE(max_start > 1800u && max_delay > 3600u) << "A9 and both reach near their maxima";
 }
 
-// The random-delay generator never sticks at zero: an entity whose id words
-// cancel the seed constant, and a start seed equal to the state, each leave
-// it at 1 (xorshift32 maps 0 to 0 for ever) (#665 FT, coverage).
 uint32_t seed_value;
 
 uint32_t chosen_seed(void* ctx) {
@@ -517,8 +499,6 @@ void core_rng_never_zero(void) {
         << "A22 a start seed equal to the state leaves it at 1 and the startup draw is made";
 }
 
-// A repeated enable or disable changes nothing: no draw, no timer, no frame
-// (#665 FT, coverage).
 void core_enable_idempotent(void) {
     struct adp a;
     fresh(&a, true);
@@ -533,8 +513,8 @@ void core_enable_idempotent(void) {
         << "A23 an enable while enabled draws and arms nothing";
 }
 
-// 5.6.3.1 discards an ADPDU of another EtherType or another subtype, counted
-// (#665 FT, coverage).
+// Milan v1.2 5.6.3.1
+
 void core_discard_kinds(void) {
     struct adp a;
     uint8_t f[ADP_FRAME_BYTES];
@@ -606,7 +586,6 @@ TEST(AdpCore, A23RepeatedEnableOrDisableChangesNothing) { core_enable_idempotent
 // REQ: ADP-01, ADP-02
 TEST(AdpCore, A24OtherEtherTypeOrSubtypeDiscarded) { core_discard_kinds(); }
 
-
 // REQ: ADP-02, PORT-01
 TEST(AdpCore, LinkLevelsAndDisabledInputs) {
     adp a;
@@ -677,9 +656,39 @@ TEST(AdpCore, MockedPortOrder) {
     adp_set_enable(&a, true);
     EXPECT_CALL(mock, Gptp(_, _)).WillOnce(DoAll(SetArgPointee<0>(1u), SetArgPointee<1>(0u)));
     EXPECT_CALL(mock, Send(_, 82u)).WillOnce(Return(true));
-    EXPECT_CALL(mock, Start(5000u));
+    EXPECT_CALL(mock, Start(_)).WillOnce([](uint32_t ms) {
+        EXPECT_EQ(ms, 5000u) << "A1 TMR_DELAY starts the advertisement period";
+    });
     adp_timer_expired(&a);
     EXPECT_EQ(a.state, ADP_STATE_WAITING);
 }
 
-} // namespace
+class AdpInputControl : public ::testing::TestWithParam<unsigned> {};
+
+// REQ: ADP-01, ADP-02
+TEST_P(AdpInputControl, InheritedDiscoveryAcceptance) {
+    adp a;
+    fresh(&a, true);
+    adp_set_enable(&a, true);
+    adp_timer_expired(&a);
+    ASSERT_EQ(a.state, ADP_STATE_WAITING);
+    uint8_t frame[ADP_FRAME_BYTES];
+    adp_build(&a, ADP_MSG_ENTITY_DISCOVER, 0, frame);
+    size_t length = sizeof frame;
+    const unsigned control = GetParam();
+    if (control == 1) frame[15] |= 0x10;
+    if (control == 2) length = 26;
+    if (control == 3) frame[17] = 0;
+    const unsigned starts = fk.starts;
+    const unsigned stops = fk.stops;
+    adp_rx(&a, frame, length);
+    EXPECT_EQ(a.state, ADP_STATE_DELAY) << "inherited discovery enters DELAY";
+    EXPECT_EQ(a.discarded, 0u) << "inherited discovery input is not discarded";
+    EXPECT_EQ(fk.starts, starts + 1u) << "inherited discovery restarts delay timer";
+    EXPECT_EQ(fk.stops, stops + 1u) << "inherited discovery stops advertisement timer";
+    EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "inherited discovery selects delay timer";
+}
+
+INSTANTIATE_TEST_SUITE_P(AllInputs, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u));
+
+}

@@ -14,7 +14,7 @@ No SRP checkout is needed to build or test these cores.
 ## Build and test
 
 Install a C11 compiler, a C++20 compiler, [CMake](https://cmake.org/),
-[GoogleTest and GMock](https://github.com/google/googletest), and Python 3.10 or later.
+[GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571), and Python 3.10 or later.
 On Ubuntu, the test packages are `libgtest-dev` and `libgmock-dev`.
 
 ```sh
@@ -27,6 +27,24 @@ The library-only build uses `-DTSN_TESTS=OFF` and target `tsn`.
 Use `-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++` for Clang.
 Both compilers use `-Wall -Wextra -Werror` and ISO C11.
 The tests use C++20. The library exposes C headers in [include](include/).
+
+Linux and bare-metal RV32 are required targets for every change.
+Linux runs the full GoogleTest suite with GCC and Clang, sanitizers and coverage.
+The [RV32 gate](scripts/baremetal.py) builds and links all cores against a
+[minimal port](examples/rv32/) in Debug and Release. It executes protocol smoke
+checks on [QEMU](https://www.qemu.org/).
+
+On Ubuntu, install `gcc-riscv64-unknown-elf`, `binutils-riscv64-unknown-elf`,
+`qemu-system-misc` and CMake. Then run:
+
+```sh
+python3 scripts/baremetal.py --work build-rv32 --jobs 16
+```
+
+The cross build uses `-march=rv32i -mabi=ilp32 -ffreestanding`.
+It has no OS headers, heap or unresolved final symbols.
+The [workflow](.github/workflows/quality.yml) requires both target jobs on every PR.
+See [port obligations](docs/PORTING.md#target-builds) and [validation limits](docs/VERIFICATION.md#bare-metal-rv32).
 
 ## Choose a task
 

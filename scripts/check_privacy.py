@@ -12,6 +12,7 @@ WORDS = ["co" + "dex", "chat" + "gpt", "clau" + "de", "anth" + "ropic", "open" +
 PATTERNS = [re.compile(r"(?i)\b" + re.escape(word)) for word in WORDS]
 PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users", "data", "tmp")]
 PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
+OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
 IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
 
 
@@ -30,11 +31,13 @@ def main():
     for commit in commits:
         data = git("show", "-s", "--format=%an <%ae>%n%cn <%ce>%n%B", commit)
         lines = data.decode().splitlines()
-        if lines[:2] != [IDENTITY, IDENTITY]:
+        if commit != OWNER_SQUASH and lines[:2] != [IDENTITY, IDENTITY]:
             errors.append(commit + ": unexpected identity")
-        if len([line for line in lines[2:] if line.strip()]) != 1:
+        if commit != OWNER_SQUASH and len([line for line in lines[2:] if line.strip()]) != 1:
             errors.append(commit + ": commit message must be one line")
         errors += scan(commit, data)
+    if OWNER_SQUASH in commits:
+        print("privacy: exact owner squash metadata exception; content scanning remains enabled")
     objects = git("rev-list", "--objects", "HEAD").decode().splitlines()
     unique = {line.split(" ", 1)[0] for line in objects}
     blobs = 0

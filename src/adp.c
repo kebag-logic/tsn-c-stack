@@ -1,16 +1,16 @@
 // SPDX-FileCopyrightText: 2026 Kebag Logic
 // SPDX-License-Identifier: MIT
-//
-// adp.c - the ADP advertise slice (see adp.h for the clauses it serves).
-//
-// The interface's one timer holds TMR_DELAY in DELAY and TMR_ADVERTISE in
-// WAITING, as the processor's engine shares one timer slot. An expiry with no
-// timer running is a stray (Milan v1.2 Table 5.51's "x" cells): counted,
-// never acted on. The adapter filters an expiry that raced a stop or a
-// restart before it reaches here (adp_mbx.c, by the arm's tag).
-//
-// The random delay draw costs the same every time: one xorshift step and one
-// multiply, no rejection loop, uniform to one part in 65536.
+// Milan v1.2 Table 5.51
+
+
+
+
+
+
+
+
+
+
 
 #include "adp.h"
 
@@ -19,8 +19,8 @@
 
 #include "wire.h"
 
-// One event loop owns every instance. Shared state also protects init's
-// uninitialized destination and build's const instance without casting.
+
+
 static bool port_active;
 static uint32_t reentry_count;
 
@@ -77,7 +77,7 @@ static void timer_stop(struct adp *a)
 	port_active = false;
 }
 
-// Start TMR_DELAY and go to DELAY.
+
 static void enter_delay(struct adp *a, enum adp_draw kind)
 {
 	timer_start(a, ADP_TIMER_DELAY, draw_ms(a, kind));
@@ -93,7 +93,7 @@ void adp_build(const struct adp *a, uint8_t message_type, uint32_t available_ind
 	uint64_t gm = 0;
 	uint8_t domain = 0;
 	port_active = true;
-	a->ports->gptp(a->ports->ctx, a->interface, &gm, &domain);    // sampled at build, as the fabric does
+	a->ports->gptp(a->ports->ctx, a->interface, &gm, &domain);
 	port_active = false;
 	uint8_t valid_time = message_type == ADP_MSG_ENTITY_AVAILABLE ? ADP_VALID_TIME : 0u;
 	uint8_t *pdu = frame + ADP_HEADER_BYTES;
@@ -102,28 +102,28 @@ void adp_build(const struct adp *a, uint8_t message_type, uint32_t available_ind
 	wire_put_be(frame, ADP_MULTICAST_MAC, 6);
 	wire_put_be(frame + 6, e->mac, 6);
 	wire_put_be(frame + 12, ADP_ETHERTYPE, 2);
-	pdu[0] = ADP_SUBTYPE;                                           // 6.2.2.1
-	pdu[1] = message_type & 0x0Fu;                                  // h 0, version 0 (6.2.2.2-4)
-	wire_put_be(pdu + 2, ((uint32_t)valid_time << 11) | ADP_CONTROL_DATA_LENGTH, 2);   // 6.2.2.5-6
-	wire_put_be(pdu + 4, e->entity_id, 8);                          // 6.2.2.7
-	wire_put_be(pdu + 12, e->entity_model_id, 8);                   // 6.2.2.8
-	wire_put_be(pdu + 20, e->entity_capabilities, 4);               // 6.2.2.9, Milan 5.6.2
-	wire_put_be(pdu + 24, e->talker_stream_sources, 2);             // 6.2.2.10, Milan 5.6.2
-	wire_put_be(pdu + 26, e->talker_capabilities, 2);               // 6.2.2.11
-	wire_put_be(pdu + 28, e->listener_stream_sinks, 2);             // 6.2.2.12, Milan 5.6.2
-	wire_put_be(pdu + 30, e->listener_capabilities, 2);             // 6.2.2.13
-	wire_put_be(pdu + 32, 0u, 4);                                   // 6.2.2.14: not a controller
-	wire_put_be(pdu + 36, available_index, 4);                      // 6.2.2.15
-	wire_put_be(pdu + 40, gm, 8);                                   // 6.2.2.16
-	pdu[48] = domain;                                               // 6.2.2.17
-	wire_put_be(pdu + 50, a->current_configuration_index, 2);      // 6.2.2.18
-	wire_put_be(pdu + 52, e->identify_control_index, 2);           // 6.2.2.19
-	wire_put_be(pdu + 54, a->interface, 2);                         // 6.2.2.20
-	// association_id (6.2.2.21) and the reserved word stay 0
+	pdu[0] = ADP_SUBTYPE;                                           // IEEE 1722.1-2021 6.2.2.1
+	pdu[1] = message_type & 0x0Fu;                                  // IEEE 1722.1-2021 6.2.2.2-4
+	wire_put_be(pdu + 2, ((uint32_t)valid_time << 11) | ADP_CONTROL_DATA_LENGTH, 2);   // IEEE 1722.1-2021 6.2.2.5-6
+	wire_put_be(pdu + 4, e->entity_id, 8);                          // IEEE 1722.1-2021 6.2.2.7
+	wire_put_be(pdu + 12, e->entity_model_id, 8);                   // IEEE 1722.1-2021 6.2.2.8
+	wire_put_be(pdu + 20, e->entity_capabilities, 4);               // IEEE 1722.1-2021 6.2.2.9; Milan v1.2 5.6.2
+	wire_put_be(pdu + 24, e->talker_stream_sources, 2);             // IEEE 1722.1-2021 6.2.2.10; Milan v1.2 5.6.2
+	wire_put_be(pdu + 26, e->talker_capabilities, 2);               // IEEE 1722.1-2021 6.2.2.11
+	wire_put_be(pdu + 28, e->listener_stream_sinks, 2);             // IEEE 1722.1-2021 6.2.2.12; Milan v1.2 5.6.2
+	wire_put_be(pdu + 30, e->listener_capabilities, 2);             // IEEE 1722.1-2021 6.2.2.13
+	wire_put_be(pdu + 32, 0u, 4);                                   // IEEE 1722.1-2021 6.2.2.14
+	wire_put_be(pdu + 36, available_index, 4);                      // IEEE 1722.1-2021 6.2.2.15
+	wire_put_be(pdu + 40, gm, 8);                                   // IEEE 1722.1-2021 6.2.2.16
+	pdu[48] = domain;                                               // IEEE 1722.1-2021 6.2.2.17
+	wire_put_be(pdu + 50, a->current_configuration_index, 2);      // IEEE 1722.1-2021 6.2.2.18
+	wire_put_be(pdu + 52, e->identify_control_index, 2);           // IEEE 1722.1-2021 6.2.2.19
+	wire_put_be(pdu + 54, a->interface, 2);                         // IEEE 1722.1-2021 6.2.2.20
+	// IEEE 1722.1-2021 6.2.2.21
 }
 
-// Send an ENTITY_AVAILABLE or ENTITY_DEPARTING now; true when the port took
-// it. The caller keeps a refused frame owed for adp_poll().
+
+
 static bool send(struct adp *a, uint8_t message_type, uint32_t available_index)
 {
 	uint8_t frame[ADP_FRAME_BYTES];
@@ -138,7 +138,7 @@ static bool send(struct adp *a, uint8_t message_type, uint32_t available_index)
 	return false;
 }
 
-// Send the oldest owed ENTITY_DEPARTING; the one behind it carries 0 (adp.h).
+
 static void depart(struct adp *a)
 {
 	if (!send(a, ADP_MSG_ENTITY_DEPARTING, a->departing_index)) {
@@ -148,10 +148,10 @@ static void depart(struct adp *a)
 	a->departing_index = 0;
 }
 
-// 5.6.3.5.9: ENTITY_AVAILABLE, then TMR_ADVERTISE, then WAITING. Until the
-// frame leaves it is owed and the machine stays in DELAY with no timer
-// running: behind an owed ENTITY_DEPARTING, which it may not pass, or while
-// the port has no room.
+// Milan v1.2 5.6.3.5.9
+
+
+
 static void advertise(struct adp *a)
 {
 	a->available_owed = true;
@@ -159,7 +159,7 @@ static void advertise(struct adp *a)
 		return;
 	}
 	a->available_owed = false;
-	a->available_index++;                                           // 6.2.2.15: after transmitting
+	a->available_index++;                                           // IEEE 1722.1-2021 6.2.2.15
 	timer_start(a, ADP_TIMER_ADVERTISE, ADP_ADVERTISE_MS);
 	a->state = ADP_STATE_WAITING;
 }
@@ -190,27 +190,27 @@ void adp_set_current_configuration(struct adp *a, uint16_t index)
 	a->current_configuration_index = index;
 }
 
-// SHUTDOWN: 5.6.3.5.8 in WAITING and 5.6.3.5.11 in DELAY; ignored in DOWN.
+// Milan v1.2 5.6.3.5.8; Milan v1.2 5.6.3.5.11
 static void shutdown(struct adp *a)
 {
 	if (a->state == ADP_STATE_DOWN) {
 		return;
 	}
 	timer_stop(a);
-	// ENTITY_DEPARTING carries the current index (Figure 6-3, 6.2.5.2.2); the
-	// reset (6.2.2.15) shows on the next start's first ENTITY_AVAILABLE.
+	// IEEE 1722.1-2021 Figure 6-3
+	// IEEE 1722.1-2021 6.2.5.2.2; IEEE 1722.1-2021 6.2.2.15
 	uint32_t index = a->available_index;
 	a->available_index = 0;
-	a->available_owed = false;                                      // its run is over
+	a->available_owed = false;
 	a->state = ADP_STATE_DOWN;
 	if (a->departing_owed == 0u) {
 		a->departing_index = index;
 		a->departing_owed = 1u;
-		depart(a);                                              // owed if no room
+		depart(a);
 	} else if (a->departing_owed < ADP_DEPARTING_OWED_MAX) {
-		a->departing_owed++;                                    // queued behind the oldest, carrying 0
+		a->departing_owed++;
 	} else {
-		a->departing_coalesced++;                               // the queued one stands for it (adp.h)
+		a->departing_coalesced++;
 	}
 }
 
@@ -238,9 +238,9 @@ void adp_set_enable(struct adp *a, bool enable)
 	a->link_up = a->ports->link_up(a->ports->ctx, a->interface);
 	port_active = false;
 	if (a->link_up) {
-		enter_delay(a, ADP_DRAW_STARTUP);                       // 5.6.3.5.2
+		enter_delay(a, ADP_DRAW_STARTUP);                       // Milan v1.2 5.6.3.5.2
 	} else {
-		a->state = ADP_STATE_DOWN;                              // 5.6.3.5.1
+		a->state = ADP_STATE_DOWN;                              // Milan v1.2 5.6.3.5.1
 	}
 }
 
@@ -256,13 +256,13 @@ void adp_link_change(struct adp *a, bool up)
 	}
 	if (up) {
 		if (a->state == ADP_STATE_DOWN) {
-			enter_delay(a, ADP_DRAW_DELAY);                 // 5.6.3.5.3
+			enter_delay(a, ADP_DRAW_DELAY);                 // Milan v1.2 5.6.3.5.3
 		}
 		return;
 	}
 	if (a->state != ADP_STATE_DOWN) {
-		timer_stop(a);                                          // 5.6.3.5.6 / 5.6.3.5.10, no DEPARTING
-		a->available_owed = false;                              // an owed DEPARTING stays owed
+		timer_stop(a);                                          // Milan v1.2 5.6.3.5.6 / 5.6.3.5.10
+		a->available_owed = false;
 		a->state = ADP_STATE_DOWN;
 	}
 }
@@ -274,7 +274,7 @@ void adp_gm_change(struct adp *a)
 	}
 	a->gm_changed++;
 	if (a->enabled && a->state == ADP_STATE_WAITING) {
-		enter_delay(a, ADP_DRAW_DELAY);                         // 5.6.3.5.7
+		enter_delay(a, ADP_DRAW_DELAY);                         // Milan v1.2 5.6.3.5.7
 	}
 }
 
@@ -290,9 +290,9 @@ void adp_timer_expired(struct adp *a)
 	}
 	a->timer = ADP_TIMER_NONE;
 	if (a->state == ADP_STATE_DELAY && kind == ADP_TIMER_DELAY) {
-		advertise(a);                                           // 5.6.3.5.9
+		advertise(a);                                           // Milan v1.2 5.6.3.5.9
 	} else if (a->state == ADP_STATE_WAITING && kind == ADP_TIMER_ADVERTISE) {
-		enter_delay(a, ADP_DRAW_DELAY);                         // 5.6.3.5.5
+		enter_delay(a, ADP_DRAW_DELAY);                         // Milan v1.2 5.6.3.5.5
 	} else {
 		a->stray_expiries++;
 	}
@@ -303,8 +303,8 @@ void adp_rx(struct adp *a, const uint8_t *frame, size_t len)
 	if (reject_reentry()) {
 		return;
 	}
-	// 5.6.3.1: an ENTITY_DISCOVER for entity_id 0 or this entity is
-	// RCV_ADP_DISCOVER; anything else is discarded.
+	// Milan v1.2 5.6.3.1
+
 	if (len < ADP_HEADER_BYTES + 12u || wire_be16(frame + 12) != ADP_ETHERTYPE ||
 	    frame[ADP_HEADER_BYTES] != ADP_SUBTYPE ||
 	    (frame[ADP_HEADER_BYTES + 1u] & 0x0Fu) != ADP_MSG_ENTITY_DISCOVER) {
@@ -316,15 +316,15 @@ void adp_rx(struct adp *a, const uint8_t *frame, size_t len)
 		a->discarded++;
 		return;
 	}
-	if (!a->enabled || a->state != ADP_STATE_WAITING) {             // Table 5.51: ignored
+	if (!a->enabled || a->state != ADP_STATE_WAITING) {             // Milan v1.2 Table 5.51
 		return;
 	}
-	timer_stop(a);                                                  // 5.6.3.5.4 step 1
-	enter_delay(a, ADP_DRAW_DELAY);                                 // steps 2 and 3
+	timer_stop(a);                                                  // Milan v1.2 5.6.3.5.4
+	enter_delay(a, ADP_DRAW_DELAY);
 }
 
-// At most one frame per call: the oldest owed ENTITY_DEPARTING, and only
-// when none is owed, the owed ENTITY_AVAILABLE.
+
+
 bool adp_poll(struct adp *a)
 {
 	if (reject_reentry()) {

@@ -7,16 +7,23 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
+import secrets
 from pathlib import Path
 import shutil
 import subprocess
 import threading
 import xml.etree.ElementTree as ET
+from test_registry import environment, registered
+from needle_audit import assertion_literals, validate_needles
+from assertion_messages import instrument
+from assertion_forms import package_flags, require_version
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
            "adp_debug": "test_adp_reentry.cpp", "adp_release": "test_adp_reentry.cpp", "maap_debug": "test_maap_debug.cpp"}
 HEADER_SLOTS = threading.Semaphore(3)
+MESSAGE_MARKERS = ('TSN_MESSAGE_BEGIN_' + secrets.token_hex(16),
+                   'TSN_MESSAGE_END_' + secrets.token_hex(16))
 
 
 def run(cmd, log, **kwargs):
@@ -37,14 +44,35 @@ def cppflags(arm):
 
 
 def execute(binary, xml, log, filters=None):
-    env = {k: v for k, v in os.environ.items() if not k.startswith("GTEST_")}
+    # A reused work directory must never supply evidence for this execution.
+    xml.unlink(missing_ok=True)
+    patterns = [k['test'] + ('*' if k['test'].endswith('/') else '') for k in (filters or [])]
+    expected = set(registered(binary, patterns))
+    for pattern in patterns:
+        if not any(name.startswith(pattern[:-1]) if pattern.endswith('*') else name == pattern
+                   for name in expected):
+            raise RuntimeError('unknown mutation test: ' + pattern)
+    env = environment()
     command = [str(binary), "--gtest_output=xml:" + str(xml)]
     if filters:
         command.append("--gtest_filter=" + ":".join(k["test"] + ("*" if k["test"].endswith("/") else "") for k in filters))
     rc = run(command, log, env=env)
-    if not xml.exists():
+    try:
+        doc = ET.parse(xml).getroot()
+        cases = list(doc.iter('testcase'))
+        names = [case.attrib['classname'] + '.' + case.attrib['name'] for case in cases]
+        complete = (doc.tag == 'testsuites' and len(cases) == int(doc.attrib['tests'])
+                    and len(names) == len(set(names)) and set(names) == expected
+                    and int(doc.attrib['errors']) == 0
+                    and int(doc.attrib['disabled']) == 0
+                    and int(doc.attrib['failures']) == sum(bool(c.findall('failure')) for c in cases)
+                    and all(c.get('status') == 'run' and c.get('result') == 'completed'
+                            and not c.findall('skipped') and not c.findall('error') for c in cases))
+        if not complete:
+            raise ValueError('incomplete report or registration mismatch')
+    except (OSError, ET.ParseError, KeyError, ValueError) as error:
+        log.append('Report refused: ' + str(error) + '\n')
         return rc, {}, 0
-    doc = ET.parse(xml).getroot()
     failures = {}
     for case in doc.iter("testcase"):
         messages = [e.get("message", "") for e in case.findall("failure")]
@@ -54,7 +82,18 @@ def execute(binary, xml, log, filters=None):
 
 
 def matches(kill, failures):
-    return any(name.startswith(kill["test"]) and kill["needle"] in message
+    def streamed(message):
+        begin, end = ('\n' + marker + '\n' for marker in MESSAGE_MARKERS)
+        portions = []
+        while begin in message:
+            _, _, message = message.partition(begin)
+            body, found, message = message.partition(end)
+            if not found:
+                return ''
+            portions.append(body)
+        return '\0'.join(portions)
+    return any((name.startswith(kill['test']) if kill['test'].endswith('/') else name == kill['test'])
+               and kill["needle"] in streamed(message)
                for name, message in failures.items())
 
 
@@ -67,13 +106,27 @@ def main():
     args = parser.parse_args()
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
+    (work / 'results.json').unlink(missing_ok=True)
+    require_version()
+    test_cflags = package_flags('--cflags')
+    test_ldflags = package_flags('--libs')
+    mutants = json.loads((ROOT / "tests/mutations.json").read_text())
+    messages = assertion_literals()
     baseline = work / "baseline"
     baseline.mkdir(exist_ok=True)
+    (work / 'message-markers.json').write_text(json.dumps(MESSAGE_MARKERS) + '\n')
+    test_sources = baseline / 'tests'
+    shutil.copytree(ROOT / 'tests', test_sources, dirs_exist_ok=True)
+    for path in test_sources.glob('*'):
+        if path.suffix in ('.cpp', '.hpp'):
+            path.write_text(instrument(path.read_text(), MESSAGE_MARKERS))
     cc = os.environ.get("CC", "gcc")
     cxx = os.environ.get("CXX", "g++")
     log = []
-    assert run([cxx, *cppflags(""), "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0
-    assert run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0
+    if not (run([cxx, *cppflags(""), *test_cflags, "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0):
+        raise RuntimeError('baseline test entry build failed: ' + ''.join(log))
+    if not (run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0):
+        raise RuntimeError('baseline example port build failed: ' + ''.join(log))
     def extra(arm):
         return [str(baseline / "port_extra.o")] if arm == "port" else []
     def prepare(arm):
@@ -81,8 +134,8 @@ def main():
         local = []
         commands = [
             [cc, *cflags(arm), "-I" + str(ROOT / "include"), "-c", str(ROOT / f"src/{module}.c"), "-o", str(baseline / (arm + ".c.o"))],
-            [cxx, *cppflags(arm), "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(ROOT / "tests" / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
-            [cxx, str(baseline / (arm + ".c.o")), str(baseline / (arm + ".cpp.o")), str(baseline / "main.o"), *extra(arm), "-lgmock", "-lgtest", "-pthread", "-o", str(baseline / arm)]]
+            [cxx, *cppflags(arm), *test_cflags, "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
+            [cxx, str(baseline / (arm + ".c.o")), str(baseline / (arm + ".cpp.o")), str(baseline / "main.o"), *extra(arm), *test_ldflags, "-o", str(baseline / arm)]]
         for cmd in commands:
             if run(cmd, local) != 0:
                 raise RuntimeError("baseline build failed: " + "".join(local))
@@ -92,7 +145,6 @@ def main():
             raise RuntimeError("baseline test failed: " + arm)
     with ThreadPoolExecutor(max_workers=min(args.jobs, 5)) as pool:
         list(pool.map(prepare, SOURCES))
-    mutants = json.loads((ROOT / "tests/mutations.json").read_text())
     names = [m["name"] for m in mutants]
     if len(set(names)) != len(names):
         raise RuntimeError("duplicate mutant name")
@@ -105,6 +157,9 @@ def main():
         local = []
         result = {"name": m["name"], "status": "ERROR"}
         try:
+            errors = validate_needles([m], messages)
+            if errors:
+                raise RuntimeError('\n'.join(errors))
             for name in ("src", "include"):
                 shutil.copytree(ROOT / name, directory / name, dirs_exist_ok=True)
             target = directory / m["path"]
@@ -127,11 +182,11 @@ def main():
                 if target.suffix == ".h":
                     test_obj = directory / (arm + ".test.o")
                     with HEADER_SLOTS:
-                        rc = run([cxx, *cppflags(arm), "-I" + str(directory / "include"), "-I" + str(ROOT / "tests"), "-I" + str(ROOT / "examples"), "-c", str(ROOT / "tests" / SOURCES[arm]), "-o", str(test_obj)], local)
+                        rc = run([cxx, *cppflags(arm), *test_cflags, "-I" + str(directory / "include"), "-I" + str(test_sources), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(test_obj)], local)
                     if rc != 0:
                         raise RuntimeError("mutated header test build failed")
                 binary = directory / arm
-                rc = run([cxx, str(obj), str(test_obj), str(baseline / "main.o"), *extra(arm), "-lgmock", "-lgtest", "-pthread", "-o", str(binary)], local)
+                rc = run([cxx, str(obj), str(test_obj), str(baseline / "main.o"), *extra(arm), *test_ldflags, "-o", str(binary)], local)
                 if rc != 0:
                     raise RuntimeError("mutant link failed")
                 rc, failures, count = execute(binary, directory / (arm + ".xml"), local, kills)
@@ -139,7 +194,7 @@ def main():
                 all_caught = all_caught and rc == 1 and count > 0 and all(matches(k, failures) for k in kills)
             result.update(rc=rc, failures=failures_all, tests=count)
             result["status"] = "CAUGHT" if all_caught else "ESCAPED"
-        except (RuntimeError, subprocess.TimeoutExpired) as error:
+        except (RuntimeError, subprocess.SubprocessError, OSError) as error:
             result["error"] = str(error)
         (directory / "run.log").write_text("".join(local))
         print(result["status"], m["name"], flush=True)
