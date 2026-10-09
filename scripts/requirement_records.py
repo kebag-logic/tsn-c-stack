@@ -201,7 +201,7 @@ def validate(requirements, catalog):
             if r['id'] not in source.get('requirements', []):
                 errors.append('imported requirement has no matching origin row: ' + r['id'])
         if r.get('targets') != TARGETS:
-            errors.append('imported requirement must address both targets: ' + r['id'])
+            errors.append('requirement must address both targets: ' + r['id'])
         if not isinstance(r.get('text'), str) or not r['text'].strip():
             errors.append('empty requirement: ' + r['id'])
         clauses = r.get('clauses', [])

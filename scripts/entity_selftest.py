@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import types
 import unittest
 
 import yaml
@@ -177,7 +178,7 @@ class EntityTests(unittest.TestCase):
     def test_mapping_refusals(self):
         cases = (
             (('schema_version',), '1.3.0', 'milan.schema_version: expected kebag-logic/milan-endstation-config 1.2.0'),
-            (('entity', 'typo'), 1, 'milan.entity: unknown field or invalid mapping'),
+            (('entity',), [], 'milan.entity: expected a mapping'),
             (('entity', 'entity_model_id'), '1', 'milan.entity.entity_model_id: resolved value contradicts literal or pin'),
             (('entity', 'model_id_pin'), '1', 'milan.entity.entity_model_id: resolved value contradicts literal or pin'),
             (('entity', 'entity_capabilities'), '1', 'milan.entity.entity_capabilities: contradicts resolved capabilities'),
@@ -326,6 +327,26 @@ class EntityTests(unittest.TestCase):
                 source.write_text(yaml.safe_dump(self.document).replace('identify_control_index: 0', 'identify_control_index: ' + text))
                 self.assertEqual(entity.validate(entity.load(source))['identify'], number)
 
+    def test_mapping_refuse_firmware_version(self):
+        doc = self.fixture['input']
+        doc['entity']['firmware_version'] = '1.22.0'
+        self.mapping_refuse(doc, 'milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev')
+
+    def test_mapping_refuse_unknown_entity_key(self):
+        doc = self.fixture['input']
+        doc['entity']['typo'] = 1
+        self.mapping_refuse(doc, 'milan.entity.typo: unknown field')
+
+    def run_killer(self, killer, implementation):
+        global project
+        saved, project = project, implementation
+        try:
+            result = unittest.TestResult()
+            EntityTests(killer).run(result)
+        finally:
+            project = saved
+        return result
+
 
 REFUSALS = {
     'version': (('schema_version',), '2.0.0', 'entity.schema_version: supported version is 1.0.0'),
@@ -404,15 +425,91 @@ for field, bits in (('entity_id', 64), ('entity_model_id', 64), ('model_id_pin',
                 f'expected at most {bits // 4} hexadecimal digits ({bits} bits), including leading zeros'))
 
 
+OMITTED = object()
+
+
+def mapping_firmware_rev(value):
+    def test(self):
+        doc = self.fixture['input']
+        if value is OMITTED:
+            self.assertNotIn('firmware_rev', doc['entity'])
+        else:
+            doc['entity']['firmware_rev'] = value
+        try:
+            mapped = self.mapped(doc)
+        except entity.Invalid as error:
+            self.fail('source-valid firmware_rev refused: ' + str(error))
+        self.assertEqual(mapped, entity.load(ROOT / 'configs/ax7101.yaml'))
+    return test
+
+
+for form, value in (('omitted', OMITTED), ('zero', 0), ('one', 1)):
+    setattr(EntityTests, 'test_mapping_firmware_rev_' + form, mapping_firmware_rev(value))
+for form, value in (('boolean', True), ('false', False), ('negative', -1), ('string', '1'), ('float', 1.0), ('null', None)):
+    setattr(EntityTests, 'test_mapping_refuse_firmware_rev_' + form,
+            mapping_hex_refusal('firmware_rev', value, 'expected a non-negative integer'))
+
+
+MAPPER_PLANTS = {
+    'base-zero': ('return int(digits, 16)', 'return int(digits, 0)', 'test_mapping_digit_only_entity_id'),
+    'unbounded-digits': ('if len(digits) > bits // 4:', 'if False:', 'test_mapping_refuse_entity_id_extra_zero'),
+    'unquoted-accepted': ('def hex_text(value, bits, path):\n', 'def hex_text(value, bits, path):\n    if isinstance(value, int):\n        return value\n',
+                          'test_mapping_refuse_entity_id_integer'),
+    'double-underscore': ('(?:_?[0-9A-Fa-f])*', '(?:_*[0-9A-Fa-f])*', 'test_mapping_refuse_entity_id_double_underscore'),
+    'vendor-default': ("source.get('vendor_name', 'Kebag Logic')", "source.get('vendor_name', 'Wrong vendor')", 'test_mapping_default_vendor_name'),
+    'group-default': ("source.get('group_name', '')", "source.get('group_name', 'Wrong group')", 'test_mapping_default_group_name'),
+    'entity-default': ("source.get('entity_id', 'mac-derived')", "source.get('entity_id', '1')", 'test_mapping_default_entity_id'),
+    'pin-agreement': ('if declared is not None and declared != model_id:', 'if False:', 'test_mapping_refusals'),
+    'firmware-rev-unknown': (", 'firmware_rev'}", '}', 'test_mapping_firmware_rev_zero'),
+    'firmware-rev-boolean': ('type(revision) is not int', 'not isinstance(revision, int)', 'test_mapping_refuse_firmware_rev_boolean'),
+    'firmware-rev-negative': (' or revision < 0:', ':', 'test_mapping_refuse_firmware_rev_negative'),
+    'firmware-version-pointer': ("if 'firmware_version' in source:", 'if False:', 'test_mapping_refuse_firmware_version'),
+    'unknown-key-generic': ("f'milan.entity.{unknown[0]}: unknown field'", "'milan.entity: unknown field or invalid mapping'",
+                            'test_mapping_refuse_unknown_entity_key'),
+}
+
+
+def mapper_project(text):
+    module = types.ModuleType('planted_milan_entity')
+    exec(compile(text, str(ROOT / 'scripts/milan_entity.py'), 'exec'), module.__dict__)
+    return module.project
+
+
+def mapper_plant(old, new, killer):
+    def test(self):
+        text = (ROOT / 'scripts/milan_entity.py').read_text()
+        self.assertEqual(text.count(old), 1)
+        control = self.run_killer(killer, mapper_project(text))
+        self.assertEqual((control.testsRun, control.failures, control.errors, control.skipped), (1, [], [], []))
+        planted = self.run_killer(killer, mapper_project(text.replace(old, new)))
+        self.assertEqual((planted.testsRun, planted.errors, planted.skipped), (1, [], []))
+        self.assertTrue(planted.failures, killer + ' did not fail')
+        for case, _ in planted.failures:
+            self.assertIn('.' + killer, case.id())
+    return test
+
+
+for name, arguments in MAPPER_PLANTS.items():
+    setattr(EntityTests, 'test_mapper_plant_' + name.replace('-', '_'), mapper_plant(*arguments))
+
+
 def main():
     global WORK
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--work', type=Path, default=Path('build-entity'))
+    parser.add_argument('--select', help='run only tests whose names contain this text')
     args = parser.parse_args()
     WORK = args.work.resolve()
     WORK.mkdir(parents=True, exist_ok=True)
     os.environ['TMPDIR'] = str(WORK)
-    result = unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(EntityTests))
+    loader = unittest.TestLoader()
+    if args.select:
+        loader.testNamePatterns = ['*' + args.select + '*']
+    suite = loader.loadTestsFromTestCase(EntityTests)
+    if not suite.countTestCases():
+        print('entity_selftest: no test matches ' + repr(args.select), file=sys.stderr)
+        return 2
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
     return int(not result.wasSuccessful())
 
 

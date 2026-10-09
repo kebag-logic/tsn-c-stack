@@ -53,9 +53,17 @@ def project(document, model_id, capabilities):
         raise Invalid('milan.schema_version: expected kebag-logic/milan-endstation-config 1.2.0')
     try:
         source = document['entity']
-        fields = {'entity_id', 'entity_model_id', 'model_id_pin', 'name', 'vendor_name', 'serial_number', 'group_name', 'vendor_oui', 'locale', 'entity_capabilities'}
-        if not isinstance(source, dict) or set(source) - fields:
-            raise Invalid('milan.entity: unknown field or invalid mapping')
+        fields = {'entity_id', 'entity_model_id', 'model_id_pin', 'name', 'vendor_name', 'serial_number', 'group_name', 'vendor_oui', 'locale', 'entity_capabilities', 'firmware_rev'}
+        if not isinstance(source, dict):
+            raise Invalid('milan.entity: expected a mapping')
+        if 'firmware_version' in source:
+            raise Invalid('milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev')
+        unknown = sorted(map(str, set(source) - fields))
+        if unknown:
+            raise Invalid(f'milan.entity.{unknown[0]}: unknown field')
+        revision = source.get('firmware_rev', 0)
+        if type(revision) is not int or revision < 0:
+            raise Invalid('milan.entity.firmware_rev: expected a non-negative integer')
         identity = {key: copy.deepcopy(source[key]) for key in ('name', 'serial_number')}
         identity.update(entity_id=source.get('entity_id', 'mac-derived'),
                         vendor_name=source.get('vendor_name', 'Kebag Logic'),

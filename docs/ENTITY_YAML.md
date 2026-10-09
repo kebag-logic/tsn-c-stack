@@ -140,6 +140,32 @@ The [mutation campaign](../tests/mutations.json) plants three named defects:
 
 All three plants still compile. Each must fail its named assertion in a completed run.
 The golden test also refuses each planted file as drift.
+
+The schema tests also register 13 mapper plants.
+Each plant edits one unique fragment of the [mapper](../scripts/milan_entity.py) in memory.
+Its named test must pass on the unedited mapper and fail an assertion on the planted one.
+An error, a skip, a failure in another test or an ambiguous fragment does not count as a catch.
+Rerun only these controls with:
+
+```sh
+python3 scripts/entity_selftest.py --work build-entity-controls --select mapper_plant
+```
+
+| Plant | Planted defect | Required failing test |
+|---|---|---|
+| `base-zero` | Source hexadecimal text uses prefix-based base detection. | `test_mapping_digit_only_entity_id` |
+| `unbounded-digits` | The digit-count bound is removed. | `test_mapping_refuse_entity_id_extra_zero` |
+| `unquoted-accepted` | Unquoted source integers are accepted. | `test_mapping_refuse_entity_id_integer` |
+| `double-underscore` | Repeated underscores are accepted. | `test_mapping_refuse_entity_id_double_underscore` |
+| `vendor-default` | An omitted vendor name gets another default. | `test_mapping_default_vendor_name` |
+| `group-default` | An omitted group name gets another default. | `test_mapping_default_group_name` |
+| `entity-default` | An omitted entity ID gets another default. | `test_mapping_default_entity_id` |
+| `pin-agreement` | The literal or pin is not compared with the resolved model ID. | `test_mapping_refusals` |
+| `firmware-rev-unknown` | `firmware_rev` is removed from the accepted keys. | `test_mapping_firmware_rev_zero` |
+| `firmware-rev-boolean` | A boolean `firmware_rev` is accepted. | `test_mapping_refuse_firmware_rev_boolean` |
+| `firmware-rev-negative` | A negative `firmware_rev` is accepted. | `test_mapping_refuse_firmware_rev_negative` |
+| `firmware-version-pointer` | `firmware_version` gets the generic unknown-key refusal. | `test_mapping_refuse_firmware_version` |
+| `unknown-key-generic` | The unknown-key refusal no longer names the key. | `test_mapping_refuse_unknown_entity_key` |
 The [quality workflow](../.github/workflows/quality.yml) runs regeneration and all host checks.
 The [RV32 gate](../scripts/baremetal.py) checks each generated object has no imports and only permitted freestanding headers.
 The existing [coverage denominator](VERIFICATION.md#measurement-and-limits) stays unchanged and must remain at 100%.
@@ -166,6 +192,8 @@ The manager owns the follow-up that replaces the firmware generators with this i
 | `entity.entity_model_id`, optional `model_id_pin`, `vendor_oui` | `identity.model_id`, resolved by the complete source builder. A pin takes precedence over a valid literal. The selected literal or pin and any declared OUI must agree with the supplied resolved value. |
 | `entity.name`, `vendor_name`, `serial_number`, `group_name` | Corresponding fields in `identity`. Omitted `vendor_name` defaults to `Kebag Logic`. Omitted `group_name` defaults to the empty string. Name and serial remain required. |
 | `entity.locale` | AEM localization only. Retained by the product descriptor generator. No core field. |
+| Optional `entity.firmware_rev` | A non-negative integer, never a boolean. Omission means 0. The [source loader](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3720-L3730) derives the AEM `firmware_version` string from it. That string is in the ENTITY descriptor ([IEEE 1722.1-2021 7.2.1, Table 7-2][atdecc]). It does not change the model ID ([IEEE 1722.1-2021 6.2.2.8][atdecc]). No core field, so `identity` is unchanged. |
+| `entity.firmware_version` | Refused, as in the source. The refusal points to `entity.firmware_rev`. |
 | Optional `entity.entity_capabilities` | Must agree with the resolved capability value. Source authority is the [protocol package](https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/blob/2ad2f845dd583f8310075fa2380cb60a04fd091a/hdl/adp/pp_adp_pkg.sv). |
 | `platform.mac_address` | `interfaces[0].mac`. Normalize source MAC spellings to colon-separated octets. The supported projection has one protocol interface. |
 | `streams.listeners`, `streams.talkers` | Audio `inputs`, `outputs` in source order, all on interface 0. Preserve stream names. |
@@ -197,8 +225,9 @@ The source [MAC parser](https://github.com/kebag-logic/milan-fpga/blob/5603c3531
 accepts six two-digit octets with a shared `:` or `-` separator.
 It also accepts exactly 12 hexadecimal digits using the string grammar above.
 The mapper accepts these forms and requires a nonzero unicast value.
-The [builder defaults](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3731)
+The [builder defaults](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3727-L3740)
 apply only to omitted keys. An explicit null does not request a default.
+This includes `firmware_rev`: an explicit null is refused.
 
 For the pinned AX7101 source, run:
 
@@ -207,10 +236,13 @@ python3 scripts/milan_entity.py source/configs/endstation_ax7101_1x1_tdm8.yaml -
 python3 scripts/entity_yaml.py build-ax7101.yaml --output build-ax7101 --prefix ax7101
 ```
 
-The mapper refuses unsupported source versions, unknown entity fields, missing projection inputs, conflicting model identity or capabilities, and non-boolean CRF enables.
+The mapper refuses unsupported source versions, a non-mapping entity section, `firmware_version`, and invalid `firmware_rev` values.
+It names each unknown entity key, for example `milan.entity.typo: unknown field`.
+It also refuses missing projection inputs, conflicting model identity or capabilities, and non-boolean CRF enables.
 Other source sections are intentionally outside its validation scope.
 Validate the complete product configuration with its own builder before projecting it.
-The live source generators and all five end-station shapes were inspected for this mapping.
+The accepted entity keys are the keys read by the source entity loader.
+All five pinned end-station shapes map.
 No platform source change is part of this repository change.
 
 For a developer, keep the [generator](../scripts/entity_yaml.py), [examples](../configs/),

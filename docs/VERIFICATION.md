@@ -18,7 +18,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 
 | Check | Command | Acceptance |
 |---|---|---|
-| Entity YAML | `python3 scripts/entity_yaml.py --examples --check` and `python3 scripts/entity_selftest.py --work build-entity-controls` | Schema refusals, exact golden bytes, version guard, planted drift and the AX7101 mapping pass. [Round trips](ENTITY_YAML.md#validation-and-tests) execute on Linux and RV32. |
+| Entity YAML | `python3 scripts/entity_yaml.py --examples --check` and `python3 scripts/entity_selftest.py --work build-entity-controls` | Schema refusals, exact golden bytes, version guard, planted drift, the AX7101 mapping and 13 registered mapper plants pass. [Round trips](ENTITY_YAML.md#validation-and-tests) execute on Linux and RV32. |
 | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
 | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
 | Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 327 core plants and three generated configuration plants caught by their named assertions. |
