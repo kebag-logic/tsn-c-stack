@@ -59,7 +59,7 @@ A linked quote control fails the comment rule and `-Wl,--fatal-warnings`; valid 
 Assembly forbids all preprocessor directives, including definitions that produce a hash comment.
 Every `#` starts a comment checked against the tracing allowlist. Single quotes,
 assembler conditionals, macros and repeats are refused. Direct tracing remains accepted.
-Compiling controls include plain, spliced and digraph directives and macro-produced prose and tracing.
+Compiling controls include plain and spliced directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32

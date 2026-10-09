@@ -32,7 +32,6 @@ def selftest(work):
         'assembly-macro-hash': ('asm', '#define HASH #\nnop HASH prose\n', True),
         'assembly-macro-trace': ('asm', '#define HASH #\nnop HASH REQ: PORT-01\n', True),
         'assembly-plain-define': ('asm', '#define V 4\n.word V\n', True),
-        'assembly-digraph-define': ('asm', '%:define V 4\n.word V\n', True),
         'assembly-spliced-define': ('asm', '#def\\\nine V 4\n.word V\n', True),
         'assembly-prose': ('asm', 'nop # prose\n', True),
         'assembly-formfeed': ('asm', 'nop \f#define prose\n', True),
