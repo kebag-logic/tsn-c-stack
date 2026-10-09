@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Accept GitHub squash merges in the privacy gate: the noreply author with GitHub as committer, still with a one-line message.
 - Enforce the closed contributor rules for source bytes, suffixes, header modes, linker scripts and assembly. Restrict assertion forms and check generated GoogleTest defaults.
 - Use compiler comment tokens and compile both sides of permitted conditional regions. Refuse assembly hiding mechanisms. Grade mutations only from delimited assertion messages. Require unique message needles with at least eight characters.
 - Close comment scanner gaps for digit separators, zero conditions and assembly directive bodies.
