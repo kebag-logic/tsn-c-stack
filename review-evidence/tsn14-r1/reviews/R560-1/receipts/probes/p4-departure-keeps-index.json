@@ -1,0 +1,17 @@
+{
+  "probe": "p4-departure-keeps-index",
+  "path": "src/adp.c",
+  "old": "\ta->available_index = 0;\n",
+  "new": "",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A10toA14DepartingIndex",
+    "AdpCore.A15OwedDepartingAcrossARestart",
+    "AdpCore.A16SecondShutdownQueuesItsOwn",
+    "AdpCore.A17RoomBackBeforeAPoll",
+    "AdpCore.A18LinkLossKeepsTheOwedDeparting",
+    "AdpCore.A21DepartingCapacity",
+    "AdpCore.A6toA8DeferredSends",
+    "ExamplePort.DefersExpiryAndRetainsBlockedOutput"
+  ]
+}

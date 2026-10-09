@@ -1,0 +1,11 @@
+{
+  "probe": "p2-discover-restarts-delay",
+  "path": "src/adp.c",
+  "old": "if (!a->enabled || a->state != ADP_STATE_WAITING) {",
+  "new": "if (!a->enabled || a->state == ADP_STATE_DOWN) {",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A19IgnoredInputsKeepTheOwedAvailable",
+    "AdpCore.A3toA5DiscoverAndDiscard"
+  ]
+}

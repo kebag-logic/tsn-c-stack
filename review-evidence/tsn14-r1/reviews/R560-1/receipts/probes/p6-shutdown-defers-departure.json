@@ -1,0 +1,10 @@
+{
+  "probe": "p6-shutdown-defers-departure",
+  "path": "src/adp.c",
+  "old": "\t\ta->departing_owed = 1u;\n\t\tdepart(a);",
+  "new": "\t\ta->departing_owed = 1u;\n\t\t(void)0;",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A10toA14DepartingIndex"
+  ]
+}

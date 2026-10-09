@@ -1,0 +1,11 @@
+{
+  "probe": "p1-valid-time-31",
+  "path": "include/adp.h",
+  "old": "#define ADP_VALID_TIME 10u",
+  "new": "#define ADP_VALID_TIME 31u",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A0toA2Schedule",
+    "AdpCore.AdvertisementFieldsMatchCaller"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "probe": "p3-link-down-sends-departing",
+  "path": "src/adp.c",
+  "old": "\t\ta->available_owed = false;\n\t\ta->state = ADP_STATE_DOWN;\n\t}\n}",
+  "new": "\t\ta->available_owed = false;\n\t\ta->state = ADP_STATE_DOWN;\n\t\t(void)send(a, ADP_MSG_ENTITY_DEPARTING, 0);\n\t}\n}",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.LinkLevelsAndDisabledInputs"
+  ]
+}

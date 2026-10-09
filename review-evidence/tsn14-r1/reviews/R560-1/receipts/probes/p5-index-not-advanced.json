@@ -1,0 +1,16 @@
+{
+  "probe": "p5-index-not-advanced",
+  "path": "src/adp.c",
+  "old": "\ta->available_index++;",
+  "new": "\t(void)0;",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A0toA2Schedule",
+    "AdpCore.A10toA14DepartingIndex",
+    "AdpCore.A15OwedDepartingAcrossARestart",
+    "AdpCore.A16SecondShutdownQueuesItsOwn",
+    "AdpCore.A17RoomBackBeforeAPoll",
+    "AdpCore.A18LinkLossKeepsTheOwedDeparting",
+    "AdpCore.A21DepartingCapacity"
+  ]
+}
