@@ -1,0 +1,46 @@
+
+## D1 determinism: generate every persona twice via CLI and compare with the tracked goldens
+listener: identical runs and identical to golden
+talker: identical runs and identical to golden
+duplex: identical runs and identical to golden
+ax7101: identical runs and identical to golden
+
+## D2 drift: edit a config, then a golden, in the disposable copy; --examples --check must fail
+entity_yaml: maap[1].interface: duplicate reservation
+config drift rc=2
+entity_yaml: ax7101/entity_config.c: generated file drift
+golden drift rc=2
+restored copy rc=0
+
+## R refusal probes (each input is the duplex example with one change)
+R1 merge key: entity_yaml: yaml: invalid document
+rc=2
+R2 unquoted all-digit MAC (YAML 1.1 sexagesimal integer): entity_yaml: interfaces[1].mac: expected six colon-separated hexadecimal octets
+rc=2
+R3 sexagesimal integer accepted as identify index: rc=0
+R4 leading-zero octal integer for an interface: rc=0
+R5 65-byte name: entity_yaml: identity.name: expected UTF-8 string of 0..64 bytes without controls
+rc=2
+R6 64-byte name: rc=0
+R7 schema_version as float: entity_yaml: entity.schema_version: supported version is 1.0.0
+rc=2
+R8 entity_id hex string: entity_yaml: identity.entity_id: expected integer in 1..18446744073709551614
+rc=2
+R9 unknown top-level field: entity_yaml: entity.extra: unknown field
+rc=2
+R10 sink on missing interface: entity_yaml: inputs[0].interface: expected integer in 0..1
+rc=2
+R11 tab-containing name: entity_yaml: identity.name: expected UTF-8 string of 0..64 bytes without controls
+rc=2
+
+## B boundary entity: 4 interfaces, 16/16 streams, max pool end; compile with the cores (C11 -Werror -pedantic) and C++20 header, then run init calls
+generate rc=0
+acmp sinks=16 sources=16 if=4; maap owners=2 counts=1,15; adp src=16 sink=16 tcaps=0x4801 lcaps=0x4801 eid=020000fffe000001 bad=0
+boundary run rc=0
+C++20 header rc=0
+
+## P prefixes that share core module names compile beside the cores
+prefix adp rc=0
+prefix acmp rc=0
+prefix maap rc=0
+prefix wire rc=0

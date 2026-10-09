@@ -112,5 +112,185 @@
     "original_sha256": "e7ae660a44abd279453cd881e0697329f86aaf0b87378c60e02c6b70b34b4498",
     "published_sha256": "e7ae660a44abd279453cd881e0697329f86aaf0b87378c60e02c6b70b34b4498",
     "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/execution.json",
+    "original_sha256": "09352b0b5e186ed1b5185c76079dcc23b0b143baef89e54f99bf3e5d89bb9c16",
+    "published_sha256": "e682879173effd7b7751f6b7a929c63a8b8cd7aaf361f37185ec14f49eedf8f6",
+    "path_redacted": true
+  },
+  {
+    "file": "reviews/R578-1/MANIFEST.sha256",
+    "original_sha256": "c818df7d2f159c3ca28bc1f3c300a7a0fcceef17061e3be985644866dd479298",
+    "published_sha256": "c818df7d2f159c3ca28bc1f3c300a7a0fcceef17061e3be985644866dd479298",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/REPORT.md",
+    "original_sha256": "124983d169ae5238aaf23ea9682be7fe52ff5c5227af2008fe36bcd56609a10a",
+    "published_sha256": "124983d169ae5238aaf23ea9682be7fe52ff5c5227af2008fe36bcd56609a10a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/ax7101-mapping.txt",
+    "original_sha256": "007632f333476614c6040ee55d8f1ca0b722448fb849f372d1f981d88d2d81a7",
+    "published_sha256": "007632f333476614c6040ee55d8f1ca0b722448fb849f372d1f981d88d2d81a7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/baremetal.log",
+    "original_sha256": "67a264527e1a6b479d11f21785847816e5e6552adf420becefd6938d744fe0dc",
+    "published_sha256": "67a264527e1a6b479d11f21785847816e5e6552adf420becefd6938d744fe0dc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/baremetal.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/check-runs-4c939ef1.tsv",
+    "original_sha256": "ca672cdb8f3fe241f112a64555149d0df8b6443596aa51e8bd3a9293bd405971",
+    "published_sha256": "ca672cdb8f3fe241f112a64555149d0df8b6443596aa51e8bd3a9293bd405971",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/ci-job-steps.txt",
+    "original_sha256": "13aff28154d0e4b80ecaa189439c955337e1f00f5c408d78e1c3b1002382a281",
+    "published_sha256": "13aff28154d0e4b80ecaa189439c955337e1f00f5c408d78e1c3b1002382a281",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/environment.txt",
+    "original_sha256": "fafdce26ae6011a89c2352912ba9ef1879d60bc93ab06a9154673106ab05a314",
+    "published_sha256": "fafdce26ae6011a89c2352912ba9ef1879d60bc93ab06a9154673106ab05a314",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/gh-pr-checks.txt",
+    "original_sha256": "eedf4d97a43566f86a4f598f8d44daaa73fcd2dd8189d632cb4fc03d408448c1",
+    "published_sha256": "eedf4d97a43566f86a4f598f8d44daaa73fcd2dd8189d632cb4fc03d408448c1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/mapper-five-shapes.txt",
+    "original_sha256": "2cefd5ac93c9540ad8d156ba43236d1d09b742f4443f417f22c1041387455226",
+    "published_sha256": "2cefd5ac93c9540ad8d156ba43236d1d09b742f4443f417f22c1041387455226",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/mutation-results.json",
+    "original_sha256": "7f1477697b8ceb772b7a90cf6b2d400fe2da127d172a446ea4a971ade62db1de",
+    "published_sha256": "7f1477697b8ceb772b7a90cf6b2d400fe2da127d172a446ea4a971ade62db1de",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/probe_generator.txt",
+    "original_sha256": "8b88e4658b10ad728956c4e1aa0987e2e7f59324493d3e1f079a94f10070b592",
+    "published_sha256": "8b88e4658b10ad728956c4e1aa0987e2e7f59324493d3e1f079a94f10070b592",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/probe_generator_mutants.txt",
+    "original_sha256": "c0e5e63f0fd5ae36c543a2742fddf8fd3b5778da531be5ed180c753cb836edbf",
+    "published_sha256": "c0e5e63f0fd5ae36c543a2742fddf8fd3b5778da531be5ed180c753cb836edbf",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/probe_mapper.txt",
+    "original_sha256": "2b523cd9fbd795d5893258cac795d497f85491dc9e749517c4d3c0602d9d6a32",
+    "published_sha256": "2b523cd9fbd795d5893258cac795d497f85491dc9e749517c4d3c0602d9d6a32",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/rv32-results.json",
+    "original_sha256": "67a264527e1a6b479d11f21785847816e5e6552adf420becefd6938d744fe0dc",
+    "published_sha256": "67a264527e1a6b479d11f21785847816e5e6552adf420becefd6938d744fe0dc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-clang-sanitizers-test.log",
+    "original_sha256": "2c57c0f56ba5c13d48e9c8937b569604b01437b5fd8ac1c41ab76b903e79dae8",
+    "published_sha256": "2c57c0f56ba5c13d48e9c8937b569604b01437b5fd8ac1c41ab76b903e79dae8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-comments.log",
+    "original_sha256": "44e2b23eac3e479e6ab43d449293754d5649df2423ca1efa88deb8dc78b0a8b8",
+    "published_sha256": "44e2b23eac3e479e6ab43d449293754d5649df2423ca1efa88deb8dc78b0a8b8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-conditionals.log",
+    "original_sha256": "e5af86f74340fd2d4f93bb4e1f8acd212a9cc0c2096385d0b11190496212c3d3",
+    "published_sha256": "e5af86f74340fd2d4f93bb4e1f8acd212a9cc0c2096385d0b11190496212c3d3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-coverage.log",
+    "original_sha256": "d3dc4ca00bf75b805d8f55575b0be343728d2dfda2130d9f161b6ceb422a0059",
+    "published_sha256": "d3dc4ca00bf75b805d8f55575b0be343728d2dfda2130d9f161b6ceb422a0059",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-entity-controls.log",
+    "original_sha256": "277096b77a2c89d3df939483110cf776bbe8b6de43c8c8343d413562c3c4aff9",
+    "published_sha256": "277096b77a2c89d3df939483110cf776bbe8b6de43c8c8343d413562c3c4aff9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-gates.json",
+    "original_sha256": "306c77cb2686214d8b38ec13330643b695be55687d390c5e04f9261a15ecb8a1",
+    "published_sha256": "306c77cb2686214d8b38ec13330643b695be55687d390c5e04f9261a15ecb8a1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-gcc-test.log",
+    "original_sha256": "2f61036280ebc9d3974e9c3fd40ffa6b2986fa6d9328e67ee11abe5317a651f8",
+    "published_sha256": "2f61036280ebc9d3974e9c3fd40ffa6b2986fa6d9328e67ee11abe5317a651f8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-static-analysis.log",
+    "original_sha256": "11bd27f5767dab2647b2eadc81bbe70d08ea813eedcc575109511b0e3b61675b",
+    "published_sha256": "11bd27f5767dab2647b2eadc81bbe70d08ea813eedcc575109511b0e3b61675b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate-traceability.log",
+    "original_sha256": "970255196b1b52c2c8978e3f9ca33a01e516d52160620020305d5664d10e6c54",
+    "published_sha256": "970255196b1b52c2c8978e3f9ca33a01e516d52160620020305d5664d10e6c54",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate.log",
+    "original_sha256": "2805e952476b0f6f33e8b8e65de6326c376e8cface4eb912ea1ba4a81f2b4153",
+    "published_sha256": "2805e952476b0f6f33e8b8e65de6326c376e8cface4eb912ea1ba4a81f2b4153",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/receipts/validate.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/scripts/probe_generator.sh",
+    "original_sha256": "16a1662a56279c4477facb3b305b5778768f7ed648a12ff8552898979325eabb",
+    "published_sha256": "16a1662a56279c4477facb3b305b5778768f7ed648a12ff8552898979325eabb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/scripts/probe_generator_mutants.py",
+    "original_sha256": "bb52464367fcc1d87b60e51cf76407ea0b30796704678c4804d24be7508206e3",
+    "published_sha256": "bb52464367fcc1d87b60e51cf76407ea0b30796704678c4804d24be7508206e3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R578-1/scripts/probe_mapper.py",
+    "original_sha256": "f5228744e72941122a8c69ac5d080baf1e267659b24e72f2c1dccf678194f348",
+    "published_sha256": "f5228744e72941122a8c69ac5d080baf1e267659b24e72f2c1dccf678194f348",
+    "path_redacted": false
   }
 ]

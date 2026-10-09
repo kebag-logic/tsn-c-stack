@@ -1,0 +1,49 @@
+test_ax7101_mapping (__main__.EntityTests.test_ax7101_mapping) ... ok
+test_dropped_required_fields (__main__.EntityTests.test_dropped_required_fields) ... ok
+test_explicit_identity_and_literal_escaping (__main__.EntityTests.test_explicit_identity_and_literal_escaping) ... ok
+test_golden_bytes (__main__.EntityTests.test_golden_bytes) ... ok
+test_golden_planted_drift (__main__.EntityTests.test_golden_planted_drift) ... ok
+test_integer_boolean_and_float_refusals (__main__.EntityTests.test_integer_boolean_and_float_refusals) ... ok
+test_invalid_cli_preserves_outputs (__main__.EntityTests.test_invalid_cli_preserves_outputs) ... ok
+test_invalid_prefix (__main__.EntityTests.test_invalid_prefix) ... ok
+test_mapping_refusals (__main__.EntityTests.test_mapping_refusals) ... ok
+test_missing_golden_file (__main__.EntityTests.test_missing_golden_file) ... ok
+test_refuse_capability_auth (__main__.EntityTests.test_refuse_capability_auth) ... ok
+test_refuse_capability_milan (__main__.EntityTests.test_refuse_capability_milan) ... ok
+test_refuse_capability_range (__main__.EntityTests.test_refuse_capability_range) ... ok
+test_refuse_entity_id_zero (__main__.EntityTests.test_refuse_entity_id_zero) ... ok
+test_refuse_interfaces_count (__main__.EntityTests.test_refuse_interfaces_count) ... ok
+test_refuse_interfaces_empty (__main__.EntityTests.test_refuse_interfaces_empty) ... ok
+test_refuse_kind (__main__.EntityTests.test_refuse_kind) ... ok
+test_refuse_maap_duplicate (__main__.EntityTests.test_refuse_maap_duplicate) ... ok
+test_refuse_maap_interface (__main__.EntityTests.test_refuse_maap_interface) ... ok
+test_refuse_maap_missing (__main__.EntityTests.test_refuse_maap_missing) ... ok
+test_refuse_maap_no_outputs (__main__.EntityTests.test_refuse_maap_no_outputs) ... ok
+test_refuse_maap_pool (__main__.EntityTests.test_refuse_maap_pool) ... ok
+test_refuse_maap_range (__main__.EntityTests.test_refuse_maap_range) ... ok
+test_refuse_mac_duplicate (__main__.EntityTests.test_refuse_mac_duplicate) ... ok
+test_refuse_mac_format (__main__.EntityTests.test_refuse_mac_format) ... ok
+test_refuse_mac_multicast (__main__.EntityTests.test_refuse_mac_multicast) ... ok
+test_refuse_mac_zero (__main__.EntityTests.test_refuse_mac_zero) ... ok
+test_refuse_missing_mac (__main__.EntityTests.test_refuse_missing_mac) ... ok
+test_refuse_model_id_ones (__main__.EntityTests.test_refuse_model_id_ones) ... ok
+test_refuse_name_c1_control (__main__.EntityTests.test_refuse_name_c1_control) ... ok
+test_refuse_name_control (__main__.EntityTests.test_refuse_name_control) ... ok
+test_refuse_name_length (__main__.EntityTests.test_refuse_name_length) ... ok
+test_refuse_name_surrogate (__main__.EntityTests.test_refuse_name_surrogate) ... ok
+test_refuse_name_type (__main__.EntityTests.test_refuse_name_type) ... ok
+test_refuse_root_type (__main__.EntityTests.test_refuse_root_type) ... ok
+test_refuse_sink_count (__main__.EntityTests.test_refuse_sink_count) ... ok
+test_refuse_sink_interface (__main__.EntityTests.test_refuse_sink_interface) ... ok
+test_refuse_source_count (__main__.EntityTests.test_refuse_source_count) ... ok
+test_refuse_source_interface (__main__.EntityTests.test_refuse_source_interface) ... ok
+test_refuse_version (__main__.EntityTests.test_refuse_version) ... ok
+test_schema_header_guard (__main__.EntityTests.test_schema_header_guard) ... ok
+test_unknown_fields_at_each_level (__main__.EntityTests.test_unknown_fields_at_each_level) ... ok
+test_valid_boundaries (__main__.EntityTests.test_valid_boundaries) ... ok
+test_yaml_refusals (__main__.EntityTests.test_yaml_refusals) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 0.194s
+
+OK
