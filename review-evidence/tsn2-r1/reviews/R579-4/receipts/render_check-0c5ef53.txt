@@ -1,0 +1,17 @@
+header: ['Plant', 'Planted defect', 'Required failing test']
+row: ['base-zero', 'Source hexadecimal text uses prefix-based base detection.', 'test_mapping_digit_only_entity_id']
+row: ['unbounded-digits', 'The digit-count bound is removed.', 'test_mapping_refuse_entity_id_extra_zero']
+row: ['unquoted-accepted', 'Unquoted source integers are accepted.', 'test_mapping_refuse_entity_id_integer']
+row: ['double-underscore', 'Repeated underscores are accepted.', 'test_mapping_refuse_entity_id_double_underscore']
+row: ['vendor-default', 'An omitted vendor name gets another default.', 'test_mapping_default_vendor_name']
+row: ['group-default', 'An omitted group name gets another default.', 'test_mapping_default_group_name']
+row: ['entity-default', 'An omitted entity ID gets another default.', 'test_mapping_default_entity_id']
+row: ['pin-agreement', 'The literal or pin is not compared with the resolved model ID.', 'test_mapping_refusals']
+row: ['firmware-rev-unknown', 'firmware_rev is removed from the accepted keys.', 'test_mapping_firmware_rev_zero']
+row: ['firmware-rev-boolean', 'A boolean firmware_rev is accepted.', 'test_mapping_refuse_firmware_rev_boolean']
+row: ['firmware-rev-negative', 'A negative firmware_rev is accepted.', 'test_mapping_refuse_firmware_rev_negative']
+row: ['firmware-version-pointer', 'firmware_version gets the generic unknown-key refusal.', 'test_mapping_refuse_firmware_version']
+row: ['unknown-key-generic', 'The unknown-key refusal no longer names the key.', 'test_mapping_refuse_unknown_entity_key']
+body rows: 13
+first paragraph after table: ['The quality workflow runs regeneration and all host checks.\nThe RV32 gate checks each generated object has no imports and only permitted freestanding headers.\nThe existing coverage denominator stays unchanged and must remain at 100%.\nIt measures production cores and wire helpers. It does not claim Python generator branch coverage.']
+PASS

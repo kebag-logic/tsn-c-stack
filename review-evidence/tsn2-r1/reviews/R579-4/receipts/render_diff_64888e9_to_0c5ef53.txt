@@ -1,0 +1,26 @@
+334,353d333
+< <tr>
+< <td>The <a href="../.github/workflows/quality.yml">quality workflow</a> runs regeneration and all host checks.</td>
+< <td></td>
+< <td></td>
+< </tr>
+< <tr>
+< <td>The <a href="../scripts/baremetal.py">RV32 gate</a> checks each generated object has no imports and only permitted freestanding headers.</td>
+< <td></td>
+< <td></td>
+< </tr>
+< <tr>
+< <td>The existing <a href="VERIFICATION.md#measurement-and-limits">coverage denominator</a> stays unchanged and must remain at 100%.</td>
+< <td></td>
+< <td></td>
+< </tr>
+< <tr>
+< <td>It measures production cores and wire helpers. It does not claim Python generator branch coverage.</td>
+< <td></td>
+< <td></td>
+< </tr>
+355a336,339
+> <p dir="auto">The <a href="../.github/workflows/quality.yml">quality workflow</a> runs regeneration and all host checks.
+> The <a href="../scripts/baremetal.py">RV32 gate</a> checks each generated object has no imports and only permitted freestanding headers.
+> The existing <a href="VERIFICATION.md#measurement-and-limits">coverage denominator</a> stays unchanged and must remain at 100%.
+> It measures production cores and wire helpers. It does not claim Python generator branch coverage.</p>

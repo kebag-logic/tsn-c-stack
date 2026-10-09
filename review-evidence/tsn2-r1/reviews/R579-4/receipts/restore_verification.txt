@@ -1,0 +1,11 @@
+HEAD 0c5ef532cb782f9e7c73855b41c397679d176ea7
+HEAD tree 7d4a8d904e073167345d3d7eeecf91fee5bec48e
+index tree 7d4a8d904e073167345d3d7eeecf91fee5bec48e
+status --porcelain --ignored --untracked-files=all:
+(end status)
+diff-index vs HEAD: 0 paths
+tracked files 96, blob/mode mismatches 0
+gitlinks (mode 160000): 0; .gitmodules present: no
+ls-files -s digest 4513bd4190fa28369a4f8fc408b409e201dbe0c4ae83d9bda5cd14dd1d63f278
+ls-tree -r HEAD digest d70a16ae86b4811f65740cba70853ea0df6a747020984c48f6fb84935091c8fd
+ls-files -s as tree digest d70a16ae86b4811f65740cba70853ea0df6a747020984c48f6fb84935091c8fd
