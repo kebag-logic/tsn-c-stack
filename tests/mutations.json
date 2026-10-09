@@ -3435,7 +3435,7 @@
     "kills": [
       {
         "test": "AcmpCore.A24UnboundRecordsRefusalsAndRollback",
-        "needle": "A24 a payload of"
+        "needle": "bytes is refused, the longer ones too, before a byte is read"
       }
     ],
     "original_tests": [
@@ -3608,7 +3608,7 @@
     "kills": [
       {
         "test": "AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker",
-        "needle": "A29 a re-bind to another talker admits it"
+        "needle": "A29 re-binding emits one admission"
       }
     ],
     "original_tests": [
@@ -3655,7 +3655,7 @@
     "kills": [
       {
         "test": "AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens",
-        "needle": "A29 a sink the store resets is withdrawn at the next open"
+        "needle": "A29 opening after reset emits one withdrawal"
       }
     ],
     "original_tests": [
@@ -4256,7 +4256,7 @@
     "kills": [
       {
         "test": "MaapCore.ReleaseLossAndRetry",
-        "needle": "PortOperational invalidates acquired address"
+        "needle": "loss of PortOperational invalidates the acquired address"
       }
     ],
     "original_tests": [
@@ -4421,7 +4421,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/0",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4436,7 +4436,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/1",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4451,7 +4451,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/2",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4466,7 +4466,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/3",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4481,7 +4481,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/4",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4496,7 +4496,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/5",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4511,7 +4511,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/6",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4526,7 +4526,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/7",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4541,7 +4541,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/8",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4556,7 +4556,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/9",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4571,7 +4571,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/10",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4586,7 +4586,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/11",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4601,7 +4601,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/12",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4616,7 +4616,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/13",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4631,7 +4631,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/14",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4646,7 +4646,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/15",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4661,7 +4661,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/16",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4676,7 +4676,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/17",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4766,7 +4766,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/0",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [
@@ -4781,7 +4781,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/12",
-        "needle": "Table B.7"
+        "needle": "Table B.7 conflict decision"
       }
     ],
     "original_tests": [
@@ -4796,7 +4796,7 @@
     "kills": [
       {
         "test": "AllStates/MaapCell.TableB7/10",
-        "needle": "Table B.7"
+        "needle": "Table B.7 output count"
       }
     ],
     "original_tests": [

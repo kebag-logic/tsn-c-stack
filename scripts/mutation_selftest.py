@@ -11,9 +11,51 @@ import subprocess
 import sys
 import tempfile
 import xml.etree.ElementTree as ET
-from mutation import execute
+from mutation import execute, matches, MESSAGE_MARKERS
+from assertion_messages import instrument, inventory
+from needle_audit import validate_needles
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def grading(work):
+    source = '''#include <gtest/gtest.h>
+#include <string>
+TEST(Control, Streamed) { EXPECT_EQ(1, 2) << "specific streamed defect"; }
+TEST(Control, Default) {
+  EXPECT_EQ(std::string("specific streamed defect"), std::string("other value"))
+    << "another assertion message";
+}
+TEST(Control, Short) { EXPECT_EQ(1, 2) << "e"; }
+TEST(Control, Failed) { FAIL() << "Failed"; }
+TEST(Control, Fragment) { EXPECT_EQ(1, 2) << "hich is"; }
+TEST(Control, Space) { EXPECT_EQ(1, 2) << " equal"; }
+TEST(Control, Duplicate) {
+  EXPECT_EQ(1, 2) << "duplicate message";
+  EXPECT_EQ(2, 3) << "duplicate message";
+}
+'''
+    path = work / 'grading.cpp'
+    path.write_text(instrument(source, MESSAGE_MARKERS))
+    binary = work / 'grading'
+    subprocess.run(['g++', '-std=c++20', '-Wall', '-Wextra', '-Werror', str(path),
+                    '-lgtest_main', '-lgtest', '-pthread', '-o', str(binary)], check=True)
+    rc, failures, count = execute(binary, work / 'grading.xml', [])
+    if rc != 1 or count != 7:
+        raise RuntimeError('assertion grading controls did not execute')
+    kill = {'test': 'Control.Streamed', 'needle': 'specific streamed defect'}
+    if not matches(kill, failures):
+        raise RuntimeError('streamed assertion was lost')
+    kill['test'] = 'Control.Default'
+    if matches(kill, failures):
+        raise RuntimeError('default value printout counted as an assertion message')
+    messages = inventory(source)
+    for name, needle in [('Short', 'e'), ('Failed', 'Failed'), ('Fragment', 'hich is'),
+                         ('Space', ' equal'), ('Duplicate', 'duplicate message')]:
+        plant = {'name': name, 'kills': [{'test': 'Control.' + name, 'needle': needle}]}
+        if not validate_needles([plant], messages):
+            raise RuntimeError('generic or ambiguous compiled needle accepted: ' + needle)
+    print('grading controls: compiled streamed message accepted; default text and five invalid needles refused')
 
 
 def reports(work):
@@ -117,6 +159,7 @@ def main():
     args.work.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=args.work.resolve()) as temporary:
         work = Path(temporary)
+        grading(work)
         reports(work)
         campaign(work, args.jobs)
     return 0

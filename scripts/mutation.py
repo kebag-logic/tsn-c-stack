@@ -7,6 +7,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
+import secrets
 from pathlib import Path
 import shutil
 import subprocess
@@ -14,11 +15,14 @@ import threading
 import xml.etree.ElementTree as ET
 from test_registry import environment, registered
 from needle_audit import assertion_literals, validate_needles
+from assertion_messages import instrument
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
            "adp_debug": "test_adp_reentry.cpp", "adp_release": "test_adp_reentry.cpp", "maap_debug": "test_maap_debug.cpp"}
 HEADER_SLOTS = threading.Semaphore(3)
+MESSAGE_MARKERS = ('TSN_MESSAGE_BEGIN_' + secrets.token_hex(16),
+                   'TSN_MESSAGE_END_' + secrets.token_hex(16))
 
 
 def run(cmd, log, **kwargs):
@@ -77,8 +81,18 @@ def execute(binary, xml, log, filters=None):
 
 
 def matches(kill, failures):
+    def streamed(message):
+        begin, end = ('\n' + marker + '\n' for marker in MESSAGE_MARKERS)
+        portions = []
+        while begin in message:
+            _, _, message = message.partition(begin)
+            body, found, message = message.partition(end)
+            if not found:
+                return ''
+            portions.append(body)
+        return '\0'.join(portions)
     return any((name.startswith(kill['test']) if kill['test'].endswith('/') else name == kill['test'])
-               and kill["needle"] in message
+               and kill["needle"] in streamed(message)
                for name, message in failures.items())
 
 
@@ -96,6 +110,12 @@ def main():
     messages = assertion_literals()
     baseline = work / "baseline"
     baseline.mkdir(exist_ok=True)
+    (work / 'message-markers.json').write_text(json.dumps(MESSAGE_MARKERS) + '\n')
+    test_sources = baseline / 'tests'
+    shutil.copytree(ROOT / 'tests', test_sources, dirs_exist_ok=True)
+    for path in test_sources.glob('*'):
+        if path.suffix in ('.cpp', '.hpp'):
+            path.write_text(instrument(path.read_text(), MESSAGE_MARKERS))
     cc = os.environ.get("CC", "gcc")
     cxx = os.environ.get("CXX", "g++")
     log = []
@@ -110,7 +130,7 @@ def main():
         local = []
         commands = [
             [cc, *cflags(arm), "-I" + str(ROOT / "include"), "-c", str(ROOT / f"src/{module}.c"), "-o", str(baseline / (arm + ".c.o"))],
-            [cxx, *cppflags(arm), "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(ROOT / "tests" / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
+            [cxx, *cppflags(arm), "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
             [cxx, str(baseline / (arm + ".c.o")), str(baseline / (arm + ".cpp.o")), str(baseline / "main.o"), *extra(arm), "-lgmock", "-lgtest", "-pthread", "-o", str(baseline / arm)]]
         for cmd in commands:
             if run(cmd, local) != 0:
@@ -158,7 +178,7 @@ def main():
                 if target.suffix == ".h":
                     test_obj = directory / (arm + ".test.o")
                     with HEADER_SLOTS:
-                        rc = run([cxx, *cppflags(arm), "-I" + str(directory / "include"), "-I" + str(ROOT / "tests"), "-I" + str(ROOT / "examples"), "-c", str(ROOT / "tests" / SOURCES[arm]), "-o", str(test_obj)], local)
+                        rc = run([cxx, *cppflags(arm), "-I" + str(directory / "include"), "-I" + str(test_sources), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(test_obj)], local)
                     if rc != 0:
                         raise RuntimeError("mutated header test build failed")
                 binary = directory / arm

@@ -294,7 +294,7 @@ TEST(MaapCore, InitAndPreferredRangeBounds) {
 TEST(MaapCore, ReleaseLossAndRetry) {
     CoreRig claimed; claimed.acquire();
     maap_port_operational(&claimed.core, true);
-    EXPECT_FALSE(claimed.valid) << "PortOperational invalidates acquired address";
+    EXPECT_FALSE(claimed.valid) << "loss of PortOperational invalidates the acquired address";
     CoreRig r; maap_release(&r.core); maap_port_operational(&r.core, false);
     r.valid = true;
     r.begin(); EXPECT_EQ(r.core.state, MAAP_INITIAL); EXPECT_TRUE(r.frames.empty());
@@ -373,7 +373,7 @@ TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
     EXPECT_EQ(r.core.queued, 2u);
     r.room = true; EXPECT_FALSE(maap_poll(&r.core)); EXPECT_TRUE(r.valid);
     ASSERT_EQ(r.frames.size(), 5u) << "both owed frames and ANNOUNCE leave once room returns";
-    EXPECT_EQ(r.frames[3][15], 1u) << "last PROBE precedes ANNOUNCE"; EXPECT_EQ(r.frames[4][15], 3u) << "last PROBE precedes ANNOUNCE";
+    EXPECT_EQ(r.frames[3][15], 1u) << "last PROBE precedes ANNOUNCE"; EXPECT_EQ(r.frames[4][15], 3u) << "ANNOUNCE follows the final PROBE";
 }
 
 // REQ: MAAP-04

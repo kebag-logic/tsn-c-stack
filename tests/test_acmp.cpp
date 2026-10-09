@@ -1771,7 +1771,7 @@ TEST_F(AcmpCore, A29TheAdmitPortFollowsEachSinksBoundTalker) {
     EXPECT_TRUE(admits().empty()) << "A29 a re-bind to the same talker, from any controller or source, admits nothing";
     bind(0, kTkB);
     v = admits();
-    ASSERT_EQ(v.size(), 1u) << "A29 a re-bind to another talker admits it";
+    ASSERT_EQ(v.size(), 1u) << "A29 re-binding emits one admission";
     EXPECT_TRUE(v[0].flag && v[0].talker == kTkB && v[0].index == 0u) << "A29 a re-bind to another talker admits it";
     fk.clear();
     rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
@@ -1783,7 +1783,7 @@ TEST_F(AcmpCore, A29TheAdmitPortFollowsEachSinksBoundTalker) {
     EXPECT_TRUE(admits().empty()) << "A29 an UNBIND_RX of an unbound sink withdraws nothing";
     bind(2, kTkB);
     v = admits();
-    ASSERT_EQ(v.size(), 1u) << "A29 sink 2's talker on interface 1";
+    ASSERT_EQ(v.size(), 1u) << "A29 sink 2 emits one admission";
     EXPECT_TRUE(v[0].index == 2u && v[0].value == 1u && v[0].flag) << "A29 sink 2's talker on interface 1";
     fk.clear();
     fk.locked = true;
@@ -1818,7 +1818,7 @@ TEST_F(AcmpCore, A29RestoredBindingsAreAdmittedWhenTheTransportOpens) {
     ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
     acmp_open(&a);
     v = admits();
-    ASSERT_EQ(v.size(), 1u) << "A29 a sink the store resets is withdrawn at the next open";
+    ASSERT_EQ(v.size(), 1u) << "A29 opening after reset emits one withdrawal";
     EXPECT_TRUE(!v[0].flag && v[0].index == 0u)
         << "A29 a sink the store resets is withdrawn at the next open: what the port holds outlives the reset";
 }

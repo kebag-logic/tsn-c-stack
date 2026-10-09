@@ -10,6 +10,9 @@ from assertion_messages import inventory
 from test_registry import canonical
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_TEMPLATES = ('Expected equality of these values:', 'Which is: ', 'Value of: ',
+                     'Actual: false', 'Actual: true', 'Expected: true', 'Expected: false',
+                     'Expected: (', ') <= (', ') != (', 'Failed', 'Google Test trace:')
 
 
 def assertion_literals(root=ROOT):
@@ -31,7 +34,7 @@ def validate_needles(mutations, messages=None):
             errors.append(plant['name'] + ': no required assertion')
         for kill in plant.get('kills', []):
             needle = kill.get('needle', '').strip()
-            if not needle or re.fullmatch(
+            if len(needle) < 8 or any(needle in template for template in DEFAULT_TEMPLATES) or re.fullmatch(
                     r'(Expected|Actual|Value of|Which is|Expected equality of these values)(:.*)?|true|false|[01]',
                     needle, re.I):
                 errors.append(plant['name'] + ': empty or generic assertion needle')
@@ -39,8 +42,8 @@ def validate_needles(mutations, messages=None):
                 name = canonical(kill.get('test', ''))
             except ValueError:
                 name = ''
-            if not any(needle in value for value in messages.get(name, ())):
-                errors.append(plant['name'] + ': needle is not an assertion message literal in ' + name)
+            if sum(needle in value for value in messages.get(name, ())) != 1:
+                errors.append(plant['name'] + ': needle must identify exactly one assertion message literal in ' + name)
     return errors
 
 
@@ -52,7 +55,8 @@ def main():
     if args.selftest:
         controls = ('', ' ', 'Expected: true', 'Actual: false', 'Value of: x', 'true',
                     '    Which is: 5', 'Which is: 1', 'Expected equality of these values:', 'Actual:',
-                    'is: 5', '5u', 'r.frames.size()', 'Expected equality', 'equality of these values')
+                    'is: 5', '5u', 'r.frames.size()', 'Expected equality', 'equality of these values',
+                    'e', 'Failed', 'hich is', ' equal')
         messages = assertion_literals()
         for value in controls:
             planted = copy.deepcopy(mutations)
@@ -85,6 +89,10 @@ TEST(Control, Other) { EXPECT_TRUE(false) << "other test message"; }
             if bool(validate_needles(table, messages)) != refused:
                 raise RuntimeError('assertion ownership control failed: ' + value)
         print('needles: named-test, helper, callback and streamed-literal controls pass')
+        duplicated = {'Control.First': ['unique marker', 'unique marker']}
+        if not validate_needles([{'name': 'duplicate', 'kills': [
+                {'test': 'Control.First', 'needle': 'unique marker'}]}], duplicated):
+            raise RuntimeError('ambiguous assertion message accepted')
     errors = validate_needles(mutations)
     print('\n'.join(errors) if errors else 'needles: zero unspecific killers; no inherited exceptions')
     return bool(errors)

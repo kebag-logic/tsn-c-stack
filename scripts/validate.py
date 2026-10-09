@@ -53,7 +53,8 @@ def main():
     for name, script, switches in (
         ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
         ('needles', 'needle_audit.py', ['--selftest']),
-        ('comments', 'check_comments.py', ['--selftest']),
+        ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
+        ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
         ('port-contracts', 'check_port_contracts.py', ['--selftest']),
         ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
         ('license', 'check_license.py', ['--selftest']),

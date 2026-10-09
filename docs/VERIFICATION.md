@@ -24,8 +24,9 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
-| Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle occurs in an assertion message literal of the named test or its referenced helper. Fifteen generic table controls are refused. |
-| Code comments | `python3 scripts/check_comments.py --selftest` | Only SPDX, requirement IDs and short standard references. Every comment line is checked after line splicing, including assembly comments. Digit separators cannot hide comments. Zero or false `#if` and `#elif` conditions and prose in assembly directive bodies are refused. |
+| Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle has at least eight characters and identifies exactly one assertion message literal in its named test or helper. Default-message fragments are refused. |
+| Code comments | `python3 scripts/check_comments.py --selftest` | Clang 18 raw tokens supply every C11 and C++20 comment. Only SPDX, requirement IDs and short standard references pass. Compiling controls exercise the [conditional and assembly policy](CODING_STANDARD.md). |
+| Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
@@ -42,6 +43,10 @@ Install [GoogleTest and GMock](https://github.com/google/googletest),
 [clang-tidy](https://clang.llvm.org/extra/clang-tidy/), and Python 3.10 or later.
 The graph check needs [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli).
 The hosted [workflow](../.github/workflows/quality.yml) installs these dependencies.
+Comment and assertion lexing use Clang 18 (`clang-18`), pinned by the package name.
+The lexer runs `-cc1 -dump-raw-tokens`, with C11 for `.c` and `.h`, and C++20 for `.cpp` and `.hpp`.
+Set `TSN_CLANG` to a Clang 18 executable when it is outside the command search path.
+The comment controls also need the RV32 cross compiler listed below.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32
@@ -100,6 +105,12 @@ Gate decisions raise explicit errors and remain active under optimized Python.
 It requires complete, unique results for exactly the selected executable registration.
 Missing reports, partial results, skips, errors and inconsistent counts fail grading.
 All killers have literal message needles. Streamed values remain in diagnostics but are excluded from needles.
+The campaign adds fresh begin/end markers around assertion streams in temporary test copies.
+Markers occupy separate diagnostic lines. The grader blanks everything outside them.
+Default GoogleTest text, source locations, expected values and actual values cannot establish a kill.
+The original XML retains the complete diagnostics for independent regrading.
+Marker insertion changes no assertion expression or production source.
+Compiling controls prove that a needle in a default value printout does not count.
 The [assertion inventory](../scripts/assertion_messages.py) follows referenced helpers and callbacks in the same test file.
 It excludes assertion arguments, unrelated streams, comments and other tests. Unsupported forms fail the positive check.
 There are no inherited exceptions.
