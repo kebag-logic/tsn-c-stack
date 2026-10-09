@@ -12,6 +12,8 @@ import shutil
 import subprocess
 import threading
 import xml.etree.ElementTree as ET
+from test_registry import environment, registered
+from needle_audit import validate_needles
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
@@ -37,14 +39,31 @@ def cppflags(arm):
 
 
 def execute(binary, xml, log, filters=None):
-    env = {k: v for k, v in os.environ.items() if not k.startswith("GTEST_")}
+    # A reused work directory must never supply evidence for this execution.
+    xml.unlink(missing_ok=True)
+    patterns = [k['test'] + ('*' if k['test'].endswith('/') else '') for k in (filters or [])]
+    expected = set(registered(binary, patterns))
+    env = environment()
     command = [str(binary), "--gtest_output=xml:" + str(xml)]
     if filters:
         command.append("--gtest_filter=" + ":".join(k["test"] + ("*" if k["test"].endswith("/") else "") for k in filters))
     rc = run(command, log, env=env)
-    if not xml.exists():
+    try:
+        doc = ET.parse(xml).getroot()
+        cases = list(doc.iter('testcase'))
+        names = [case.attrib['classname'] + '.' + case.attrib['name'] for case in cases]
+        complete = (doc.tag == 'testsuites' and len(cases) == int(doc.attrib['tests'])
+                    and len(names) == len(set(names)) and set(names) == expected
+                    and int(doc.attrib['errors']) == 0
+                    and int(doc.attrib['disabled']) == 0
+                    and int(doc.attrib['failures']) == sum(bool(c.findall('failure')) for c in cases)
+                    and all(c.get('status') == 'run' and c.get('result') == 'completed'
+                            and not c.findall('skipped') and not c.findall('error') for c in cases))
+        if not complete:
+            raise ValueError('incomplete report or registration mismatch')
+    except (OSError, ET.ParseError, KeyError, ValueError) as error:
+        log.append('Report refused: ' + str(error) + '\n')
         return rc, {}, 0
-    doc = ET.parse(xml).getroot()
     failures = {}
     for case in doc.iter("testcase"):
         messages = [e.get("message", "") for e in case.findall("failure")]
@@ -54,7 +73,8 @@ def execute(binary, xml, log, filters=None):
 
 
 def matches(kill, failures):
-    return any(name.startswith(kill["test"]) and kill["needle"] in message
+    return any((name.startswith(kill['test']) if kill['test'].endswith('/') else name == kill['test'])
+               and kill["needle"] in message
                for name, message in failures.items())
 
 
@@ -65,6 +85,10 @@ def main():
     parser.add_argument("--select", default="")
     parser.add_argument("--discover", action="store_true", help="Report candidate killers; never grade as a pass")
     args = parser.parse_args()
+    mutants = json.loads((ROOT / "tests/mutations.json").read_text())
+    errors = validate_needles(mutants)
+    if errors:
+        raise SystemExit('\n'.join(errors))
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
     baseline = work / "baseline"
@@ -92,7 +116,6 @@ def main():
             raise RuntimeError("baseline test failed: " + arm)
     with ThreadPoolExecutor(max_workers=min(args.jobs, 5)) as pool:
         list(pool.map(prepare, SOURCES))
-    mutants = json.loads((ROOT / "tests/mutations.json").read_text())
     names = [m["name"] for m in mutants]
     if len(set(names)) != len(names):
         raise RuntimeError("duplicate mutant name")

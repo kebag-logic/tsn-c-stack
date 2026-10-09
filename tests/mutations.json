@@ -304,6 +304,22 @@
       {
         "test": "AdpCore.A3toA5DiscoverAndDiscard",
         "needle": "A4 a DISCOVER for this entity stops TMR_ADVERTISE and enters DELAY (5.6.3.5.4)"
+      },
+      {
+        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0",
+        "needle": "inherited discovery enters DELAY"
+      },
+      {
+        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1",
+        "needle": "inherited discovery enters DELAY"
+      },
+      {
+        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2",
+        "needle": "inherited discovery enters DELAY"
+      },
+      {
+        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3",
+        "needle": "inherited discovery enters DELAY"
       }
     ],
     "original_tests": [
@@ -412,7 +428,7 @@
       },
       {
         "test": "AdpCore.MockedPortOrder",
-        "needle": ""
+        "needle": "A1 TMR_DELAY starts the advertisement period"
       }
     ],
     "original_tests": [
@@ -2765,7 +2781,7 @@
     "kills": [
       {
         "test": "AcmpCore.CommandPortBudgets",
-        "needle": ""
+        "needle": "GET_RX_STATE needs no clock"
       }
     ],
     "original_tests": [
@@ -2780,7 +2796,7 @@
     "kills": [
       {
         "test": "AcmpCore.CommandPortBudgets",
-        "needle": ""
+        "needle": "successful probe response starts one reservation timer"
       }
     ],
     "original_tests": [
@@ -2795,7 +2811,7 @@
     "kills": [
       {
         "test": "AcmpCore.CommandPortBudgets",
-        "needle": ""
+        "needle": "UNBIND needs no clock"
       }
     ],
     "original_tests": [
@@ -2810,7 +2826,7 @@
     "kills": [
       {
         "test": "AcmpCore.CommandPortBudgets",
-        "needle": ""
+        "needle": "talker response needs no clock"
       }
     ],
     "original_tests": [
@@ -2825,7 +2841,7 @@
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
-        "needle": ""
+        "needle": "timer clock budget for state PRB_W_RESP2"
       }
     ],
     "original_tests": [
@@ -2840,7 +2856,7 @@
     "kills": [
       {
         "test": "AcmpCore.DiscoveryPortBudgets",
-        "needle": ""
+        "needle": "AVAILABLE starts one discovery deadline"
       }
     ],
     "original_tests": [
@@ -2855,7 +2871,7 @@
     "kills": [
       {
         "test": "AcmpCore.DiscoveryPortBudgets",
-        "needle": ""
+        "needle": "DEPARTING needs no grandmaster"
       }
     ],
     "original_tests": [
@@ -2870,7 +2886,7 @@
     "kills": [
       {
         "test": "AcmpCore.DiscoveryPortBudgets",
-        "needle": ""
+        "needle": "aging needs no grandmaster"
       }
     ],
     "original_tests": [
@@ -2900,7 +2916,7 @@
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
-        "needle": ""
+        "needle": "timer expiry never samples the grandmaster in PRB_W_RESP2"
       }
     ],
     "original_tests": [
@@ -2915,7 +2931,7 @@
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
-        "needle": ""
+        "needle": "timer expiry never samples the grandmaster in PRB_W_RETRY"
       }
     ],
     "original_tests": [
@@ -2930,7 +2946,7 @@
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
-        "needle": ""
+        "needle": "timer clock budget for state PRB_W_DELAY"
       }
     ],
     "original_tests": [
@@ -2945,7 +2961,7 @@
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
-        "needle": ""
+        "needle": "timer expiry never samples the grandmaster in SETTLED_NO_RSV"
       }
     ],
     "original_tests": [
@@ -3805,7 +3821,7 @@
     "kills": [
       {
         "test": "MaapCore.ConstantsStrictTimersAndSeed",
-        "needle": ""
+        "needle": "probe base interval"
       }
     ],
     "original_tests": [
@@ -3820,7 +3836,7 @@
     "kills": [
       {
         "test": "MaapCore.ConstantsStrictTimersAndSeed",
-        "needle": ""
+        "needle": "probe interval variation"
       }
     ],
     "original_tests": [
@@ -3835,7 +3851,7 @@
     "kills": [
       {
         "test": "MaapCore.ConstantsStrictTimersAndSeed",
-        "needle": ""
+        "needle": "announce base interval"
       }
     ],
     "original_tests": [
@@ -3850,7 +3866,7 @@
     "kills": [
       {
         "test": "MaapCore.ConstantsStrictTimersAndSeed",
-        "needle": ""
+        "needle": "announce interval variation"
       }
     ],
     "original_tests": [
@@ -3865,7 +3881,7 @@
     "kills": [
       {
         "test": "MaapCore.ConstantsStrictTimersAndSeed",
-        "needle": ""
+        "needle": "clock seed spans the probe interval"
       }
     ],
     "original_tests": [
@@ -4225,7 +4241,7 @@
     "kills": [
       {
         "test": "MaapCore.InitAndPreferredRangeBounds",
-        "needle": ""
+        "needle": "range past pool end is refused"
       }
     ],
     "original_tests": [
@@ -4300,7 +4316,7 @@
     "kills": [
       {
         "test": "MaapCore.StalledOutputRetainsOrderAndOriginalExpiry",
-        "needle": ""
+        "needle": "last PROBE precedes ANNOUNCE"
       }
     ],
     "original_tests": [
@@ -4345,7 +4361,7 @@
     "kills": [
       {
         "test": "MaapCore.QueueBoundAndWithdrawal",
-        "needle": ""
+        "needle": "release clears pending output"
       }
     ],
     "original_tests": [
@@ -4675,7 +4691,7 @@
     "kills": [
       {
         "test": "MaapCore.InitialAndThreeRetransmissions",
-        "needle": "Expected: true"
+        "needle": "accepted ANNOUNCE publishes allocation"
       }
     ],
     "original_tests": [

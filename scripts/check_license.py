@@ -7,12 +7,12 @@ import subprocess
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-EXTENSIONS = {".c", ".h", ".cpp", ".hpp", ".py", ".yml", ".yaml", ".cmake"}
+EXTENSIONS = {".c", ".h", ".cpp", ".hpp", ".py", ".yml", ".yaml", ".cmake", ".S", ".ld"}
 
 
 def valid(text):
-    lines = [line for line in text.splitlines() if re.match(r"\s*(?://|#)\s*SPDX-License-Identifier:", line)]
-    return bool(lines) and all(line.split("SPDX-License-Identifier:", 1)[1].strip() == "MIT" for line in lines)
+    lines = [line for line in text.splitlines() if re.match(r"\s*(?://|#|/\*)\s*SPDX-License-Identifier:", line)]
+    return bool(lines) and all(line.split("SPDX-License-Identifier:", 1)[1].removesuffix('*/').strip() == "MIT" for line in lines)
 
 
 def main():
@@ -21,6 +21,7 @@ def main():
     args = parser.parse_args()
     if args.selftest:
         assert valid("// SPDX-License-Identifier: MIT\n")
+        assert valid("/* SPDX-License-Identifier: MIT */\n")
         assert not valid("// SPDX-License-Identifier: Apache-2.0\n")
         assert not valid("int n;\n")
         assert not valid("// SPDX-License-Identifier: MIT\n// SPDX-License-Identifier: GPL-2.0\n")

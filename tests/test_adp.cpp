@@ -677,9 +677,40 @@ TEST(AdpCore, MockedPortOrder) {
     adp_set_enable(&a, true);
     EXPECT_CALL(mock, Gptp(_, _)).WillOnce(DoAll(SetArgPointee<0>(1u), SetArgPointee<1>(0u)));
     EXPECT_CALL(mock, Send(_, 82u)).WillOnce(Return(true));
-    EXPECT_CALL(mock, Start(5000u));
+    EXPECT_CALL(mock, Start(_)).WillOnce([](uint32_t ms) {
+        EXPECT_EQ(ms, 5000u) << "A1 TMR_DELAY starts the advertisement period";
+    });
     adp_timer_expired(&a);
     EXPECT_EQ(a.state, ADP_STATE_WAITING);
 }
+
+
+class AdpInputControl : public ::testing::TestWithParam<unsigned> {};
+
+// REQ: ADP-01, ADP-02
+TEST_P(AdpInputControl, InheritedDiscoveryAcceptance) {
+    adp a;
+    fresh(&a, true);
+    adp_set_enable(&a, true);
+    adp_timer_expired(&a);
+    ASSERT_EQ(a.state, ADP_STATE_WAITING);
+    uint8_t frame[ADP_FRAME_BYTES];
+    adp_build(&a, ADP_MSG_ENTITY_DISCOVER, 0, frame);
+    size_t length = sizeof frame;
+    const unsigned control = GetParam();
+    if (control == 1) frame[15] |= 0x10;  // Unsupported AVTP version.
+    if (control == 2) length = 26;       // Only the fields read by this core.
+    if (control == 3) frame[17] = 0;     // Invalid control_data_length.
+    const unsigned starts = fk.starts;
+    const unsigned stops = fk.stops;
+    adp_rx(&a, frame, length);
+    EXPECT_EQ(a.state, ADP_STATE_DELAY) << "inherited discovery enters DELAY";
+    EXPECT_EQ(a.discarded, 0u) << "inherited discovery input is not discarded";
+    EXPECT_EQ(fk.starts, starts + 1u) << "inherited discovery restarts delay timer";
+    EXPECT_EQ(fk.stops, stops + 1u) << "inherited discovery stops advertisement timer";
+    EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "inherited discovery selects delay timer";
+}
+
+INSTANTIATE_TEST_SUITE_P(AllInputs, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u));
 
 } // namespace

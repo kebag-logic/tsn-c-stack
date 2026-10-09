@@ -2017,9 +2017,13 @@ TEST_F(AcmpCore, TimerPortBudgets) {
         if (state == ACMP_PRB_W_RETRY) { adp(Adp{}); }
         fk.clear();
         fire(0);
+        const char* label = state == ACMP_PRB_W_DELAY ? "PRB_W_DELAY" :
+                            state == ACMP_PRB_W_RESP ? "PRB_W_RESP" :
+                            state == ACMP_PRB_W_RESP2 ? "PRB_W_RESP2" :
+                            state == ACMP_PRB_W_RETRY ? "PRB_W_RETRY" : "SETTLED_NO_RSV";
         const unsigned clocks = (state == ACMP_PRB_W_DELAY || state == ACMP_PRB_W_RESP) ? 2u : 1u;
-        EXPECT_EQ(fk.count(Call::NOW), clocks) << "timer clock budget for state " << state;
-        EXPECT_EQ(fk.count(Call::GPTP), 0u) << "timer expiry never samples the grandmaster";
+        EXPECT_EQ(fk.count(Call::NOW), clocks) << "timer clock budget for state " << label;
+        EXPECT_EQ(fk.count(Call::GPTP), 0u) << "timer expiry never samples the grandmaster in " << label;
     }
 }
 

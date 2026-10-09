@@ -1,9 +1,10 @@
 # Verification
 
-For a tester, the complete local gate is:
+For a tester, the Linux validation command is:
 
 ```sh
 python3 scripts/validate.py --work build-validation --jobs 16 --graphs
+python3 scripts/baremetal.py --work build-rv32 --jobs 16
 ```
 
 It runs independent builds and campaigns concurrently.
@@ -22,9 +23,12 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 311 core plants caught by their named assertions. |
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
-| Boundary | `python3 scripts/check_boundary.py --selftest` | C library and owned headers only. Seven forbidden controls rejected. |
+| Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
+| Assertion needles | `python3 scripts/needle_audit.py --selftest` | No empty or generic needles, including the inherited MAAP cases. Six table controls refused. |
+| Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
+| Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
-| Traceability | `python3 scripts/traceability.py --selftest` | Every requirement has a test. Unknown IDs and untraced tests fail. Generated document is current. |
+| Traceability | `python3 scripts/traceability.py --selftest` | Reconcile source declarations with executable GoogleTest registration. Every requirement has a test. Unknown IDs and untraced tests fail. Generated document is current. |
 | Test sensitivity | `python3 scripts/test_inventory.py` | Every test declaration has a named plant. No unknown test names. |
 | Coverage controls | `python3 scripts/coverage_selftest.py` | Drops, missing files, moved uncovered arcs and stale exclusions rejected. |
 | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
@@ -36,7 +40,40 @@ Install [GoogleTest and GMock](https://github.com/google/googletest),
 [clang-tidy](https://clang.llvm.org/extra/clang-tidy/), and Python 3.10 or later.
 The graph check needs [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli).
 The hosted [workflow](../.github/workflows/quality.yml) installs these dependencies.
-No FPGA toolchain, simulator, platform checkout or submodule is used.
+The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
+
+## Bare-metal RV32
+
+Both targets are mandatory for every PR. The separate [bare-metal CI job](../.github/workflows/quality.yml)
+installs a RISC-V cross compiler and [QEMU](https://www.qemu.org/) on the hosted runner.
+On Ubuntu, install `gcc-riscv64-unknown-elf`, `binutils-riscv64-unknown-elf`, `qemu-system-misc` and CMake.
+
+```sh
+python3 scripts/baremetal.py --work build-rv32 --jobs 16
+```
+
+The [gate](../scripts/baremetal.py) builds Debug and Release concurrently with `-march=rv32i -mabi=ilp32 -ffreestanding`.
+It removes default header search paths and checks the compiler dependency output.
+Only core headers, compiler intrinsic headers and the minimal port's C-library subset are permitted.
+The core imports must match the explicit port, memory and integer-helper allowlist.
+The final ELF must be 32-bit RISC-V with the soft-float ABI and no unresolved symbols.
+The whole core archive is linked, so unused entry points cannot hide a missing dependency.
+
+The [smoke checks](../examples/rv32/smoke.c) reuse cases from the hosted tests:
+
+| Check | Defect caught |
+|---|---|
+| ADP schedule and wire fields | Wrong advertisement period, frame size or entity byte order. |
+| ADP valid and inherited malformed discovery | Changed acceptance of version 1, 26-byte input or zero control length. |
+| ADP blocked departure | Dropped queued frame or failure to reset the next advertisement index. |
+| ACMP restore, admission, latch and rollback | Wrong binding byte order, startup state, admission or rollback. |
+| MAAP pool bounds and probe schedule | Off-by-one range end, wrong retransmit count, premature validity or missing withdrawal. |
+
+Any failed check exits the simulator with a nonzero status. A hang times out and fails the gate.
+The gate writes `results.json`, per-build logs and link maps beneath the work directory.
+The full GoogleTest, sanitizer, coverage and mutation campaigns run on Linux.
+RV32 runs these focused smoke checks; it does not claim the Linux coverage denominator.
+Neither target establishes physical transport latency or board behavior.
 
 ## Measurement and limits
 
@@ -53,8 +90,12 @@ The [mutation table](../tests/mutations.json) preserves the core substitutions
 from the source campaigns. Platform-only substitutions are outside this export.
 Where a former killer needed an adapter, a named core assertion now tests the
 same defect. The [test inventory](TESTS.md) records the mapping.
-Compilation failures and crashes count as escapes, not caught mutations.
-Every required killer must fail; an unrelated failed assertion is insufficient.
+Compilation failures and crashes fail the campaign; neither counts as a caught mutation.
+Every required killer must fail with its assertion-specific message; an unrelated failed assertion is insufficient.
+The driver removes each previous XML report before running the binary.
+It requires complete, unique results for exactly the selected executable registration.
+Missing reports, partial results, skips, errors and inconsistent counts fail grading.
+All killers have specific needles. There are no inherited exceptions.
 Header plants rebuild the affected test translation unit too.
 
 The [traceability matrix](TRACEABILITY.md) is generated from requirement records

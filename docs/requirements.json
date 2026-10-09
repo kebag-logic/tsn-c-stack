@@ -1,146 +1,224 @@
 [
   {
     "id": "ADP-01",
-    "text": "Encode the entity fields and reject unrelated or malformed discovery input.",
-    "clause": "IEEE 1722.1-2021 6.2.2; Milan v1.2 5.6.3.1",
-    "links": [
-      "https://standards.ieee.org/ieee/1722.1/6670/",
-      "https://avnu.org/resource/milan-specification/"
+    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble, target and input shorter than 26 bytes. Preserve the [DEV-08 input limits](DEVIATIONS.md).",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.3.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "ADP-02",
     "text": "Follow advertise, discover, link, grandmaster and shutdown transitions.",
-    "clause": "Milan v1.2 5.6.3.5, Table 5.51; IEEE 1722.1-2021 6.2.2.15",
-    "links": [
-      "https://avnu.org/resource/milan-specification/",
-      "https://standards.ieee.org/ieee/1722.1/6670/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.6.3.5, Table 5.51",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.15",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
     ]
   },
   {
     "id": "ADP-03",
     "text": "Keep refused departures ordered before an advertisement. Bound storage and count coalescing.",
-    "clause": "IEEE 1722.1-2021 6.2.5.2.2; Milan v1.2 5.6.3.5.8 and 5.6.3.5.11; local transport contract",
-    "links": [
-      "https://standards.ieee.org/ieee/1722.1/6670/",
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.5.2.2",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.3.5.8 and 5.6.3.5.11",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "Local transport contract",
+        "url": "PORTING.md"
+      }
     ]
   },
   {
     "id": "PORT-01",
     "text": "Serialize input. Refuse synchronous callback re-entry. Preserve state on refusal.",
-    "clause": "Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5; IEEE 1722-2016 B.3",
-    "links": [
-      "https://avnu.org/resource/milan-specification/",
-      "https://sagroups.ieee.org/1722/"
+    "clauses": [
+      {
+        "text": "Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3",
+        "url": "https://sagroups.ieee.org/1722/"
+      }
     ]
   },
   {
     "id": "ACMP-01",
     "text": "Refuse configurations outside static capacities and initialize without port access.",
-    "clause": "Local capacity contract supporting Milan v1.2 5.5.3.5.1",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "Local capacity contract supporting Milan v1.2 5.5.3.5.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "ACMP-02",
     "text": "Parse and build the Milan ACMP format, status codes and flags. Ignore foreign input.",
-    "clause": "IEEE 1722.1-2021 8.2.1; Milan v1.2 5.5.2.2 and 5.5.3.1",
-    "links": [
-      "https://standards.ieee.org/ieee/1722.1/6670/",
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 8.2.1",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.5.2.2 and 5.5.3.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "ACMP-03",
     "text": "Bind, unbind and report each sink with lock checks and response-before-change ordering.",
-    "clause": "Milan v1.2 5.5.2.4, 5.5.2.5 and 5.5.3.5, Tables 5.30 and 5.32",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.2.4, 5.5.2.5 and 5.5.3.5, Tables 5.30 and 5.32",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "ACMP-04",
     "text": "Probe the bound talker, match responses, retry and consume reservation feedback.",
-    "clause": "Milan v1.2 5.5.3.5, Tables 5.29 and 5.30",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5, Tables 5.29 and 5.30",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "ACMP-05",
-    "text": "Start probe deadlines after accepted sends. Keep the earliest per-interface timer across wrap.",
-    "clause": "Milan v1.2 5.5.2.3, 5.5.3.5.3 and 5.5.3.5.16, Table 5.26",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "text": "Use the specified command timeout. Start probe deadlines after accepted sends. Keep the earliest per-interface timer across wrap.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.2.3, 5.5.3.5.3 and 5.5.3.5.16, Table 5.26",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "Local timer and accepted-send contract",
+        "url": "PORTING.md"
+      }
     ]
   },
   {
     "id": "ACMP-06",
     "text": "Discover bound talkers by interface and grandmaster. Handle departure, index changes and aging.",
-    "clause": "Milan v1.2 5.6.4.1 and 5.6.4.5, Table 5.54; IEEE 1722.1-2021 6.2.2.5",
-    "links": [
-      "https://avnu.org/resource/milan-specification/",
-      "https://standards.ieee.org/ieee/1722.1/6670/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.6.4.1 and 5.6.4.5, Table 5.54",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.5",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
     ]
   },
   {
     "id": "ACMP-07",
     "text": "Restore and latch bindings for fast connect without a storage-device dependency.",
-    "clause": "Milan v1.2 5.5.3.5.2 and 5.5.2.4; local binding-record format",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5.2 and 5.5.2.4",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "Local binding-record format",
+        "url": "PORTING.md"
+      }
     ]
   },
   {
     "id": "ACMP-08",
     "text": "Answer talker commands from live source state with the prescribed flags.",
-    "clause": "Milan v1.2 5.5.4; IEEE 1722.1-2021 8.2.1",
-    "links": [
-      "https://avnu.org/resource/milan-specification/",
-      "https://standards.ieee.org/ieee/1722.1/6670/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.4",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722.1-2021 8.2.1",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
     ]
   },
   {
     "id": "ACMP-09",
     "text": "Queue bounded responses and delay notifications until their responses are accepted.",
-    "clause": "Milan v1.2 5.5.3.5; local transport and port work budgets",
-    "links": [
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "Local transport and port work budgets",
+        "url": "PORTING.md"
+      }
     ]
   },
   {
     "id": "MAAP-01",
     "text": "Validate frame fields, destination, source, lengths and supported version behavior.",
-    "clause": "IEEE 1722-2016 B.2, especially B.2.3",
-    "links": [
-      "https://sagroups.ieee.org/1722/"
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.2, especially B.2.3",
+        "url": "https://sagroups.ieee.org/1722/"
+      }
     ]
   },
   {
     "id": "MAAP-02",
     "text": "Reserve valid ranges using three probe retransmissions and randomized timer intervals.",
-    "clause": "IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9",
-    "links": [
-      "https://sagroups.ieee.org/1722/"
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9",
+        "url": "https://sagroups.ieee.org/1722/"
+      }
     ]
   },
   {
     "id": "MAAP-03",
     "text": "Resolve full-width range conflicts and priority. Defend the exact intersection.",
-    "clause": "IEEE 1722-2016 B.3, Table B.7; Milan v1.2 4.3.5.1",
-    "links": [
-      "https://sagroups.ieee.org/1722/",
-      "https://avnu.org/resource/milan-specification/"
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.3, Table B.7",
+        "url": "https://sagroups.ieee.org/1722/"
+      },
+      {
+        "text": "Milan v1.2 4.3.5.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
     ]
   },
   {
     "id": "MAAP-04",
     "text": "Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work.",
-    "clause": "IEEE 1722-2016 B.3, Table B.7; local transport contract",
-    "links": [
-      "https://sagroups.ieee.org/1722/"
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.3, Table B.7",
+        "url": "https://sagroups.ieee.org/1722/"
+      },
+      {
+        "text": "Local transport contract",
+        "url": "PORTING.md"
+      }
     ]
   }
 ]

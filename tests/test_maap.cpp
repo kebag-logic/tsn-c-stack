@@ -108,7 +108,7 @@ TEST(MaapCore, InitialAndThreeRetransmissions) {
     }
     ASSERT_EQ(r.frames.size(), 5u) << "four PROBEs followed by ANNOUNCE";
     EXPECT_EQ(r.frames[4], pdu(3, kBase, 8, kMac)) << "B.2 complete ANNOUNCE bytes";
-    EXPECT_TRUE(r.valid);
+    EXPECT_TRUE(r.valid) << "accepted ANNOUNCE publishes allocation";
     maap_timer_expired(&r.core);
     EXPECT_EQ(r.frames.back(), pdu(3, kBase, 8, kMac)) << "periodic ANNOUNCE";
     EXPECT_FALSE(maap_poll(&r.core));
@@ -116,8 +116,8 @@ TEST(MaapCore, InitialAndThreeRetransmissions) {
 
 // REQ: MAAP-02
 TEST(MaapCore, ConstantsStrictTimersAndSeed) {
-    EXPECT_EQ(MAAP_PROBE_BASE_MS, 500u); EXPECT_EQ(MAAP_PROBE_VARIATION_MS, 100u);
-    EXPECT_EQ(MAAP_ANNOUNCE_BASE_MS, 30000u); EXPECT_EQ(MAAP_ANNOUNCE_VARIATION_MS, 2000u);
+    EXPECT_EQ(MAAP_PROBE_BASE_MS, 500u) << "probe base interval"; EXPECT_EQ(MAAP_PROBE_VARIATION_MS, 100u) << "probe interval variation";
+    EXPECT_EQ(MAAP_ANNOUNCE_BASE_MS, 30000u) << "announce base interval"; EXPECT_EQ(MAAP_ANNOUNCE_VARIATION_MS, 2000u) << "announce interval variation";
     unsigned min_probe = 1000, max_probe = 0, min_announce = 40000, max_announce = 0;
     for (unsigned seed = 0; seed < 5000; ++seed) {
         CoreRig a; CoreRig b; a.clock = seed; b.clock = seed;
@@ -128,7 +128,7 @@ TEST(MaapCore, ConstantsStrictTimersAndSeed) {
             else { min_announce = std::min(min_announce, delay); max_announce = std::max(max_announce, delay); }
         }
     }
-    EXPECT_EQ(min_probe, 511u); EXPECT_EQ(max_probe, 589u);
+    EXPECT_EQ(min_probe, 511u) << "clock seed spans the probe interval"; EXPECT_EQ(max_probe, 589u);
     EXPECT_EQ(min_announce, 30011u); EXPECT_EQ(max_announce, 31989u);
     CoreRig zero;
     zero.clock = 0u - static_cast<std::uint32_t>(kMac);
@@ -280,8 +280,8 @@ TEST(MaapCore, InitAndPreferredRangeBounds) {
     EXPECT_FALSE(maap_init(&r.core, &r.ports, 3, kMac, 0xfe01));
     ASSERT_TRUE(maap_init(&r.core, &r.ports, 3, kMac, 8));
     EXPECT_FALSE(maap_begin(&r.core, MAAP_POOL_BASE - 1));
-    EXPECT_FALSE(maap_begin(&r.core, MAAP_POOL_BASE + 0xfdf9));
-    EXPECT_TRUE(maap_begin(&r.core, MAAP_POOL_BASE + 0xfdf8));
+    EXPECT_FALSE(maap_begin(&r.core, MAAP_POOL_BASE + 0xfdf9)) << "range past pool end is refused";
+    EXPECT_TRUE(maap_begin(&r.core, MAAP_POOL_BASE + 0xfdf8)) << "last legal range is accepted";
     EXPECT_EQ(r.core.base, MAAP_POOL_BASE + 0xfdf8) << "last legal range";
     auto n = r.frames.size(); EXPECT_TRUE(maap_begin(&r.core, kBase));
     EXPECT_EQ(r.frames.size(), n) << "Begin in PROBE ignored";
@@ -304,7 +304,7 @@ TEST(MaapCore, ReleaseLossAndRetry) {
     EXPECT_FALSE(r.valid) << "starting down withdraws the prior owner";
     maap_port_operational(&r.core, true); EXPECT_EQ(r.core.state, MAAP_PROBE);
     for (unsigned k = 0; k < 3; ++k) maap_timer_expired(&r.core);
-    EXPECT_TRUE(r.valid);
+    EXPECT_TRUE(r.valid) << "accepted ANNOUNCE publishes allocation";
     maap_port_operational(&r.core, true); EXPECT_EQ(r.core.state, MAAP_PROBE);
     EXPECT_FALSE(r.valid) << "PortOperational invalidates acquired address";
     maap_port_operational(&r.core, false);
@@ -377,7 +377,7 @@ TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
     EXPECT_EQ(r.core.queued, 2u);
     r.room = true; EXPECT_FALSE(maap_poll(&r.core)); EXPECT_TRUE(r.valid);
     ASSERT_EQ(r.frames.size(), 5u);
-    EXPECT_EQ(r.frames[3][15], 1u); EXPECT_EQ(r.frames[4][15], 3u) << "last PROBE precedes ANNOUNCE";
+    EXPECT_EQ(r.frames[3][15], 1u) << "last PROBE precedes ANNOUNCE"; EXPECT_EQ(r.frames[4][15], 3u) << "last PROBE precedes ANNOUNCE";
 }
 
 // REQ: MAAP-04
@@ -388,7 +388,7 @@ TEST(MaapCore, QueueBoundAndWithdrawal) {
     EXPECT_EQ(r.core.overflow, 1u) << "overload is counted as failure";
     r.room = true; auto n = r.frames.size(); EXPECT_TRUE(maap_poll(&r.core));
     EXPECT_EQ(r.frames.size(), n + 2) << "poll has bounded work";
-    maap_release(&r.core); EXPECT_EQ(r.core.queued, 0u); EXPECT_FALSE(maap_poll(&r.core));
+    maap_release(&r.core); EXPECT_EQ(r.core.queued, 0u) << "release clears pending output"; EXPECT_FALSE(maap_poll(&r.core));
     CoreRig loss; loss.acquire(); loss.room = false; loss.receive(pdu(1)); loss.receive(pdu(3));
     EXPECT_EQ(loss.core.queued, 1u) << "lost range output replaced by new PROBE";
     loss.room = true; maap_poll(&loss.core); EXPECT_EQ(loss.frames.back()[15], 1u);

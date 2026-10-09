@@ -1,5 +1,13 @@
 # Change log
 
+## Review follow-up
+
+Require fresh complete mutation reports, specific assertion messages, compiler boundary checks and executable test registration.
+Link each standard separately. Record the inherited ADP input limits and caller validation obligations.
+Require Linux and freestanding RV32 validation in [CI](.github/workflows/quality.yml).
+Link the complete RV32 library against a minimal port and run protocol smoke checks in Debug and Release.
+
+
 ## Unreleased
 
 - Import the ADP, ACMP and MAAP cores and wire helpers with rewritten history.

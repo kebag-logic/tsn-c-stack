@@ -73,7 +73,7 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AcmpCore.A9FailureWaitsForTheRetry](../tests/test_acmp.cpp#L620) | acmp-header-retry-2s; acmp-failure-status-dropped; acmp-failure-retries-at-200ms | ACMP-04 |
 | [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1993) | acmp-get-rx-state-reads-the-clock; acmp-probe-response-reads-the-clock-twice; acmp-unbind-reads-the-clock; acmp-talker-reads-the-clock | PORT-01 |
 | [AcmpCore.DepartingStopsEveryProbingTimer](../tests/test_acmp.cpp#L1975) | acmp-probing-status-not-notified | ACMP-06 |
-| [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2027) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
+| [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2031) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
 | [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L775) | acmp-kind-lost; acmp-kind-any-state | ACMP-04 |
 | [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2012) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L555) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01 |
@@ -94,6 +94,7 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L633) | frame-sources-from-sinks | ADP-01, ADP-02 |
 | [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L611) | link-down-departs | ADP-02, PORT-01 |
 | [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L659) | advertise-period-wrong | ADP-02, PORT-01 |
+| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L691) | own-discover-discarded | ADP-01, ADP-02 |
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L195) | reentry-not-ignored | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L139) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L167) | reentry-guard-removed | PORT-01 |
