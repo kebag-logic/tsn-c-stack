@@ -39,6 +39,8 @@ def comment_errors(value, line):
 
 
 def check(text, assembly=False, language='c++', path=None, fragment=False):
+    if any(ord(c) not in (9, 10) and not 32 <= ord(c) <= 126 for c in text):
+        return ['only printable ASCII, tab and LF are permitted']
     errors = []
     if assembly:
         if "'" in text:
@@ -83,11 +85,17 @@ def main():
     files = 0
     for directory in ('src', 'include', 'tests', 'examples'):
         for path in sorted((ROOT / directory).rglob('*')):
+            if not path.is_file():
+                continue
+            data = path.read_bytes()
+            if any(c not in (9, 10) and not 32 <= c <= 126 for c in data):
+                errors.append(path.relative_to(ROOT).as_posix() + ': only printable ASCII, tab and LF are permitted')
+                continue
             if path.suffix in ('.c', '.h', '.cpp', '.hpp', '.S', '.ld'):
                 files += 1
                 relative = path.relative_to(ROOT).as_posix()
                 errors += [relative + ': ' + e for e in check(
-                    path.read_text(), path.suffix == '.S',
+                    data.decode('ascii'), path.suffix == '.S',
                     'c++' if path.suffix in ('.cpp', '.hpp') else 'c', relative)]
     for plant in json.loads((ROOT / 'tests/mutations.json').read_text()):
         for field in ('old', 'new'):

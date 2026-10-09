@@ -47,6 +47,8 @@ Comment and assertion lexing use Clang 18 (`clang-18`), pinned by the package na
 The lexer runs `-cc1 -dump-raw-tokens`, with C11 for `.c` and `.h`, and C++20 for `.cpp` and `.hpp`.
 Set `TSN_CLANG` to a Clang 18 executable when it is outside the command search path.
 The comment controls also need the RV32 cross compiler listed below.
+The gate reads source bytes without newline conversion. Only printable ASCII, tab and LF pass.
+Compiling controls refuse CR, form feed, vertical tab, other controls and non-ASCII text.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32

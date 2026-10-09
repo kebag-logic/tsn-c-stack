@@ -3,6 +3,8 @@
 Code comments contain only SPDX lines, requirement IDs, or short references to standard clauses, tables and figures.
 Put integration contracts in the [porting guide](PORTING.md) and [architecture](ARCHITECTURE.md).
 The [comment gate](../scripts/check_comments.py) checks sources, headers, tests, examples and mutation fragments.
+Files under `src/`, `include/`, `tests/` and `examples/` use only printable ASCII, tab and LF.
+CR, form feed, vertical tab, other controls and non-ASCII bytes are refused before lexing.
 
 The library uses ISO C11. Public headers also compile as C++20.
 Use `-Wall -Wextra -Werror` with GCC and Clang.
