@@ -14,10 +14,24 @@ PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users
 PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
 OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
 IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
+WEB_FLOW = ["hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>", "GitHub <noreply@github.com>"]
 
 
 def git(*args):
     return subprocess.check_output(["git", *args], cwd=ROOT)
+
+
+def identity_ok(lines):
+    return lines[:2] in ([IDENTITY, IDENTITY], WEB_FLOW)
+
+
+def selftest():
+    cases = [([IDENTITY, IDENTITY], True), (WEB_FLOW, True), ([WEB_FLOW[0], IDENTITY], False),
+             ([IDENTITY, WEB_FLOW[1]], False), (["someone <a@b.c>", WEB_FLOW[1]], False),
+             (["someone <a@b.c>", "someone <a@b.c>"], False)]
+    bad = [case for case, want in cases if identity_ok(case) != want]
+    print("privacy selftest: " + ("fail " + repr(bad) if bad else f"{len(cases)} identity controls pass"))
+    return bool(bad)
 
 
 def scan(label, data):
@@ -31,7 +45,7 @@ def main():
     for commit in commits:
         data = git("show", "-s", "--format=%an <%ae>%n%cn <%ce>%n%B", commit)
         lines = data.decode().splitlines()
-        if commit != OWNER_SQUASH and lines[:2] != [IDENTITY, IDENTITY]:
+        if commit != OWNER_SQUASH and not identity_ok(lines):
             errors.append(commit + ": unexpected identity")
         if commit != OWNER_SQUASH and len([line for line in lines[2:] if line.strip()]) != 1:
             errors.append(commit + ": commit message must be one line")
@@ -55,4 +69,5 @@ def main():
     return bool(errors)
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+    raise SystemExit(selftest() if sys.argv[1:] == ["--selftest"] else main())

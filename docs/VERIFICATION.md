@@ -37,6 +37,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Test sensitivity | `python3 scripts/test_inventory.py` | Every test declaration has a named plant. No unknown test names. |
 | Coverage controls | `python3 scripts/coverage_selftest.py` | Drops, missing files, moved uncovered arcs and stale exclusions rejected. |
 | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
+| Privacy identity rule | `python3 scripts/check_privacy.py --selftest` | The holder identity and the GitHub squash identity pass; other identity pairs fail. |
 | Graphs | `python3 scripts/render_graphs.py --output build-graphs` | Every Mermaid fence renders. |
 
 Install [GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571),

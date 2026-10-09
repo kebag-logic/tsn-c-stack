@@ -131,4 +131,6 @@ The owner-created [squash commit](https://github.com/kebag-logic/tsn-c-stack/com
 uses hosted merge identities and a message body.
 The [follow-up assignment](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074811248) fixes it as the branch base.
 The [privacy gate](../scripts/check_privacy.py) exempts only that exact commit from identity and one-line checks.
+Later pull requests are squash-merged on GitHub. Their commits carry the account's noreply author and GitHub as committer.
+The gate accepts exactly that identity pair, still with a one-line message. `check_privacy.py --selftest` checks the identity rule.
 It still scans that commit's content and every reachable blob. Every new commit must use the configured holder identity and one-line subject.
