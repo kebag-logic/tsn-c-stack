@@ -2,10 +2,8 @@
 
 ## Unreleased
 
-Use compiler comment tokens and compile both sides of permitted conditional regions.
-Refuse assembly hiding mechanisms. Grade mutations only from delimited assertion messages.
-Require unique message needles with at least eight characters.
-
+- Enforce the closed contributor rules for source bytes, suffixes, header modes, linker scripts and assembly. Restrict assertion forms and check generated GoogleTest defaults.
+- Use compiler comment tokens and compile both sides of permitted conditional regions. Refuse assembly hiding mechanisms. Grade mutations only from delimited assertion messages. Require unique message needles with at least eight characters.
 - Close comment scanner gaps for digit separators, zero conditions and assembly directive bodies.
 - Require mutation needles to come from named assertion messages. Preserve critical port contract phrases.
 - Require fresh complete mutation reports, specific assertion messages, compiler boundary checks and executable test registration.
