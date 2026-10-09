@@ -62,6 +62,21 @@ def selftest(work):
         assembly.write_text('.global _start\n_start:\nnop\n')
         obj = directory / 'link.o'
         subprocess.run([cross, '-march=rv32i', '-mabi=ilp32', '-c', str(assembly), '-o', str(obj)], check=True)
+        (directory / 'included.h').write_text('nop # prose\n')
+        (directory / 'data.bin').write_bytes(b'\x00\x00\x00\x00')
+        for label, body in (
+                ('assembly-include', '.include "included.h"\n'),
+                ('assembly-incbin', '.incbin "data.bin"\n'),
+                ('assembly-end', '.end\nprose after end\n')):
+            path = directory / (label + '.S')
+            source = '.global _start\n_start:\nnop\n' + body
+            path.write_text(source)
+            subprocess.run([cross, '-march=rv32i', '-mabi=ilp32', '-nostdlib',
+                            '-I' + str(directory), '-Wl,--fatal-warnings', str(path),
+                            '-o', str(directory / (label + '.elf'))], check=True)
+            if not check(source, assembly=True):
+                raise RuntimeError(label + ': unsupported assembler directive accepted')
+            print('comment control ' + label + ': compiled and linked; refused')
         linker = directory / 'link.ld'
         for label, source, refused in (
                 ('linker-quote', "PROVIDE(probe' = 1); /* prose */ PROVIDE(end' = 2);\n", True),

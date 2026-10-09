@@ -21,6 +21,7 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 5. Assembly forbids single quotes and all preprocessor directives.
    Every `#` starts a checked assembler comment. Keep `#` out of assembly strings.
    Assembler conditionals (`.if*`), macros (`.macro`) and repeats (`.rept`, `.irp`, `.irpc`) are forbidden.
+   Includes (`.include`, `.incbin`) and termination (`.end`) are forbidden.
    Use numeric character values. Macro-produced tracing is refused too.
 6. Tests use only `EXPECT_TRUE`, `ASSERT_TRUE`, `EXPECT_FALSE`, `ASSERT_FALSE`,
    `EXPECT_EQ`, `ASSERT_EQ`, `EXPECT_NE`, `ASSERT_NE`, `EXPECT_LE`, `ASSERT_LE`,

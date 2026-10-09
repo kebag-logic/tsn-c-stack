@@ -60,7 +60,8 @@ Linker scripts forbid single quotes. Their comments use C11 raw tokens.
 A linked quote control fails the comment rule and `-Wl,--fatal-warnings`; valid tracing links cleanly.
 Assembly forbids all preprocessor directives, including definitions that produce a hash comment.
 Every `#` starts a comment checked against the tracing allowlist. Single quotes,
-assembler conditionals, macros and repeats are refused. Direct tracing remains accepted.
+assembler conditionals, macros, repeats, `.include`, `.incbin` and `.end` are refused. Direct tracing remains accepted.
+Linked controls refuse assembly source includes, binary includes and text after `.end`.
 Compiling controls include plain and spliced directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
@@ -74,7 +75,7 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 | Suffixes | `.c`, `.h`, `.cpp`, `.hpp`, `.S`, `.ld`; data exceptions are [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet). | An included `.inc` is refused. |
 | Header modes | C11 and C++20 for every `.h`, `.hpp` and header plant fragment. | A digit separator hiding a C++ comment is refused; tracing passes. |
 | Linker scripts | No single quotes; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
-| Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp` or `.irpc`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
+| Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp`, `.irpc`, `.include`, `.incbin` or `.end`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
 | Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
 
 The assertion gate refuses token pasting (`##`) and scans the named macros in all C and C++ files below `tests/`.

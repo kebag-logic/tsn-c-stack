@@ -71,8 +71,8 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
         code = [t for t in tokens if t[0] != 'comment' and not t[1].isspace()]
         for previous, token in zip(code, code[1:]):
             if previous[1] == '.' and (token[1].lower().startswith('if') or
-                    token[1].lower() in ('macro', 'rept', 'irp', 'irpc')):
-                errors.append(f'line {token[4]}: assembler conditional or macro is forbidden')
+                    token[1].lower() in ('macro', 'rept', 'irp', 'irpc', 'include', 'incbin', 'end')):
+                errors.append(f'line {token[4]}: assembler conditional, macro, include or end is forbidden')
     errors += inspect(tokens, path, fragment)[0]
     return errors
 
