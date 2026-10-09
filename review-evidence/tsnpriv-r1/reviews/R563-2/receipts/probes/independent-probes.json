@@ -1,0 +1,530 @@
+[
+  {
+    "case": "helper/holder",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "helper/web-flow",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "helper/owner-exact",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "helper/owner-prefix-only",
+    "actual": 2,
+    "expected": 2,
+    "pass_": true
+  },
+  {
+    "case": "helper/owner-nearby-hash",
+    "actual": 2,
+    "expected": 2,
+    "pass_": true
+  },
+  {
+    "case": "helper/mixed-noreply-holder",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/mixed-holder-github",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/other-noreply-account",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/reversed",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/case-variant",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/holder-body",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/web-body",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/holder-empty",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/web-empty",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "helper/foreign",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "cli/normal",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "cli/selftest",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "cli/selftes",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "cli/selftest-extra",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "cli/selftest-selftest",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "cli/separator",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "main/holder",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "delegation/holder",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/holder",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/web-flow",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "delegation/web-flow",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/web-flow",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/owner-exact",
+    "actual": 0,
+    "expected": 0,
+    "pass_": true
+  },
+  {
+    "case": "delegation/owner-exact",
+    "actual": [
+      "ae982af85ec97286bd35b39403926d8f0eaec81d"
+    ],
+    "expected": [
+      "ae982af85ec97286bd35b39403926d8f0eaec81d"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/owner-exact",
+    "actual": [
+      "ae982af85ec97286bd35b39403926d8f0eaec81d"
+    ],
+    "expected": [
+      "ae982af85ec97286bd35b39403926d8f0eaec81d"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/owner-prefix-only",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/owner-prefix-only",
+    "actual": [
+      "ae982af"
+    ],
+    "expected": [
+      "ae982af"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/owner-prefix-only",
+    "actual": [
+      "ae982af"
+    ],
+    "expected": [
+      "ae982af"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/owner-nearby-hash",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/owner-nearby-hash",
+    "actual": [
+      "ae982af85ec97286bd35b39403926d8f0eaec810"
+    ],
+    "expected": [
+      "ae982af85ec97286bd35b39403926d8f0eaec810"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/owner-nearby-hash",
+    "actual": [
+      "ae982af85ec97286bd35b39403926d8f0eaec810"
+    ],
+    "expected": [
+      "ae982af85ec97286bd35b39403926d8f0eaec810"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/mixed-noreply-holder",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/mixed-noreply-holder",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/mixed-noreply-holder",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/mixed-holder-github",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/mixed-holder-github",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/mixed-holder-github",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/other-noreply-account",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/other-noreply-account",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/other-noreply-account",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/reversed",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/reversed",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/reversed",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/case-variant",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/case-variant",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/case-variant",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/holder-body",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/holder-body",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/holder-body",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/web-body",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/web-body",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/web-body",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/holder-empty",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/holder-empty",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/holder-empty",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/web-empty",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/web-empty",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/web-empty",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/foreign",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "delegation/foreign",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "metadata-scanned/foreign",
+    "actual": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "expected": [
+      "0000000000000000000000000000000000000000"
+    ],
+    "pass_": true
+  },
+  {
+    "case": "main/owner-content",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  },
+  {
+    "case": "main/web-content",
+    "actual": 1,
+    "expected": 1,
+    "pass_": true
+  }
+]

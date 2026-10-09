@@ -1,0 +1,15 @@
+2026-10-09T13:05:04.4402296Z   ref: b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:05.3610662Z [command]/usr/bin/git rev-parse --verify --quiet b7c6b7ba0007aaa5791df68d30296423127b003e^{object}
+2026-10-09T13:05:05.3628921Z b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:05.3741393Z [command]/usr/bin/git checkout --progress --force b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:05.3970771Z Note: switching to 'b7c6b7ba0007aaa5791df68d30296423127b003e'.
+2026-10-09T13:05:05.4083645Z b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:26.9803374Z Unpacking googletest (1.14.0-1) ...
+2026-10-09T13:05:27.1494956Z Setting up googletest (1.14.0-1) ...
+2026-10-09T13:05:51.1872733Z ##[group]Run python3 scripts/validate.py --work build-validation --jobs 16 --graphs
+2026-10-09T13:05:51.1874070Z python3 scripts/validate.py --work build-validation --jobs 16 --graphs
+2026-10-09T13:07:36.1412525Z privacy-selftest: rc 0
+2026-10-09T13:07:36.9044788Z privacy: rc 0
+2026-10-09T13:08:23.0096145Z clang-sanitizers-test: rc 0
+2026-10-09T13:09:11.2989701Z mutation: rc 0
+2026-10-09T13:09:35.3757104Z graphs: rc 0

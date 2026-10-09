@@ -1,0 +1,119 @@
+docs/IMPORT.md
+129: 
+130: The owner-created [squash commit](https://github.com/kebag-logic/tsn-c-stack/commit/ae982af85ec97286bd35b39403926d8f0eaec81d)
+131: uses hosted merge identities and a message body.
+132: The [follow-up assignment](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074811248) fixes it as the branch base.
+133: The [privacy gate](../scripts/check_privacy.py) exempts only that exact commit from identity and one-line checks.
+134: It still scans that commit's content and every reachable blob.
+135: Later pull requests are squash-merged on GitHub. Their commits carry the account's noreply author and GitHub as committer.
+136: Every new commit must use one of these two identity pairs and a one-line subject:
+137: the configured holder identity as author and committer, or that hosted squash pair.
+138: `check_privacy.py --selftest` checks the identity rule.
+docs/VERIFICATION.md
+37: | Test sensitivity | `python3 scripts/test_inventory.py` | Every test declaration has a named plant. No unknown test names. |
+38: | Coverage controls | `python3 scripts/coverage_selftest.py` | Drops, missing files, moved uncovered arcs and stale exclusions rejected. |
+39: | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
+40: | Privacy commit rule | `python3 scripts/check_privacy.py --selftest` | The holder pair and the GitHub squash pair pass with a one-line message, and the exact owner squash passes. Mixed, reversed, case-varied and other-account pairs fail, and so does a multi-line message. |
+41: | Graphs | `python3 scripts/render_graphs.py --output build-graphs` | Every Mermaid fence renders. |
+CHANGELOG.md
+1: # Change log
+2: 
+3: ## Unreleased
+4: 
+5: - Accept GitHub squash merges in the privacy gate: the noreply author with GitHub as committer, still with a one-line message.
+6: - Enforce the closed contributor rules for source bytes, suffixes, header modes, linker scripts and assembly. Restrict assertion forms and check generated GoogleTest defaults.
+7: - Use compiler comment tokens and compile both sides of permitted conditional regions. Refuse assembly hiding mechanisms. Grade mutations only from delimited assertion messages. Require unique message needles with at least eight characters.
+8: - Close comment scanner gaps for digit separators, zero conditions and assembly directive bodies.
+scripts/check_privacy.py
+24: def identity_ok(lines):
+25:     return lines[:2] in ([IDENTITY, IDENTITY], WEB_FLOW)
+26: 
+27: 
+28: def commit_errors(commit, lines):
+29:     errors = []
+30:     if commit != OWNER_SQUASH and not identity_ok(lines):
+31:         errors.append(commit + ": unexpected identity")
+32:     if commit != OWNER_SQUASH and len([line for line in lines[2:] if line.strip()]) != 1:
+33:         errors.append(commit + ": commit message must be one line")
+34:     return errors
+35: 
+36: 
+37: def selftest():
+38:     other = "hackerman-kl <99999999+someone@users.noreply.github.com>"
+39:     cases = [
+40:         ("holder", [IDENTITY, IDENTITY, "Subject"], True),
+41:         ("web-flow", WEB_FLOW + ["Subject (#1)"], True),
+42:         ("owner-squash", ["x <x@y.z>", "x <x@y.z>", "Subject", "", "Body"], True),
+43:         ("noreply-author-holder-committer", [WEB_FLOW[0], IDENTITY, "Subject"], False),
+44:         ("holder-author-github-committer", [IDENTITY, WEB_FLOW[1], "Subject"], False),
+45:         ("other-noreply-account", [other, WEB_FLOW[1], "Subject"], False),
+46:         ("reversed-web-flow", [WEB_FLOW[1], WEB_FLOW[0], "Subject"], False),
+47:         ("case-variant", [WEB_FLOW[0].lower(), WEB_FLOW[1], "Subject"], False),
+48:         ("web-flow-two-lines", WEB_FLOW + ["Subject", "", "Body"], False),
+49:         ("holder-two-lines", [IDENTITY, IDENTITY, "Subject", "", "Body"], False),
+50:         ("foreign", ["someone <a@b.c>", "someone <a@b.c>", "Subject"], False),
+51:     ]
+52:     bad = []
+53:     for name, lines, want in cases:
+54:         commit = OWNER_SQUASH if name == "owner-squash" else "0" * 40
+55:         if (not commit_errors(commit, lines)) != want:
+56:             bad.append(name)
+57:     print("privacy selftest: " + ("fail " + ", ".join(bad) if bad else f"{len(cases)} commit controls pass"))
+58:     return bool(bad)
+scripts/check_privacy.py
+65: def main():
+66:     errors = []
+67:     commits = git("rev-list", "HEAD").decode().splitlines()
+68:     for commit in commits:
+69:         data = git("show", "-s", "--format=%an <%ae>%n%cn <%ce>%n%B", commit)
+70:         lines = data.decode().splitlines()
+71:         errors += commit_errors(commit, lines)
+72:         errors += scan(commit, data)
+73:     if OWNER_SQUASH in commits:
+74:         print("privacy: exact owner squash metadata exception; content scanning remains enabled")
+75:     objects = git("rev-list", "--objects", "HEAD").decode().splitlines()
+76:     unique = {line.split(" ", 1)[0] for line in objects}
+77:     blobs = 0
+78:     for oid in sorted(unique):
+79:         if git("cat-file", "-t", oid).strip() != b"blob":
+80:             continue
+81:         blobs += 1
+82:         errors += scan(oid, git("cat-file", "blob", oid))
+83:     files = set(git("ls-files", "--cached", "--others", "--exclude-standard", "-z").decode().split("\0")) - {""}
+84:     for name in sorted(files):
+85:         path = ROOT / name
+86:         if path.is_file():
+87:             errors += scan(name, path.read_bytes())
+88:     print("\n".join(errors) if errors else f"privacy: {len(commits)} commits, {blobs} historical blobs, {len(files)} current files; pass")
+89:     return bool(errors)
+90: 
+91: if __name__ == "__main__":
+92:     import sys
+93:     if sys.argv[1:] not in ([], ["--selftest"]):
+94:         raise SystemExit("usage: check_privacy.py [--selftest]")
+95:     raise SystemExit(selftest() if sys.argv[1:] == ["--selftest"] else main())
+scripts/validate.py
+53:     for name, script, switches in (
+54:         ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
+55:         ('needles', 'needle_audit.py', ['--selftest']),
+56:         ('assertion-templates', 'assertion_templates.py', ['--check', '--selftest', '--work', str(work / 'assertion-templates')]),
+57:         ('dependencies', 'dependency_selftest.py', ['--work', str(work / 'dependency-controls'), '--jobs', str(args.jobs)]),
+58:         ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
+59:         ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
+60:         ('port-contracts', 'check_port_contracts.py', ['--selftest']),
+61:         ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
+62:         ('license', 'check_license.py', ['--selftest']),
+63:         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+64:         ('test-inventory', 'test_inventory.py', ['--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+65:         ('coverage-controls', 'coverage_selftest.py', []),
+66:         ('privacy-selftest', 'check_privacy.py', ['--selftest']),
+67:         ('privacy', 'check_privacy.py', [])):
+68:         results.append(command(name, [python, 'scripts/' + script, *switches]))
+69:     if not any(r['rc'] for r in results):
+70:         with ThreadPoolExecutor(max_workers=4) as pool:
+71:             for group in pool.map(lambda task: task(), tasks):
+72:                 results += group
+73:         if args.graphs:
+74:             results.append(command('graphs', [python, 'scripts/render_graphs.py', '--output', str(work / 'graphs')]))
+75:     (work / 'gates.json').write_text(json.dumps(results, indent=2) + '\n')
+76:     return int(any(r['rc'] != 0 for r in results))

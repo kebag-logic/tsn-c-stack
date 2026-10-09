@@ -1,0 +1,79 @@
+{
+  "head": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+  "published_script_sha256": "11a549fadd33f7eb5bc41d5f407d28f21ac39671cdb1001212196219c830de34",
+  "original_script_unchanged": true,
+  "detector": "real --selftest, normal and optimized Python",
+  "adaptation": "Replay published substitutions only; omit old-head checkout and synthetic commit creation",
+  "cases": [
+    {
+      "name": "none (control)",
+      "substitutions": 0,
+      "selftest_rc": 0,
+      "optimized_selftest_rc": 0,
+      "passed": true
+    },
+    {
+      "name": "accept-any-noreply-author-with-github-committer",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "order-insensitive-pair",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "case-insensitive-pair",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "webflow-checks-committer-only",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "webflow-checks-author-only",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "accept-everything",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "main-keeps-old-holder-only-rule",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "webflow-exempt-from-one-line-rule",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    },
+    {
+      "name": "owner-squash-exception-widened-to-webflow",
+      "substitutions": 1,
+      "selftest_rc": 1,
+      "optimized_selftest_rc": 1,
+      "passed": true
+    }
+  ]
+}

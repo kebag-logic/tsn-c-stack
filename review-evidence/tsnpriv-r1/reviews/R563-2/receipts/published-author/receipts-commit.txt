@@ -1,0 +1,11 @@
+commit 61fb7c9a523b89cb96d493c5baf9f7f866ebed85
+Author: hackerman-kl <hackerman-kl@kebag-logic.com>
+Date:   Fri Oct 9 14:44:59 2026 +0200
+
+    Accept the GitHub squash identity in the privacy gate
+
+ docs/IMPORT.md           |  2 ++
+ docs/VERIFICATION.md     |  1 +
+ scripts/check_privacy.py | 19 +++++++++++++++++--
+ scripts/validate.py      |  1 +
+ 4 files changed, 21 insertions(+), 2 deletions(-)

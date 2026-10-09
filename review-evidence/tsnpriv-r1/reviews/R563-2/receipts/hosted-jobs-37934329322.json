@@ -1,0 +1,148 @@
+{
+  "run": {
+    "id": 37934329322,
+    "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/37934329322"
+  },
+  "jobs": [
+    {
+      "id": 113832483151,
+      "name": "bare-metal",
+      "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T13:04:58Z",
+      "completed_at": "2026-10-09T13:05:55Z",
+      "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/37934329322/job/113832483151",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T13:04:58Z",
+          "completed_at": "2026-10-09T13:04:59Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T13:04:59Z",
+          "completed_at": "2026-10-09T13:05:00Z"
+        },
+        {
+          "name": "Install RV32 dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T13:05:00Z",
+          "completed_at": "2026-10-09T13:05:41Z"
+        },
+        {
+          "name": "Validate the freestanding cores",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T13:05:41Z",
+          "completed_at": "2026-10-09T13:05:52Z"
+        },
+        {
+          "name": "Keep RV32 evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T13:05:52Z",
+          "completed_at": "2026-10-09T13:05:53Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T13:05:53Z",
+          "completed_at": "2026-10-09T13:05:53Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T13:05:53Z",
+          "completed_at": "2026-10-09T13:05:53Z"
+        }
+      ]
+    },
+    {
+      "id": 113832483545,
+      "name": "quality",
+      "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-09T13:04:58Z",
+      "completed_at": "2026-10-09T13:08:58Z",
+      "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/37934329322/job/113832483545",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T13:04:58Z",
+          "completed_at": "2026-10-09T13:04:59Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T13:04:59Z",
+          "completed_at": "2026-10-09T13:05:01Z"
+        },
+        {
+          "name": "Install host dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T13:05:01Z",
+          "completed_at": "2026-10-09T13:05:34Z"
+        },
+        {
+          "name": "Validate the portable cores",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T13:05:34Z",
+          "completed_at": "2026-10-09T13:08:54Z"
+        },
+        {
+          "name": "Keep gate evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T13:08:54Z",
+          "completed_at": "2026-10-09T13:08:56Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T13:08:56Z",
+          "completed_at": "2026-10-09T13:08:56Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T13:08:56Z",
+          "completed_at": "2026-10-09T13:08:56Z"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "file": "author/HANDOFF.md",
+    "expected": "84d671b2acd3d55c08190765715f6b8a392385494b364d6c5caf9e9cf10e2a08",
+    "actual": "84d671b2acd3d55c08190765715f6b8a392385494b364d6c5caf9e9cf10e2a08",
+    "match": true
+  },
+  {
+    "file": "author/receipts/commit.txt",
+    "expected": "f45e74840cfbb3749ba4c19ae431518007b6906c1cc0cb4166b2b6150b4758ec",
+    "actual": "f45e74840cfbb3749ba4c19ae431518007b6906c1cc0cb4166b2b6150b4758ec",
+    "match": true
+  },
+  {
+    "file": "author/receipts/validate-gates-r2.json",
+    "expected": "a234be9df10fd5476580a6a30a698fee27b29b81cf6418e2d27a4688201f3809",
+    "actual": "a234be9df10fd5476580a6a30a698fee27b29b81cf6418e2d27a4688201f3809",
+    "match": true
+  },
+  {
+    "file": "author/receipts/validate-r2.log",
+    "expected": "f3fad057e276c02b3c55050ac0d66199f3326d376744af03636caedf5416495b",
+    "actual": "f3fad057e276c02b3c55050ac0d66199f3326d376744af03636caedf5416495b",
+    "match": true
+  }
+]

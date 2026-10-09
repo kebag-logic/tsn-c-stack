@@ -1,0 +1,37 @@
+{
+  "total_count": 2,
+  "artifacts": [
+    {
+      "id": 11617970099,
+      "name": "rv32-evidence",
+      "size_in_bytes": 5657,
+      "archive_download_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11617970099/zip",
+      "digest": "sha256:a3a0b13e3146b1df88b2c89949cc16651632e67fc81f99332eeeca7410518bae",
+      "expired": false,
+      "created_at": "2026-10-09T13:05:52Z",
+      "workflow_run": {
+        "id": 37934329322,
+        "repository_id": 1411276404,
+        "head_repository_id": 1411276404,
+        "head_branch": "privacy-web-flow-squash",
+        "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e"
+      }
+    },
+    {
+      "id": 11617960597,
+      "name": "quality-evidence",
+      "size_in_bytes": 365978,
+      "archive_download_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11617960597/zip",
+      "digest": "sha256:4699ed0f1e547783e7c003bfa810523899edd0d3bcaab2495cddf766722c7e9b",
+      "expired": false,
+      "created_at": "2026-10-09T13:08:56Z",
+      "workflow_run": {
+        "id": 37934329322,
+        "repository_id": 1411276404,
+        "head_repository_id": 1411276404,
+        "head_branch": "privacy-web-flow-squash",
+        "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e"
+      }
+    }
+  ]
+}
