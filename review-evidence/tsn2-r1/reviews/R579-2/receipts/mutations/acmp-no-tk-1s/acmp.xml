@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T21:20:08.247" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T21:20:08.247">
+    <testcase name="A8SuccessSettles" file="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp" line="612" status="run" result="completed" time="0." timestamp="2026-10-09T21:20:08.247" classname="AcmpCore">
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:623&#x0A;Value of: s.timer == ACMP_TIMER_NO_TK &amp;&amp; s.timer_deadline == fk.now + spec::TMR_NO_TK_MS&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:623
+Value of: s.timer == ACMP_TIMER_NO_TK && s.timer_deadline == fk.now + spec::TMR_NO_TK_MS
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:623&#x0A;Value of: s.timer == ACMP_TIMER_NO_TK &amp;&amp; s.timer_deadline == fk.now + spec::TMR_NO_TK_MS&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:623
+Value of: s.timer == ACMP_TIMER_NO_TK && s.timer_deadline == fk.now + spec::TMR_NO_TK_MS
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

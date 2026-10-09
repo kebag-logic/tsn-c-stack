@@ -1,0 +1,17 @@
+{
+  "gcc": "gcc (GCC) 16.2.1 20260810",
+  "clang": "clang version 23.1.1",
+  "lexical_clang": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+  "rv32": "riscv64-elf-gcc (Arch Linux Repositories) 16.2.0",
+  "google_test": "1.14.0",
+  "google_mock": "1.14.0",
+  "pinned_prefix_variables": [
+    "PKG_CONFIG_PATH",
+    "CMAKE_PREFIX_PATH",
+    "LD_LIBRARY_PATH"
+  ],
+  "pinned_lexical_compiler_directory_first": true,
+  "driver_jobs": 4,
+  "unit_memory_cap_bytes": 12884901888,
+  "unit_memory_peak_bytes": 3311906816
+}

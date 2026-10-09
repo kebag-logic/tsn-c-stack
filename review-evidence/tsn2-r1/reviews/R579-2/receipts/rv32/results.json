@@ -1,0 +1,54 @@
+[
+  {
+    "configuration": "Debug",
+    "rc": 0,
+    "elf_sha256": "3709c4d9bf9aae161d885b65400a4fa65eed461b06d5f6786ae9bea861079da7",
+    "elf_bytes": 130348,
+    "core_objects": {
+      "adp.c": "fcd58cffe4a5e4d1523d8494d85ad9a0c462666af14232a178d00f3373846b01",
+      "acmp.c": "4c351852e5e7fb3c3f97ad62ae8ef90ff4c6e3aa652f3513bdc47fd885571004",
+      "maap.c": "4021a8d600f8bd9ab8c4e91a4bbd5ff849b13f998636cfd83be8faf3600cc517"
+    },
+    "core_imports": [
+      "__mulsi3",
+      "__umodsi3",
+      "ctrl_reentry_assert",
+      "memcpy",
+      "memset",
+      "port_assert_failed"
+    ],
+    "generated_objects": {
+      "listener": "720509eb2d94434f0baaed1d2b0ddd49357bdc0d4f4e8fc195d140c9f7b5eeff",
+      "talker": "ae704da295179938265db949d736700506788453af6cb5f4b15c004da337546f",
+      "duplex": "53221a612e9ae849f82359ca9fac0e1e2dfe99e8772dc0cdd53925f0249f9afe",
+      "ax7101": "c90b35a9af23dc6d06411e0cccd283ea3942fc66d3597831087abc7360ab69fe"
+    },
+    "unresolved_final": [],
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips"
+  },
+  {
+    "configuration": "Release",
+    "rc": 0,
+    "elf_sha256": "8c097b7eda237906cf2155a2e59cb1e0a02c17b65bb3b3aee737ecae00cad620",
+    "elf_bytes": 43508,
+    "core_objects": {
+      "adp.c": "a8f0bba907e976580caeda5d7fc1365f84aafdbcc661547f3d28f94b27d9b178",
+      "acmp.c": "56b0c8d698c884ebc9b0732a24edd1f269473e5e0610a0170c647726f218413f",
+      "maap.c": "f04b053968b267848c4752d65f1675fca061d9f8aed7e9165885f2b097be0ce8"
+    },
+    "core_imports": [
+      "__umodsi3",
+      "ctrl_reentry_assert",
+      "memcpy",
+      "memset"
+    ],
+    "generated_objects": {
+      "listener": "52f2ca1d176a628a283f523ca9ae769ea52dda2d3ab35a781d000cb3b3ed1bfc",
+      "talker": "a8351ec6d8d73b9497f2dde3b34fe04c6e45c678d15410176a13bfc8016e4d31",
+      "duplex": "03a7b66054b32641f67448209227d9fef9b82f4ba4d6f2eaa7c431147803d640",
+      "ax7101": "37bde69f1ce1539e8e6437761cbf8e434078d54fcdf88e7762cb48e716c7fd24"
+    },
+    "unresolved_final": [],
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips"
+  }
+]

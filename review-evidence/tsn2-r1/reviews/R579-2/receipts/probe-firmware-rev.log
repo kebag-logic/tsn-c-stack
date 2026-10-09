@@ -1,0 +1,10 @@
+builder lines naming firmware_rev:
+  f"respin with no CSR-ABI change use entity.firmware_rev.")
+  rev = ent.get("firmware_rev", 0)
+  f"entity.firmware_rev: {rev!r} is not a non-negative integer")
+  firmware_rev=rev,
+  f"0x{_fwmaj:04X}_{_fwmin:04X} . rev {e['firmware_rev']})")
+without firmware_rev: ACCEPTED entity_id=mac-derived
+firmware_rev: 1: REFUSED: milan.entity: unknown field or invalid mapping
+firmware_rev: 0: REFUSED: milan.entity: unknown field or invalid mapping
+FIRMWARE_REV_SOURCE_VALID_ACCEPTED FAIL

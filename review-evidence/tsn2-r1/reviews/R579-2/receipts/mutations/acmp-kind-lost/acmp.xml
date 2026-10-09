@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T21:20:09.414" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T21:20:09.414">
+    <testcase name="KindChangesOnlyTheSettledView" file="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp" line="786" status="run" result="completed" time="0." timestamp="2026-10-09T21:20:09.414" classname="AcmpCore">
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:791&#x0A;Expected equality of these values:&#x0A;  view(0).registering_failed&#x0A;    Which is: false&#x0A;  failed&#x0A;    Which is: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;kind updates the reported view&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:791
+Expected equality of these values:
+  view(0).registering_failed
+    Which is: false
+  failed
+    Which is: true
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+kind updates the reported view
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:793&#x0A;Expected equality of these values:&#x0A;  fk.count(Call::CHANGED)&#x0A;    Which is: 0&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;kind change notifies once&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:793
+Expected equality of these values:
+  fk.count(Call::CHANGED)
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+kind change notifies once
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:796&#x0A;Expected equality of these values:&#x0A;  fk.count(Call::CHANGED)&#x0A;    Which is: 0&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;same kind is idempotent&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:796
+Expected equality of these values:
+  fk.count(Call::CHANGED)
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+same kind is idempotent
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:793&#x0A;Expected equality of these values:&#x0A;  fk.count(Call::CHANGED)&#x0A;    Which is: 0&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;kind change notifies once&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:793
+Expected equality of these values:
+  fk.count(Call::CHANGED)
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+kind change notifies once
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:796&#x0A;Expected equality of these values:&#x0A;  fk.count(Call::CHANGED)&#x0A;    Which is: 0&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;same kind is idempotent&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_acmp.cpp:796
+Expected equality of these values:
+  fk.count(Call::CHANGED)
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+same kind is idempotent
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

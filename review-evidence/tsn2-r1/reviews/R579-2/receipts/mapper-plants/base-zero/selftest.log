@@ -1,0 +1,1200 @@
+test_ax7101_mapping (__main__.EntityTests.test_ax7101_mapping) ... ok
+test_dropped_required_fields (__main__.EntityTests.test_dropped_required_fields) ... ok
+test_explicit_identity_and_literal_escaping (__main__.EntityTests.test_explicit_identity_and_literal_escaping) ... ok
+test_golden_bytes (__main__.EntityTests.test_golden_bytes) ... ok
+test_golden_planted_drift (__main__.EntityTests.test_golden_planted_drift) ... ok
+test_integer_boolean_and_float_refusals (__main__.EntityTests.test_integer_boolean_and_float_refusals) ... ok
+test_invalid_cli_preserves_outputs (__main__.EntityTests.test_invalid_cli_preserves_outputs) ... ok
+test_invalid_prefix (__main__.EntityTests.test_invalid_prefix) ... ok
+test_mapping_cli_compiled_identity (__main__.EntityTests.test_mapping_cli_compiled_identity) ... FAIL
+test_mapping_default_entity_id (__main__.EntityTests.test_mapping_default_entity_id) ... ok
+test_mapping_default_group_name (__main__.EntityTests.test_mapping_default_group_name) ... ok
+test_mapping_default_vendor_name (__main__.EntityTests.test_mapping_default_vendor_name) ... ok
+test_mapping_digit_only_entity_id (__main__.EntityTests.test_mapping_digit_only_entity_id) ... FAIL
+test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) ... 
+  test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='entity_id', value='FFFFFFFFFFFFFFFE') ... ERROR
+  test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='entity_model_id', value='FFFFFFFFFFFFFFFE') ... ERROR
+  test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='model_id_pin', value='FFFFFFFFFFFFFFFE') ... ERROR
+test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) ... ERROR
+test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) ... 
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='020000FFFE000001') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='020000fffe000001') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0x020000FFFE000001') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0X020000FFFE000001') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0_2_0_0_0_0_F_F_F_E_0_0_0_0_0_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0x0_2_0_0_0_0_F_F_F_E_0_0_0_0_0_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='001bc5c1935893e1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0x001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0X001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0x0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='001bc5c1935893e1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0x001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0X001BC5C1935893E1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0x0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='001BC5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='001bc5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0x001BC5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0X001BC5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0_0_1_B_C_5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0x0_0_1_B_C_5') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0000C588') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0000c588') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0x0000C588') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0X0000C588') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0_0_0_0_C_5_8_8') ... ERROR
+  test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0x0_0_0_0_C_5_8_8') ... ERROR
+test_mapping_mac_refusals (__main__.EntityTests.test_mapping_mac_refusals) ... 
+  test_mapping_mac_refusals (__main__.EntityTests.test_mapping_mac_refusals) (value='02000000001') ... FAIL
+test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) ... 
+  test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='020000000001') ... ERROR
+  test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='0x02_0000_000001') ... ERROR
+  test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='0X020000000001') ... ERROR
+test_mapping_pin_precedence_and_literal_validation (__main__.EntityTests.test_mapping_pin_precedence_and_literal_validation) ... ERROR
+test_mapping_refusals (__main__.EntityTests.test_mapping_refusals) ... 
+  test_mapping_refusals (__main__.EntityTests.test_mapping_refusals) (path=('entity', 'vendor_oui'), value='010000') ... FAIL
+test_mapping_refuse_entity_capabilities_boolean (__main__.EntityTests.test_mapping_refuse_entity_capabilities_boolean) ... ok
+test_mapping_refuse_entity_capabilities_double_underscore (__main__.EntityTests.test_mapping_refuse_entity_capabilities_double_underscore) ... ok
+test_mapping_refuse_entity_capabilities_empty (__main__.EntityTests.test_mapping_refuse_entity_capabilities_empty) ... ok
+test_mapping_refuse_entity_capabilities_extra_zero (__main__.EntityTests.test_mapping_refuse_entity_capabilities_extra_zero) ... ok
+test_mapping_refuse_entity_capabilities_float (__main__.EntityTests.test_mapping_refuse_entity_capabilities_float) ... ok
+test_mapping_refuse_entity_capabilities_integer (__main__.EntityTests.test_mapping_refuse_entity_capabilities_integer) ... ok
+test_mapping_refuse_entity_capabilities_leading_space (__main__.EntityTests.test_mapping_refuse_entity_capabilities_leading_space) ... ok
+test_mapping_refuse_entity_capabilities_leading_underscore (__main__.EntityTests.test_mapping_refuse_entity_capabilities_leading_underscore) ... ok
+test_mapping_refuse_entity_capabilities_list (__main__.EntityTests.test_mapping_refuse_entity_capabilities_list) ... ok
+test_mapping_refuse_entity_capabilities_mapping (__main__.EntityTests.test_mapping_refuse_entity_capabilities_mapping) ... ok
+test_mapping_refuse_entity_capabilities_negative (__main__.EntityTests.test_mapping_refuse_entity_capabilities_negative) ... ok
+test_mapping_refuse_entity_capabilities_newline (__main__.EntityTests.test_mapping_refuse_entity_capabilities_newline) ... ok
+test_mapping_refuse_entity_capabilities_nonhex (__main__.EntityTests.test_mapping_refuse_entity_capabilities_nonhex) ... ok
+test_mapping_refuse_entity_capabilities_null (__main__.EntityTests.test_mapping_refuse_entity_capabilities_null) ... ok
+test_mapping_refuse_entity_capabilities_overflow (__main__.EntityTests.test_mapping_refuse_entity_capabilities_overflow) ... ok
+test_mapping_refuse_entity_capabilities_prefix_only (__main__.EntityTests.test_mapping_refuse_entity_capabilities_prefix_only) ... ok
+test_mapping_refuse_entity_capabilities_prefix_underscore (__main__.EntityTests.test_mapping_refuse_entity_capabilities_prefix_underscore) ... ok
+test_mapping_refuse_entity_capabilities_separator (__main__.EntityTests.test_mapping_refuse_entity_capabilities_separator) ... ok
+test_mapping_refuse_entity_capabilities_sign (__main__.EntityTests.test_mapping_refuse_entity_capabilities_sign) ... ok
+test_mapping_refuse_entity_capabilities_trailing_space (__main__.EntityTests.test_mapping_refuse_entity_capabilities_trailing_space) ... ok
+test_mapping_refuse_entity_capabilities_trailing_underscore (__main__.EntityTests.test_mapping_refuse_entity_capabilities_trailing_underscore) ... ok
+test_mapping_refuse_entity_capabilities_unicode (__main__.EntityTests.test_mapping_refuse_entity_capabilities_unicode) ... ok
+test_mapping_refuse_entity_capabilities_wide_underscores (__main__.EntityTests.test_mapping_refuse_entity_capabilities_wide_underscores) ... ok
+test_mapping_refuse_entity_id_boolean (__main__.EntityTests.test_mapping_refuse_entity_id_boolean) ... ok
+test_mapping_refuse_entity_id_double_underscore (__main__.EntityTests.test_mapping_refuse_entity_id_double_underscore) ... ok
+test_mapping_refuse_entity_id_empty (__main__.EntityTests.test_mapping_refuse_entity_id_empty) ... ok
+test_mapping_refuse_entity_id_extra_zero (__main__.EntityTests.test_mapping_refuse_entity_id_extra_zero) ... ok
+test_mapping_refuse_entity_id_float (__main__.EntityTests.test_mapping_refuse_entity_id_float) ... ok
+test_mapping_refuse_entity_id_integer (__main__.EntityTests.test_mapping_refuse_entity_id_integer) ... ok
+test_mapping_refuse_entity_id_leading_space (__main__.EntityTests.test_mapping_refuse_entity_id_leading_space) ... ok
+test_mapping_refuse_entity_id_leading_underscore (__main__.EntityTests.test_mapping_refuse_entity_id_leading_underscore) ... ok
+test_mapping_refuse_entity_id_list (__main__.EntityTests.test_mapping_refuse_entity_id_list) ... ok
+test_mapping_refuse_entity_id_mapping (__main__.EntityTests.test_mapping_refuse_entity_id_mapping) ... ok
+test_mapping_refuse_entity_id_negative (__main__.EntityTests.test_mapping_refuse_entity_id_negative) ... ok
+test_mapping_refuse_entity_id_newline (__main__.EntityTests.test_mapping_refuse_entity_id_newline) ... ok
+test_mapping_refuse_entity_id_nonhex (__main__.EntityTests.test_mapping_refuse_entity_id_nonhex) ... ok
+test_mapping_refuse_entity_id_null (__main__.EntityTests.test_mapping_refuse_entity_id_null) ... ok
+test_mapping_refuse_entity_id_overflow (__main__.EntityTests.test_mapping_refuse_entity_id_overflow) ... ok
+test_mapping_refuse_entity_id_prefix_only (__main__.EntityTests.test_mapping_refuse_entity_id_prefix_only) ... ok
+test_mapping_refuse_entity_id_prefix_underscore (__main__.EntityTests.test_mapping_refuse_entity_id_prefix_underscore) ... ok
+test_mapping_refuse_entity_id_separator (__main__.EntityTests.test_mapping_refuse_entity_id_separator) ... ok
+test_mapping_refuse_entity_id_sign (__main__.EntityTests.test_mapping_refuse_entity_id_sign) ... ok
+test_mapping_refuse_entity_id_trailing_space (__main__.EntityTests.test_mapping_refuse_entity_id_trailing_space) ... ok
+test_mapping_refuse_entity_id_trailing_underscore (__main__.EntityTests.test_mapping_refuse_entity_id_trailing_underscore) ... ok
+test_mapping_refuse_entity_id_unicode (__main__.EntityTests.test_mapping_refuse_entity_id_unicode) ... ok
+test_mapping_refuse_entity_id_wide_underscores (__main__.EntityTests.test_mapping_refuse_entity_id_wide_underscores) ... ok
+test_mapping_refuse_entity_model_id_boolean (__main__.EntityTests.test_mapping_refuse_entity_model_id_boolean) ... ok
+test_mapping_refuse_entity_model_id_double_underscore (__main__.EntityTests.test_mapping_refuse_entity_model_id_double_underscore) ... ok
+test_mapping_refuse_entity_model_id_empty (__main__.EntityTests.test_mapping_refuse_entity_model_id_empty) ... ok
+test_mapping_refuse_entity_model_id_extra_zero (__main__.EntityTests.test_mapping_refuse_entity_model_id_extra_zero) ... ok
+test_mapping_refuse_entity_model_id_float (__main__.EntityTests.test_mapping_refuse_entity_model_id_float) ... ok
+test_mapping_refuse_entity_model_id_integer (__main__.EntityTests.test_mapping_refuse_entity_model_id_integer) ... ok
+test_mapping_refuse_entity_model_id_leading_space (__main__.EntityTests.test_mapping_refuse_entity_model_id_leading_space) ... ok
+test_mapping_refuse_entity_model_id_leading_underscore (__main__.EntityTests.test_mapping_refuse_entity_model_id_leading_underscore) ... ok
+test_mapping_refuse_entity_model_id_list (__main__.EntityTests.test_mapping_refuse_entity_model_id_list) ... ok
+test_mapping_refuse_entity_model_id_mapping (__main__.EntityTests.test_mapping_refuse_entity_model_id_mapping) ... ok
+test_mapping_refuse_entity_model_id_negative (__main__.EntityTests.test_mapping_refuse_entity_model_id_negative) ... ok
+test_mapping_refuse_entity_model_id_newline (__main__.EntityTests.test_mapping_refuse_entity_model_id_newline) ... ok
+test_mapping_refuse_entity_model_id_nonhex (__main__.EntityTests.test_mapping_refuse_entity_model_id_nonhex) ... ok
+test_mapping_refuse_entity_model_id_null (__main__.EntityTests.test_mapping_refuse_entity_model_id_null) ... ok
+test_mapping_refuse_entity_model_id_overflow (__main__.EntityTests.test_mapping_refuse_entity_model_id_overflow) ... ok
+test_mapping_refuse_entity_model_id_prefix_only (__main__.EntityTests.test_mapping_refuse_entity_model_id_prefix_only) ... ok
+test_mapping_refuse_entity_model_id_prefix_underscore (__main__.EntityTests.test_mapping_refuse_entity_model_id_prefix_underscore) ... ok
+test_mapping_refuse_entity_model_id_separator (__main__.EntityTests.test_mapping_refuse_entity_model_id_separator) ... ok
+test_mapping_refuse_entity_model_id_sign (__main__.EntityTests.test_mapping_refuse_entity_model_id_sign) ... ok
+test_mapping_refuse_entity_model_id_trailing_space (__main__.EntityTests.test_mapping_refuse_entity_model_id_trailing_space) ... ok
+test_mapping_refuse_entity_model_id_trailing_underscore (__main__.EntityTests.test_mapping_refuse_entity_model_id_trailing_underscore) ... ok
+test_mapping_refuse_entity_model_id_unicode (__main__.EntityTests.test_mapping_refuse_entity_model_id_unicode) ... ok
+test_mapping_refuse_entity_model_id_wide_underscores (__main__.EntityTests.test_mapping_refuse_entity_model_id_wide_underscores) ... ok
+test_mapping_refuse_model_id_pin_boolean (__main__.EntityTests.test_mapping_refuse_model_id_pin_boolean) ... ok
+test_mapping_refuse_model_id_pin_double_underscore (__main__.EntityTests.test_mapping_refuse_model_id_pin_double_underscore) ... ok
+test_mapping_refuse_model_id_pin_empty (__main__.EntityTests.test_mapping_refuse_model_id_pin_empty) ... ok
+test_mapping_refuse_model_id_pin_extra_zero (__main__.EntityTests.test_mapping_refuse_model_id_pin_extra_zero) ... ok
+test_mapping_refuse_model_id_pin_float (__main__.EntityTests.test_mapping_refuse_model_id_pin_float) ... ok
+test_mapping_refuse_model_id_pin_integer (__main__.EntityTests.test_mapping_refuse_model_id_pin_integer) ... ok
+test_mapping_refuse_model_id_pin_leading_space (__main__.EntityTests.test_mapping_refuse_model_id_pin_leading_space) ... ok
+test_mapping_refuse_model_id_pin_leading_underscore (__main__.EntityTests.test_mapping_refuse_model_id_pin_leading_underscore) ... ok
+test_mapping_refuse_model_id_pin_list (__main__.EntityTests.test_mapping_refuse_model_id_pin_list) ... ok
+test_mapping_refuse_model_id_pin_mapping (__main__.EntityTests.test_mapping_refuse_model_id_pin_mapping) ... ok
+test_mapping_refuse_model_id_pin_negative (__main__.EntityTests.test_mapping_refuse_model_id_pin_negative) ... ok
+test_mapping_refuse_model_id_pin_newline (__main__.EntityTests.test_mapping_refuse_model_id_pin_newline) ... ok
+test_mapping_refuse_model_id_pin_nonhex (__main__.EntityTests.test_mapping_refuse_model_id_pin_nonhex) ... ok
+test_mapping_refuse_model_id_pin_null (__main__.EntityTests.test_mapping_refuse_model_id_pin_null) ... ok
+test_mapping_refuse_model_id_pin_overflow (__main__.EntityTests.test_mapping_refuse_model_id_pin_overflow) ... ok
+test_mapping_refuse_model_id_pin_prefix_only (__main__.EntityTests.test_mapping_refuse_model_id_pin_prefix_only) ... ok
+test_mapping_refuse_model_id_pin_prefix_underscore (__main__.EntityTests.test_mapping_refuse_model_id_pin_prefix_underscore) ... ok
+test_mapping_refuse_model_id_pin_separator (__main__.EntityTests.test_mapping_refuse_model_id_pin_separator) ... ok
+test_mapping_refuse_model_id_pin_sign (__main__.EntityTests.test_mapping_refuse_model_id_pin_sign) ... ok
+test_mapping_refuse_model_id_pin_trailing_space (__main__.EntityTests.test_mapping_refuse_model_id_pin_trailing_space) ... ok
+test_mapping_refuse_model_id_pin_trailing_underscore (__main__.EntityTests.test_mapping_refuse_model_id_pin_trailing_underscore) ... ok
+test_mapping_refuse_model_id_pin_unicode (__main__.EntityTests.test_mapping_refuse_model_id_pin_unicode) ... ok
+test_mapping_refuse_model_id_pin_wide_underscores (__main__.EntityTests.test_mapping_refuse_model_id_pin_wide_underscores) ... ok
+test_mapping_refuse_vendor_oui_boolean (__main__.EntityTests.test_mapping_refuse_vendor_oui_boolean) ... ok
+test_mapping_refuse_vendor_oui_double_underscore (__main__.EntityTests.test_mapping_refuse_vendor_oui_double_underscore) ... ok
+test_mapping_refuse_vendor_oui_empty (__main__.EntityTests.test_mapping_refuse_vendor_oui_empty) ... ok
+test_mapping_refuse_vendor_oui_extra_zero (__main__.EntityTests.test_mapping_refuse_vendor_oui_extra_zero) ... ok
+test_mapping_refuse_vendor_oui_float (__main__.EntityTests.test_mapping_refuse_vendor_oui_float) ... ok
+test_mapping_refuse_vendor_oui_integer (__main__.EntityTests.test_mapping_refuse_vendor_oui_integer) ... ok
+test_mapping_refuse_vendor_oui_leading_space (__main__.EntityTests.test_mapping_refuse_vendor_oui_leading_space) ... ok
+test_mapping_refuse_vendor_oui_leading_underscore (__main__.EntityTests.test_mapping_refuse_vendor_oui_leading_underscore) ... ok
+test_mapping_refuse_vendor_oui_list (__main__.EntityTests.test_mapping_refuse_vendor_oui_list) ... ok
+test_mapping_refuse_vendor_oui_mapping (__main__.EntityTests.test_mapping_refuse_vendor_oui_mapping) ... ok
+test_mapping_refuse_vendor_oui_negative (__main__.EntityTests.test_mapping_refuse_vendor_oui_negative) ... ok
+test_mapping_refuse_vendor_oui_newline (__main__.EntityTests.test_mapping_refuse_vendor_oui_newline) ... ok
+test_mapping_refuse_vendor_oui_nonhex (__main__.EntityTests.test_mapping_refuse_vendor_oui_nonhex) ... ok
+test_mapping_refuse_vendor_oui_null (__main__.EntityTests.test_mapping_refuse_vendor_oui_null) ... ok
+test_mapping_refuse_vendor_oui_overflow (__main__.EntityTests.test_mapping_refuse_vendor_oui_overflow) ... ok
+test_mapping_refuse_vendor_oui_prefix_only (__main__.EntityTests.test_mapping_refuse_vendor_oui_prefix_only) ... ok
+test_mapping_refuse_vendor_oui_prefix_underscore (__main__.EntityTests.test_mapping_refuse_vendor_oui_prefix_underscore) ... ok
+test_mapping_refuse_vendor_oui_separator (__main__.EntityTests.test_mapping_refuse_vendor_oui_separator) ... ok
+test_mapping_refuse_vendor_oui_sign (__main__.EntityTests.test_mapping_refuse_vendor_oui_sign) ... ok
+test_mapping_refuse_vendor_oui_trailing_space (__main__.EntityTests.test_mapping_refuse_vendor_oui_trailing_space) ... ok
+test_mapping_refuse_vendor_oui_trailing_underscore (__main__.EntityTests.test_mapping_refuse_vendor_oui_trailing_underscore) ... ok
+test_mapping_refuse_vendor_oui_unicode (__main__.EntityTests.test_mapping_refuse_vendor_oui_unicode) ... ok
+test_mapping_refuse_vendor_oui_wide_underscores (__main__.EntityTests.test_mapping_refuse_vendor_oui_wide_underscores) ... ok
+test_mapping_reserved_models (__main__.EntityTests.test_mapping_reserved_models) ... 
+  test_mapping_reserved_models (__main__.EntityTests.test_mapping_reserved_models) (field='entity_model_id', value='FFFFFFFFFFFFFFFF') ... FAIL
+  test_mapping_reserved_models (__main__.EntityTests.test_mapping_reserved_models) (field='model_id_pin', value='FFFFFFFFFFFFFFFF') ... FAIL
+test_mapping_unprefixed_entity_id (__main__.EntityTests.test_mapping_unprefixed_entity_id) ... ERROR
+test_missing_golden_file (__main__.EntityTests.test_missing_golden_file) ... ok
+test_refuse_capability_auth (__main__.EntityTests.test_refuse_capability_auth) ... ok
+test_refuse_capability_milan (__main__.EntityTests.test_refuse_capability_milan) ... ok
+test_refuse_capability_range (__main__.EntityTests.test_refuse_capability_range) ... ok
+test_refuse_entity_id_zero (__main__.EntityTests.test_refuse_entity_id_zero) ... ok
+test_refuse_interfaces_count (__main__.EntityTests.test_refuse_interfaces_count) ... ok
+test_refuse_interfaces_empty (__main__.EntityTests.test_refuse_interfaces_empty) ... ok
+test_refuse_kind (__main__.EntityTests.test_refuse_kind) ... ok
+test_refuse_maap_duplicate (__main__.EntityTests.test_refuse_maap_duplicate) ... ok
+test_refuse_maap_interface (__main__.EntityTests.test_refuse_maap_interface) ... ok
+test_refuse_maap_missing (__main__.EntityTests.test_refuse_maap_missing) ... ok
+test_refuse_maap_no_outputs (__main__.EntityTests.test_refuse_maap_no_outputs) ... ok
+test_refuse_maap_pool (__main__.EntityTests.test_refuse_maap_pool) ... ok
+test_refuse_maap_range (__main__.EntityTests.test_refuse_maap_range) ... ok
+test_refuse_mac_duplicate (__main__.EntityTests.test_refuse_mac_duplicate) ... ok
+test_refuse_mac_format (__main__.EntityTests.test_refuse_mac_format) ... ok
+test_refuse_mac_multicast (__main__.EntityTests.test_refuse_mac_multicast) ... ok
+test_refuse_mac_zero (__main__.EntityTests.test_refuse_mac_zero) ... ok
+test_refuse_missing_mac (__main__.EntityTests.test_refuse_missing_mac) ... ok
+test_refuse_model_id_ones (__main__.EntityTests.test_refuse_model_id_ones) ... ok
+test_refuse_name_c1_control (__main__.EntityTests.test_refuse_name_c1_control) ... ok
+test_refuse_name_control (__main__.EntityTests.test_refuse_name_control) ... ok
+test_refuse_name_length (__main__.EntityTests.test_refuse_name_length) ... ok
+test_refuse_name_surrogate (__main__.EntityTests.test_refuse_name_surrogate) ... ok
+test_refuse_name_type (__main__.EntityTests.test_refuse_name_type) ... ok
+test_refuse_root_type (__main__.EntityTests.test_refuse_root_type) ... ok
+test_refuse_sink_count (__main__.EntityTests.test_refuse_sink_count) ... ok
+test_refuse_sink_interface (__main__.EntityTests.test_refuse_sink_interface) ... ok
+test_refuse_source_count (__main__.EntityTests.test_refuse_source_count) ... ok
+test_refuse_source_interface (__main__.EntityTests.test_refuse_source_interface) ... ok
+test_refuse_version (__main__.EntityTests.test_refuse_version) ... ok
+test_schema_header_guard (__main__.EntityTests.test_schema_header_guard) ... ok
+test_unknown_fields_at_each_level (__main__.EntityTests.test_unknown_fields_at_each_level) ... ok
+test_valid_boundaries (__main__.EntityTests.test_valid_boundaries) ... ok
+test_yaml_integer_compatibility (__main__.EntityTests.test_yaml_integer_compatibility) ... ok
+test_yaml_refusals (__main__.EntityTests.test_yaml_refusals) ... ok
+
+======================================================================
+ERROR: test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='entity_id', value='FFFFFFFFFFFFFFFE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 240, in test_mapping_hex_boundaries
+    mapped = project(doc, mid, 0xC588)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+======================================================================
+ERROR: test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='entity_model_id', value='FFFFFFFFFFFFFFFE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 240, in test_mapping_hex_boundaries
+    mapped = project(doc, mid, 0xC588)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+======================================================================
+ERROR: test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries) (field='model_id_pin', value='FFFFFFFFFFFFFFFE')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 240, in test_mapping_hex_boundaries
+    mapped = project(doc, mid, 0xC588)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFE'
+
+======================================================================
+ERROR: test_mapping_hex_boundaries (__main__.EntityTests.test_mapping_hex_boundaries)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: 'FEFFFF'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 245, in test_mapping_hex_boundaries
+    self.assertEqual(project(doc, mid, 0xC588)['identity']['model_id'], mid)
+                     ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FEFFFF'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='020000FFFE000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='020000fffe000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000fffe000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000fffe000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0x020000FFFE000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0X020000FFFE000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0_2_0_0_0_0_F_F_F_E_0_0_0_0_0_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_id', value='0x0_2_0_0_0_0_F_F_F_E_0_0_0_0_0_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='001bc5c1935893e1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001bc5c1935893e1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001bc5c1935893e1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0x001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0X001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_model_id', value='0x0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 66, in project
+    declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+                                                  ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='001bc5c1935893e1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001bc5c1935893e1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001bc5c1935893e1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0x001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0X001BC5C1935893E1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='model_id_pin', value='0x0_0_1_B_C_5_C_1_9_3_5_8_9_3_E_1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='001BC5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='001bc5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001bc5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001bc5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0x001BC5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0X001BC5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0_0_1_B_C_5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='vendor_oui', value='0x0_0_1_B_C_5')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 73, in project
+    oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0000C588')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000C588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000C588'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0000c588')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000c588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000c588'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0x0000C588')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000C588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000C588'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0X0000C588')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000C588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000C588'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0_0_0_0_C_5_8_8')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000C588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000C588'
+
+======================================================================
+ERROR: test_mapping_hex_spellings (__main__.EntityTests.test_mapping_hex_spellings) (field='entity_capabilities', value='0x0_0_0_0_C_5_8_8')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 78, in project
+    if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
+                                           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '0000C588'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 231, in test_mapping_hex_spellings
+    self.assertEqual(self.mapped(doc), expected)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '0000C588'
+
+======================================================================
+ERROR: test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='020000000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 87, in project
+    interfaces=[dict(mac=station_mac(document['platform']['mac_address']))], maap=[])
+                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 41, in station_mac
+    number = hex_text(value, 48, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 288, in test_mapping_mac_spellings
+    mapped = self.mapped(doc)
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000000001'
+
+======================================================================
+ERROR: test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='0x02_0000_000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 87, in project
+    interfaces=[dict(mac=station_mac(document['platform']['mac_address']))], maap=[])
+                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 41, in station_mac
+    number = hex_text(value, 48, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 288, in test_mapping_mac_spellings
+    mapped = self.mapped(doc)
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000000001'
+
+======================================================================
+ERROR: test_mapping_mac_spellings (__main__.EntityTests.test_mapping_mac_spellings) (value='0X020000000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 87, in project
+    interfaces=[dict(mac=station_mac(document['platform']['mac_address']))], maap=[])
+                         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 41, in station_mac
+    number = hex_text(value, 48, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 288, in test_mapping_mac_spellings
+    mapped = self.mapped(doc)
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000000001'
+
+======================================================================
+ERROR: test_mapping_pin_precedence_and_literal_validation (__main__.EntityTests.test_mapping_pin_precedence_and_literal_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 68, in project
+    declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 28, in model_identity
+    number = hex_text(value, 64, path)
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 254, in test_mapping_pin_precedence_and_literal_validation
+    self.assertEqual(self.mapped(doc)['identity']['model_id'], 0x001BC5C1935893E1)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '001BC5C1935893E1'
+
+======================================================================
+ERROR: test_mapping_unprefixed_entity_id (__main__.EntityTests.test_mapping_unprefixed_entity_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 64, in project
+    identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+                            ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 24, in hex_text
+    return int(digits, 0)
+ValueError: invalid literal for int() with base 0: '020000FFFE000001'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 217, in test_mapping_unprefixed_entity_id
+    self.assertEqual(self.mapped(doc)['identity']['entity_id'], 0x020000FFFE000001)
+                     ~~~~~~~~~~~^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 202, in mapped
+    return project(doc, old['entity_model_id'], old['entity_capabilities'])
+  File "<scratch>/mapper-plants/base-zero/scripts/milan_entity.py", line 97, in project
+    raise Invalid('milan: missing or invalid mapping input: ' + str(error)) from error
+entity_yaml.Invalid: milan: missing or invalid mapping input: invalid literal for int() with base 0: '020000FFFE000001'
+
+======================================================================
+FAIL: test_mapping_cli_compiled_identity (__main__.EntityTests.test_mapping_cli_compiled_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 320, in test_mapping_cli_compiled_identity
+    self.assertEqual(subprocess.run([str(binary)]).returncode, 0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_mapping_digit_only_entity_id (__main__.EntityTests.test_mapping_digit_only_entity_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 212, in test_mapping_digit_only_entity_id
+    self.assertEqual(self.mapped(doc)['identity']['entity_id'], 0x1234567890123456)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1234567890123456 != 1311768467284833366
+
+======================================================================
+FAIL: test_mapping_mac_refusals (__main__.EntityTests.test_mapping_mac_refusals) (value='02000000001')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 305, in test_mapping_mac_refusals
+    self.mapping_refuse(doc, 'milan.platform.mac_address: ' + message)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 207, in mapping_refuse
+    self.assertEqual(str(caught.exception), message)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "milan: missing or invalid mapping input:[49 chars]001'" != 'milan.platform.mac_address: expected exa[32 chars]its)'
+- milan: missing or invalid mapping input: invalid literal for int() with base 0: '02000000001'
++ milan.platform.mac_address: expected exactly 12 hexadecimal digits (48 bits)
+
+
+======================================================================
+FAIL: test_mapping_refusals (__main__.EntityTests.test_mapping_refusals) (path=('entity', 'vendor_oui'), value='010000')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 195, in test_mapping_refusals
+    self.mapping_refuse(doc, message)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 207, in mapping_refuse
+    self.assertEqual(str(caught.exception), message)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "milan: missing or invalid mapping input:[44 chars]000'" != 'milan.entity.vendor_oui: I/G bit must be clear'
+- milan: missing or invalid mapping input: invalid literal for int() with base 0: '010000'
++ milan.entity.vendor_oui: I/G bit must be clear
+
+
+======================================================================
+FAIL: test_mapping_reserved_models (__main__.EntityTests.test_mapping_reserved_models) (field='entity_model_id', value='FFFFFFFFFFFFFFFF')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 264, in test_mapping_reserved_models
+    self.mapping_refuse(doc, f'milan.entity.{field}: model identity must not be zero or all ones')
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 207, in mapping_refuse
+    self.assertEqual(str(caught.exception), message)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "milan: missing or invalid mapping input:[54 chars]FFF'" != 'milan.entity.entity_model_id: model iden[29 chars]ones'
+- milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFF'
++ milan.entity.entity_model_id: model identity must not be zero or all ones
+
+
+======================================================================
+FAIL: test_mapping_reserved_models (__main__.EntityTests.test_mapping_reserved_models) (field='model_id_pin', value='FFFFFFFFFFFFFFFF')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 264, in test_mapping_reserved_models
+    self.mapping_refuse(doc, f'milan.entity.{field}: model identity must not be zero or all ones')
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<scratch>/mapper-plants/base-zero/scripts/entity_selftest.py", line 207, in mapping_refuse
+    self.assertEqual(str(caught.exception), message)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "milan: missing or invalid mapping input:[54 chars]FFF'" != 'milan.entity.model_id_pin: model identit[26 chars]ones'
+- milan: missing or invalid mapping input: invalid literal for int() with base 0: 'FFFFFFFFFFFFFFFF'
++ milan.entity.model_id_pin: model identity must not be zero or all ones
+
+
+----------------------------------------------------------------------
+Ran 172 tests in 0.706s
+
+FAILED (failures=6, errors=39)

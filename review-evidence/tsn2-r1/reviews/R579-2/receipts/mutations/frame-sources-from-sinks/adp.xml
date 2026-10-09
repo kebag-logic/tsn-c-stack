@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T21:19:58.376" name="AllTests">
+  <testsuite name="AdpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T21:19:58.376">
+    <testcase name="EntityFieldsUseIndependentCounts" file="<scratch>/gates/linux/mutations/baseline/tests/test_adp.cpp" line="614" status="run" result="completed" time="0." timestamp="2026-10-09T21:19:58.376" classname="AdpCore">
+      <failure message="<scratch>/gates/linux/mutations/baseline/tests/test_adp.cpp:623&#x0A;Expected equality of these values:&#x0A;  wire_be16(f + 38)&#x0A;    Which is: 3&#x0A;  7u&#x0A;    Which is: 7&#x0A;&#x0A;TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241&#x0A;talker count is independent of listener count&#x0A;TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612&#x0A;&#x0A;" type=""><![CDATA[<scratch>/gates/linux/mutations/baseline/tests/test_adp.cpp:623
+Expected equality of these values:
+  wire_be16(f + 38)
+    Which is: 3
+  7u
+    Which is: 7
+
+TSN_MESSAGE_BEGIN_5bccf468d99ba2cf3e7e6b972789c241
+talker count is independent of listener count
+TSN_MESSAGE_END_de3eb33e47df03181603e5a4fdc9c612
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

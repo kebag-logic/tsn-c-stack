@@ -1,0 +1,21 @@
+milan-fpga 5603c353137e90c1fa95429f6d00ef7a2298d9ee
+a9557227351bbe91ed52d4e545d3192b5c3eae9ba4287fcc06c3b53daed15c89  endstation_arty_4x4.yaml
+a86b3e85eb08f931663f0d288694a64d1c38ee5f69d88a41b8f1c33a0afd0a1f  endstation_arty_8ch.yaml
+87940d8d3ffc947ac8a5faf4b3b9e464a5e28913fc84b4d6a5f02eb18999a744  endstation_arty_current.yaml
+6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1  endstation_ax7101_1x1_tdm8.yaml
+ca491ba5c172fce3e4a99ef9ecbe7412804b8234320c8459e6b8e150e5e3635b  endstation_ax7101_8x8.yaml
+b0761b5894532c8379df1c320d7afb5c6aa787dd4bf35432973f15f3cc470c73  ENDSTATION_BUILDER.md
+
+endstation_arty_4x4.yaml:56:  # Optional `firmware_rev: N` (default 0) bumps the third component for a
+endstation_arty_8ch.yaml:91:  # Optional `firmware_rev: N` (default 0) bumps the third component for a
+endstation_arty_current.yaml:87:  # [31:16].[15:0].firmware_rev, so 0x0001_0016 -> "1.22.0". Until
+endstation_arty_current.yaml:93:  # preferring one of two answers; `firmware_rev: N` (optional, default 0)
+endstation_ax7101_8x8.yaml:26:  # Optional `firmware_rev: N` (default 0) bumps the third component for a
+ENDSTATION_BUILDER.md:1021:| 4b | `entity.firmware_rev` (optional, default 0); **there is no `entity.firmware_version` key and declaring one is refused** | ENTITY `firmware_version` = `VERSION[31:16]`.`VERSION[15:0]`.`fi
+
+endstation_builder.py:3720:    if "firmware_version" in ent:
+endstation_builder.py:3726:            f"respin with no CSR-ABI change use entity.firmware_rev.")
+endstation_builder.py:3727:    rev = ent.get("firmware_rev", 0)
+endstation_builder.py:3730:            f"entity.firmware_rev: {rev!r} is not a non-negative integer")
+endstation_builder.py:3735:        firmware_rev=rev,
+endstation_builder.py:5536:      f"0x{_fwmaj:04X}_{_fwmin:04X} . rev {e['firmware_rev']})")
