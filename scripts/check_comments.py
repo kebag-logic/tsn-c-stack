@@ -8,7 +8,7 @@ import re
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from compiler_tokens import compiler, logical, raw_tokens
+from compiler_tokens import compiler, directives, logical, raw_tokens
 from conditional_policy import DIRECTIVES, inspect
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,14 +53,17 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
             first = line.lstrip()
             words = first[1:].lstrip().split() if first.startswith('#') else []
             directive = bool(words and words[0] in DIRECTIVES)
-            start = line.index('#') + 1 if directive else 0
-            at = line.find('#', start)
+            if directive:
+                errors.append(f'line {number}: assembly preprocessor directives are forbidden')
+            at = line.find('#')
             if at >= 0:
                 errors += comment_errors('//' + line[at + 1:], number)
                 lines[number - 1] = line[:at] + '\n'
         text = ''.join(lines)
         language = 'c'
     tokens = raw_tokens(text, language)
+    if assembly and directives(tokens):
+        errors.append('assembly preprocessor directives are forbidden')
     for kind, value, _, _, number in tokens:
         if kind == 'comment':
             errors += comment_errors(value, number)

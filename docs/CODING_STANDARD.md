@@ -38,8 +38,9 @@ C uses C11; C++ uses C++20. Every `.h` and `.hpp` is lexed in both modes.
 Header mutation fragments use both modes too. Each comment token under these rules is checked.
 Linker scripts forbid single quotes and use the C11 raw comment tokens.
 RV32 linking treats all linker warnings as errors.
-Assembly forbids single quotes, conditional directives, macros and repeats.
-Every assembly `#` after a preprocessor directive marker starts a checked comment.
+Assembly forbids single quotes and all preprocessor directives.
+Every assembly `#` starts a checked assembler comment. Macro-produced tracing is refused too.
+Assembler conditionals (`.if*`), macros (`.macro`) and repeats (`.rept`, `.irp`, `.irpc`) are forbidden.
 Use numeric character values. Keep `#` out of assembly strings.
 The [port contract gate](../scripts/check_port_contracts.py) keeps relocated interface names and critical contract phrases in the integrator guide.
 

@@ -56,6 +56,10 @@ Only `.c`, `.h`, `.cpp`, `.hpp`, `.S` and `.ld` files and the two
 A compiling included `.inc` control proves that an unscanned suffix fails.
 Linker scripts forbid single quotes. Their comments use C11 raw tokens.
 A linked quote control fails the comment rule and `-Wl,--fatal-warnings`; valid tracing links cleanly.
+Assembly forbids all preprocessor directives, including definitions that produce a hash comment.
+Every `#` starts a comment checked against the tracing allowlist. Single quotes,
+assembler conditionals, macros and repeats are refused. Direct tracing remains accepted.
+Compiling controls include plain, spliced and digraph directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32
