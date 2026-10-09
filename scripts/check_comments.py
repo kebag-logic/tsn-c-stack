@@ -8,8 +8,8 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_STRING = r'R"([^ ()\\\t\r\n]*)\(.*?\)\1"'
-STRING = r'"(?:\\[^\n]|[^"\\\n])*"'
-CHARACTER = r"'(?:\\[^\n]|[^'\\\n])*'"
+STRING = r'"(?:\\[^\r\n]|[^"\\\r\n])*"'
+CHARACTER = r"'(?:\\[^\r\n]|[^'\\\r\n])*'"
 # Preprocessing numbers consume digit separators before character recognition.
 PP_NUMBER = r"(?:\d|\.\d)(?:[\w.]|[eEpP][+-]|'[\w])*"
 COMMENT = r'//[^\n]*|/\*.*?\*/'
@@ -88,6 +88,8 @@ def selftest():
         'digit separator': ("int a = 1'000; // narrative\nint b = 2'000;", False),
         'hex digit separator': ("int a = 0xA'B; // narrative\nint b = 0xC'D;", False),
         'multiline character': ("char a = 'a\n// narrative\n';", False),
+        'carriage-return character': ("char a = 'a\r/* narrative */\r';", False),
+        'carriage-return string': ('char *a = "a\r/* narrative */\r";', False),
         'assembly character': ("li a0, 'A\n# narrative\nli a1, 'B", True),
         'assembly define prose': ('#define WORDS 4 # narrative\n.word WORDS', True),
         'assembly quoted prose': ('# "narrative"', True),
