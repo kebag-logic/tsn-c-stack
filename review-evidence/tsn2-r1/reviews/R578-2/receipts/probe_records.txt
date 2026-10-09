@@ -1,0 +1,9 @@
+R4 head validate: [] check_document: []
+R1 added record documented(): ['requirement missing from REQUIREMENTS.md: ZZZ-01']
+R1 added record check_document(): ['requirement missing from REQUIREMENTS.md: ZZZ-01']
+R2 removed ENTITY-01 row documented(): ['requirement missing from REQUIREMENTS.md: ENTITY-01']
+R3 wrong origin -> ['local requirement has no matching issue origin: ENTITY-01']
+R3 missing origin -> ['local requirement has no matching issue origin: ENTITY-01']
+R3 port obligation -> ['local requirement must remain tested: ENTITY-01', 'verification exemption needs a reason: ENTITY-01', 'verification exemption needs linked evidence: ENTITY-01', 'port obligation needs a named port contract: ENTITY-01']
+R3 one target -> ['imported requirement must address both targets: ENTITY-01']
+rc=0

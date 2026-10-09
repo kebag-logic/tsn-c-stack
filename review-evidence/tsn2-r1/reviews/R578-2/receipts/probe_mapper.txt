@@ -1,0 +1,30 @@
+P1 explicit entity_id "1234567890123456" (digit-only hex text)
+  builder view: valid, entity_id=0x1234567890123456
+  mapper: ACCEPTED entity_id=0x1234567890123456
+P2 explicit entity_id "020000FFFE000001" (hex text without 0x)
+  builder view: valid, entity_id=0x020000FFFE000001
+  mapper: ACCEPTED entity_id=0x020000FFFE000001
+P3 vendor_oui "0x001BC5" (agrees with resolved model ID)
+  builder view: valid, oui=0x001BC5; resolved model OUI=0x001BC5
+  mapper: ACCEPTED entity_id=mac-derived
+P4 entity_capabilities "0x0000C588" (agrees with resolved caps)
+  builder view: valid, caps=0x0000C588; resolved=0x0000C588
+  mapper: ACCEPTED entity_id=mac-derived
+P5 vendor_name omitted (builder default "Kebag Logic")
+  builder view: valid (ent.get default)
+  mapper: ACCEPTED entity_id=mac-derived
+P6 group_name omitted (builder default "")
+  builder view: valid (ent.get default)
+  mapper: ACCEPTED entity_id=mac-derived
+P7 entity_id omitted (builder default mac-derived)
+  builder view: valid (ent.get default)
+  mapper: ACCEPTED entity_id=mac-derived
+P8 platform.mac_address "02-00-00-00-00-01"
+  builder view: valid MAC_OCTETS match=True
+  mapper: ACCEPTED entity_id=mac-derived
+P9 vendor_oui integer 1 (the selftest plant; builder refuses unquoted)
+  builder view: invalid: quote the hexadecimal value
+  mapper: REFUSED: milan.entity.vendor_oui: quote the hexadecimal value as a YAML string
+P10 entity_capabilities integer 1 (the selftest plant)
+  builder view: invalid: quote the hexadecimal value
+  mapper: REFUSED: milan.entity.entity_capabilities: quote the hexadecimal value as a YAML string

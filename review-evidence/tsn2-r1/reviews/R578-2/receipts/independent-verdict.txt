@@ -1,0 +1,11 @@
+Independent verdict recorded before reading any earlier review comment on PR #20 or issue 2.
+Recorded at 2026-10-09T19:10:30Z. Exact head 6f4ecc9036f9ac2694b05a749cc9105d9c15c05f.
+Verdict: NEGATIVE.
+Open: R578-2-F1 MINOR (Conformance, Docs, Tests, Robustness) - the mapper refuses the source-valid optional
+  entity.firmware_rev key (builder 5603c353 L3727, default 0) as "milan.entity: unknown field or invalid mapping";
+  the mapping documentation neither covers it nor names a deliberate restriction.
+Suggestions: register runnable mapper plants in the repository; local-record target diagnostic says "imported";
+  mapper accepts source-invalid locale and 64-byte names (documented builder-first scope).
+Delta items: (1) scalar grammar resolved (0 divergences in 160244 scalar and 60084 MAC differential cases; probe_mapper P1-P10 as expected);
+  (2) vendor_name/group_name/entity_id defaults and '-' separators resolved (P5-P8); (3) ENTITY-01 provenance resolved;
+  (4) 27/27 Linux gates rc 0, RV32 rc 0, 330/330 registered plants caught, 19/19 reviewer mapper plants caught.
