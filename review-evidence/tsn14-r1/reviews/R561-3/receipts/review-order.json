@@ -1,0 +1,17 @@
+{
+  "independent_freeze_utc": "2026-10-09T14:52:21.516969+00:00",
+  "earlier_review_read_order": [
+    6082579082,
+    6082605009,
+    6083096975,
+    6083205085
+  ],
+  "earlier_reports_opened_after_verdict_and_ledger": true,
+  "prescribed_environment_gate_run_before_freeze": true,
+  "supplemental_clang18_compiler_gate_run_after_freeze": true,
+  "published_claim_script_rerun_after_freeze": true,
+  "independent_files_sha256": {
+    "INDEPENDENT.md": "41b5794711290d654d1fcd5458f719a866191fe59e13a6a382c665d15e0ef1f4",
+    "LEDGER.md": "24d99082e37a6fd7c5cebb5d7718002f7ef376a6abf44a6fcb2a6396c468357b"
+  }
+}

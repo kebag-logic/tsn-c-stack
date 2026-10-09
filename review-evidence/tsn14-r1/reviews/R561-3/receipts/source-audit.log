@@ -1,0 +1,30 @@
+docs/reference/FR_NFR.md numbered source rows: 68
+REQUIREMENTS.md numbered source rows: 46
+All 114 numbered source anchors match the downloaded pinned source bytes.
+Moved-anchor negative control: ['source row must link to its pinned ID anchor: milan-fpga FR-DISC-01']
+MFDISC-01 test AdpCore.A0toA2Schedule, AdpCore.A9DrawKinds, AdpCore.A10toA14DepartingIndex
+MFDISC-02 test AdpCore.A3toA5DiscoverAndDiscard
+MFDISC-03 test AdpCore.A10toA14DepartingIndex, AdpCore.A15OwedDepartingAcrossARestart, AdpCore.A18LinkLossKeepsTheOwedDeparting, AdpCore.A20LinkLossDropsTheOwedAvailable, AdpCore.LinkLevelsAndDisabledInputs
+MFDISC-04 test AdpCore.A0toA2Schedule, AdpCore.EntityFieldsUseIndependentCounts, AdpCore.AdvertisementFieldsMatchCaller
+MFENTITY-01 port obligation 
+MFENTITY-02 port obligation 
+MFENTITY-03 port obligation 
+MFCONN-01 test AcmpCore.A1BindFromUnboundRespondsThenProbes, AcmpCore.A2GetRxStateInEveryState, AcmpCore.A3UnbindInEveryState, AcmpCore.A20ProbeTxIsAnsweredFromTheSource, AcmpCore.A20DisconnectGetTxStateAndGetTxConnection
+MFCONN-02 port obligation 
+MFCONN-03 test AcmpCore.A22DiscoveredStateCells, AcmpCore.A22DepartingAndAging, AcmpCore.DepartingRetainsBindingAndReprobes, AcmpCore.AdpTimeoutRetainsBindingAndReprobes, AcmpCore.A24ARestoredBindingFastConnects, AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens
+MFCONN-04 port obligation 
+MFMAAP-01 test MaapCore.InitialAndThreeRetransmissions, MaapCell.TableB7, MaapCore.DefendEchoAndIntersection, MaapCore.ReleaseLossAndRetry
+MFMAAP-02 port obligation 
+MFSRP-01 test AcmpCore.A3UnbindInEveryState, AcmpCore.A8SuccessSettles, AcmpCore.A14RegisteredSettlesTheReservation, AcmpCore.A15UnregisteredReprobes, AcmpCore.KindChangesOnlyTheSettledView
+MFSRP-02 port obligation 
+MFSRP-03 port obligation 
+MFSRP-04 port obligation 
+MFOWNER-01 port obligation 
+MFSERVICE-01 port obligation 
+MFLATENCY-01 port obligation 
+MFRECOVERY-01 test AcmpCore.A15UnregisteredReprobes, AcmpCore.A22DiscoveredStateCells, AcmpCore.A22DepartingAndAging, AcmpCore.DepartingRetainsBindingAndReprobes, AcmpCore.AdpTimeoutRetainsBindingAndReprobes, AdpCore.A0toA2Schedule, AdpCore.LinkLevelsAndDisabledInputs, MaapCore.ReleaseLossAndRetry, MaapCore.LinkBounceDrawsAfterSuppliedRange
+MFRECOVERY-02 port obligation 
+MFBUILD-01 verified by inspection 
+MFMEMORY-01 verified by inspection 
+MFQUALITY-01 verified by inspection 
+Source audit PASS

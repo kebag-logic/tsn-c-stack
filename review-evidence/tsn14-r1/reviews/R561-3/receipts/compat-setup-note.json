@@ -1,0 +1,6 @@
+{
+  "initial_setup_rc": 1,
+  "cause": "dpkg-deb is absent from the host",
+  "resolution": "The portable provisioner now extracts the verified ar data member with tar under scratch. No source or gate failure resulted.",
+  "final_setup_rc": 0
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "probe": "p0-baseline",
+    "path": "include/adp.h",
+    "old": "#define ADP_VALID_TIME 10u",
+    "new": "__BASELINE__",
+    "build_rc": 0,
+    "failed": [],
+    "instances": 372,
+    "tagged_failures": {}
+  },
+  {
+    "probe": "p7-peer-loss-unbinds",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->bound = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "build_rc": 0,
+    "failed": [
+      "AcmpCore.A2GetRxStateInEveryState",
+      "AcmpCore.A3UnbindInEveryState",
+      "AcmpCore.A5RebindTheSameSourceUpdatesAndExits",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+      "AcmpCore.DepartingRetainsBindingAndReprobes"
+    ],
+    "instances": 372,
+    "tagged_failures": {
+      "AcmpCore.A2GetRxStateInEveryState": [
+        "ACMP-03",
+        "ACMP-02",
+        "MFCONN-01"
+      ],
+      "AcmpCore.A3UnbindInEveryState": [
+        "ACMP-03",
+        "ACMP-02",
+        "MFCONN-01",
+        "MFSRP-01"
+      ],
+      "AcmpCore.A5RebindTheSameSourceUpdatesAndExits": [
+        "ACMP-03",
+        "ACMP-02"
+      ],
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes": [
+        "ACMP-06",
+        "MFCONN-03",
+        "MFRECOVERY-01"
+      ],
+      "AcmpCore.DepartingRetainsBindingAndReprobes": [
+        "ACMP-06",
+        "MFCONN-03",
+        "MFRECOVERY-01"
+      ]
+    }
+  },
+  {
+    "probe": "p8-peer-loss-stops-discovery",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->disc_running = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "build_rc": 0,
+    "failed": [
+      "AcmpCore.A12DelaySendsANewProbe",
+      "AcmpCore.A18TheSeedIsTakenAtTheFirstDraw",
+      "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+      "AcmpCore.DepartingRetainsBindingAndReprobes",
+      "AcmpCore.DepartingStopsEveryProbingTimer",
+      "AcmpCore.TimerPortBudgets"
+    ],
+    "instances": 372,
+    "tagged_failures": {
+      "AcmpCore.A12DelaySendsANewProbe": [
+        "ACMP-04"
+      ],
+      "AcmpCore.A18TheSeedIsTakenAtTheFirstDraw": [
+        "ACMP-05"
+      ],
+      "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered": [
+        "ACMP-09"
+      ],
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes": [
+        "ACMP-06",
+        "MFCONN-03",
+        "MFRECOVERY-01"
+      ],
+      "AcmpCore.DepartingRetainsBindingAndReprobes": [
+        "ACMP-06",
+        "MFCONN-03",
+        "MFRECOVERY-01"
+      ],
+      "AcmpCore.DepartingStopsEveryProbingTimer": [
+        "ACMP-06"
+      ],
+      "AcmpCore.TimerPortBudgets": [
+        "PORT-01"
+      ]
+    }
+  },
+  {
+    "probe": "p9-startup-draw-uses-4s",
+    "path": "src/adp.c",
+    "old": "kind == ADP_DRAW_STARTUP ? ADP_DELAY_STARTUP_MAX_MS : ADP_DELAY_MAX_MS",
+    "new": "ADP_DELAY_MAX_MS",
+    "build_rc": 0,
+    "failed": [
+      "AdpCore.A9DrawKinds"
+    ],
+    "instances": 372,
+    "tagged_failures": {
+      "AdpCore.A9DrawKinds": [
+        "ADP-02",
+        "PORT-01",
+        "MFDISC-01"
+      ]
+    }
+  }
+]

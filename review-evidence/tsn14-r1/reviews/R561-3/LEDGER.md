@@ -1,0 +1,7 @@
+| Lens | State | Examined artifacts | Covering round | Exact head |
+|---|---|---|---|---|
+| Conformance | CLEAN | Issue #14 items 1–6; assignments 6080704899 and 6082613435; pinned FR/NFR and product register; 25 imported records; 116 dispositions; PORTING identity, SRP, timing and recovery contracts; source-audit.log | R561-3 independent | 663f14de4a07bb1a777282fdfc83d30fd03843d4 |
+| RTL | CLEAN | Complete base-to-head tree/diff; zero RTL files, zero gitlinks; src/ and include/ byte-identical to base; PORTING target boundary; RV32 Debug/Release complete-object link and smoke receipts | R561-3 independent | 663f14de4a07bb1a777282fdfc83d30fd03843d4 |
+| Robustness | CLEAN | requirement_records.py:177–237 and :285–324; traceability.py:51–58; 25 metadata controls; independently moved source anchor; peer-loss assertion messages and both planted defects; report/registration/boundary/privacy controls | R561-3 independent | 663f14de4a07bb1a777282fdfc83d30fd03843d4 |
+| Tests | CLEAN | test_adp.cpp:547 and :628; test_acmp.cpp:148, :1282, :1287; mutations.json; 25 Linux gates; 324 caught plants; 372 executed instances in 7 binaries; both RV32 results; exact-head hosted executed steps | R561-3 independent | 663f14de4a07bb1a777282fdfc83d30fd03843d4 |
+| Docs | CLEAN | CONTRIBUTING; README; REQUIREMENTS, requirements.json, requirement-origins.json, PORTING, TRACEABILITY, TESTS, VERIFICATION, IMPORT, CHANGELOG; current PR body 25-gate claim; generated-document checks and 3 rendered graphs | R561-3 independent | 663f14de4a07bb1a777282fdfc83d30fd03843d4 |

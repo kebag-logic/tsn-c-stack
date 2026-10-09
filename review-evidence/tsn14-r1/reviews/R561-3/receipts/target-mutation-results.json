@@ -1,0 +1,31 @@
+[
+  {
+    "name": "draw-kinds-merged",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AdpCore.A9DrawKinds": "$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_adp.cpp:477\nValue of: in_range\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\nA9 every startup draw is 0..2 s and every other draw 0..4 s\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-peer-loss-clears-binding",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.DepartingRetainsBindingAndReprobes": "$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:164\nValue of: retained.bound && retained.binding.talker_entity_id == kTkA && retained.binding.talker_unique_id == 1u && retained.binding.controller_entity_id == kCtl1\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\npeer loss retains the binding and its talker, stream and controller\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n\n$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:184\nValue of: view(0).bound && view(0).state == ACMP_PRB_W_RESP\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\nrediscovery keeps the sink bound while awaiting the new response\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes": "$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:164\nValue of: retained.bound && retained.binding.talker_entity_id == kTkA && retained.binding.talker_unique_id == 1u && retained.binding.controller_entity_id == kCtl1\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\npeer loss retains the binding and its talker, stream and controller\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n\n$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:184\nValue of: view(0).bound && view(0).state == ACMP_PRB_W_RESP\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\nrediscovery keeps the sink bound while awaiting the new response\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n"
+    },
+    "tests": 2
+  },
+  {
+    "name": "acmp-peer-loss-stops-discovery",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.DepartingRetainsBindingAndReprobes": "$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:174\nValue of: a.sinks[0].discovered && a.sinks[0].state == ACMP_PRB_W_DELAY && a.sinks[0].timer == ACMP_TIMER_DELAY\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\nreturning talker remains discoverable and starts a fresh probe delay\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes": "$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:174\nValue of: a.sinks[0].discovered && a.sinks[0].state == ACMP_PRB_W_DELAY && a.sinks[0].timer == ACMP_TIMER_DELAY\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac\nreturning talker remains discoverable and starts a fresh probe delay\nTSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab\n\n"
+    },
+    "tests": 2
+  }
+]

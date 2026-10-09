@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T16:58:17.075" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T16:58:17.075">
+    <testcase name="A2GetRxStateReportsStreamingWaitAndRegisteringFailed" file="$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp" line="357" status="run" result="completed" time="0." timestamp="2026-10-09T16:58:17.075" classname="AcmpCore">
+      <failure message="$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:363&#x0A;Expected equality of these values:&#x0A;  last().flags&#x0A;    Which is: 10&#x0A;  spec::FLAG_FAST_CONNECT | spec::FLAG_STREAMING_WAIT | spec::FLAG_REGISTERING_FAILED&#x0A;    Which is: 74&#x0A;&#x0A;TSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac&#x0A;A2 SETTLED_RSV_OK on a Talker Failed: STREAMING_WAIT saved, REGISTERING_FAILED 1 (Table 5.39)&#x0A;TSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab&#x0A;&#x0A;" type=""><![CDATA[$PACKET/scratch/gates-clang18/linux/mutations/baseline/tests/test_acmp.cpp:363
+Expected equality of these values:
+  last().flags
+    Which is: 10
+  spec::FLAG_FAST_CONNECT | spec::FLAG_STREAMING_WAIT | spec::FLAG_REGISTERING_FAILED
+    Which is: 74
+
+TSN_MESSAGE_BEGIN_60cc9e36d12d3d0caef45732cd8c7bac
+A2 SETTLED_RSV_OK on a Talker Failed: STREAMING_WAIT saved, REGISTERING_FAILED 1 (Table 5.39)
+TSN_MESSAGE_END_353c47c92ae907f23707ca91088ba0ab
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
