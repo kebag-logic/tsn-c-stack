@@ -1,0 +1,20 @@
+{
+  "base": "18d737832c376f32660eb21fe2796e0b611507e3",
+  "head": "69a312e3914f96c2db5fa51f07b087a6cd6ff349",
+  "commits": [
+    "3d50085fc627f9cfb4c7f5817936cda1f1dd8dd9",
+    "69a312e3914f96c2db5fa51f07b087a6cd6ff349"
+  ],
+  "privacy_gate_sha256": "92ffadffc00e5be0dc29f3b2d5c5877b7e63cedac28b737242c25ede1d1baa6b",
+  "privacy_gate_unchanged": true,
+  "production_sources_unchanged": true,
+  "patch": {
+    "path": "$VALIDATION_STORAGE/tsn14-a571/resume/requirements-port-final.patch",
+    "bytes": 226144,
+    "sha256": "926ebfffb618ff7b88a035933527a68f7c6d075948bf7951bdcb3430c8bcaa3a"
+  },
+  "source_head": "5603c353137e90c1fa95429f6d00ef7a2298d9ee",
+  "source_clean": true,
+  "prepared_files_restored_exactly": true,
+  "new_commit_identity_check": "pass"
+}
