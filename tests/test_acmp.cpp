@@ -219,7 +219,7 @@ TEST_F(AcmpCore, A0EverySinkStartsUnboundAndNothingIsCalled) {
 
 // Milan v1.2 5.5.3.5.3
 
-// REQ: ACMP-03, ACMP-02
+// REQ: ACMP-03, ACMP-02, MFCONN-01
 TEST_F(AcmpCore, A1BindFromUnboundRespondsThenProbes) {
     rx(command(spec::MSG_BIND_RX_COMMAND, 0, kTkA, 1, kCtl1, spec::FLAG_STREAMING_WAIT | spec::FLAG_FAST_CONNECT, 0x4100));
     ASSERT_EQ(fk.sent.size(), 2u) << "A1 BIND_RX sends two frames: the response and the probe";
@@ -278,7 +278,7 @@ TEST_F(AcmpCore, A1BindWithoutStreamingWaitBindsStarted) {
 
 // Milan v1.2 Table 5.34; Milan v1.2 Table 5.37; Milan v1.2 Table 5.38; Milan v1.2 Table 5.39
 
-// REQ: ACMP-03, ACMP-02
+// REQ: ACMP-03, ACMP-02, MFCONN-01
 TEST_F(AcmpCore, A2GetRxStateInEveryState) {
     for (acmp_sink_state st : kStates) {
         SetUp();
@@ -346,7 +346,7 @@ TEST_F(AcmpCore, A2UnknownSinkIsAnsweredListenerUnknownId) {
 
 // Milan v1.2 Table 5.36
 
-// REQ: ACMP-03, ACMP-02
+// REQ: ACMP-03, ACMP-02, MFCONN-01, MFSRP-01
 TEST_F(AcmpCore, A3UnbindInEveryState) {
     for (acmp_sink_state st : kStates) {
         SetUp();
@@ -566,7 +566,7 @@ TEST_F(AcmpCore, A7ResponsesOutsideProbingAreIgnored) {
 
 // Milan v1.2 5.5.3.5.18; Milan v1.2 5.5.3.5.25
 
-// REQ: ACMP-04
+// REQ: ACMP-04, MFSRP-01
 TEST_F(AcmpCore, A8SuccessSettles) {
     for (acmp_sink_state st : {ACMP_PRB_W_RESP, ACMP_PRB_W_RESP2}) {
         SetUp();
@@ -682,7 +682,7 @@ TEST_F(AcmpCore, A13NoTalkerAttributeReprobes) {
         << "A13 talker discovered: TMR_DELAY, PRB_W_DELAY, ACTIVE, status 0 (step 3)";
 }
 
-// REQ: ACMP-04
+// REQ: ACMP-04, MFSRP-01
 TEST_F(AcmpCore, A14RegisteredSettlesTheReservation) {
     to_state(0, ACMP_SETTLED_NO_RSV);
     fk.clear();
@@ -707,7 +707,7 @@ TEST_F(AcmpCore, A14RegisteredSettlesTheReservation) {
     EXPECT_EQ(a.impossible, 2u) << "A14 as is one for a sink the entity lacks";
 }
 
-// REQ: ACMP-04
+// REQ: ACMP-04, MFSRP-01, MFRECOVERY-01
 TEST_F(AcmpCore, A15UnregisteredReprobes) {
     to_state(0, ACMP_SETTLED_RSV_OK);
     fk.clear();
@@ -740,7 +740,7 @@ TEST_F(AcmpCore, A15UnregisteredReprobes) {
     EXPECT_EQ(a.impossible, 2u) << "A15 as is one for a sink the entity lacks";
 }
 
-// REQ: ACMP-04
+// REQ: ACMP-04, MFSRP-01
 TEST_F(AcmpCore, KindChangesOnlyTheSettledView) {
     to_state(0, ACMP_SETTLED_RSV_OK);
     for (bool failed : {true, false}) {
@@ -855,7 +855,7 @@ TEST_F(AcmpCore, A18TheSeedIsTakenAtTheFirstDraw) {
 
 // Milan v1.2 5.5.4
 
-// REQ: ACMP-08
+// REQ: ACMP-08, MFCONN-01
 TEST_F(AcmpCore, A20ProbeTxIsAnsweredFromTheSource) {
     Pdu cmd;
     cmd.msg = spec::MSG_PROBE_TX_COMMAND;
@@ -908,7 +908,7 @@ TEST_F(AcmpCore, A20ProbeTxIsAnsweredFromTheSource) {
         << "A20 on its own interface source 1 is answered there";
 }
 
-// REQ: ACMP-08
+// REQ: ACMP-08, MFCONN-01
 TEST_F(AcmpCore, A20DisconnectGetTxStateAndGetTxConnection) {
     Pdu cmd;
     cmd.controller = kCtl1;
@@ -1152,7 +1152,7 @@ TEST_F(AcmpCore, A22DiscoveredStartsTheProbeFromPrbWAvail) {
     EXPECT_EQ(fk.count(Call::GPTP), 1u) << "A22 the grandmaster is sampled once for the frame";
 }
 
-// REQ: ACMP-06
+// REQ: ACMP-06, MFCONN-03, MFRECOVERY-01
 TEST_F(AcmpCore, A22DiscoveredStateCells) {
 
     auto discovered = [this]() {
@@ -1209,7 +1209,7 @@ TEST_F(AcmpCore, A22DiscoveredStateCells) {
         << "A22 a rising index reads no grandmaster: step 2 alone does";
 }
 
-// REQ: ACMP-06
+// REQ: ACMP-06, MFCONN-03, MFRECOVERY-01
 TEST_F(AcmpCore, A22DepartingAndAging) {
     bind(0);
     Adp gone;
@@ -1340,7 +1340,7 @@ TEST_F(AcmpCore, A23EveryPortIsGuarded) {
     }
 }
 
-// REQ: ACMP-07
+// REQ: ACMP-07, MFCONN-03
 TEST_F(AcmpCore, A24ARestoredBindingFastConnects) {
     std::uint8_t record[spec::BINDING_BYTES] = {0x07, 0xAA, 0x12, 0x34};
     wire_put_be(record + 4, kTkB, 8);
@@ -1792,7 +1792,7 @@ TEST_F(AcmpCore, A29TheAdmitPortFollowsEachSinksBoundTalker) {
     EXPECT_TRUE(admits().empty() && a.sinks[1].state == ACMP_UNBOUND) << "A29 a BIND_RX the lock refuses admits nothing";
 }
 
-// REQ: ACMP-07
+// REQ: ACMP-07, MFCONN-03
 TEST_F(AcmpCore, A29RestoredBindingsAreAdmittedWhenTheTransportOpens) {
     const auto bound = payload(kRecValid, 1u, kTkB, kCtl1);
     const auto none = payload(0u, 0u, 0u, 0u);

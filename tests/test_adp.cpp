@@ -531,11 +531,11 @@ void core_discard_kinds(void) {
     EXPECT_EQ(a.state, ADP_STATE_WAITING) << "A24 and leaves WAITING alone";
 }
 
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01
 TEST(AdpCore, A0toA2Schedule) {
     core_schedule();
 }
-// REQ: ADP-01, ADP-02
+// REQ: ADP-01, ADP-02, MFDISC-02
 TEST(AdpCore, A3toA5DiscoverAndDiscard) {
     core_discard();
 }
@@ -547,11 +547,11 @@ TEST(AdpCore, A6toA8DeferredSends) {
 TEST(AdpCore, A9DrawKinds) {
     core_draws();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-01, MFDISC-03
 TEST(AdpCore, A10toA14DepartingIndex) {
     core_departing_index();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A15OwedDepartingAcrossARestart) {
     core_owed_departing();
 }
@@ -563,7 +563,7 @@ TEST(AdpCore, A16SecondShutdownQueuesItsOwn) {
 TEST(AdpCore, A17RoomBackBeforeAPoll) {
     core_owed_room_first();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A18LinkLossKeepsTheOwedDeparting) {
     core_owed_link_loss();
 }
@@ -571,7 +571,7 @@ TEST(AdpCore, A18LinkLossKeepsTheOwedDeparting) {
 TEST(AdpCore, A19IgnoredInputsKeepTheOwedAvailable) {
     core_owed_inputs_ignored();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A20LinkLossDropsTheOwedAvailable) {
     core_owed_link_loss_drops();
 }
@@ -586,7 +586,7 @@ TEST(AdpCore, A23RepeatedEnableOrDisableChangesNothing) { core_enable_idempotent
 // REQ: ADP-01, ADP-02
 TEST(AdpCore, A24OtherEtherTypeOrSubtypeDiscarded) { core_discard_kinds(); }
 
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01
 TEST(AdpCore, LinkLevelsAndDisabledInputs) {
     adp a;
     uint8_t f[ADP_FRAME_BYTES];
@@ -608,7 +608,7 @@ TEST(AdpCore, LinkLevelsAndDisabledInputs) {
     EXPECT_EQ(fk.sends, 0u) << "shutdown in DOWN sends nothing";
 }
 
-// REQ: ADP-01, ADP-02
+// REQ: ADP-01, ADP-02, MFDISC-04
 TEST(AdpCore, EntityFieldsUseIndependentCounts) {
     auto e = entity;
     e.talker_stream_sources = 7;
@@ -624,7 +624,7 @@ TEST(AdpCore, EntityFieldsUseIndependentCounts) {
     EXPECT_EQ(wire_be16(f + 68), 2u);
 }
 
-// REQ: ADP-01
+// REQ: ADP-01, MFDISC-04
 TEST(AdpCore, AdvertisementFieldsMatchCaller) {
     auto e = entity;
     e.talker_stream_sources = 7;

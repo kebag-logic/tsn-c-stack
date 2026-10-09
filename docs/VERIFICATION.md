@@ -33,7 +33,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
-| Traceability | `python3 scripts/traceability.py --selftest` | Reconcile source declarations with executable GoogleTest registration. Every requirement has a test. Unknown IDs and untraced tests fail. Generated document is current. |
+| Traceability | `python3 scripts/traceability.py --selftest` | Reconcile source declarations with executable GoogleTest registration. Tested requirements need a tagged test. Imported inspection and port obligations need linked evidence and a reason. Check the complete pinned source inventory, origins, both targets and clause links. Metadata defects, unknown IDs and untraced tests fail. Generated documents are current. |
 | Test sensitivity | `python3 scripts/test_inventory.py` | Every test declaration has a named plant. No unknown test names. |
 | Coverage controls | `python3 scripts/coverage_selftest.py` | Drops, missing files, moved uncovered arcs and stale exclusions rejected. |
 | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
@@ -177,6 +177,13 @@ Header plants rebuild the affected test translation unit too.
 The [traceability matrix](TRACEABILITY.md) is generated from requirement records
 and test annotations. Regenerate it and the test inventory with `--write` after
 an intentional test change. Review the resulting diff.
+The [source inventory](requirement-origins.json) records every numbered source requirement and the two Mark II decisions.
+The [record checker](../scripts/requirement_records.py) keeps its pinned inventory complete.
+It generates the import and disposition tables in [requirements](REQUIREMENTS.md).
+The traceability self-test plants missing origins, target omissions, lost source rows, false exclusions, broken links and unsupported exemptions.
+Each must fail. A tested import with its last test removed must also fail.
+Inspection evidence establishes build or source properties on the stated targets.
+Port obligations retain the integration checks in [PORTING](PORTING.md), including the unmeasured service bound.
 A coverage update uses `python3 scripts/coverage.py build-gcc --write` and refuses
 a drop. Exclusion changes need an unreachable-state argument and independent review.
 

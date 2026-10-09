@@ -220,5 +220,636 @@
         "url": "PORTING.md"
       }
     ]
+  },
+  {
+    "id": "MFDISC-01",
+    "origin": "milan-fpga FR-DISC-01",
+    "text": "Advertise with the Milan schedule and valid_time 10. Advance available_index after an accepted advertisement. Initialization and departure reset the next advertisement index under [DEV-02](DEVIATIONS.md).",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.2 and 5.6.3.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFDISC-02",
+    "origin": "milan-fpga FR-DISC-02",
+    "text": "Handle global and own-entity discovery through the advertiser state machine. Ignore a foreign target. Preserve an already running delay.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.4 and 6.2.2.7",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.3.5 and Table 5.51",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFDISC-03",
+    "origin": "milan-fpga FR-DISC-03",
+    "text": "Queue departure on shutdown from an active state. On link down, stop advertising and enter DOWN. Preserve shutdown departures across a restart.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.6.3.5.6, 5.6.3.5.8, 5.6.3.5.10 and 5.6.3.5.11",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFDISC-04",
+    "origin": "milan-fpga FR-DISC-04",
+    "text": "Encode the supplied identity, capabilities, independent stream counts, Identify index and interface. Sample the current grandmaster and domain through the port.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.2",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFENTITY-01",
+    "origin": "milan-fpga FR-DISC-04",
+    "text": "Supply advertisement configuration consistent with the entity descriptors. Supply the current per-interface grandmaster and domain.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.6.2",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "The library encodes caller data. It has no descriptor store or gPTP implementation.",
+      "evidence": [
+        {
+          "text": "Entity configuration contract",
+          "url": "PORTING.md#entity-configuration"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFENTITY-02",
+    "origin": "milan-fpga FR-DISC-05",
+    "text": "Provide one stable EUI-64 entity identity derived from the selected interface MAC. Retain it across restarts and use it consistently in ADP and ACMP.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 6.2.2.7",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "MAC derivation and restart stability are source product policy. IEEE permits MAC derivation; the core accepts a caller-supplied identifier.",
+      "evidence": [
+        {
+          "text": "Entity identity contract",
+          "url": "PORTING.md#entity-configuration"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFCONN-01",
+    "origin": "milan-fpga FR-CONN-01",
+    "text": "Serve Milan listener bind, unbind and state commands. Serve talker probe and state commands with their status and flag rules.",
+    "clauses": [
+      {
+        "text": "IEEE 1722.1-2021 8.2.1",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "Milan v1.2 5.5.2.1 through 5.5.2.5, 5.5.3 and 5.5.4",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFCONN-02",
+    "origin": "milan-fpga FR-CONN-02",
+    "text": "Apply accepted connection and reservation state to the stream transport. Configure its VLAN, priority and any queue or shaper before enabling media.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 4.3.3.2 and 5.5.3.5.18",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "This library owns no media queues or shaper. Their programming depends on the selected transport.",
+      "evidence": [
+        {
+          "text": "Reservation and datapath contract",
+          "url": "PORTING.md#reservation-and-datapath"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFCONN-03",
+    "origin": "milan-fpga FR-CONN-03",
+    "text": "Restore saved bindings before opening transport. Admit restored talkers and resume discovery and probing without controller repair. Retain the binding during peer loss.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.2.6, 5.5.3.5.2 and 5.6.4.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFCONN-04",
+    "origin": "milan-fpga FR-CONN-04",
+    "text": "Persist complete binding records and started state. Validate and restore them before acmp_open. Roll back the entire restore if the store rejects the transaction.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.3.8.2, 5.3.8.3, 5.3.8.7 and 5.5.3.5.2",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "The record codec and rollback are tested. Durable writes, power loss and boot ordering need an external store.",
+      "evidence": [
+        {
+          "text": "Persistence contract",
+          "url": "PORTING.md#persistence-and-startup"
+        },
+        {
+          "text": "Binding tests",
+          "url": "../tests/test_acmp.cpp"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFMAAP-01",
+    "origin": "milan-fpga FR-MAAP-01",
+    "text": "Allocate multicast destination ranges with PROBE and ANNOUNCE. Resolve conflicts and DEFEND the overlapping range. Withdraw validity when the range is lost.",
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.2, B.3 and B.4, Tables B.7 and B.8",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      },
+      {
+        "text": "Milan v1.2 4.3.5.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFMAAP-02",
+    "origin": "milan-fpga FR-MAAP-01",
+    "text": "Use stream destinations only while the MAAP range is valid. Withdraw affected destinations on allocation loss and publish current validity to the talker view.",
+    "clauses": [
+      {
+        "text": "IEEE 1722-2016 B.3.2, Table B.7",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      },
+      {
+        "text": "Milan v1.2 4.3.5.1 and 5.5.4.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "The range callback reports allocation. The application assigns addresses to streams and owns media use.",
+      "evidence": [
+        {
+          "text": "Reservation and datapath contract",
+          "url": "PORTING.md#reservation-and-datapath"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFSRP-01",
+    "origin": "milan-fpga FR-SRP-01",
+    "text": "Request reservation through env->srp after a successful probe. Withdraw it when settlement ends. Consume registration, withdrawal and kind changes through serialized feedback.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5.18, 5.5.3.5.36 and Tables 5.23, 5.29 and 5.30",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFSRP-02",
+    "origin": "milan-fpga FR-SRP-01",
+    "text": "Connect the reservation callbacks to lwSRP. Maintain MSRP declarations and admission per stream and interface. Deliver ordered feedback outside callbacks.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 4.2.7.2, 4.3.3 and 5.5.2.7",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "MSRP and bandwidth admission are outside the three cores. The selected SRP component is lwSRP.",
+      "evidence": [
+        {
+          "text": "Reservation contract",
+          "url": "PORTING.md#reservation-and-datapath"
+        },
+        {
+          "text": "SRP component",
+          "url": "https://github.com/kebag-logic/lwSRP"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFSRP-03",
+    "origin": "milan-fpga FR-SRP-02",
+    "text": "Register the stream VLAN through the external MVRP port. Keep each reservation and its VLAN associated with the correct interface.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 4.2.7.3, 4.3.2 and 4.4.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "ACMP exposes the VLAN in stream parameters. MVRP runs in lwSRP, outside this library.",
+      "evidence": [
+        {
+          "text": "Reservation contract",
+          "url": "PORTING.md#reservation-and-datapath"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFSRP-04",
+    "origin": "milan-fpga FR-SRP-03",
+    "text": "Gate media transmission on actual reservation admission. Apply the reserved rate to any installed shaper. Withdraw permission when admission is lost.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 4.3.3.2 and 5.5.2.7",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "Added beside the proposed SRP rows because reservation enforcement shares the datapath boundary. No shaper is supplied.",
+      "evidence": [
+        {
+          "text": "Reservation contract",
+          "url": "PORTING.md#reservation-and-datapath"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFOWNER-01",
+    "origin": "milan-fpga NFR-SCOUT-02",
+    "text": "Assign each protocol instance one state owner. Serialize frames, timer expiry, link and grandmaster events through its port. Keep other protocol and transport ownership external.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5 and 5.6.3.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "Single ownership is portable. Placement switches and platform ingress hardware are excluded parts of the source row.",
+      "evidence": [
+        {
+          "text": "Dispatch contract",
+          "url": "PORTING.md#ownership-and-dispatch"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFSERVICE-01",
+    "origin": "milan-fpga NFR-SCOUT-03",
+    "text": "Budget at most 10 ms of total service per ADP, listener-discovery, ACMP or MAAP action. Include queueing, callbacks and refused sends. Account for only normative waiting time separately.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.2.3, 5.6.3.5 and 5.6.4.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3.4",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "Ten milliseconds is project policy, proposed in the source register. Execution time depends on the scheduler and transport; no target timing is claimed.",
+      "evidence": [
+        {
+          "text": "Service measurement contract",
+          "url": "PORTING.md#service-measurement"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFLATENCY-01",
+    "origin": "milan-fpga NFR-LAT-02",
+    "text": "Meet the Milan 200 ms ACMP transaction timeout with positive measured margin. Include ingress, service, egress and the network allowance.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.2.3 and Table 5.26",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "Added because the source latency row also applies to ACMP. The core timer tests do not establish a wire deadline. AECP timing is excluded.",
+      "evidence": [
+        {
+          "text": "Service measurement contract",
+          "url": "PORTING.md#service-measurement"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFRECOVERY-01",
+    "origin": "milan-fpga NFR-REL-01",
+    "text": "Recover core advertisement, discovery, probing and address allocation after delivered link, grandmaster and peer-loss events. Keep bound sinks eligible to reconnect without core reinitialization.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.5.3.5, 5.6.3.5 and 5.6.4.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3.2, Table B.7",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test",
+      "reason": "",
+      "evidence": []
+    }
+  },
+  {
+    "id": "MFRECOVERY-02",
+    "origin": "milan-fpga NFR-REL-01",
+    "text": "Detect and deliver link, grandmaster and peer-loss events. Count each event and its recovery outcome. Preserve service failures in diagnostics while recovery proceeds.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 5.6.3.5 and 5.6.4.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722-2016 B.3.2",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "port obligation",
+      "reason": "The cores expose selected counters, not a complete recovery event ledger. Media recovery and complete event counting belong to the application.",
+      "evidence": [
+        {
+          "text": "Recovery accounting contract",
+          "url": "PORTING.md#recovery-accounting"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFBUILD-01",
+    "origin": "milan-fpga NFR-PORT-01",
+    "text": "Build the same C11 core on Linux with GCC and Clang and as freestanding RV32I with the minimal port. Link all core objects without an OS dependency.",
+    "clauses": [
+      {
+        "text": "Source portability requirement",
+        "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#35-resource-reliability-and-the-rest"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "verified by inspection",
+      "reason": "This is a build property. Hosted dependency audits and Debug and Release RV32 links inspect every core object.",
+      "evidence": [
+        {
+          "text": "Hosted boundary audit",
+          "url": "../scripts/check_boundary.py"
+        },
+        {
+          "text": "RV32 link and execution gate",
+          "url": "../scripts/baremetal.py"
+        },
+        {
+          "text": "Both target verification",
+          "url": "VERIFICATION.md"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFMEMORY-01",
+    "origin": "milan-fpga #665 memory",
+    "text": "Use caller-owned instances and fixed arrays sized before execution. Protocol code shall not allocate from the heap or call OS services.",
+    "clauses": [
+      {
+        "text": "Mark II memory decision",
+        "url": "https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "verified by inspection",
+      "reason": "Static arrays are the pools. Source and symbol audits check the cores on both targets; test framework allocation is outside the core contract.",
+      "evidence": [
+        {
+          "text": "C subset",
+          "url": "CODING_STANDARD.md"
+        },
+        {
+          "text": "Hosted boundary audit",
+          "url": "../scripts/check_boundary.py"
+        },
+        {
+          "text": "RV32 audit",
+          "url": "../scripts/baremetal.py"
+        }
+      ]
+    }
+  },
+  {
+    "id": "MFQUALITY-01",
+    "origin": "milan-fpga #665 testing",
+    "text": "Keep GoogleTest and GMock tests for the portable cores. Require 100% line and branch coverage after documented unreachable exclusions, and a caught named defect for each test.",
+    "clauses": [
+      {
+        "text": "Mark II testing decision",
+        "url": "https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-6008744385"
+      }
+    ],
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "verified by inspection",
+      "reason": "Coverage and mutation run on Linux for the shared core source. RV32 runs the linked smoke suite. No RV32 coverage denominator is claimed.",
+      "evidence": [
+        {
+          "text": "Verification gates",
+          "url": "VERIFICATION.md"
+        },
+        {
+          "text": "Coverage exclusions",
+          "url": "COVERAGE.md"
+        },
+        {
+          "text": "Test defects",
+          "url": "TESTS.md"
+        }
+      ]
+    }
   }
 ]
