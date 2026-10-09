@@ -333,3 +333,128 @@ Each sink and source uses its configured interface for routing, discovery and ti
 For a developer, the [coding standard](CODING_STANDARD.md) explains the C subset.
 For a tester, the [verification guide](VERIFICATION.md) covers malformed input,
 backpressure, timer wrap and deliberate callback violations.
+
+## Entity configuration
+
+The [imported identity requirements](REQUIREMENTS.md#mfentity-01) apply to both targets.
+Populate advertisement values from the same entity description used by the application.
+Check capabilities, stream counts, Identify index and interface selection before enabling ADP.
+The grandmaster and domain come from the current per-interface time service.
+They are not a substitute for the static entity fields.
+Check consistency under [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/)
+and [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/).
+
+The [authentication configuration obligation](REQUIREMENTS.md#mfentity-03) retains the source product policy.
+Clear `AEM_AUTHENTICATION_REQUIRED` in the supplied `entity_capabilities` before enabling ADP.
+Check the emitted capability field on Linux and bare-metal RV32.
+[IEEE 1722.1-2021 6.2.2.9 and Table 6-2](https://standards.ieee.org/ieee/1722.1/6670/) define the field and flag.
+The application must handle unauthenticated requests safely.
+AECP authentication and application authorization remain outside this library.
+
+The [stable identity obligation](REQUIREMENTS.md#mfentity-02) retains the source product's MAC-derived EUI-64 policy.
+Derive and store that identity outside the cores. Supply the same identity to ADP and ACMP after restart.
+[IEEE 1722.1-2021 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/) permits MAC derivation; it does not require that particular derivation.
+Test the application identity across cold starts and configuration changes.
+The library neither derives identity nor reads device storage.
+
+## Reservation and datapath
+
+The [reservation requirements](REQUIREMENTS.md#mfsrp-01) split core signaling from external protocol work.
+Connect `env->srp` to [lwSRP](https://github.com/kebag-logic/lwSRP).
+Copy the requested stream parameters before returning from the callback.
+Process declaration changes outside callbacks. Preserve sink and interface identity.
+Deliver registration, withdrawal and registration-kind updates in order through the ACMP entry points.
+Retain a withdrawal even when the same stream registers again before delivery.
+Retire stale feedback when a binding is replaced or removed.
+The integration must test those ordering and supersession cases.
+
+Maintain Talker and Listener declarations, admission and MVRP membership in the external component.
+Use the stream VLAN and the current SR class configuration for each interface.
+The authority is [Milan v1.2 4.2.7.2, 4.2.7.3, 4.3.2, 4.4.1, 5.5.2.7 and 5.5.3.5](https://avnu.org/resource/milan-specification/).
+No MSRP, MVRP or bandwidth admission algorithm is supplied by these cores.
+
+The [datapath obligation](REQUIREMENTS.md#mfconn-02) covers connection programming.
+The [admission obligation](REQUIREMENTS.md#mfsrp-04) covers permission to transmit media.
+Apply the accepted stream identity, VLAN and priority to the transport.
+Configure any installed queue or shaper from the reservation result.
+Refused or withdrawn admission must close the media gate.
+A successful ACMP response alone is insufficient to open it.
+Test successful admission, refusal, withdrawal and replacement on each supported transport.
+
+The [allocation-use obligation](REQUIREMENTS.md#mfmaap-02) connects MAAP to stream ownership.
+Assign addresses only from a currently valid range.
+On loss, invalidate affected source destinations and update `acmp_source_state.dest_mac_valid`.
+Resume use only after the new allocation is valid.
+Test address loss while connected and confirm that stale destinations are no longer used.
+See [IEEE 1722-2016 B.3.2 and Table B.7](https://standards.ieee.org/ieee/1722/5979/)
+and [Milan v1.2 4.3.5.1 and 5.5.4.1](https://avnu.org/resource/milan-specification/).
+
+## Service measurement
+
+The [service requirement](REQUIREMENTS.md#mfservice-01) retains `T_svc = 10 ms` for each core action.
+It is a project figure, proposed for approval in the [source register](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#341-control-service-budget-and-normative-timing).
+It is not a timeout specified by IEEE or Milan.
+Measure it separately on Linux and bare-metal RV32 with the actual port and scheduler.
+Host callback counts and RV32 simulator success do not prove elapsed time on either deployment.
+
+Start reception timing when the port accepts a complete input for delivery.
+Start event timing at event occurrence, before any dispatch queue delay.
+Start an expiry at its original armed deadline.
+Finish when the last required complete output is accepted by transport.
+For actions without output, finish at state and timer commitment.
+Count receive backlog, dispatch, all matching sinks, callbacks, persistence work and refused sends.
+Do not restart the allowance after space becomes available or a discovery event enters ACMP.
+A send accepted into a queue is a service endpoint; wire departure is a separate observation.
+
+For a normative wait `W`, require `elapsed <= W + 10 ms`.
+Record the full elapsed interval and the selected wait separately.
+All overhead before and after the wait shares one allowance.
+Zero random delay means `W = 0`.
+Each retry retains its own normative timeout and cannot erase late service from the earlier action.
+Dropped, unserved and overflowed accepted work fails the measurement.
+Successful eventual recovery does not turn that failure into a pass.
+
+| Hook | Portable observations and required cases | Timing authority |
+|---|---|---|
+| H-ADP | Startup, discovery, GM change, both link edges, shutdown/restart and original advertisement deadlines. Observe accepted AVAILABLE and DEPARTING. Exercise zero and maximum draws, blocked sends, ignored inputs and departure ordering. | [Milan v1.2 5.6.2, 5.6.3.5 and Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) |
+| H-DISC | Received AVAILABLE/DEPARTING or original aging deadline through every matching sink and resulting output. Exercise all discovery cells, received validity 1, 10 and 31, index restart, interface/GM/domain mismatch and stale expiry. | [Milan v1.2 5.6.4.1, 5.6.4.5 and Table 5.54](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.5](https://standards.ieee.org/ieee/1722.1/6670/) |
+| H-ACMP | Accepted request through matched response; originated probe through response receipt; original timer deadline through its action. Exercise each command, refusal, retry, identity guard, restored binding and blocked response. | [Milan v1.2 5.5.2.3, 5.5.3.5 and Table 5.26](https://avnu.org/resource/milan-specification/) |
+| H-MAAP | Receive, link event or original deadline through PROBE, DEFEND, ANNOUNCE or state commitment. Exercise conflicts in every state, three retransmissions, loss/retry, extreme draws and blocked output. | [IEEE 1722-2016 B.3.2 through B.3.6, Tables B.7 and B.8](https://standards.ieee.org/ieee/1722/5979/) |
+| H-SRP | Measure the external component's receive, registration and timer paths through completed declarations. Include withdrawal and queued feedback into ACMP. | [Milan v1.2 4.2.7.1.1 and Table 4.3](https://avnu.org/resource/milan-specification/); [lwSRP integration contract](https://github.com/kebag-logic/lwSRP/blob/main/doc/integrator.md) |
+
+Use a monotonic elapsed-time source independent of grandmaster clock steps.
+Record target, compiler options, clock rate, configured capacities, event identity and timestamp resolution.
+Include clock resolution and instrumentation error in every upper bound.
+Run each supported shape under simultaneous protocol traffic, maximum supported backlog and storage write-back.
+Include timer wrap, scheduling stalls, saturation, reset and recovery.
+Plant late-service and reordered-output defects; each named hook must reject its defect.
+Check ingress acceptance in the adapter, including the [ADP validation duty](#adp-input-validation).
+The source platform's bus and filter implementation is not required by the portable core.
+
+For [ACMP latency](REQUIREMENTS.md#mflatency-01), record ingress, service, egress and network allowances separately.
+Their sum must be strictly below 200 ms with positive measured margin.
+The 10 ms service check does not replace that complete transaction check.
+Preserve normative timer and spacing bounds independently.
+MAAP probe intervals must remain strictly between 500 and 600 ms.
+Announcement intervals must remain strictly between 30 and 32 seconds.
+Service cannot extend a near-maximum draw beyond its upper bound.
+The authority is [IEEE 1722-2016 B.3.3 and B.3.4](https://standards.ieee.org/ieee/1722/5979/).
+
+## Recovery accounting
+
+The [recovery requirements](REQUIREMENTS.md#mfrecovery-01) cover core transitions and application accounting separately.
+Deliver link changes to ADP and MAAP. Deliver current GM data and GM-change events to ADP.
+Keep ACMP discovery and reservation feedback current for each interface.
+Detect peer loss through departure, aging and reservation withdrawal as applicable.
+Bindings must remain available for automatic discovery and reprobe.
+The application owns media restart after the reservation and destination become usable.
+
+Count link edges, GM changes, peer-loss events, recovery attempts and recovery outcomes in the port.
+Document counter width, wrap and snapshot rules. Read core diagnostics in the serialized dispatch context.
+The ADP `gm_changed` and MAAP `conflicts` counters cover only their stated events.
+ACMP malformed-input and probe counters do not count every recovery event.
+Do not present them as a complete recovery ledger.
+Record overflow, dropped work and late service even when a later retry succeeds.
+Test each fault and counter increment without reinitializing the cores, on both targets' integrations.
+See [Milan v1.2 5.5.3.5, 5.6.3.5 and 5.6.4.5](https://avnu.org/resource/milan-specification/)
+and [IEEE 1722-2016 B.3.2](https://standards.ieee.org/ieee/1722/5979/).

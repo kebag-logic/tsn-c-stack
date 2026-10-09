@@ -4832,5 +4832,177 @@
     "original_tests": [
       "MaapCore.LinkBounceDrawsAfterSuppliedRange"
     ]
+  },
+  {
+    "name": "adp-config-entity-id",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 4, e->entity_id, 8);",
+    "new": "wire_put_be(pdu + 4, e->entity_id ^ 1u, 8);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-model-id",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 12, e->entity_model_id, 8);",
+    "new": "wire_put_be(pdu + 12, e->entity_model_id ^ 1u, 8);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-entity-capabilities",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 20, e->entity_capabilities, 4);",
+    "new": "wire_put_be(pdu + 20, e->entity_capabilities ^ 1u, 4);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-talker-count",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 24, e->talker_stream_sources, 2);",
+    "new": "wire_put_be(pdu + 24, e->listener_stream_sinks, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-talker-capabilities",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 26, e->talker_capabilities, 2);",
+    "new": "wire_put_be(pdu + 26, e->listener_capabilities, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-listener-count",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 28, e->listener_stream_sinks, 2);",
+    "new": "wire_put_be(pdu + 28, e->talker_stream_sources, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-listener-capabilities",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 30, e->listener_capabilities, 2);",
+    "new": "wire_put_be(pdu + 30, e->talker_capabilities, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-grandmaster",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 40, gm, 8);",
+    "new": "wire_put_be(pdu + 40, gm ^ 1u, 8);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-domain",
+    "path": "src/adp.c",
+    "old": "pdu[48] = domain;",
+    "new": "pdu[48] = 0;",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-identify-index",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 52, e->identify_control_index, 2);",
+    "new": "wire_put_be(pdu + 52, 0, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "adp-config-interface-index",
+    "path": "src/adp.c",
+    "old": "wire_put_be(pdu + 54, a->interface, 2);",
+    "new": "wire_put_be(pdu + 54, 0, 2);",
+    "kills": [
+      {
+        "test": "AdpCore.AdvertisementFieldsMatchCaller",
+        "needle": "advertisement bytes match the independent entity vector"
+      }
+    ]
+  },
+  {
+    "name": "acmp-peer-loss-clears-binding",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->bound = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller"
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.DepartingRetainsBindingAndReprobes",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+    ]
+  },
+  {
+    "name": "acmp-peer-loss-stops-discovery",
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "new": "\ts->discovered = false;\n\ts->disc_running = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay"
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.DepartingRetainsBindingAndReprobes",
+      "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+    ]
   }
 ]

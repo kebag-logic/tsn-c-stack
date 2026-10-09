@@ -531,11 +531,11 @@ void core_discard_kinds(void) {
     EXPECT_EQ(a.state, ADP_STATE_WAITING) << "A24 and leaves WAITING alone";
 }
 
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01
 TEST(AdpCore, A0toA2Schedule) {
     core_schedule();
 }
-// REQ: ADP-01, ADP-02
+// REQ: ADP-01, ADP-02, MFDISC-02
 TEST(AdpCore, A3toA5DiscoverAndDiscard) {
     core_discard();
 }
@@ -543,15 +543,15 @@ TEST(AdpCore, A3toA5DiscoverAndDiscard) {
 TEST(AdpCore, A6toA8DeferredSends) {
     core_deferred();
 }
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-01
 TEST(AdpCore, A9DrawKinds) {
     core_draws();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-01, MFDISC-03
 TEST(AdpCore, A10toA14DepartingIndex) {
     core_departing_index();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A15OwedDepartingAcrossARestart) {
     core_owed_departing();
 }
@@ -563,7 +563,7 @@ TEST(AdpCore, A16SecondShutdownQueuesItsOwn) {
 TEST(AdpCore, A17RoomBackBeforeAPoll) {
     core_owed_room_first();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A18LinkLossKeepsTheOwedDeparting) {
     core_owed_link_loss();
 }
@@ -571,7 +571,7 @@ TEST(AdpCore, A18LinkLossKeepsTheOwedDeparting) {
 TEST(AdpCore, A19IgnoredInputsKeepTheOwedAvailable) {
     core_owed_inputs_ignored();
 }
-// REQ: ADP-03, ADP-02
+// REQ: ADP-03, ADP-02, MFDISC-03
 TEST(AdpCore, A20LinkLossDropsTheOwedAvailable) {
     core_owed_link_loss_drops();
 }
@@ -586,7 +586,7 @@ TEST(AdpCore, A23RepeatedEnableOrDisableChangesNothing) { core_enable_idempotent
 // REQ: ADP-01, ADP-02
 TEST(AdpCore, A24OtherEtherTypeOrSubtypeDiscarded) { core_discard_kinds(); }
 
-// REQ: ADP-02, PORT-01
+// REQ: ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01
 TEST(AdpCore, LinkLevelsAndDisabledInputs) {
     adp a;
     uint8_t f[ADP_FRAME_BYTES];
@@ -608,7 +608,7 @@ TEST(AdpCore, LinkLevelsAndDisabledInputs) {
     EXPECT_EQ(fk.sends, 0u) << "shutdown in DOWN sends nothing";
 }
 
-// REQ: ADP-01, ADP-02
+// REQ: ADP-01, ADP-02, MFDISC-04
 TEST(AdpCore, EntityFieldsUseIndependentCounts) {
     auto e = entity;
     e.talker_stream_sources = 7;
@@ -622,6 +622,39 @@ TEST(AdpCore, EntityFieldsUseIndependentCounts) {
     EXPECT_EQ(wire_be16(f + 42), 3u);
     EXPECT_EQ(wire_be16(f + 64), 0x1234u);
     EXPECT_EQ(wire_be16(f + 68), 2u);
+}
+
+// REQ: ADP-01, MFDISC-04
+TEST(AdpCore, AdvertisementFieldsMatchCaller) {
+    auto e = entity;
+    e.talker_stream_sources = 7;
+    e.talker_capabilities = 0x1357;
+    e.listener_stream_sinks = 3;
+    e.listener_capabilities = 0x2468;
+    adp a;
+    fresh(&a, true);
+    fk.domain = 7;
+    adp_init(&a, &e, &ports, 2, 0x1234);
+    uint8_t frame[ADP_FRAME_BYTES];
+    adp_build(&a, 0, 0x87654321, frame);
+    const uint8_t expected[] = {
+        0x91, 0xe0, 0xf0, 0x01, 0x00, 0x00,
+        0x00, 0x1b, 0x92, 0x11, 0x22, 0xaa,
+        0x22, 0xf0, 0xfa, 0x00, 0x50, 0x38,
+        0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
+        0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff, 0x01,
+        0x00, 0x00, 0xc5, 0x88,
+        0x00, 0x07, 0x13, 0x57, 0x00, 0x03, 0x24, 0x68,
+        0x00, 0x00, 0x00, 0x00,
+        0x87, 0x65, 0x43, 0x21,
+        0xa1, 0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8,
+        0x07, 0x00, 0x12, 0x34, 0x00, 0x05, 0x00, 0x02,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00,
+    };
+    ASSERT_EQ(sizeof frame, sizeof expected) << "advertisement vector covers the complete frame";
+    EXPECT_EQ(std::memcmp(frame, expected, sizeof expected), 0)
+        << "advertisement bytes match the independent entity vector";
 }
 
 class AdpPortMock {

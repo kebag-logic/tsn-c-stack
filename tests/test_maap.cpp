@@ -90,7 +90,7 @@ struct CoreRig {
     void receive(const Frame& f, std::size_t len = 60) { maap_rx(&core, f.data(), len); }
 };
 
-// REQ: MAAP-02
+// REQ: MAAP-02, MFMAAP-01
 TEST(MaapCore, InitialAndThreeRetransmissions) {
     CoreRig r;
     EXPECT_EQ(r.core.state, MAAP_INITIAL);
@@ -135,7 +135,7 @@ TEST(MaapCore, ConstantsStrictTimersAndSeed) {
 }
 
 class MaapCell : public ::testing::TestWithParam<int> {};
-// REQ: MAAP-03
+// REQ: MAAP-03, MFMAAP-01
 TEST_P(MaapCell, TableB7) {
     int key = GetParam();
     const unsigned state = key / 6, type = key % 3 + 1;
@@ -215,7 +215,7 @@ TEST(MaapCore, UniformDrawRejectsIncompleteBucket) {
     EXPECT_EQ(r.core.last_delay_ms, 587u) << "draw uses the next complete-bucket word";
 }
 
-// REQ: MAAP-03
+// REQ: MAAP-03, MFMAAP-01
 TEST(MaapCore, DefendEchoAndIntersection) {
     CoreRig r; r.acquire();
     for (const auto& range : std::array<std::array<unsigned, 3>, 4>{{
@@ -290,7 +290,7 @@ TEST(MaapCore, InitAndPreferredRangeBounds) {
     EXPECT_LE(random.core.base + 8, MAAP_POOL_BASE + MAAP_POOL_SIZE);
 }
 
-// REQ: MAAP-04
+// REQ: MAAP-04, MFMAAP-01, MFRECOVERY-01
 TEST(MaapCore, ReleaseLossAndRetry) {
     CoreRig claimed; claimed.acquire();
     maap_port_operational(&claimed.core, true);
@@ -334,7 +334,7 @@ TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
     EXPECT_NE(r.core.base, kBase) << "new Begin without preferred range draws";
 }
 
-// REQ: MAAP-02
+// REQ: MAAP-02, MFRECOVERY-01
 TEST(MaapCore, LinkBounceDrawsAfterSuppliedRange) {
     CoreRig r;
     maap_port_operational(&r.core, false);
