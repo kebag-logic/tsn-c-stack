@@ -1,0 +1,10 @@
+{
+  "probe": "p9-startup-draw-uses-4s",
+  "path": "src/adp.c",
+  "old": "kind == ADP_DRAW_STARTUP ? ADP_DELAY_STARTUP_MAX_MS : ADP_DELAY_MAX_MS",
+  "new": "ADP_DELAY_MAX_MS",
+  "build_rc": 0,
+  "failed": [
+    "AdpCore.A9DrawKinds"
+  ]
+}

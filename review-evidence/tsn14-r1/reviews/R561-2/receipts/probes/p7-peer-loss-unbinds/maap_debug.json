@@ -1,0 +1,32 @@
+{
+  "tests": 1,
+  "failures": 0,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-09T16:32:09Z",
+  "time": "0.148s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "MaapDebug",
+      "tests": 1,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-09T16:32:09Z",
+      "time": "0.148s",
+      "testsuite": [
+        {
+          "name": "SynchronousExpiryAsserts",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p7-peer-loss-unbinds\/src-tree\/tests\/test_maap_debug.cpp",
+          "line": 9,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0.148s",
+          "classname": "MaapDebug"
+        }
+      ]
+    }
+  ]
+}

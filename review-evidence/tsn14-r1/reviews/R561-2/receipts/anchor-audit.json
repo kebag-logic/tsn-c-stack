@@ -1,0 +1,713 @@
+{
+  "source_rows": 114,
+  "decision_anchors": 2,
+  "all_match": true,
+  "moved_anchor_controls": [
+    {
+      "origin": "milan-fpga FR-DISC-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-DISC-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-DISC-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-DISC-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-DISC-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-DISC-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-DISC-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-DISC-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-DISC-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-DISC-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-ENUM-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-ENUM-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-ENUM-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-ENUM-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CTRL-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MVU-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MVU-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MVU-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MVU-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MVU-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MVU-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CONN-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CONN-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CONN-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CONN-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CONN-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CONN-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CONN-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CONN-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MAAP-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MAAP-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-SRP-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-SRP-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-SRP-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-SRP-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-SRP-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-SRP-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CLK-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CLK-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CLK-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CLK-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CLK-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CLK-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CLK-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CLK-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-CLK-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-CLK-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-03a",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-03a"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-03b",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-03b"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-STR-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-STR-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-QOS-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-QOS-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-QOS-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-QOS-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-QOS-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-QOS-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MGT-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MGT-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga FR-MGT-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga FR-MGT-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-PERF-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-PERF-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-PERF-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-PERF-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-LAT-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-LAT-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-LAT-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-LAT-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-DET-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-DET-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-TIME-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-TIME-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-TIME-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCUP-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCUP-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCUP-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCUP-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-07",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-07"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-08",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SCOUT-08"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-RES-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-RES-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-REL-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-REL-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-REL-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-REL-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-OBS-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-OBS-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-MAINT-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-MAINT-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-PORT-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-PORT-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga NFR-SEC-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga NFR-SEC-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CSR-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CSR-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CSR-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CSR-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CSR-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-07",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-07"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-08",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-08"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-09",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-PTP-09"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-07",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-07"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-08",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CBS-08"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-07",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-07"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-08",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-08"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-09",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-09"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-10",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-CLS-10"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-07",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-07"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-08",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-MAC-08"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-01",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-01"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-02",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-02"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-03",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-03"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-04",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-04"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-05",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-05"
+      ]
+    },
+    {
+      "origin": "milan-fpga REQ-VER-06",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga REQ-VER-06"
+      ]
+    },
+    {
+      "origin": "milan-fpga #665 memory",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga #665 memory"
+      ]
+    },
+    {
+      "origin": "milan-fpga #665 testing",
+      "errors": [
+        "source row must link to its pinned ID anchor: milan-fpga #665 testing"
+      ]
+    }
+  ],
+  "imported_methods": {
+    "verified by inspection": 3,
+    "port obligation": 13,
+    "test": 9
+  },
+  "dispositions": {
+    "ported": 12,
+    "port obligation": 9,
+    "excluded": 95
+  }
+}

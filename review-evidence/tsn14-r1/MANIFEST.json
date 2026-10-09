@@ -3640,5 +3640,3173 @@
     "original_sha256": "6b27ecda332a83931a1cf5ae70f93739330e0f1e099001e5dbee24e5b2e1c17e",
     "published_sha256": "6b27ecda332a83931a1cf5ae70f93739330e0f1e099001e5dbee24e5b2e1c17e",
     "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/execution.json",
+    "original_sha256": "9f4b93eef742ca736bb451e1595fdc8bdb19ede80c0e81a7b981822254770fba",
+    "published_sha256": "697b1236a92712987effc9d46bf8a9b3d62169c54a52ea0afc8688f323b5c11f",
+    "path_redacted": true
+  },
+  {
+    "file": "reviews/R561-2/MANIFEST.sha256",
+    "original_sha256": "d431e3312ae5698a1e9438158bb92671f37ec3a56837dadb10cfeda10effdce1",
+    "published_sha256": "d431e3312ae5698a1e9438158bb92671f37ec3a56837dadb10cfeda10effdce1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/REPORT.md",
+    "original_sha256": "8410f06e952b409f4c756e6fd208284bb2e0d3656ddde40e33e5ecfd798f807e",
+    "published_sha256": "8410f06e952b409f4c756e6fd208284bb2e0d3656ddde40e33e5ecfd798f807e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/REPRODUCE.md",
+    "original_sha256": "5a78dc23e0ea17a5cd829ad754a35006435dfc34dbcc99a6df8c6a7f278424be",
+    "published_sha256": "5a78dc23e0ea17a5cd829ad754a35006435dfc34dbcc99a6df8c6a7f278424be",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/NORMALIZATION.json",
+    "original_sha256": "7c803b75e1475a7b52638a82f6064ad9071d1d6e38d8caa295ceb49a7f341466",
+    "published_sha256": "7c803b75e1475a7b52638a82f6064ad9071d1d6e38d8caa295ceb49a7f341466",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/anchor-audit.json",
+    "original_sha256": "a7a037f8d009c2af57185edadf788d9188f1dff733badf58e16d88ee98802094",
+    "published_sha256": "a7a037f8d009c2af57185edadf788d9188f1dff733badf58e16d88ee98802094",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/authority-decisions.md",
+    "original_sha256": "b36e1c75be522927d71bcf98101b650aa28b857d845c14f89f8f8af11d0c48cd",
+    "published_sha256": "b36e1c75be522927d71bcf98101b650aa28b857d845c14f89f8f8af11d0c48cd",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/authority-fr-nfr.md",
+    "original_sha256": "7ca56fa950c00c0a9623087fc141b8a0aa99db0fa0e421c5bf667e0d2d7067f1",
+    "published_sha256": "7ca56fa950c00c0a9623087fc141b8a0aa99db0fa0e421c5bf667e0d2d7067f1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/authority-limits.json",
+    "original_sha256": "c53ce3a471116982a0bc9112091e5d84449f591bdcf25bfecf3ddbe128f32538",
+    "published_sha256": "c53ce3a471116982a0bc9112091e5d84449f591bdcf25bfecf3ddbe128f32538",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/authority-requirements.md",
+    "original_sha256": "10bac6a48664f607fb99b3ed89505da4ebc4ee80282582f4200b1b8227e75ab5",
+    "published_sha256": "10bac6a48664f607fb99b3ed89505da4ebc4ee80282582f4200b1b8227e75ab5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal/debug/build.log",
+    "original_sha256": "530fde9d0356599a34a5d9f508f6f725e2989540f7c6d929c2891e177bdca2ee",
+    "published_sha256": "530fde9d0356599a34a5d9f508f6f725e2989540f7c6d929c2891e177bdca2ee",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal/debug/smoke.log",
+    "original_sha256": "bbede90894c2422b0bf7233a24db3795cb1031877483605e57045211c940bf15",
+    "published_sha256": "bbede90894c2422b0bf7233a24db3795cb1031877483605e57045211c940bf15",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal/release/build.log",
+    "original_sha256": "530fde9d0356599a34a5d9f508f6f725e2989540f7c6d929c2891e177bdca2ee",
+    "published_sha256": "530fde9d0356599a34a5d9f508f6f725e2989540f7c6d929c2891e177bdca2ee",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal/release/smoke.log",
+    "original_sha256": "bbede90894c2422b0bf7233a24db3795cb1031877483605e57045211c940bf15",
+    "published_sha256": "bbede90894c2422b0bf7233a24db3795cb1031877483605e57045211c940bf15",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal/results.json",
+    "original_sha256": "3d59a4d261e75e749b435c8a1d8984e9abfc24325f8f48b959eed7a984a94c53",
+    "published_sha256": "3d59a4d261e75e749b435c8a1d8984e9abfc24325f8f48b959eed7a984a94c53",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal.log",
+    "original_sha256": "3d59a4d261e75e749b435c8a1d8984e9abfc24325f8f48b959eed7a984a94c53",
+    "published_sha256": "3d59a4d261e75e749b435c8a1d8984e9abfc24325f8f48b959eed7a984a94c53",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/baremetal.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/campaigns.json",
+    "original_sha256": "3b441959002843fc4778fbdf316157e5b188b5eedf2a753a6c7b61b3b9986430",
+    "published_sha256": "3b441959002843fc4778fbdf316157e5b188b5eedf2a753a6c7b61b3b9986430",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/delta.diff",
+    "original_sha256": "f6a794678018e044d9852eb68949142681151db6f523dadab291e054faf296cd",
+    "published_sha256": "f6a794678018e044d9852eb68949142681151db6f523dadab291e054faf296cd",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/final-integrity.json",
+    "original_sha256": "33ca437155f680510c51e93b6ef4eeabf3238249f1c37ff1aa35af2c7b7c2dc3",
+    "published_sha256": "33ca437155f680510c51e93b6ef4eeabf3238249f1c37ff1aa35af2c7b7c2dc3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/final-integrity.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/full.diff",
+    "original_sha256": "956f3a2163c7d1378066ba0602b25328fad475437188143d28afbfc507a41f7a",
+    "published_sha256": "956f3a2163c7d1378066ba0602b25328fad475437188143d28afbfc507a41f7a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/gate-count.json",
+    "original_sha256": "d7090782e0d8729f2f7cd266207cd5991ba8131498d08c2b8f144d5e24d130fb",
+    "published_sha256": "d7090782e0d8729f2f7cd266207cd5991ba8131498d08c2b8f144d5e24d130fb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/history.txt",
+    "original_sha256": "63879460617dd3c6db898d1960c93cb754b86b84ec8e2e9d1828d2892aca1c87",
+    "published_sha256": "63879460617dd3c6db898d1960c93cb754b86b84ec8e2e9d1828d2892aca1c87",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/hosted/job-113866224073-extract.log",
+    "original_sha256": "d0a0fb63e88cdc2dd40d8748842fcda7affc05c013745ad1c8f05c67ebf4ce77",
+    "published_sha256": "d0a0fb63e88cdc2dd40d8748842fcda7affc05c013745ad1c8f05c67ebf4ce77",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/hosted/job-113866224582-extract.log",
+    "original_sha256": "bfffe0846bfacf779fdaefdc94975e9dd2a67f6a05c9507cfbf8b1b5647c7bfb",
+    "published_sha256": "bfffe0846bfacf779fdaefdc94975e9dd2a67f6a05c9507cfbf8b1b5647c7bfb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/hosted/pr-checks.json",
+    "original_sha256": "013fa32f0ddea4028438209579b864636d1b487e2d1e0aba2df9962976e2cd6c",
+    "published_sha256": "013fa32f0ddea4028438209579b864636d1b487e2d1e0aba2df9962976e2cd6c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/hosted/pr-checks.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/hosted/summary.json",
+    "original_sha256": "587f4add5ef41cebc11f78951287cffa322f10a47deb17e273aa2e49bbdaf693",
+    "published_sha256": "587f4add5ef41cebc11f78951287cffa322f10a47deb17e273aa2e49bbdaf693",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/independent-pass.txt",
+    "original_sha256": "db78f3848c05175b6c32ef0cbb4ff9863821c801940819f8a33042a355caaaad",
+    "published_sha256": "db78f3848c05175b6c32ef0cbb4ff9863821c801940819f8a33042a355caaaad",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/inline-comments-count.json",
+    "original_sha256": "ca75868ed0f7bec3345d96ffa522649b2219fb4def0600bee070cea4bc9ba8e1",
+    "published_sha256": "ca75868ed0f7bec3345d96ffa522649b2219fb4def0600bee070cea4bc9ba8e1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/issue-body.md",
+    "original_sha256": "71d5eb4e6ee7359514ec028f6b1071345e2a0fb440594151745d61610c1aa1d9",
+    "published_sha256": "71d5eb4e6ee7359514ec028f6b1071345e2a0fb440594151745d61610c1aa1d9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/pr-body.md",
+    "original_sha256": "218b453bd427eadce892c0ba8f9259d95468840c0fea4427e503cbb157dbd6de",
+    "published_sha256": "218b453bd427eadce892c0ba8f9259d95468840c0fea4427e503cbb157dbd6de",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/prior-probes/p7-peer-loss-unbinds.json",
+    "original_sha256": "46a5945e358624e358d1e48412cfecf9a7513bcb9267973bcd66faa6af80063e",
+    "published_sha256": "46a5945e358624e358d1e48412cfecf9a7513bcb9267973bcd66faa6af80063e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/prior-probes/p8-peer-loss-stops-discovery.json",
+    "original_sha256": "94304f6dbd908645edea393a2d7de86a5808e2b32736208fbace352079d10720",
+    "published_sha256": "94304f6dbd908645edea393a2d7de86a5808e2b32736208fbace352079d10720",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/prior-probes/p9-startup-draw-uses-4s.json",
+    "original_sha256": "5f400af075bdb307637020b96473ebc258fe79e2329dc3261ecbcd476524c767",
+    "published_sha256": "5f400af075bdb307637020b96473ebc258fe79e2329dc3261ecbcd476524c767",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probe-registration-audit.json",
+    "original_sha256": "20d96a5d7a17054ebde570e45b2f04e4a871bcdafb16aeed0a26db8a56fba478",
+    "published_sha256": "20d96a5d7a17054ebde570e45b2f04e4a871bcdafb16aeed0a26db8a56fba478",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probe-results.json",
+    "original_sha256": "9212c2c08fc6cb25dd75323cac0c04727735fd5ff41a4143b318d71558c30e60",
+    "published_sha256": "9212c2c08fc6cb25dd75323cac0c04727735fd5ff41a4143b318d71558c30e60",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/acmp_tests.json",
+    "original_sha256": "d57e880a0393ad7efc5ba4c9794e142921728f586ab64ff7a1ee19ff4f2cd6e3",
+    "published_sha256": "d57e880a0393ad7efc5ba4c9794e142921728f586ab64ff7a1ee19ff4f2cd6e3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/acmp_tests.log",
+    "original_sha256": "b1be3da4a328740c90bc7aa51041002f38e108c54e0129c34b21004a1cf0277d",
+    "published_sha256": "b1be3da4a328740c90bc7aa51041002f38e108c54e0129c34b21004a1cf0277d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_debug.json",
+    "original_sha256": "81cc790a109cdba8fcc0941c9726fcc91b6050c1cbc6d0f189619ecc04c7f901",
+    "published_sha256": "81cc790a109cdba8fcc0941c9726fcc91b6050c1cbc6d0f189619ecc04c7f901",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_debug.log",
+    "original_sha256": "7adf1d198c4fcda13fd27b10d4ceb83ad0a0e8c05ee53ccb524c2fb5f9505095",
+    "published_sha256": "7adf1d198c4fcda13fd27b10d4ceb83ad0a0e8c05ee53ccb524c2fb5f9505095",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_release.json",
+    "original_sha256": "566a236bd994625b45302a0a6378f43974346d716109a9230ba7f3d0eed6c056",
+    "published_sha256": "566a236bd994625b45302a0a6378f43974346d716109a9230ba7f3d0eed6c056",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_release.log",
+    "original_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "published_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_tests.json",
+    "original_sha256": "7a8aa47bda867702fe324239d83d9e1c1b9fa6d7b544018173221c37f0b407a3",
+    "published_sha256": "7a8aa47bda867702fe324239d83d9e1c1b9fa6d7b544018173221c37f0b407a3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/adp_tests.log",
+    "original_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "published_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/build.log",
+    "original_sha256": "afcb3a8c8202359749073be31acd5c642c446ede0aa5457909bf3ae2bbf98133",
+    "published_sha256": "afcb3a8c8202359749073be31acd5c642c446ede0aa5457909bf3ae2bbf98133",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/maap_debug.json",
+    "original_sha256": "9af40b134a190f20d2639d7095f5581922c33981b3b4c089a08e38ddc482cc63",
+    "published_sha256": "9af40b134a190f20d2639d7095f5581922c33981b3b4c089a08e38ddc482cc63",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/maap_debug.log",
+    "original_sha256": "8bc6004fbbf2ba4d69dec3905b9b2d0811099fea4779eb57c568bb5604fc7368",
+    "published_sha256": "8bc6004fbbf2ba4d69dec3905b9b2d0811099fea4779eb57c568bb5604fc7368",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/maap_tests.json",
+    "original_sha256": "9c4f26470cdd7dc7dca5c6394a02e076677192cb7e381ccf3f4a189b5893a5e7",
+    "published_sha256": "9c4f26470cdd7dc7dca5c6394a02e076677192cb7e381ccf3f4a189b5893a5e7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/maap_tests.log",
+    "original_sha256": "949791beb7250a88c9c56c7779e403ad32b73f94ba627d8f33f8109489b067e9",
+    "published_sha256": "949791beb7250a88c9c56c7779e403ad32b73f94ba627d8f33f8109489b067e9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/port_tests.json",
+    "original_sha256": "59968ee109c2c342451e061c129d029eb85ceba096bfb46db95da96c0b3a9ef9",
+    "published_sha256": "59968ee109c2c342451e061c129d029eb85ceba096bfb46db95da96c0b3a9ef9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/port_tests.log",
+    "original_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "published_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline/result.json",
+    "original_sha256": "d55856c7ad507329a96a59f88b09f9fcd52d407d29a961d93c624bf72ca2ab5d",
+    "published_sha256": "d55856c7ad507329a96a59f88b09f9fcd52d407d29a961d93c624bf72ca2ab5d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline.log",
+    "original_sha256": "ac1b4e19ac0b7cbf024d652bbed7792410df1ce78b73ec7eb7ca96e02fa0a471",
+    "published_sha256": "ac1b4e19ac0b7cbf024d652bbed7792410df1ce78b73ec7eb7ca96e02fa0a471",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p0-baseline.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/acmp_tests.json",
+    "original_sha256": "60eedad309356465ea629398cf9c15ef7603df3656d785df4dd5e0678a3b5450",
+    "published_sha256": "60eedad309356465ea629398cf9c15ef7603df3656d785df4dd5e0678a3b5450",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/acmp_tests.log",
+    "original_sha256": "1521ebbe91afe020e68ed615e51329db6d1e8eaed90bc1a4c5d293beeece91e3",
+    "published_sha256": "1521ebbe91afe020e68ed615e51329db6d1e8eaed90bc1a4c5d293beeece91e3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_debug.json",
+    "original_sha256": "461fa9528d249ad4e1c3e3a2c7870e9c5ece6531f8e976b2b77dacca5fde42f5",
+    "published_sha256": "461fa9528d249ad4e1c3e3a2c7870e9c5ece6531f8e976b2b77dacca5fde42f5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_debug.log",
+    "original_sha256": "5bcb4e7c660a76f691b3a5e8043de7587e452f299937fc4068b31d6bb6645638",
+    "published_sha256": "5bcb4e7c660a76f691b3a5e8043de7587e452f299937fc4068b31d6bb6645638",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_release.json",
+    "original_sha256": "3612a2a499814fb30bf11878d20c7748060a888b2e5dfc682f657571f4514966",
+    "published_sha256": "3612a2a499814fb30bf11878d20c7748060a888b2e5dfc682f657571f4514966",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_release.log",
+    "original_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "published_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_tests.json",
+    "original_sha256": "7fffe659fc84ee6f6913645dc43f11aeb1ddce3119b34e0462a8b85e8ba5ac4e",
+    "published_sha256": "7fffe659fc84ee6f6913645dc43f11aeb1ddce3119b34e0462a8b85e8ba5ac4e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/adp_tests.log",
+    "original_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "published_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/build.log",
+    "original_sha256": "05143628c135e34b9f92e098f282075d4dfa15380afde5dc44f137f68b10fd46",
+    "published_sha256": "05143628c135e34b9f92e098f282075d4dfa15380afde5dc44f137f68b10fd46",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/maap_debug.json",
+    "original_sha256": "885a81233c9ac35b0f4a013b750ae2eb1743dd51ae388038efcc10fae4856090",
+    "published_sha256": "885a81233c9ac35b0f4a013b750ae2eb1743dd51ae388038efcc10fae4856090",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/maap_debug.log",
+    "original_sha256": "2774d18e7692e85f2c75e939967980397d344a656256ba9fdcf3a457b257c1b2",
+    "published_sha256": "2774d18e7692e85f2c75e939967980397d344a656256ba9fdcf3a457b257c1b2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/maap_tests.json",
+    "original_sha256": "1d6348ce06160efcc176e6e8a58da32e5afa3af3589e4990b92a7bc7979f8d40",
+    "published_sha256": "1d6348ce06160efcc176e6e8a58da32e5afa3af3589e4990b92a7bc7979f8d40",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/maap_tests.log",
+    "original_sha256": "0813b5744e7cae8a189643f69518e88b01c126781d70f2c9b4b1f044ab771f5a",
+    "published_sha256": "0813b5744e7cae8a189643f69518e88b01c126781d70f2c9b4b1f044ab771f5a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/port_tests.json",
+    "original_sha256": "d046dd4ad1473ed3f43947425026415f751d388f1a72aac05e8a002a7b5105e8",
+    "published_sha256": "d046dd4ad1473ed3f43947425026415f751d388f1a72aac05e8a002a7b5105e8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/port_tests.log",
+    "original_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "published_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds/result.json",
+    "original_sha256": "4ad163a9032e1b2ff216e417d21d5b332bcdf15ad52ecfa64404555efa3ca402",
+    "published_sha256": "4ad163a9032e1b2ff216e417d21d5b332bcdf15ad52ecfa64404555efa3ca402",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds.log",
+    "original_sha256": "41b5c6fd01af464f54e68fe4691800c4ef229858ae72de4dbba504345c07b311",
+    "published_sha256": "41b5c6fd01af464f54e68fe4691800c4ef229858ae72de4dbba504345c07b311",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p7-peer-loss-unbinds.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/acmp_tests.json",
+    "original_sha256": "05bac254a25f00bc8f63b53d50524abf9bb43c795f17cb884bf702db400d9765",
+    "published_sha256": "05bac254a25f00bc8f63b53d50524abf9bb43c795f17cb884bf702db400d9765",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/acmp_tests.log",
+    "original_sha256": "4857a88532819b8b4c071676912e10ddd44419e170e897ef1d4782725805107d",
+    "published_sha256": "4857a88532819b8b4c071676912e10ddd44419e170e897ef1d4782725805107d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_debug.json",
+    "original_sha256": "276e3e165bf392c7f5333a4f3ed6e1444b405f037b93b6c50dca7c3d139684fc",
+    "published_sha256": "276e3e165bf392c7f5333a4f3ed6e1444b405f037b93b6c50dca7c3d139684fc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_debug.log",
+    "original_sha256": "e890574328445714a6bba7638fe1a5ade16150cefef6d0a2c95f1c3af555ac49",
+    "published_sha256": "e890574328445714a6bba7638fe1a5ade16150cefef6d0a2c95f1c3af555ac49",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_release.json",
+    "original_sha256": "2d37c1ad4884b5260614d30f8b1a40b2fe0d8c769ccc4c449e11df199ff4c529",
+    "published_sha256": "2d37c1ad4884b5260614d30f8b1a40b2fe0d8c769ccc4c449e11df199ff4c529",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_release.log",
+    "original_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "published_sha256": "6e7193a88e1da8013bdcd21d26e33deb698015aff139bc0daa52eec0f923a0db",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_tests.json",
+    "original_sha256": "c62e4f573717c189cb87f38cc7c9737abd26f920d53c13335c6073e3e946f564",
+    "published_sha256": "c62e4f573717c189cb87f38cc7c9737abd26f920d53c13335c6073e3e946f564",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/adp_tests.log",
+    "original_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "published_sha256": "7a1892820eed1778648a3f6bce8ed0239b2979d508ba57dc9ac140e1e990a822",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/build.log",
+    "original_sha256": "44d969f0a7aa693d156e5a33327a0622c44001f0ab2e63993460885e23c08178",
+    "published_sha256": "44d969f0a7aa693d156e5a33327a0622c44001f0ab2e63993460885e23c08178",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/maap_debug.json",
+    "original_sha256": "766167b02616a85986eec30fee0f9cb18de1a6a9a365b46e8057823ac5ae8b2e",
+    "published_sha256": "766167b02616a85986eec30fee0f9cb18de1a6a9a365b46e8057823ac5ae8b2e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/maap_debug.log",
+    "original_sha256": "0241677136e3baa5af312493f002620f95d7fba07c91ef732c4c687a7526a7c2",
+    "published_sha256": "0241677136e3baa5af312493f002620f95d7fba07c91ef732c4c687a7526a7c2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/maap_tests.json",
+    "original_sha256": "ca02af07b587acfce31dd9cee80fa549e1cc539c74c852ce40690959ad7ab18b",
+    "published_sha256": "ca02af07b587acfce31dd9cee80fa549e1cc539c74c852ce40690959ad7ab18b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/maap_tests.log",
+    "original_sha256": "0813b5744e7cae8a189643f69518e88b01c126781d70f2c9b4b1f044ab771f5a",
+    "published_sha256": "0813b5744e7cae8a189643f69518e88b01c126781d70f2c9b4b1f044ab771f5a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/port_tests.json",
+    "original_sha256": "690674f621276b1140c13d1ddbbf5c8dc887e4fd7d5e6286cb1b10727bd82cb5",
+    "published_sha256": "690674f621276b1140c13d1ddbbf5c8dc887e4fd7d5e6286cb1b10727bd82cb5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/port_tests.log",
+    "original_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "published_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery/result.json",
+    "original_sha256": "b75db154de28f61ca406d084fbf207303ebd62e80c82a9c1db2b285574d75f4b",
+    "published_sha256": "b75db154de28f61ca406d084fbf207303ebd62e80c82a9c1db2b285574d75f4b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery.log",
+    "original_sha256": "657a7bbd83fd81762b6f06285368034da86108092675e785acbecb21a9895ffc",
+    "published_sha256": "657a7bbd83fd81762b6f06285368034da86108092675e785acbecb21a9895ffc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p8-peer-loss-stops-discovery.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/acmp_tests.json",
+    "original_sha256": "0b38b94738f88c011ade111d07ed1271973976eb1809da29227c6736047d2b8e",
+    "published_sha256": "0b38b94738f88c011ade111d07ed1271973976eb1809da29227c6736047d2b8e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/acmp_tests.log",
+    "original_sha256": "b1be3da4a328740c90bc7aa51041002f38e108c54e0129c34b21004a1cf0277d",
+    "published_sha256": "b1be3da4a328740c90bc7aa51041002f38e108c54e0129c34b21004a1cf0277d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_debug.json",
+    "original_sha256": "558785f622647ee9321afa75c8cfbe5377c3ef3fb357368a832f621f9177ca68",
+    "published_sha256": "558785f622647ee9321afa75c8cfbe5377c3ef3fb357368a832f621f9177ca68",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_debug.log",
+    "original_sha256": "32729ca821648f83ac4b86d8997842617654155a4d0bbda0d14f3ac56920d489",
+    "published_sha256": "32729ca821648f83ac4b86d8997842617654155a4d0bbda0d14f3ac56920d489",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_release.json",
+    "original_sha256": "7e586f513192103dc91f087e3350376658ba509b576f7571452640044514ef69",
+    "published_sha256": "7e586f513192103dc91f087e3350376658ba509b576f7571452640044514ef69",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_release.log",
+    "original_sha256": "642dc989381557cd2649164c93c7b91235ab77677324e44cd183ddd50e3b145a",
+    "published_sha256": "642dc989381557cd2649164c93c7b91235ab77677324e44cd183ddd50e3b145a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_tests.json",
+    "original_sha256": "c010ce29e275384cf6dc90f62ce03b451ab8c014080027d88c96de4779596e67",
+    "published_sha256": "c010ce29e275384cf6dc90f62ce03b451ab8c014080027d88c96de4779596e67",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/adp_tests.log",
+    "original_sha256": "2b0702a1edf31b592431dc23d4e932fcacca8f400980fef5fadb2d6ad18766c4",
+    "published_sha256": "2b0702a1edf31b592431dc23d4e932fcacca8f400980fef5fadb2d6ad18766c4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/build.log",
+    "original_sha256": "6a719ea1f6848b59fad4bd00d69ce45efc570368556d72f68782e6b8f2f4ae62",
+    "published_sha256": "6a719ea1f6848b59fad4bd00d69ce45efc570368556d72f68782e6b8f2f4ae62",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/maap_debug.json",
+    "original_sha256": "199b73e2146ec38690c5ecd9de3fa0d39b54678d47e9990a96b49edc6c3b48a7",
+    "published_sha256": "199b73e2146ec38690c5ecd9de3fa0d39b54678d47e9990a96b49edc6c3b48a7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/maap_debug.log",
+    "original_sha256": "950d90c1303c946c36949b9aba5a7c2dd8c1e8d6093d286e88fb490b6c292c62",
+    "published_sha256": "950d90c1303c946c36949b9aba5a7c2dd8c1e8d6093d286e88fb490b6c292c62",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/maap_tests.json",
+    "original_sha256": "79ee1d27a7cdf25bb9e14a4ced14bcad87646b6fbca57d4b9d4ec6a0b8ed291e",
+    "published_sha256": "79ee1d27a7cdf25bb9e14a4ced14bcad87646b6fbca57d4b9d4ec6a0b8ed291e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/maap_tests.log",
+    "original_sha256": "3e9f834389a37eaa9597be195d1288ea69e777eba22395d866df1913f08b4380",
+    "published_sha256": "3e9f834389a37eaa9597be195d1288ea69e777eba22395d866df1913f08b4380",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/port_tests.json",
+    "original_sha256": "d5945cf8ee1129449dbe12b9d03b8c163419c6c6c2d7d1f95ef08630949ea035",
+    "published_sha256": "d5945cf8ee1129449dbe12b9d03b8c163419c6c6c2d7d1f95ef08630949ea035",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/port_tests.log",
+    "original_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "published_sha256": "2eac7d755eb0c7a907c9865e50807da2c853d4083f5a45b0e3240e2df5b54ab9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s/result.json",
+    "original_sha256": "5f400af075bdb307637020b96473ebc258fe79e2329dc3261ecbcd476524c767",
+    "published_sha256": "5f400af075bdb307637020b96473ebc258fe79e2329dc3261ecbcd476524c767",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s.log",
+    "original_sha256": "183437026be1edd2f84860e7dbfe65016b2b118b2e6674d626f4110b04e136a1",
+    "published_sha256": "183437026be1edd2f84860e7dbfe65016b2b118b2e6674d626f4110b04e136a1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/probes/p9-startup-draw-uses-4s.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-hashes.json",
+    "original_sha256": "08256675d6d43e0bcbced5b7a3b723236e60be439c1cbe47b07f966fdafc8ca5",
+    "published_sha256": "08256675d6d43e0bcbced5b7a3b723236e60be439c1cbe47b07f966fdafc8ca5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r1/MANIFEST.json",
+    "original_sha256": "1181ce95da5b2f0350c11c3cb3c53bcc50a4d71c91aa84d706d1b137d158fbf1",
+    "published_sha256": "1181ce95da5b2f0350c11c3cb3c53bcc50a4d71c91aa84d706d1b137d158fbf1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r1/author/GATES.json",
+    "original_sha256": "063a3d4694f72516a337540432d6a22602237730364be3310449da632600468b",
+    "published_sha256": "063a3d4694f72516a337540432d6a22602237730364be3310449da632600468b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r1/author/INTEGRITY.json",
+    "original_sha256": "8f37432158d0945e562ecae30534036aec921d4c98ad40ecb433ab7d0c25a8a5",
+    "published_sha256": "8f37432158d0945e562ecae30534036aec921d4c98ad40ecb433ab7d0c25a8a5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r1/author/SOURCES.md",
+    "original_sha256": "ec22066d91b161f9498135999cf3ad375ca6fb94f081a63a4982396fb54abe49",
+    "published_sha256": "ec22066d91b161f9498135999cf3ad375ca6fb94f081a63a4982396fb54abe49",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/GATES.json",
+    "original_sha256": "edf32b8884df7863fd555f6bbd625800d14bd31241319093f644231b21c10414",
+    "published_sha256": "edf32b8884df7863fd555f6bbd625800d14bd31241319093f644231b21c10414",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/INTEGRITY.json",
+    "original_sha256": "d6fd9795ac5f5340370db13b8996956ae3fcb4ffa402b73c7a05db68223a463f",
+    "published_sha256": "d6fd9795ac5f5340370db13b8996956ae3fcb4ffa402b73c7a05db68223a463f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/MANIFEST.json",
+    "original_sha256": "a9f3c2e9b6a8888feef1ff05bd96616e3d6d27a09347f6d812961c034af0e050",
+    "published_sha256": "a9f3c2e9b6a8888feef1ff05bd96616e3d6d27a09347f6d812961c034af0e050",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/PROBES.json",
+    "original_sha256": "d749911f8e6276214501fa6ea732697c5b35e09e3826c96485cd2806364429a1",
+    "published_sha256": "d749911f8e6276214501fa6ea732697c5b35e09e3826c96485cd2806364429a1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/SOURCES.md",
+    "original_sha256": "620632bf2cb63516c73e93ee4abcb8ea0d13e2bf4c7b312b7bfafc366e2a8d60",
+    "published_sha256": "620632bf2cb63516c73e93ee4abcb8ea0d13e2bf4c7b312b7bfafc366e2a8d60",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/published-r2/provenance.json",
+    "original_sha256": "97452fed3b0e937109e7a5e45a8d8b63a474043669686ba76ba7965d5e932956",
+    "published_sha256": "97452fed3b0e937109e7a5e45a8d8b63a474043669686ba76ba7965d5e932956",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/resources.json",
+    "original_sha256": "f0d097d2f9a70dd38231f696db2380e7735f7b1ec14924e4e4fe0ecc3b6bdc9d",
+    "published_sha256": "f0d097d2f9a70dd38231f696db2380e7735f7b1ec14924e4e4fe0ecc3b6bdc9d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/review-order.json",
+    "original_sha256": "9e5f9b88155f29a5f4a3453dea962004cd0ede3cdc5ef75783fede91b1e18606",
+    "published_sha256": "9e5f9b88155f29a5f4a3453dea962004cd0ede3cdc5ef75783fede91b1e18606",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/scope-decisions.md",
+    "original_sha256": "344131deb78d6013f598d9493dca6340d713ec229c35352ccf8f0a4dfdb12d4e",
+    "published_sha256": "344131deb78d6013f598d9493dca6340d713ec229c35352ccf8f0a4dfdb12d4e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/scope.txt",
+    "original_sha256": "a7a052a67b7963466e58407c05c345075b70792fc9590bd88e542bfb63e85408",
+    "published_sha256": "a7a052a67b7963466e58407c05c345075b70792fc9590bd88e542bfb63e85408",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/sdk-packages.json",
+    "original_sha256": "bab0675b754a04c7304b60e0c7eec5b1aa45d3dcfe28ed60b633246822838c34",
+    "published_sha256": "bab0675b754a04c7304b60e0c7eec5b1aa45d3dcfe28ed60b633246822838c34",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/submitted-reviews-count.json",
+    "original_sha256": "ca75868ed0f7bec3345d96ffa522649b2219fb4def0600bee070cea4bc9ba8e1",
+    "published_sha256": "ca75868ed0f7bec3345d96ffa522649b2219fb4def0600bee070cea4bc9ba8e1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/target-mutation-audit.json",
+    "original_sha256": "20ad71f1348944498bb092daa77b56fee18584bb6ecf1e5f7ee8fe4cd5224dd6",
+    "published_sha256": "20ad71f1348944498bb092daa77b56fee18584bb6ecf1e5f7ee8fe4cd5224dd6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/toolchain.json",
+    "original_sha256": "8a533c2682b3233676bcdf2280b384622c6a9973d96d549c08fefd229f6cc46b",
+    "published_sha256": "8a533c2682b3233676bcdf2280b384622c6a9973d96d549c08fefd229f6cc46b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/assertion-templates.log",
+    "original_sha256": "e9b8bb260178099f5c39a2cbf5641d3bec45b94c142ddca74dc7e52bb470e38a",
+    "published_sha256": "e9b8bb260178099f5c39a2cbf5641d3bec45b94c142ddca74dc7e52bb470e38a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/assertion-templates.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/boundary.log",
+    "original_sha256": "d4c4a2c13a4481fd738e4b8125f1086e1cfdd0521e03841dcbb46884d307f0bd",
+    "published_sha256": "d4c4a2c13a4481fd738e4b8125f1086e1cfdd0521e03841dcbb46884d307f0bd",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/boundary.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-build.log",
+    "original_sha256": "9c1f6f0548cfb91c0afa3c85e29686c00b30cc6187db02c648adbbc83b34caec",
+    "published_sha256": "9c1f6f0548cfb91c0afa3c85e29686c00b30cc6187db02c648adbbc83b34caec",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-build.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-configure.log",
+    "original_sha256": "5f8a13c0cb83b9a4f1ebf13e4dbed78bba7ce70cf77938f588d3c2b89f377316",
+    "published_sha256": "5f8a13c0cb83b9a4f1ebf13e4dbed78bba7ce70cf77938f588d3c2b89f377316",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-configure.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-test.log",
+    "original_sha256": "c71033098bf5c74141c02a447ec194a3fdb527f3b88a0c98cf317a022523258e",
+    "published_sha256": "c71033098bf5c74141c02a447ec194a3fdb527f3b88a0c98cf317a022523258e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/clang-sanitizers-test.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/comments.log",
+    "original_sha256": "566f107aa92c2ff69379199aaf280fccfac8afbdae1220ecab7919a2905e2b7a",
+    "published_sha256": "566f107aa92c2ff69379199aaf280fccfac8afbdae1220ecab7919a2905e2b7a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/comments.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/conditionals.log",
+    "original_sha256": "0192423c3eb5c3def5a41b4ce5a6390ef1fd0a4980ee0f0c1398573a94fc293a",
+    "published_sha256": "0192423c3eb5c3def5a41b4ce5a6390ef1fd0a4980ee0f0c1398573a94fc293a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/conditionals.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/coverage-controls.log",
+    "original_sha256": "7137827cdebea07c6978264021e6a0263017f17a4f7f524054adf254acc0ea26",
+    "published_sha256": "7137827cdebea07c6978264021e6a0263017f17a4f7f524054adf254acc0ea26",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/coverage-controls.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/coverage.log",
+    "original_sha256": "e5ac6c70f39b2472ba81e0576919e5c977037c7917052dbb6e8d613012149486",
+    "published_sha256": "e5ac6c70f39b2472ba81e0576919e5c977037c7917052dbb6e8d613012149486",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/coverage.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/dependencies.log",
+    "original_sha256": "513a7c1dba3c8b3502d1f0fa13257d90c3d8a6a086178da2380002d130d96c50",
+    "published_sha256": "513a7c1dba3c8b3502d1f0fa13257d90c3d8a6a086178da2380002d130d96c50",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/dependencies.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gates.json",
+    "original_sha256": "377838cae38b8fe24a5494e442b932cd0215cde80e34fabeb556ae8ca7136f6c",
+    "published_sha256": "377838cae38b8fe24a5494e442b932cd0215cde80e34fabeb556ae8ca7136f6c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-build.log",
+    "original_sha256": "715fab490ce75ba4dbcac59883a1fdee2cb1e2505c906323232a2558d24a91a3",
+    "published_sha256": "715fab490ce75ba4dbcac59883a1fdee2cb1e2505c906323232a2558d24a91a3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-build.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-configure.log",
+    "original_sha256": "3fa81f33f71e7897208b3eebc7d60d42b152321e075517c015012e3cd88873bc",
+    "published_sha256": "3fa81f33f71e7897208b3eebc7d60d42b152321e075517c015012e3cd88873bc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-configure.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-test.log",
+    "original_sha256": "2a039e839ec328fdbd25bf4a085835f7089ca2f561941a2680e89e493dae5493",
+    "published_sha256": "2a039e839ec328fdbd25bf4a085835f7089ca2f561941a2680e89e493dae5493",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/gcc-test.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/graphs/ARCHITECTURE-0.svg",
+    "original_sha256": "7a4e44af723a9a4a76e774e48ab1f32a11b34620fdfe44c1a41126b98641ee96",
+    "published_sha256": "7a4e44af723a9a4a76e774e48ab1f32a11b34620fdfe44c1a41126b98641ee96",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/graphs/ARCHITECTURE-1.svg",
+    "original_sha256": "506dc37c416bc178085a1f668ca0a0b5cd3ce1688968e07af45fd6463fced846",
+    "published_sha256": "506dc37c416bc178085a1f668ca0a0b5cd3ce1688968e07af45fd6463fced846",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/graphs/README-0.svg",
+    "original_sha256": "6719b759f17bbc8798a1772c848cb056a0c5e5bbbcdf195e6be21f81c22a1a25",
+    "published_sha256": "6719b759f17bbc8798a1772c848cb056a0c5e5bbbcdf195e6be21f81c22a1a25",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/graphs.log",
+    "original_sha256": "3f8775110ae288c0b69ee7f2ab8e3d3aa5dcbe72229be1d03738e28a2c46570f",
+    "published_sha256": "3f8775110ae288c0b69ee7f2ab8e3d3aa5dcbe72229be1d03738e28a2c46570f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/graphs.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/license.log",
+    "original_sha256": "2901ad840947d461ca823c2347d55b2cfdae20062b46dbe37896b2ae2d9c700f",
+    "published_sha256": "2901ad840947d461ca823c2347d55b2cfdae20062b46dbe37896b2ae2d9c700f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/license.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutation-controls.log",
+    "original_sha256": "8de44f407fc0e6de48ce8ae226de88ca61df536548efab511ec97fc8cd61d86b",
+    "published_sha256": "8de44f407fc0e6de48ce8ae226de88ca61df536548efab511ec97fc8cd61d86b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutation-controls.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutation.log",
+    "original_sha256": "f4372e1677d05b6b7806e6fff0c69bb7bb4c4dd56ad43938b2fb248c8d7eac28",
+    "published_sha256": "f4372e1677d05b6b7806e6fff0c69bb7bb4c4dd56ad43938b2fb248c8d7eac28",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutation.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-admit-ignores-another-talker/acmp.xml",
+    "original_sha256": "7797eace6e9b1ace46c9db6893814525b05f7a62dd4f805227bcf865527d6acf",
+    "published_sha256": "7797eace6e9b1ace46c9db6893814525b05f7a62dd4f805227bcf865527d6acf",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-admit-never-called/acmp.xml",
+    "original_sha256": "a08edb77580e61a42cc1b92a95a17373b1144f53a6b1f628ba72438a3cfcd12f",
+    "published_sha256": "a08edb77580e61a42cc1b92a95a17373b1144f53a6b1f628ba72438a3cfcd12f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-admit-on-every-entry/acmp.xml",
+    "original_sha256": "37ab329d469a14e6bf3b0c6d7ac298fdefcebcb8748371cded58e7e313233286",
+    "published_sha256": "37ab329d469a14e6bf3b0c6d7ac298fdefcebcb8748371cded58e7e313233286",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-admit-on-interface-0/acmp.xml",
+    "original_sha256": "7b32ef6123c4c5603644b4edc3888e418750a3d9cc5e37f830260b5984673e58",
+    "published_sha256": "7b32ef6123c4c5603644b4edc3888e418750a3d9cc5e37f830260b5984673e58",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-admit-port-unflagged/acmp.xml",
+    "original_sha256": "5c41fb249c6e9912a7a9f859b273cb5d56afd903d76f9897fbfeb665060d5ae5",
+    "published_sha256": "5c41fb249c6e9912a7a9f859b273cb5d56afd903d76f9897fbfeb665060d5ae5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-adp-discover-taken/acmp.xml",
+    "original_sha256": "008ae356b92d59ba9469d383c62f977607c69d7dae31da35c9d8b532aac4c9d8",
+    "published_sha256": "008ae356b92d59ba9469d383c62f977607c69d7dae31da35c9d8b532aac4c9d8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-adp-ethertype-unchecked/acmp.xml",
+    "original_sha256": "03031c0ab7bc2f3c18c5b20a78b8726b6eb4b7ddd63b0fca0e722d024e04942d",
+    "published_sha256": "03031c0ab7bc2f3c18c5b20a78b8726b6eb4b7ddd63b0fca0e722d024e04942d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-adp-short-frame-taken/acmp.xml",
+    "original_sha256": "eccbb058f767f1f6268e1e826157f6c6100bc3a5cfd50b42c358933124cefa30",
+    "published_sha256": "eccbb058f767f1f6268e1e826157f6c6100bc3a5cfd50b42c358933124cefa30",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-adp-subtype-unchecked/acmp.xml",
+    "original_sha256": "b46a3b886d345968961eafc10469c78d507c56171dd1017db52113e6d317d408",
+    "published_sha256": "b46a3b886d345968961eafc10469c78d507c56171dd1017db52113e6d317d408",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-adp-version-unchecked/acmp.xml",
+    "original_sha256": "cb9500543707246d49f921a13cc6af379d671329aa546ae75d9d400e983cb478",
+    "published_sha256": "cb9500543707246d49f921a13cc6af379d671329aa546ae75d9d400e983cb478",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-aging-samples-the-grandmaster/acmp.xml",
+    "original_sha256": "eba4e30fedfb03566c835c744de226daf70bd580986a9766cdc007dd29b077bb",
+    "published_sha256": "eba4e30fedfb03566c835c744de226daf70bd580986a9766cdc007dd29b077bb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-available-reads-the-clock-twice/acmp.xml",
+    "original_sha256": "c142a99fcd08670a4dec2e57c48adf01f79b5e5fee702f9c32e3f1ff4e9e550a",
+    "published_sha256": "c142a99fcd08670a4dec2e57c48adf01f79b5e5fee702f9c32e3f1ff4e9e550a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-change-before-response/acmp.xml",
+    "original_sha256": "71aca044af70c01b5cfd8b1378747385ca7849f421ca885df5ddc1d15db7925c",
+    "published_sha256": "71aca044af70c01b5cfd8b1378747385ca7849f421ca885df5ddc1d15db7925c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-count-0/acmp.xml",
+    "original_sha256": "817369a110f65cd1a301e0d5d594a8fc33fcf21bfbf73fc1495c6360344e4b6e",
+    "published_sha256": "817369a110f65cd1a301e0d5d594a8fc33fcf21bfbf73fc1495c6360344e4b6e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-new-keeps-srp/acmp.xml",
+    "original_sha256": "002e80ce069257ee00d49043dddd632b652f788991f8b55f1460f9511a1606c3",
+    "published_sha256": "002e80ce069257ee00d49043dddd632b652f788991f8b55f1460f9511a1606c3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-reads-the-clock-twice/acmp.xml",
+    "original_sha256": "b12d03f9bbc0e064893ca569f6dc817844028fb5628449bc87376c2af9a9947b",
+    "published_sha256": "b12d03f9bbc0e064893ca569f6dc817844028fb5628449bc87376c2af9a9947b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-response-always-streaming-wait/acmp.xml",
+    "original_sha256": "0694d0d427cea8ba21b222c8551c0905ac1b106a267481ae1029919cffcaf80d",
+    "published_sha256": "0694d0d427cea8ba21b222c8551c0905ac1b106a267481ae1029919cffcaf80d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-same-talker-is-the-same-source/acmp.xml",
+    "original_sha256": "a30c27674e16947b368194cea54b433eb862ede08639499941baf38140daa4ed",
+    "published_sha256": "a30c27674e16947b368194cea54b433eb862ede08639499941baf38140daa4ed",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-bind-starts-no-discovery/acmp.xml",
+    "original_sha256": "8174c2877b350df5ce7a889bb59144fd1bddfcb8bcd23fd852b3cfd4b5d3956b",
+    "published_sha256": "8174c2877b350df5ce7a889bb59144fd1bddfcb8bcd23fd852b3cfd4b5d3956b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-change-not-held-for-its-response/acmp.xml",
+    "original_sha256": "dfe37506575eb852312c37add91a4947f1435cf5d10fbc4115e9e92c854b3e43",
+    "published_sha256": "dfe37506575eb852312c37add91a4947f1435cf5d10fbc4115e9e92c854b3e43",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-changed-port-unflagged/acmp.xml",
+    "original_sha256": "15507d4a778b0aaef8c09511c732103b150362ef52539ad43813d68a2b88ef41",
+    "published_sha256": "15507d4a778b0aaef8c09511c732103b150362ef52539ad43813d68a2b88ef41",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-clock-port-unflagged/acmp.xml",
+    "original_sha256": "155bd6567ae46c10d66f5d1b304cddab19db768a3bd2e7296c8b5c723df67a59",
+    "published_sha256": "155bd6567ae46c10d66f5d1b304cddab19db768a3bd2e7296c8b5c723df67a59",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-delay-deadline-saturates/acmp.xml",
+    "original_sha256": "92797bb5b8d760466e9cb93e25e08f9bfdf6c5587ad65f8052c203eeda96a9c4",
+    "published_sha256": "92797bb5b8d760466e9cb93e25e08f9bfdf6c5587ad65f8052c203eeda96a9c4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-delay-reads-the-clock-again/acmp.xml",
+    "original_sha256": "8f336217cf46b00a569f73f0f786d485289502a59d2b7fd2c43b537162a71817",
+    "published_sha256": "8f336217cf46b00a569f73f0f786d485289502a59d2b7fd2c43b537162a71817",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-delay-resends-the-old-probe/acmp.xml",
+    "original_sha256": "4e3a09a6178d937e22bd876ce40cd199ded1ab90f753db90efa5ea136116ebf4",
+    "published_sha256": "4e3a09a6178d937e22bd876ce40cd199ded1ab90f753db90efa5ea136116ebf4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-delay-up-to-4s/acmp.xml",
+    "original_sha256": "94c13f6a2bd6effc7e39ca33e491e1c54e1c0831f9e18d81cfaf2a3be3babcc9",
+    "published_sha256": "94c13f6a2bd6effc7e39ca33e491e1c54e1c0831f9e18d81cfaf2a3be3babcc9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-departing-interface-unchecked/acmp.xml",
+    "original_sha256": "8f485f61d82efaa89203e51977fbd50e8923f76529bd9a4c1cb8921575827bae",
+    "published_sha256": "8f485f61d82efaa89203e51977fbd50e8923f76529bd9a4c1cb8921575827bae",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-departing-keeps-aging/acmp.xml",
+    "original_sha256": "19f4bb722a4e46c3601408f17ace51a03c1dddeee1d9227fb24cd39fb983e2d9",
+    "published_sha256": "19f4bb722a4e46c3601408f17ace51a03c1dddeee1d9227fb24cd39fb983e2d9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-departing-samples-the-grandmaster/acmp.xml",
+    "original_sha256": "276c0d67af1f46a37f924258f5b9d82bdc2c202ca64b1aa4c4fe4b369ee494e3",
+    "published_sha256": "276c0d67af1f46a37f924258f5b9d82bdc2c202ca64b1aa4c4fe4b369ee494e3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-departing-taken-undiscovered/acmp.xml",
+    "original_sha256": "6762763d5744d81a3ed556f3639dacfda27e26478000bdaef6c7296d0b9c25a4",
+    "published_sha256": "6762763d5744d81a3ed556f3639dacfda27e26478000bdaef6c7296d0b9c25a4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-disconnect-always-succeeds/acmp.xml",
+    "original_sha256": "c5a933907f68f68af12984a12db6025aa64b6ad9832a24d0e0a0a4528d672d46",
+    "published_sha256": "c5a933907f68f68af12984a12db6025aa64b6ad9832a24d0e0a0a4528d672d46",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovered-interface-unchecked/acmp.xml",
+    "original_sha256": "1e3e11d8cf36e16114b8aa1fc94e56fe995f2dd93d8334f4bf1a0f9bd4e36756",
+    "published_sha256": "1e3e11d8cf36e16114b8aa1fc94e56fe995f2dd93d8334f4bf1a0f9bd4e36756",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovered-probing-stays-passive/acmp.xml",
+    "original_sha256": "07185341ea774577c29bd36d584ad5941147abdf05655a4ab325c8334e1469ee",
+    "published_sha256": "07185341ea774577c29bd36d584ad5941147abdf05655a4ab325c8334e1469ee",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-notifies/acmp.xml",
+    "original_sha256": "c813c67aec4527066ac658fb05b9907a86ddb070d0658a7fdb01b36e734136cf",
+    "published_sha256": "c813c67aec4527066ac658fb05b9907a86ddb070d0658a7fdb01b36e734136cf",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-on-every-interface/acmp.xml",
+    "original_sha256": "e50f2e78c1bff913fa9e2c7b2306f12957f6813517b0025ac4ce83d191142c8d",
+    "published_sha256": "e50f2e78c1bff913fa9e2c7b2306f12957f6813517b0025ac4ce83d191142c8d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-on-unbound-sinks/acmp.xml",
+    "original_sha256": "eb8b329eb964d30fbfc646b8b05399b345d0944c9f6aca64e54c00995f01eab4",
+    "published_sha256": "eb8b329eb964d30fbfc646b8b05399b345d0944c9f6aca64e54c00995f01eab4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-reads-no-domain/acmp.xml",
+    "original_sha256": "7512794650ae6cf8004fd762d6a0a6ee4f3b8a75f1e047993f18347ef8069cc3",
+    "published_sha256": "7512794650ae6cf8004fd762d6a0a6ee4f3b8a75f1e047993f18347ef8069cc3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-reads-no-grandmaster/acmp.xml",
+    "original_sha256": "c5683f06280965c3463e0642b988ced47d98b28b88576e60071b2233e5fbe4be",
+    "published_sha256": "c5683f06280965c3463e0642b988ced47d98b28b88576e60071b2233e5fbe4be",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-discovery-takes-the-first-sink/acmp.xml",
+    "original_sha256": "e8c81672bea88481bdfac1412522119518d1d5475fcc4856b8dda65c1a816b25",
+    "published_sha256": "e8c81672bea88481bdfac1412522119518d1d5475fcc4856b8dda65c1a816b25",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-due-unsigned/acmp.xml",
+    "original_sha256": "ebb61f698b49d098b05664370d7f397edc23112580c80bb5d4b6ad2e26cbb137",
+    "published_sha256": "ebb61f698b49d098b05664370d7f397edc23112580c80bb5d4b6ad2e26cbb137",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-duplicate-takes-a-new-sequence-id/acmp.xml",
+    "original_sha256": "5af76162ca0675330cac22da31670429a53d8883b3d44ca656a8ec4ded1d98d0",
+    "published_sha256": "5af76162ca0675330cac22da31670429a53d8883b3d44ca656a8ec4ded1d98d0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-earliest-unsigned/acmp.xml",
+    "original_sha256": "de8d849ba4e53cb8a56ee15cea71039de48fdcaed2591eb8a229e6770ecc5a89",
+    "published_sha256": "de8d849ba4e53cb8a56ee15cea71039de48fdcaed2591eb8a229e6770ecc5a89",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-every-listener-is-this-one/acmp.xml",
+    "original_sha256": "c7e6f9505ed4489a9d5fd0286e7ed4cf6be04db4e5444ab0613695dc8ba86640",
+    "published_sha256": "c7e6f9505ed4489a9d5fd0286e7ed4cf6be04db4e5444ab0613695dc8ba86640",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-every-talker-is-this-one/acmp.xml",
+    "original_sha256": "5525cb32d0a3d58c3bae9f27278058f1470ac4aedcb9606fcb57976b37145aad",
+    "published_sha256": "5525cb32d0a3d58c3bae9f27278058f1470ac4aedcb9606fcb57976b37145aad",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-expiry-due-at-its-first-read/acmp.xml",
+    "original_sha256": "abd47acce32eccb9a7e35938b0c24ffcc32c93f7b4a31ec2304ee1d9f80015cb",
+    "published_sha256": "abd47acce32eccb9a7e35938b0c24ffcc32c93f7b4a31ec2304ee1d9f80015cb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-expiry-not-consumed/acmp.xml",
+    "original_sha256": "6daaf90e609814dee1ef95360b887fb2ef2def01cf4e01d0e5d11e4286748862",
+    "published_sha256": "6daaf90e609814dee1ef95360b887fb2ef2def01cf4e01d0e5d11e4286748862",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-expiry-reads-the-clock-twice/acmp.xml",
+    "original_sha256": "5c087d5e0280188b8e7f3135db3b88423ad6988e50f768521a2876a748dc7437",
+    "published_sha256": "5c087d5e0280188b8e7f3135db3b88423ad6988e50f768521a2876a748dc7437",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-expiry-takes-every-interface/acmp.xml",
+    "original_sha256": "d9d47e178d2263a3aa3ca8daaa8d70d2cb14d62f35283cbebcc1add213fa49db",
+    "published_sha256": "d9d47e178d2263a3aa3ca8daaa8d70d2cb14d62f35283cbebcc1add213fa49db",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-failure-retries-at-200ms/acmp.xml",
+    "original_sha256": "5a10fbd84271eef0669e3fab0d0b2eded122d32bbf84a89292e8d3f3fbbd8608",
+    "published_sha256": "5a10fbd84271eef0669e3fab0d0b2eded122d32bbf84a89292e8d3f3fbbd8608",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-failure-status-dropped/acmp.xml",
+    "original_sha256": "ad4947e4e5add70282bd9e32d3a8b996ecf966bcb8833affa39dfaf61964ad9d",
+    "published_sha256": "ad4947e4e5add70282bd9e32d3a8b996ecf966bcb8833affa39dfaf61964ad9d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-first-owed-releases-every-change/acmp.xml",
+    "original_sha256": "b217c2d223b146f8cd8b98e9fa991cff75430400a79a11ad570f45982bfcc5ee",
+    "published_sha256": "b217c2d223b146f8cd8b98e9fa991cff75430400a79a11ad570f45982bfcc5ee",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-frames-to-the-own-mac/acmp.xml",
+    "original_sha256": "1993a9655d95ef4587f80da78a635d32e696078d1c9bb3c66a4f47fe7df6899f",
+    "published_sha256": "1993a9655d95ef4587f80da78a635d32e696078d1c9bb3c66a4f47fe7df6899f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-full-queue-acts/acmp.xml",
+    "original_sha256": "143cf05bbd47bc03716047c6e4e4ca7617e752bff06099a979632ddf9fb0b95f",
+    "published_sha256": "143cf05bbd47bc03716047c6e4e4ca7617e752bff06099a979632ddf9fb0b95f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-rx-state-locked/acmp.xml",
+    "original_sha256": "61038ad9d3c786380142758c501ff2f606f50f1d49012e31d1249c9d6b4b7c93",
+    "published_sha256": "61038ad9d3c786380142758c501ff2f606f50f1d49012e31d1249c9d6b4b7c93",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-rx-state-reads-the-clock/acmp.xml",
+    "original_sha256": "402a8328bdcdab76df89ee9c713f2d30c493a564fede66b1b6f7a597e9746a8b",
+    "published_sha256": "402a8328bdcdab76df89ee9c713f2d30c493a564fede66b1b6f7a597e9746a8b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-tx-connection-supported/acmp.xml",
+    "original_sha256": "7e95cf5f0db3bdc4098c01496f9490618c46ffe106059577b43f441da1fc71aa",
+    "published_sha256": "7e95cf5f0db3bdc4098c01496f9490618c46ffe106059577b43f441da1fc71aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-tx-state-echoes-the-listener/acmp.xml",
+    "original_sha256": "61808564ed92fb9239aa2b04ff1989700d768a99a742a5948aad4a51763807d9",
+    "published_sha256": "61808564ed92fb9239aa2b04ff1989700d768a99a742a5948aad4a51763807d9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-tx-state-registering-failed-0/acmp.xml",
+    "original_sha256": "a99f1b60e2115ba3d1fe5899dd744d9640a13c3cfc9273a5f3735465270bc2f7",
+    "published_sha256": "a99f1b60e2115ba3d1fe5899dd744d9640a13c3cfc9273a5f3735465270bc2f7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-get-tx-state-unheld-mac/acmp.xml",
+    "original_sha256": "6bdff10b92befb8e17021ebb855dc8fdf21b0b95493f805488146e3c60e2d224",
+    "published_sha256": "6bdff10b92befb8e17021ebb855dc8fdf21b0b95493f805488146e3c60e2d224",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-getrx-count-unbound/acmp.xml",
+    "original_sha256": "28608578df3b124ca04fc218bcf0e49e0f262ef070559abab6ec1ca3401a88b2",
+    "published_sha256": "28608578df3b124ca04fc218bcf0e49e0f262ef070559abab6ec1ca3401a88b2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-getrx-no-fast-connect/acmp.xml",
+    "original_sha256": "ca5c1ea9ad83215e8a73504554930addf85e3706a720aa38888cb5066161f629",
+    "published_sha256": "ca5c1ea9ad83215e8a73504554930addf85e3706a720aa38888cb5066161f629",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-getrx-no-registering-failed/acmp.xml",
+    "original_sha256": "383e5d9e560c392dbeb4a8e3bee01985853dd0d4f8cf478445f980c17dfd2471",
+    "published_sha256": "383e5d9e560c392dbeb4a8e3bee01985853dd0d4f8cf478445f980c17dfd2471",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-gptp-port-unflagged/acmp.xml",
+    "original_sha256": "6278e07152ea0859d5837e711f9d86fc1a8347675496d18db16ee75e7f1ba951",
+    "published_sha256": "6278e07152ea0859d5837e711f9d86fc1a8347675496d18db16ee75e7f1ba951",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-grandmaster-read-twice/acmp.xml",
+    "original_sha256": "05b84e5f2a245665aacc443b4967cddd4c8b85ce5a2a96a1269c2425284febc5",
+    "published_sha256": "05b84e5f2a245665aacc443b4967cddd4c8b85ce5a2a96a1269c2425284febc5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-grandmaster-sampled-for-the-refresh/acmp.xml",
+    "original_sha256": "83c281430eba7a06744fea1fa2b6b335c076d859b4c84be25522a0b88e2fb8d5",
+    "published_sha256": "83c281430eba7a06744fea1fa2b6b335c076d859b4c84be25522a0b88e2fb8d5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-grandmaster-sampled-per-sink/acmp.xml",
+    "original_sha256": "5c8c5ddba958e5e8a23cdff939fae955c6b8bdbb10b7c9779d051542a3eb63ba",
+    "published_sha256": "5c8c5ddba958e5e8a23cdff939fae955c6b8bdbb10b7c9779d051542a3eb63ba",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-guard-controller-dropped/acmp.xml",
+    "original_sha256": "f6194ac6927b8f2fc8b7a324f23e83202dc07e63d010f8103904f7c37b659a66",
+    "published_sha256": "f6194ac6927b8f2fc8b7a324f23e83202dc07e63d010f8103904f7c37b659a66",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-guard-reads-the-binding/acmp.xml",
+    "original_sha256": "f7d6e3f61058a48a29bd4dab04c040a94ce51ca169c058e7160a94e10f52ea4e",
+    "published_sha256": "f7d6e3f61058a48a29bd4dab04c040a94ce51ca169c058e7160a94e10f52ea4e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-guard-sequence-id-dropped/acmp.xml",
+    "original_sha256": "35f6b0046c63daf3dd39124ebeda06dda1fa79748a0ed704a32a7a7e1f90c450",
+    "published_sha256": "35f6b0046c63daf3dd39124ebeda06dda1fa79748a0ed704a32a7a7e1f90c450",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-guard-talker-dropped/acmp.xml",
+    "original_sha256": "e825754c7e3a2fbc6f4c87fc489065ac67d36d338b41941d365436e4e960d9e9",
+    "published_sha256": "e825754c7e3a2fbc6f4c87fc489065ac67d36d338b41941d365436e4e960d9e9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-guard-unique-id-dropped/acmp.xml",
+    "original_sha256": "5c69df74351e209f89defde63c8e1706ec7a4a491c23c85c71f94072ca6e9d62",
+    "published_sha256": "5c69df74351e209f89defde63c8e1706ec7a4a491c23c85c71f94072ca6e9d62",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-cdl-84/acmp.xml",
+    "original_sha256": "f5ac91a9fa6fcf064d5d84de0f5b3da68c4da161502aed27d157e66c350426dc",
+    "published_sha256": "f5ac91a9fa6fcf064d5d84de0f5b3da68c4da161502aed27d157e66c350426dc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-listener-unknown-is-2/acmp.xml",
+    "original_sha256": "bd99f423633ec53cf869df0749a191714f093185e8415894e8bce915d6359439",
+    "published_sha256": "bd99f423633ec53cf869df0749a191714f093185e8415894e8bce915d6359439",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-no-resp-2s/acmp.xml",
+    "original_sha256": "b59a5dd542b3f2c79828f939cdcea298f3efadb43a9172d8bc912a216924980e",
+    "published_sha256": "b59a5dd542b3f2c79828f939cdcea298f3efadb43a9172d8bc912a216924980e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-no-tk-5s/acmp.xml",
+    "original_sha256": "aee7e412815292aabd23dec41a1fb2d8656872545749aa8698a77d20cccc7112",
+    "published_sha256": "aee7e412815292aabd23dec41a1fb2d8656872545749aa8698a77d20cccc7112",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-registering-failed-bit/acmp.xml",
+    "original_sha256": "be79ae41bed3a78cddf0e53e1912719efe2dd037e7fb2c463f6a05a31a9f295c",
+    "published_sha256": "be79ae41bed3a78cddf0e53e1912719efe2dd037e7fb2c463f6a05a31a9f295c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-retry-2s/acmp.xml",
+    "original_sha256": "660cc5bba2831ca1d031a9db5cf50ec7254b5a8b68ba929e1de2c325f046b18c",
+    "published_sha256": "660cc5bba2831ca1d031a9db5cf50ec7254b5a8b68ba929e1de2c325f046b18c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-valid-time-in-seconds/acmp.xml",
+    "original_sha256": "8b90ab9ef8e7144fdc8738b19ab9f9d98ab4304a3222a65738a3d8503518be50",
+    "published_sha256": "8b90ab9ef8e7144fdc8738b19ab9f9d98ab4304a3222a65738a3d8503518be50",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-header-version-1/acmp.xml",
+    "original_sha256": "e8a27a0a9893d8e752704b2a6dc26b184f9ff34a103278c80cab00c43a20d31f",
+    "published_sha256": "e8a27a0a9893d8e752704b2a6dc26b184f9ff34a103278c80cab00c43a20d31f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-held-timer-armed/acmp.xml",
+    "original_sha256": "e7c173cbe73b3e4f3ad8c9d752ee747a5c18193c9b07c59b071f8d2b4f5926ea",
+    "published_sha256": "e7c173cbe73b3e4f3ad8c9d752ee747a5c18193c9b07c59b071f8d2b4f5926ea",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-held-timer-expires/acmp.xml",
+    "original_sha256": "0d3421432837c588e0552332b2112cb96dc3e57042bf4382b205d57266e6f068",
+    "published_sha256": "0d3421432837c588e0552332b2112cb96dc3e57042bf4382b205d57266e6f068",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-no-interface/acmp.xml",
+    "original_sha256": "6d7877419a5918aed90f6edf036e926f75a29ff624b0a2e53313cb3d6c9487b1",
+    "published_sha256": "6d7877419a5918aed90f6edf036e926f75a29ff624b0a2e53313cb3d6c9487b1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-reads-the-seed/acmp.xml",
+    "original_sha256": "9988e269ef7f4ab37c989cda1d49195aa475098773e0f1b377472834ba7f77f5",
+    "published_sha256": "9988e269ef7f4ab37c989cda1d49195aa475098773e0f1b377472834ba7f77f5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-sink-interface/acmp.xml",
+    "original_sha256": "5c31da898da49ff01cf22af6858fc9c71e6685f6a86b6ae77ee4fe3060219a26",
+    "published_sha256": "5c31da898da49ff01cf22af6858fc9c71e6685f6a86b6ae77ee4fe3060219a26",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-source-interface/acmp.xml",
+    "original_sha256": "a3986e44235a92c36fddfa1ccf12da25d7d600c36c4bd7ae4c826c6017c22bac",
+    "published_sha256": "a3986e44235a92c36fddfa1ccf12da25d7d600c36c4bd7ae4c826c6017c22bac",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-too-many-sinks/acmp.xml",
+    "original_sha256": "e64990dd2f127409c9e0c9239678d8e81ffb89ad574a6fae1f822b79b22ac8d3",
+    "published_sha256": "e64990dd2f127409c9e0c9239678d8e81ffb89ad574a6fae1f822b79b22ac8d3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-init-too-many-sources/acmp.xml",
+    "original_sha256": "08ecfaf7550bb8ec5a2ca35e79ff502bb5aa58cff1da6ef9b3dbc6c4f9cde9a4",
+    "published_sha256": "08ecfaf7550bb8ec5a2ca35e79ff502bb5aa58cff1da6ef9b3dbc6c4f9cde9a4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-kind-any-state/acmp.xml",
+    "original_sha256": "8e52f20d85c0966eea8427f0f3b6b81558adf7e46b2d5ac2289636c207c51e69",
+    "published_sha256": "8e52f20d85c0966eea8427f0f3b6b81558adf7e46b2d5ac2289636c207c51e69",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-kind-lost/acmp.xml",
+    "original_sha256": "808d88d0044288780bb8272144b1cdc7fc7218ea1a06137324008d636c8aa25a",
+    "published_sha256": "808d88d0044288780bb8272144b1cdc7fc7218ea1a06137324008d636c8aa25a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-lock-ignored/acmp.xml",
+    "original_sha256": "670bec427bc7ddc213da3135d404ad205118338bee81574a1975d4db8796f5d7",
+    "published_sha256": "670bec427bc7ddc213da3135d404ad205118338bee81574a1975d4db8796f5d7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-lock-port-unflagged/acmp.xml",
+    "original_sha256": "918eb0b3740265ab37be2480c078ff2905aaab0b4185eea9df0e62677e687d7d",
+    "published_sha256": "918eb0b3740265ab37be2480c078ff2905aaab0b4185eea9df0e62677e687d7d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-lock-refuses-the-holder/acmp.xml",
+    "original_sha256": "361bbbff4a42cf4c88c62b47445cf39bbd72bf7d926dbcc368ef6be268ee805e",
+    "published_sha256": "361bbbff4a42cf4c88c62b47445cf39bbd72bf7d926dbcc368ef6be268ee805e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-longer-pdu-refused/acmp.xml",
+    "original_sha256": "2e3bb7464f9e2604399698c8974e074cf0095991ab174207bedde2efca5684d1",
+    "published_sha256": "2e3bb7464f9e2604399698c8974e074cf0095991ab174207bedde2efca5684d1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-longer-record-applied/acmp.xml",
+    "original_sha256": "6e34e6e8a74a92ede0c70d35ccaa3925cbf2a1752d6c0bff2401a125142bf9de",
+    "published_sha256": "6e34e6e8a74a92ede0c70d35ccaa3925cbf2a1752d6c0bff2401a125142bf9de",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-lost-probe-held/acmp.xml",
+    "original_sha256": "8a0b3f519c081742b3bb74c30724566656e00fd434292bee39d7df6ff5888a88",
+    "published_sha256": "8a0b3f519c081742b3bb74c30724566656e00fd434292bee39d7df6ff5888a88",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-lost-probe-uncounted/acmp.xml",
+    "original_sha256": "7b61ebe6a0ebf190a84e7a12fedbccc747a6e690be424c3d3fe61db53c874f58",
+    "published_sha256": "7b61ebe6a0ebf190a84e7a12fedbccc747a6e690be424c3d3fe61db53c874f58",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-new-bind-never-started/acmp.xml",
+    "original_sha256": "2c98350f5c9b3eac5f5701bbaa9d3e9a1d15683679013c73919eb022230552ac",
+    "published_sha256": "2c98350f5c9b3eac5f5701bbaa9d3e9a1d15683679013c73919eb022230552ac",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-adp-deadline-saturates/acmp.xml",
+    "original_sha256": "c10087617370ab94b3535910ecc64d97f229f19f4d2b4d9bdee94ebe8a1b2265",
+    "published_sha256": "c10087617370ab94b3535910ecc64d97f229f19f4d2b4d9bdee94ebe8a1b2265",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-adp-due-unsigned/acmp.xml",
+    "original_sha256": "1230f99c912e448df8659b665e0af22fa308968299f5114492b1dedb62fe9190",
+    "published_sha256": "1230f99c912e448df8659b665e0af22fa308968299f5114492b1dedb62fe9190",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-aging/acmp.xml",
+    "original_sha256": "4797d3984654ee1621df606ab7219a7a4aa34b84b2042d97b1db3745aca69480",
+    "published_sha256": "4797d3984654ee1621df606ab7219a7a4aa34b84b2042d97b1db3745aca69480",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-duplicate/acmp.xml",
+    "original_sha256": "45f997f5cd69bd9659e1afd3937d6ef592a680df27c549862e32724683a44c53",
+    "published_sha256": "45f997f5cd69bd9659e1afd3937d6ef592a680df27c549862e32724683a44c53",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-resp-2s/acmp.xml",
+    "original_sha256": "033c2f411c8328950d587a548d2d6338369e454afe9197f1a610bb2ce1353cae",
+    "published_sha256": "033c2f411c8328950d587a548d2d6338369e454afe9197f1a610bb2ce1353cae",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-resp-deadline-saturates/acmp.xml",
+    "original_sha256": "85934ad3f4364e60c92cdec113857dcc6e19813bdf60840d592d9075ab857879",
+    "published_sha256": "85934ad3f4364e60c92cdec113857dcc6e19813bdf60840d592d9075ab857879",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-tk-1s/acmp.xml",
+    "original_sha256": "f3ef12a165d76733b91cc276ae85ee2e3a62d1e8df410ddbfb77690eb013075d",
+    "published_sha256": "f3ef12a165d76733b91cc276ae85ee2e3a62d1e8df410ddbfb77690eb013075d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-tk-deadline-saturates/acmp.xml",
+    "original_sha256": "c08905321e4eea7d381c02bb6cfa3ee67886c0d271b9e879baa109eddaca4c30",
+    "published_sha256": "c08905321e4eea7d381c02bb6cfa3ee67886c0d271b9e879baa109eddaca4c30",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-tk-keeps-srp/acmp.xml",
+    "original_sha256": "24498f245babcc2ba97efd108158fb8db760934f8600efcfdb1dc0b3816dd353",
+    "published_sha256": "24498f245babcc2ba97efd108158fb8db760934f8600efcfdb1dc0b3816dd353",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-no-tk-samples-the-grandmaster/acmp.xml",
+    "original_sha256": "51e8a6014bf24c8e8dc12674e9be27772ebe775f2c3dfce6fa7b5185933c7e4b",
+    "published_sha256": "51e8a6014bf24c8e8dc12674e9be27772ebe775f2c3dfce6fa7b5185933c7e4b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-not-authorized-is-13/acmp.xml",
+    "original_sha256": "2c9b060348bbd288c137505ce29f60517c36fd539c1e2e24440402f29bd33e7e",
+    "published_sha256": "2c9b060348bbd288c137505ce29f60517c36fd539c1e2e24440402f29bd33e7e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-nothing-persisted/acmp.xml",
+    "original_sha256": "0840ab9d9f894343cfe49717d6fa67d24b48e17fd4d7d63d676f9ecd62aea075",
+    "published_sha256": "0840ab9d9f894343cfe49717d6fa67d24b48e17fd4d7d63d676f9ecd62aea075",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-open-does-nothing/acmp.xml",
+    "original_sha256": "e82ad31d422ac87bf643b28052b8a3f951f0d4275168ddc16094edd5a0229515",
+    "published_sha256": "e82ad31d422ac87bf643b28052b8a3f951f0d4275168ddc16094edd5a0229515",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-open-unguarded/acmp.xml",
+    "original_sha256": "9a945a50eafa24e38f9c91c523589a73d4c43030ba3e760a2793313ad488a4a1",
+    "published_sha256": "9a945a50eafa24e38f9c91c523589a73d4c43030ba3e760a2793313ad488a4a1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-names-the-next-sink/acmp.xml",
+    "original_sha256": "85a4493c8977fb4a926e7fcd5b7d1841e7e4c72fa757a907620b9f7f71d2e17e",
+    "published_sha256": "85a4493c8977fb4a926e7fcd5b7d1841e7e4c72fa757a907620b9f7f71d2e17e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-never-starts/acmp.xml",
+    "original_sha256": "0732b3801294a51bcc6fb5676075d1963975d17df1b1705393ccd17753f79d6f",
+    "published_sha256": "0732b3801294a51bcc6fb5676075d1963975d17df1b1705393ccd17753f79d6f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-no-resp-2s/acmp.xml",
+    "original_sha256": "a3fbddefd5448dc7793ca5499a25fee74066516aaa4342d16b6352e0b459dd83",
+    "published_sha256": "a3fbddefd5448dc7793ca5499a25fee74066516aaa4342d16b6352e0b459dd83",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-sequence-unchecked/acmp.xml",
+    "original_sha256": "9b6e3aa3f684e8c02958f26fc6f74cdcfc6148e9edb5efdf0b53b0840cd11088",
+    "published_sha256": "9b6e3aa3f684e8c02958f26fc6f74cdcfc6148e9edb5efdf0b53b0840cd11088",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-timer-runs/acmp.xml",
+    "original_sha256": "9c98e68635e6ae6dcec0443eec465ba994a46882a45f134152e691d45d7329e6",
+    "published_sha256": "9c98e68635e6ae6dcec0443eec465ba994a46882a45f134152e691d45d7329e6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-owed-probe-unnamed/acmp.xml",
+    "original_sha256": "80a99b7859e89e11facbff1929bfd7928a02cfae0b7410e28085b68080e5c2a2",
+    "published_sha256": "80a99b7859e89e11facbff1929bfd7928a02cfae0b7410e28085b68080e5c2a2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-peer-loss-clears-binding/acmp.xml",
+    "original_sha256": "f087f76bf99bc4a3349bb2831ae2686b2b3dbb64149bd407ecf35e5a6a30f05f",
+    "published_sha256": "f087f76bf99bc4a3349bb2831ae2686b2b3dbb64149bd407ecf35e5a6a30f05f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-peer-loss-stops-discovery/acmp.xml",
+    "original_sha256": "684e5232d3a962701fb5b4cc3712df29b9a525abef872dd4accaeb4a55ffc4e2",
+    "published_sha256": "684e5232d3a962701fb5b4cc3712df29b9a525abef872dd4accaeb4a55ffc4e2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-persist-port-unflagged/acmp.xml",
+    "original_sha256": "7d39496851347a079f7ccef55eeedebadb8ecd21d6411a315db47e0c6dd982ec",
+    "published_sha256": "7d39496851347a079f7ccef55eeedebadb8ecd21d6411a315db47e0c6dd982ec",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-poll-drains-everything/acmp.xml",
+    "original_sha256": "736406a0249f82d561e61ae78562097942f3babd1fe91e66b2fc788929dc53b4",
+    "published_sha256": "736406a0249f82d561e61ae78562097942f3babd1fe91e66b2fc788929dc53b4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-poll-newest-first/acmp.xml",
+    "original_sha256": "0e290a74e77d5285c6ce51b0b378ac403dca1f40f200a99b43996f1d0db85315",
+    "published_sha256": "0e290a74e77d5285c6ce51b0b378ac403dca1f40f200a99b43996f1d0db85315",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-before-response/acmp.xml",
+    "original_sha256": "59b86c515b7400cffdaf6741fd7399e3c2e4e995eefe55e2b15326347ec2783d",
+    "published_sha256": "59b86c515b7400cffdaf6741fd7399e3c2e4e995eefe55e2b15326347ec2783d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-response-reads-the-clock-twice/acmp.xml",
+    "original_sha256": "6d6bc01d5688ea9c898177f681fba0b35d317c57f6ce4f5eaf292660992e7577",
+    "published_sha256": "6d6bc01d5688ea9c898177f681fba0b35d317c57f6ce4f5eaf292660992e7577",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-timer-before-its-send/acmp.xml",
+    "original_sha256": "daccd9c46e72a65ae4b999ad264f6b1c819a349592009d1b8d6c5606a25c2a0a",
+    "published_sha256": "daccd9c46e72a65ae4b999ad264f6b1c819a349592009d1b8d6c5606a25c2a0a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-tx-any-interface/acmp.xml",
+    "original_sha256": "168019de91b81875211e8c8cafb8bbea2a91e287967e6d35933f3f617683b496",
+    "published_sha256": "168019de91b81875211e8c8cafb8bbea2a91e287967e6d35933f3f617683b496",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-tx-echoes-every-flag/acmp.xml",
+    "original_sha256": "35c14408ad52a582d680da0322b6f436f9ba85e833e20fb5f95d863360d02b74",
+    "published_sha256": "35c14408ad52a582d680da0322b6f436f9ba85e833e20fb5f95d863360d02b74",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-tx-no-destination-mac-check/acmp.xml",
+    "original_sha256": "9bca596e01f4d33615855c28d7bca252f6fcab15fec7563940700518cdf678c1",
+    "published_sha256": "9bca596e01f4d33615855c28d7bca252f6fcab15fec7563940700518cdf678c1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-tx-reports-asking-failed/acmp.xml",
+    "original_sha256": "27c4b9b8982be102ec0614df492420b07405376376354ac7956f8979519a8b96",
+    "published_sha256": "27c4b9b8982be102ec0614df492420b07405376376354ac7956f8979519a8b96",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probe-without-fast-connect/acmp.xml",
+    "original_sha256": "3d7cfb381ce544b42c6289c4d09730c15e5ef162725ab50753fac231c051fdc3",
+    "published_sha256": "3d7cfb381ce544b42c6289c4d09730c15e5ef162725ab50753fac231c051fdc3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-probing-status-not-notified/acmp.xml",
+    "original_sha256": "2e845822c6383483dae194a8ea420244ebfdb6e401ca871a04450c9457ac8769",
+    "published_sha256": "2e845822c6383483dae194a8ea420244ebfdb6e401ca871a04450c9457ac8769",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-rebind-not-persisted/acmp.xml",
+    "original_sha256": "8927a9c7df51899fc8aa891f76ac0dfde837e41e7d8d8e32d119b002bf2b1486",
+    "published_sha256": "8927a9c7df51899fc8aa891f76ac0dfde837e41e7d8d8e32d119b002bf2b1486",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-rebind-same-keeps-the-controller/acmp.xml",
+    "original_sha256": "684dd1a830bf5e1ea2f8ecca580ad58b5c4ef6b29488e270cacf9f7e49b5cb2c",
+    "published_sha256": "684dd1a830bf5e1ea2f8ecca580ad58b5c4ef6b29488e270cacf9f7e49b5cb2c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-rebind-same-reprobes/acmp.xml",
+    "original_sha256": "7bbc9b872e0ca71c3b5402b943f8a9b34f39c5caa10ecf508edce3c04041358b",
+    "published_sha256": "7bbc9b872e0ca71c3b5402b943f8a9b34f39c5caa10ecf508edce3c04041358b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-record-flag-defines-swapped/acmp.xml",
+    "original_sha256": "425e2a41378e482bee8f4980e537d03c05d4208d6a9b7207e14d6c77e7532580",
+    "published_sha256": "425e2a41378e482bee8f4980e537d03c05d4208d6a9b7207e14d6c77e7532580",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-record-flags-swapped/acmp.xml",
+    "original_sha256": "f483623a6661abfd8bd7dc2c48ad025875d29ba55eb3b317e5fdd3776d291002",
+    "published_sha256": "f483623a6661abfd8bd7dc2c48ad025875d29ba55eb3b317e5fdd3776d291002",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-record-unique-id-little-endian/acmp.xml",
+    "original_sha256": "716c92a04f832748c7c91968e6e9343707b7c8e6304128b2e7812fe1413fe02e",
+    "published_sha256": "716c92a04f832748c7c91968e6e9343707b7c8e6304128b2e7812fe1413fe02e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-record-valid-bit-moved/acmp.xml",
+    "original_sha256": "2fab284f193b00b323975ead07f62d6fa4d2e30c8495ac2837ebdb10e85eb829",
+    "published_sha256": "2fab284f193b00b323975ead07f62d6fa4d2e30c8495ac2837ebdb10e85eb829",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-reentry-unguarded/acmp.xml",
+    "original_sha256": "1e1fad0feabb3d7cdff9de65598d877cb6cb51ba881ee293c31e222645f41312",
+    "published_sha256": "1e1fad0feabb3d7cdff9de65598d877cb6cb51ba881ee293c31e222645f41312",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-reentry-untrapped/acmp.xml",
+    "original_sha256": "ba39d470950b5fd80dc1eefba044611ae0f3f7cc65a5357f6de0fc3b060f2a17",
+    "published_sha256": "ba39d470950b5fd80dc1eefba044611ae0f3f7cc65a5357f6de0fc3b060f2a17",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-refresh-notes-no-index/acmp.xml",
+    "original_sha256": "4fefaf704b4b3edf121cef437959129c0204e25a103d4db012a61095b2e0b431",
+    "published_sha256": "4fefaf704b4b3edf121cef437959129c0204e25a103d4db012a61095b2e0b431",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-registered-anywhere/acmp.xml",
+    "original_sha256": "8bf57285d2532cc3bfb45656fa81fdb76e3ebf6452e524a977cd76062086c913",
+    "published_sha256": "8bf57285d2532cc3bfb45656fa81fdb76e3ebf6452e524a977cd76062086c913",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-registered-keeps-no-tk/acmp.xml",
+    "original_sha256": "34359bed14a28253b914aaec36a2b8d087e42daf567cce2e737a6aea64485b6f",
+    "published_sha256": "34359bed14a28253b914aaec36a2b8d087e42daf567cce2e737a6aea64485b6f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-registered-kind-dropped/acmp.xml",
+    "original_sha256": "fb348db166cd342b75473bded10a5073ccaacfdf084c618d3aa43077602f50f2",
+    "published_sha256": "fb348db166cd342b75473bded10a5073ccaacfdf084c618d3aa43077602f50f2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-reprobe-ignores-discovery/acmp.xml",
+    "original_sha256": "84c30e01ae37bd7be571b35564425712d4c0be88d2a9b369c7ffe3543b479384",
+    "published_sha256": "84c30e01ae37bd7be571b35564425712d4c0be88d2a9b369c7ffe3543b479384",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-reset-forgets-the-admitted/acmp.xml",
+    "original_sha256": "90d9a63935aafd92de320ace22e08d2606cbd5ee865d4b7c9ef95962a35dde7c",
+    "published_sha256": "90d9a63935aafd92de320ace22e08d2606cbd5ee865d4b7c9ef95962a35dde7c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-response-keyed-on-the-source/acmp.xml",
+    "original_sha256": "8a19d242e77df4209da2f6caac9eeae584e9760e9c8b4e5c28eeb9b0c534fc8f",
+    "published_sha256": "8a19d242e77df4209da2f6caac9eeae584e9760e9c8b4e5c28eeb9b0c534fc8f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-response-passes-an-owed-frame/acmp.xml",
+    "original_sha256": "b796d7cc371f866518ade8b3f3e1d79243f77a058332b225112163f51aa2d6e0",
+    "published_sha256": "b796d7cc371f866518ade8b3f3e1d79243f77a058332b225112163f51aa2d6e0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-responses-taken-outside-probing/acmp.xml",
+    "original_sha256": "10632428c6c707cda07b867ceff2b07bda071feee438f235e1e3a56a4ce74435",
+    "published_sha256": "10632428c6c707cda07b867ceff2b07bda071feee438f235e1e3a56a4ce74435",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restart-mismatch-keeps-aging/acmp.xml",
+    "original_sha256": "897ccf3c2e0497f5029d5a020b24fcd323f004bf5ec410011fede3c83f1a42ef",
+    "published_sha256": "897ccf3c2e0497f5029d5a020b24fcd323f004bf5ec410011fede3c83f1a42ef",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restart-on-a-smaller-index-only/acmp.xml",
+    "original_sha256": "d08bfc41b3bf6febb326fe0a694e0bd46d208bc5888837a42376aaad477ed442",
+    "published_sha256": "d08bfc41b3bf6febb326fe0a694e0bd46d208bc5888837a42376aaad477ed442",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restart-raises-no-discovered/acmp.xml",
+    "original_sha256": "de14ae564876d09caa525dd0a82f2bad257c87ba63bb4a8bb765d91efdec7c72",
+    "published_sha256": "de14ae564876d09caa525dd0a82f2bad257c87ba63bb4a8bb765d91efdec7c72",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restore-announced/acmp.xml",
+    "original_sha256": "8add19d2b25e88ce3c61bbdecc43391d84ec27c2b9925afa38d0b713329e9e77",
+    "published_sha256": "8add19d2b25e88ce3c61bbdecc43391d84ec27c2b9925afa38d0b713329e9e77",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restore-lands-in-prb-w-resp/acmp.xml",
+    "original_sha256": "293d8c940e19b5d70a11a80277b96850127b331a272f247e607c59be367e9832",
+    "published_sha256": "293d8c940e19b5d70a11a80277b96850127b331a272f247e607c59be367e9832",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restore-starts-no-discovery/acmp.xml",
+    "original_sha256": "585c76aabc33178fe2697477db0f36fa64b191caf185ba8afdd27a3d7bdc6755",
+    "published_sha256": "585c76aabc33178fe2697477db0f36fa64b191caf185ba8afdd27a3d7bdc6755",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-restore-unique-id-little-endian/acmp.xml",
+    "original_sha256": "963aba02959e26c9851654ae167a5668ef0079a178d37aaec66fcc3dad546b46",
+    "published_sha256": "963aba02959e26c9851654ae167a5668ef0079a178d37aaec66fcc3dad546b46",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-retry-deadline-saturates/acmp.xml",
+    "original_sha256": "73c19f045515533cbf6ad9efbb2f1ac73ec9afd36ac47b347fa1a87b86a38352",
+    "published_sha256": "73c19f045515533cbf6ad9efbb2f1ac73ec9afd36ac47b347fa1a87b86a38352",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-retry-ignores-discovery/acmp.xml",
+    "original_sha256": "e8d4c550321a111e41a801ed2be9480e3fa0d0b2215b4289afedd4ae2e728ebc",
+    "published_sha256": "e8d4c550321a111e41a801ed2be9480e3fa0d0b2215b4289afedd4ae2e728ebc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-retry-samples-the-grandmaster/acmp.xml",
+    "original_sha256": "b90b6f4ed923ae5eac588e034a04ae65481605b6269ca695ecaec4433648fde7",
+    "published_sha256": "b90b6f4ed923ae5eac588e034a04ae65481605b6269ca695ecaec4433648fde7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-retry-zeroes-the-status/acmp.xml",
+    "original_sha256": "d2b77648de118be1c3236bd50d212f677fc71afe29df4af35eee00c7468c498d",
+    "published_sha256": "d2b77648de118be1c3236bd50d212f677fc71afe29df4af35eee00c7468c498d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-rng-left-at-0/acmp.xml",
+    "original_sha256": "a222b4d88c06d190cf33dbf85de93fe03977a34096c2d2e2e05ef2b28400d18e",
+    "published_sha256": "a222b4d88c06d190cf33dbf85de93fe03977a34096c2d2e2e05ef2b28400d18e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-roll-back-keeps-the-bindings/acmp.xml",
+    "original_sha256": "6af65e3a4a3a337650ba41f49339202a96e1ec96dc184afb45c67fbe78afd4a0",
+    "published_sha256": "6af65e3a4a3a337650ba41f49339202a96e1ec96dc184afb45c67fbe78afd4a0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-second-no-resp-samples-the-grandmaster/acmp.xml",
+    "original_sha256": "bd424dd65ba57927fa715140235fe13f029b01083e33d6e779554d19f7a389ba",
+    "published_sha256": "bd424dd65ba57927fa715140235fe13f029b01083e33d6e779554d19f7a389ba",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-second-timeout-keeps-status-0/acmp.xml",
+    "original_sha256": "98cb2448f296fe3306b72fd40035457e4f108ddc260ad37987ee02262651f246",
+    "published_sha256": "98cb2448f296fe3306b72fd40035457e4f108ddc260ad37987ee02262651f246",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-seed-at-every-draw/acmp.xml",
+    "original_sha256": "bcf6366169bdb339bf9088bd72eaf3bcfd7662cd27c6951a0b60431eaedeed38",
+    "published_sha256": "bcf6366169bdb339bf9088bd72eaf3bcfd7662cd27c6951a0b60431eaedeed38",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-seed-port-unflagged/acmp.xml",
+    "original_sha256": "04cac1e493e7db33bf557c35b2e0510f073801cc1ac81d44da70f0f03dfc923b",
+    "published_sha256": "04cac1e493e7db33bf557c35b2e0510f073801cc1ac81d44da70f0f03dfc923b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-send-port-unflagged/acmp.xml",
+    "original_sha256": "05abc488fc7360fb225ca13a83bc453678da36b35dfdbbad41e457a4907dcdb0",
+    "published_sha256": "05abc488fc7360fb225ca13a83bc453678da36b35dfdbbad41e457a4907dcdb0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-sequence-id-never-advances/acmp.xml",
+    "original_sha256": "e9ea59e5dc66881874da307651eacdb62818e66c60fd1bffd5bcda3e4f23ef39",
+    "published_sha256": "e9ea59e5dc66881874da307651eacdb62818e66c60fd1bffd5bcda3e4f23ef39",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-sequence-id-per-sink/acmp.xml",
+    "original_sha256": "e2121e9d86f39441d509498d8ed4fb5d9320afe364162b30b6f8be2570655f67",
+    "published_sha256": "e2121e9d86f39441d509498d8ed4fb5d9320afe364162b30b6f8be2570655f67",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-settle-starts-no-srp/acmp.xml",
+    "original_sha256": "6f6fec7b072a8f26a75a7d0478410683893787cad935ca5469adfca2ae2bab20",
+    "published_sha256": "6f6fec7b072a8f26a75a7d0478410683893787cad935ca5469adfca2ae2bab20",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-settle-swaps-stream-fields/acmp.xml",
+    "original_sha256": "e2a94303a1c4408949c222b3b44c5d1bc9cd239429282afd769043d382eb9d0e",
+    "published_sha256": "e2a94303a1c4408949c222b3b44c5d1bc9cd239429282afd769043d382eb9d0e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-short-pdu-read/acmp.xml",
+    "original_sha256": "afeb2335eeed99d4ce6861deb868ed28886557a193ac6028f731c9b01523b8b4",
+    "published_sha256": "afeb2335eeed99d4ce6861deb868ed28886557a193ac6028f731c9b01523b8b4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-source-port-unflagged/acmp.xml",
+    "original_sha256": "88dfd5bf0aa5b3bd1fb5339347714379946eb840dccb8442fe12f1b71cd2b6c8",
+    "published_sha256": "88dfd5bf0aa5b3bd1fb5339347714379946eb840dccb8442fe12f1b71cd2b6c8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-srp-port-unflagged/acmp.xml",
+    "original_sha256": "ed833ef4d19f6a1de9baa12a813ee5deed2197b95a7d4f7d9687d73a16d52401",
+    "published_sha256": "ed833ef4d19f6a1de9baa12a813ee5deed2197b95a7d4f7d9687d73a16d52401",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-started-not-saved/acmp.xml",
+    "original_sha256": "bc86ad1786c7db63b845d547af4289ec94d3e7531d92934d39638f72144c1ef4",
+    "published_sha256": "bc86ad1786c7db63b845d547af4289ec94d3e7531d92934d39638f72144c1ef4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-status-not-notified/acmp.xml",
+    "original_sha256": "94347bf4dbdd777ace184d99e12575a741f4f910d6a6cdae2d7a30376e870cd7",
+    "published_sha256": "94347bf4dbdd777ace184d99e12575a741f4f910d6a6cdae2d7a30376e870cd7",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-stop-keeps-the-hold/acmp.xml",
+    "original_sha256": "d696ed875bf70562b77aa3912a523c71275b65f90884fc1a6343012f6cc99322",
+    "published_sha256": "d696ed875bf70562b77aa3912a523c71275b65f90884fc1a6343012f6cc99322",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-streaming-wait-ignored/acmp.xml",
+    "original_sha256": "0e025faaed3ce99b09abfbd21b315b25927d711edc07bf393acadaefef80cb6e",
+    "published_sha256": "0e025faaed3ce99b09abfbd21b315b25927d711edc07bf393acadaefef80cb6e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-sw-read-from-fast-connect/acmp.xml",
+    "original_sha256": "6c1f17ad1cab4e48e2271c318b2e90fe9329ec2bce922799d1b5f30ee58fed85",
+    "published_sha256": "6c1f17ad1cab4e48e2271c318b2e90fe9329ec2bce922799d1b5f30ee58fed85",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-taken-probe-timer-from-the-entry-clock/acmp.xml",
+    "original_sha256": "c67d900f2e273db462d62569de9d265ed72bedee4ef9d0c33a32119f1bdffc0b",
+    "published_sha256": "c67d900f2e273db462d62569de9d265ed72bedee4ef9d0c33a32119f1bdffc0b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-talker-reads-the-clock/acmp.xml",
+    "original_sha256": "4e3de81bc03cce98ced14aac77aa52ddd6a69500a52d67d124a86eaa8bf18bcc",
+    "published_sha256": "4e3de81bc03cce98ced14aac77aa52ddd6a69500a52d67d124a86eaa8bf18bcc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-timer-at-the-latest-deadline/acmp.xml",
+    "original_sha256": "c7987091db1c1b06c8a5cbd5e02700bdfbb92a853b3cce089a453fcd285395e2",
+    "published_sha256": "c7987091db1c1b06c8a5cbd5e02700bdfbb92a853b3cce089a453fcd285395e2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-timer-never-stopped/acmp.xml",
+    "original_sha256": "2b42eee6fc30b8b7223f864c744abaf819916e5f821c0d77e75d314b628a7e9e",
+    "published_sha256": "2b42eee6fc30b8b7223f864c744abaf819916e5f821c0d77e75d314b628a7e9e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-timer-port-called-every-time/acmp.xml",
+    "original_sha256": "43c9eccbd0ba915bb63ce68e64b04947cfed1585c8ce682e010d5826c8fd1e8b",
+    "published_sha256": "43c9eccbd0ba915bb63ce68e64b04947cfed1585c8ce682e010d5826c8fd1e8b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-timer-port-unflagged/acmp.xml",
+    "original_sha256": "38cab51322cfe404e9cae3f73997bdc3c7e2c9eb33feb8e28a66ddb35491f965",
+    "published_sha256": "38cab51322cfe404e9cae3f73997bdc3c7e2c9eb33feb8e28a66ddb35491f965",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-change-before-response/acmp.xml",
+    "original_sha256": "c0de8c290d0a8a9a2868eea306c5f20490a4ee374c79fc1af2997d89e22b0c14",
+    "published_sha256": "c0de8c290d0a8a9a2868eea306c5f20490a4ee374c79fc1af2997d89e22b0c14",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-echoes-the-talker/acmp.xml",
+    "original_sha256": "af74a03ed1db43ff7a049df9b68936163f1643617a50c03a0e0b8a4c3f583ef8",
+    "published_sha256": "af74a03ed1db43ff7a049df9b68936163f1643617a50c03a0e0b8a4c3f583ef8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-keeps-discovery/acmp.xml",
+    "original_sha256": "b1ac02444b8569e1b3962be5442a8f150fcb180ae0964a4dc435f6027ecc0340",
+    "published_sha256": "b1ac02444b8569e1b3962be5442a8f150fcb180ae0964a4dc435f6027ecc0340",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-keeps-srp/acmp.xml",
+    "original_sha256": "6a1e3742ccb520eb0253fa982c097f9453c18b291d47387ff5a820cd1910c112",
+    "published_sha256": "6a1e3742ccb520eb0253fa982c097f9453c18b291d47387ff5a820cd1910c112",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-not-persisted/acmp.xml",
+    "original_sha256": "35029e9bab48e5aaedfe5c823344db838b390dbbc43510991755bc008d59096b",
+    "published_sha256": "35029e9bab48e5aaedfe5c823344db838b390dbbc43510991755bc008d59096b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-reads-the-clock/acmp.xml",
+    "original_sha256": "d0761d89e9334d24ed6e5ffdbfdde957bce7aa6768b9582528a35cf430f830bd",
+    "published_sha256": "d0761d89e9334d24ed6e5ffdbfdde957bce7aa6768b9582528a35cf430f830bd",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbind-srp-after-response/acmp.xml",
+    "original_sha256": "267e97e05874444f92d4a6f4228a48e004d8b1f8f3aea49a5c10ef2fea1d2a6e",
+    "published_sha256": "267e97e05874444f92d4a6f4228a48e004d8b1f8f3aea49a5c10ef2fea1d2a6e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unbound-record-not-zero/acmp.xml",
+    "original_sha256": "fafd2c1575536ab28d085262a976c6cbbfc7efdb6f11c832446694593f0c8742",
+    "published_sha256": "fafd2c1575536ab28d085262a976c6cbbfc7efdb6f11c832446694593f0c8742",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unknown-sink-silent/acmp.xml",
+    "original_sha256": "0213e8d9315f44536650ab3607207e3f703deb71240aa76e216d87a66338fcd6",
+    "published_sha256": "0213e8d9315f44536650ab3607207e3f703deb71240aa76e216d87a66338fcd6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unknown-source-answered/acmp.xml",
+    "original_sha256": "76673b73874df1f701cbbf97f502ee156cc02abf1af5f15d8c83a7c494e05290",
+    "published_sha256": "76673b73874df1f701cbbf97f502ee156cc02abf1af5f15d8c83a7c494e05290",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unregistered-anywhere/acmp.xml",
+    "original_sha256": "8dcea3e20e1091cd6e443e3fa2a6784c81a48b803c83e73f108778f82d017c12",
+    "published_sha256": "8dcea3e20e1091cd6e443e3fa2a6784c81a48b803c83e73f108778f82d017c12",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-unregistered-keeps-srp/acmp.xml",
+    "original_sha256": "f26f594f8a1a7b582e7347e1ea495603ecd99f3ae778f763b0c0012fa45370da",
+    "published_sha256": "f26f594f8a1a7b582e7347e1ea495603ecd99f3ae778f763b0c0012fa45370da",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-valid-time-in-seconds/acmp.xml",
+    "original_sha256": "198f01880e73f889a25606e5fc0449ee3a0b4f752fd9b328ea9bbd36e64d3111",
+    "published_sha256": "198f01880e73f889a25606e5fc0449ee3a0b4f752fd9b328ea9bbd36e64d3111",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-version-bits-misread/acmp.xml",
+    "original_sha256": "bcc0ee7f80684ef06bbfa99419cadb0a84fd467d4ce36600c2ea520d6b499200",
+    "published_sha256": "bcc0ee7f80684ef06bbfa99419cadb0a84fd467d4ce36600c2ea520d6b499200",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-version-unchecked/acmp.xml",
+    "original_sha256": "5acf8833ca3b55553f22da5cc7d09f8d515e36012755bd0546ef7dc9e30297b5",
+    "published_sha256": "5acf8833ca3b55553f22da5cc7d09f8d515e36012755bd0546ef7dc9e30297b5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-view-without-registering-failed/acmp.xml",
+    "original_sha256": "40e3d86a2e1451cad93405b387719129815dfb7f1a1d5e2536925eed6836531a",
+    "published_sha256": "40e3d86a2e1451cad93405b387719129815dfb7f1a1d5e2536925eed6836531a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-vlan-masked/acmp.xml",
+    "original_sha256": "28835ecb924d809da7bd589376d84268eea32f7244df96cf914dfd3c23e5f0ad",
+    "published_sha256": "28835ecb924d809da7bd589376d84268eea32f7244df96cf914dfd3c23e5f0ad",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/acmp-zero-delay-waits/acmp.xml",
+    "original_sha256": "58dfbdfb6135fff0007eab9734ea301276295f22c534617fb679931d26af386e",
+    "published_sha256": "58dfbdfb6135fff0007eab9734ea301276295f22c534617fb679931d26af386e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-domain/adp.xml",
+    "original_sha256": "e8bb8ad3d243cbeb443df0f36cec7553f38e6c4f1eaee1862c3293442e973348",
+    "published_sha256": "e8bb8ad3d243cbeb443df0f36cec7553f38e6c4f1eaee1862c3293442e973348",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-entity-capabilities/adp.xml",
+    "original_sha256": "d8afe11ad7ef2c6a9c3dda81e77caf28582d61167f7adc69a403005a24a7051e",
+    "published_sha256": "d8afe11ad7ef2c6a9c3dda81e77caf28582d61167f7adc69a403005a24a7051e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-entity-id/adp.xml",
+    "original_sha256": "185cb3a69189bf2aceac2a1db93b782f1413191c6b67dab276c6738f53f117fb",
+    "published_sha256": "185cb3a69189bf2aceac2a1db93b782f1413191c6b67dab276c6738f53f117fb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-grandmaster/adp.xml",
+    "original_sha256": "05eec2dcb7f4f2ac91413da31c8f8820482911d7bddfa8773b1fcb2baf15864e",
+    "published_sha256": "05eec2dcb7f4f2ac91413da31c8f8820482911d7bddfa8773b1fcb2baf15864e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-identify-index/adp.xml",
+    "original_sha256": "d870aaac01bc676493df3e9817c2c27784210e42ad0503d894d5df2ac386fb6d",
+    "published_sha256": "d870aaac01bc676493df3e9817c2c27784210e42ad0503d894d5df2ac386fb6d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-interface-index/adp.xml",
+    "original_sha256": "ba8b5fe38669d29f3c9708eacaac01babd8e2463afcfde273fd935e8537f2cc6",
+    "published_sha256": "ba8b5fe38669d29f3c9708eacaac01babd8e2463afcfde273fd935e8537f2cc6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-listener-capabilities/adp.xml",
+    "original_sha256": "a55bbf205f20b849556adf461dbd209b39be899002ef1fb419b68b2ef546c712",
+    "published_sha256": "a55bbf205f20b849556adf461dbd209b39be899002ef1fb419b68b2ef546c712",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-listener-count/adp.xml",
+    "original_sha256": "7b856d23f00cc7138b79025dc761cf1ab4cf7fabab3be64025b7d141edca9df8",
+    "published_sha256": "7b856d23f00cc7138b79025dc761cf1ab4cf7fabab3be64025b7d141edca9df8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-model-id/adp.xml",
+    "original_sha256": "794d451d826098dbdca44121949d93ce3e2ce8e7d5b55111d650b38fa6739ce3",
+    "published_sha256": "794d451d826098dbdca44121949d93ce3e2ce8e7d5b55111d650b38fa6739ce3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-talker-capabilities/adp.xml",
+    "original_sha256": "f7fe8e8e3cbb5372d3663392cad2f0cdb5a959b5c8eb00bb1a9e6c39c9796ea3",
+    "published_sha256": "f7fe8e8e3cbb5372d3663392cad2f0cdb5a959b5c8eb00bb1a9e6c39c9796ea3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/adp-config-talker-count/adp.xml",
+    "original_sha256": "d651ccf3add89711014ed3cf4b3b6c0c36641d03fe3338ed5b4f7b40afa6420a",
+    "published_sha256": "d651ccf3add89711014ed3cf4b3b6c0c36641d03fe3338ed5b4f7b40afa6420a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/advertise-expiry-skips-delay/adp.xml",
+    "original_sha256": "bc8c4fdcdb31269a75be87fbfc28004548cbc8d43f24f41d3e35ffcff5189161",
+    "published_sha256": "bc8c4fdcdb31269a75be87fbfc28004548cbc8d43f24f41d3e35ffcff5189161",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/advertise-period-wrong/adp.xml",
+    "original_sha256": "01422742b4f719375b3c908ab37bcbfdad31b16e70282847b1fd67750e3c567d",
+    "published_sha256": "01422742b4f719375b3c908ab37bcbfdad31b16e70282847b1fd67750e3c567d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/available-passes-owed-departing/adp.xml",
+    "original_sha256": "ca8e1fb6390551deaa5bf587dc5f9ef57c73e0dbe3c5f1fc6b4b8f06826a19c2",
+    "published_sha256": "ca8e1fb6390551deaa5bf587dc5f9ef57c73e0dbe3c5f1fc6b4b8f06826a19c2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/available-replaces-owed-departing/adp.xml",
+    "original_sha256": "d0249a80ff6948b6547c8067b3beb86c54ead9f2ee66a3a015448b52939be408",
+    "published_sha256": "d0249a80ff6948b6547c8067b3beb86c54ead9f2ee66a3a015448b52939be408",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/acmp.xml",
+    "original_sha256": "58b357e6a67759d9ab966dd86e4fdd8a486d503f48e38436e776c4d43da1ab64",
+    "published_sha256": "58b357e6a67759d9ab966dd86e4fdd8a486d503f48e38436e776c4d43da1ab64",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/adp.xml",
+    "original_sha256": "366715cc0a3658f8540852afb5b2e657cf76e8ed57b57d42dc0e5c1b89105d3e",
+    "published_sha256": "366715cc0a3658f8540852afb5b2e657cf76e8ed57b57d42dc0e5c1b89105d3e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/adp_debug.xml",
+    "original_sha256": "456d33fe0cc7f77fa32e17172a1bbc2f24ee72b573dd4ce0813f02149d624623",
+    "published_sha256": "456d33fe0cc7f77fa32e17172a1bbc2f24ee72b573dd4ce0813f02149d624623",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/adp_release.xml",
+    "original_sha256": "99be3c2d6c8fa460722e0d9eb5256f3ac5946b899525ab398619fedcac82b00f",
+    "published_sha256": "99be3c2d6c8fa460722e0d9eb5256f3ac5946b899525ab398619fedcac82b00f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/maap.xml",
+    "original_sha256": "4b70b21909d9cfc741d9966eb8898c1ea07812faa377d1cbf2a3265a35fe83de",
+    "published_sha256": "4b70b21909d9cfc741d9966eb8898c1ea07812faa377d1cbf2a3265a35fe83de",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/maap_debug.xml",
+    "original_sha256": "c495bfe8506e26ac8ae92177ced4c9ef02297ed5363a9973d1dcec9fd16fa5c5",
+    "published_sha256": "c495bfe8506e26ac8ae92177ced4c9ef02297ed5363a9973d1dcec9fd16fa5c5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/baseline/port.xml",
+    "original_sha256": "101f3b74606eac54040938364c3d61b5a9aa9edec1d060bd8debfe75318779ea",
+    "published_sha256": "101f3b74606eac54040938364c3d61b5a9aa9edec1d060bd8debfe75318779ea",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/coalesce-drops-queued-departing/adp.xml",
+    "original_sha256": "ff41391e36a9177821bfbb4bfc395c5a38df140d2143abc517b447f1b829393f",
+    "published_sha256": "ff41391e36a9177821bfbb4bfc395c5a38df140d2143abc517b447f1b829393f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/coalesce-overwrites-oldest-index/adp.xml",
+    "original_sha256": "0459b18eeeeb7d2277876e4faa60fe2faa431312c544c01ed0517a66444fcbba",
+    "published_sha256": "0459b18eeeeb7d2277876e4faa60fe2faa431312c544c01ed0517a66444fcbba",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/coalesced-departing-uncounted/adp.xml",
+    "original_sha256": "82a31e361a366dac252c1c2decc30b1c9768834d74bf83c74b10087653f6a591",
+    "published_sha256": "82a31e361a366dac252c1c2decc30b1c9768834d74bf83c74b10087653f6a591",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/delay-ignores-link-down/adp.xml",
+    "original_sha256": "cab1cd2ffb984576d84be0839c5bb8085a22b4c9157fb464c9c54d4ec3ec8c9b",
+    "published_sha256": "cab1cd2ffb984576d84be0839c5bb8085a22b4c9157fb464c9c54d4ec3ec8c9b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/departing-keeps-index/adp.xml",
+    "original_sha256": "6cab547eae3f38802de553423b6f886e22d18ad8c5bc0e8e21f29ecec9549f73",
+    "published_sha256": "6cab547eae3f38802de553423b6f886e22d18ad8c5bc0e8e21f29ecec9549f73",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/departing-keeps-index/port.xml",
+    "original_sha256": "61f6cd763be82532e65929e57eadb7abc579a5113552cc4ad16dd6b5dae2d587",
+    "published_sha256": "61f6cd763be82532e65929e57eadb7abc579a5113552cc4ad16dd6b5dae2d587",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/departing-queue-unbounded/adp.xml",
+    "original_sha256": "37cbdfee5a989e1a051987db294e542fde6c5e898b212ff1c6fc5f8d08bccedc",
+    "published_sha256": "37cbdfee5a989e1a051987db294e542fde6c5e898b212ff1c6fc5f8d08bccedc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/departing-sends-zero/adp.xml",
+    "original_sha256": "b1969f2216c15967a80cb8d47b9bc5453f76819fbc723a54c6f750642ccb8586",
+    "published_sha256": "b1969f2216c15967a80cb8d47b9bc5453f76819fbc723a54c6f750642ccb8586",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/discover-drops-owed-available/adp.xml",
+    "original_sha256": "fd600d3e438e1eb6c1d56acf36a6e993a1e7dd6340f4236ea3cedfa44dcf8806",
+    "published_sha256": "fd600d3e438e1eb6c1d56acf36a6e993a1e7dd6340f4236ea3cedfa44dcf8806",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/down-answers-discover/adp.xml",
+    "original_sha256": "b6583d815cd8382d65171a78f4894f70cb35195b76c2cff97b76f9bf6e9b64ad",
+    "published_sha256": "b6583d815cd8382d65171a78f4894f70cb35195b76c2cff97b76f9bf6e9b64ad",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/draw-kinds-merged/adp.xml",
+    "original_sha256": "a353a49840f0ce25ff3f2bab9e2c294bfe63194c2253416db4522af7d43dd8c8",
+    "published_sha256": "a353a49840f0ce25ff3f2bab9e2c294bfe63194c2253416db4522af7d43dd8c8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/enable-not-idempotent/adp.xml",
+    "original_sha256": "ae22c957ee515203996884ff31af2feed366b1536a407397c8c976c92064d795",
+    "published_sha256": "ae22c957ee515203996884ff31af2feed366b1536a407397c8c976c92064d795",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/foreign-discover-answered/adp.xml",
+    "original_sha256": "fdebf77913b86b0b15130a57b0d5cade8028d06c2a35312c3215ed1aec6e4306",
+    "published_sha256": "fdebf77913b86b0b15130a57b0d5cade8028d06c2a35312c3215ed1aec6e4306",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/frame-misses-config-index/adp.xml",
+    "original_sha256": "0592724528046f9b312472be8f652a34f38697cb99fe540c3b7b189040c4eedf",
+    "published_sha256": "0592724528046f9b312472be8f652a34f38697cb99fe540c3b7b189040c4eedf",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/frame-sources-from-sinks/adp.xml",
+    "original_sha256": "38b61076b8ab6bd771ebbf9c095cdfa14910a2a340285988a0a5ce472541bddc",
+    "published_sha256": "38b61076b8ab6bd771ebbf9c095cdfa14910a2a340285988a0a5ce472541bddc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/gm-change-drops-owed-available/adp.xml",
+    "original_sha256": "3112e9c0a170d880f0963fc01bce9c4679b7efa009e115e8b7f5b2e3fc363d0f",
+    "published_sha256": "3112e9c0a170d880f0963fc01bce9c4679b7efa009e115e8b7f5b2e3fc363d0f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/gm-change-ignored/adp.xml",
+    "original_sha256": "585fffef0f1afb0a9f1995851f2acbf373d01bf4e7e3e562ad159cddde108e5d",
+    "published_sha256": "585fffef0f1afb0a9f1995851f2acbf373d01bf4e7e3e562ad159cddde108e5d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/link-down-departs/adp.xml",
+    "original_sha256": "9b140708ca89cffc36bc46953c492a40123903479e1e624ac37a19a5dbc0705a",
+    "published_sha256": "9b140708ca89cffc36bc46953c492a40123903479e1e624ac37a19a5dbc0705a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/link-loss-drops-owed-departing/adp.xml",
+    "original_sha256": "eb54cafbc312f052516e8a5b7b0fae736bfc14e9e9c79d2a1d521c27ec58e26b",
+    "published_sha256": "eb54cafbc312f052516e8a5b7b0fae736bfc14e9e9c79d2a1d521c27ec58e26b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/link-loss-keeps-owed-available/adp.xml",
+    "original_sha256": "dd95b10041af469ba241ba0ec8e6226fc46b97bbebe3c34e62de24813353ddd9",
+    "published_sha256": "dd95b10041af469ba241ba0ec8e6226fc46b97bbebe3c34e62de24813353ddd9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/link-up-draws-startup-kind/adp.xml",
+    "original_sha256": "21487dff290eddba96b01977050b239e456c97ff81eebaf2c38531521f40ae92",
+    "published_sha256": "21487dff290eddba96b01977050b239e456c97ff81eebaf2c38531521f40ae92",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-adjacent-overlaps/maap.xml",
+    "original_sha256": "a8cf15d965ac766323535169dfb9882f2341e84cd967564176757d90fbade43e",
+    "published_sha256": "a8cf15d965ac766323535169dfb9882f2341e84cd967564176757d90fbade43e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-allocation-before-commit/maap.xml",
+    "original_sha256": "1e26b8241761c644ea507a80968e7e53e5a685315a1821f263689db4b94106a3",
+    "published_sha256": "1e26b8241761c644ea507a80968e7e53e5a685315a1821f263689db4b94106a3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-allocation-seam-disconnected/maap.xml",
+    "original_sha256": "6c6ddc85798cdf5e83026084c790faa0bb9b934e3065097a66aff1c8c4e9e277",
+    "published_sha256": "6c6ddc85798cdf5e83026084c790faa0bb9b934e3065097a66aff1c8c4e9e277",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-begin-down-forgets-range/maap.xml",
+    "original_sha256": "3bf427c46cc598e834a242d59c326f82148d4ff7c4ff43f503c9509ed6bee0b3",
+    "published_sha256": "3bf427c46cc598e834a242d59c326f82148d4ff7c4ff43f503c9509ed6bee0b3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-biased-random-bucket/maap.xml",
+    "original_sha256": "8d07d29785dfd79a15457e6fefb118e10bb89be505fbd29c3c28b388b834e85d",
+    "published_sha256": "8d07d29785dfd79a15457e6fefb118e10bb89be505fbd29c3c28b388b834e85d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-compare-mac-lsb-only/maap.xml",
+    "original_sha256": "38f4215a26dc5637f63af8657e89c97ee1882b8a2c0f32ca88ee5d218c52a51d",
+    "published_sha256": "38f4215a26dc5637f63af8657e89c97ee1882b8a2c0f32ca88ee5d218c52a51d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-constant-announce_base/maap.xml",
+    "original_sha256": "15dac9a5de6808f275b1aefadc5aac7ab5a18cf8fa87f5628dda8aea64decabb",
+    "published_sha256": "15dac9a5de6808f275b1aefadc5aac7ab5a18cf8fa87f5628dda8aea64decabb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-constant-announce_variation/maap.xml",
+    "original_sha256": "e7f47a3ff297b5fd2bf1550c2a7db7e56b6bef0d30dff759b6e180e8643cafcb",
+    "published_sha256": "e7f47a3ff297b5fd2bf1550c2a7db7e56b6bef0d30dff759b6e180e8643cafcb",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-constant-probe_base/maap.xml",
+    "original_sha256": "8622a124cb6cf0860d1a6961b46d4189be7328848c9f2185ad1ef0dea724e1d1",
+    "published_sha256": "8622a124cb6cf0860d1a6961b46d4189be7328848c9f2185ad1ef0dea724e1d1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-constant-probe_variation/maap.xml",
+    "original_sha256": "4eba9d2e192c52770b72a47e9417a4457008465fba873c7dafbdb54bd83f716c",
+    "published_sha256": "4eba9d2e192c52770b72a47e9417a4457008465fba873c7dafbdb54bd83f716c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-debug-no-assert/maap_debug.xml",
+    "original_sha256": "3090b20ef52fb868d39d24c85c52f816edd873e2939e1c8b24b2596ce90677fc",
+    "published_sha256": "3090b20ef52fb868d39d24c85c52f816edd873e2939e1c8b24b2596ce90677fc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-defend-checks-request/maap.xml",
+    "original_sha256": "b2285c3d6eaf4cf25c16e06665284918d5d47591cfa4506136d048812b636c3a",
+    "published_sha256": "b2285c3d6eaf4cf25c16e06665284918d5d47591cfa4506136d048812b636c3a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-defend-echo-own-range/maap.xml",
+    "original_sha256": "8dbff91d34f1f99c04e5afd29ff0f5bf2136bc8b213a1f4136d89587e96e0166",
+    "published_sha256": "8dbff91d34f1f99c04e5afd29ff0f5bf2136bc8b213a1f4136d89587e96e0166",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-defend-multicast/maap.xml",
+    "original_sha256": "be1e04d3cb98f1c8ab2195da524f37cb9ebc40a0b1978f5ec09d0d9d61f4a9e4",
+    "published_sha256": "be1e04d3cb98f1c8ab2195da524f37cb9ebc40a0b1978f5ec09d0d9d61f4a9e4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-down-start-keeps-owner/maap.xml",
+    "original_sha256": "ca1baa8876038d6c121ce38a4da330d52efb1b9dc4e5127d871a8f2b93380e4e",
+    "published_sha256": "ca1baa8876038d6c121ce38a4da330d52efb1b9dc4e5127d871a8f2b93380e4e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-expiry-forgotten-on-stall/maap.xml",
+    "original_sha256": "083560c0c0b691e0b8eeb0d0fd2df93c188929f310b789ba88d583ad0c0e1498",
+    "published_sha256": "083560c0c0b691e0b8eeb0d0fd2df93c188929f310b789ba88d583ad0c0e1498",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-future-version-refused/maap.xml",
+    "original_sha256": "448663366c73b2e85ffb1fc5a3db1c8643f4c7405bfb22a669d0a0f23a608556",
+    "published_sha256": "448663366c73b2e85ffb1fc5a3db1c8643f4c7405bfb22a669d0a0f23a608556",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-generic-equal-mac-wins/maap.xml",
+    "original_sha256": "2148a0b8861ed7930a9565be39b88d3046a40faeef7ae70be826684726a03b8e",
+    "published_sha256": "2148a0b8861ed7930a9565be39b88d3046a40faeef7ae70be826684726a03b8e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-generic-initial-handles-conflict/maap.xml",
+    "original_sha256": "b4ae5e4b7fe2488e75f96e8e335290cc0add10a4ebc58274c2a706aafb2ec3a2",
+    "published_sha256": "b4ae5e4b7fe2488e75f96e8e335290cc0add10a4ebc58274c2a706aafb2ec3a2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-generic-probe-defend-uses-priority/maap.xml",
+    "original_sha256": "2c029b64489c15c57e2d3756efb91fc2903be40b5597bb39bc93360289d03ec1",
+    "published_sha256": "2c029b64489c15c57e2d3756efb91fc2903be40b5597bb39bc93360289d03ec1",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-generic-probe-state-defends/maap.xml",
+    "original_sha256": "0743d37aba0f08631a85f61b271f6d163fa12f8d05900a870bd0e4007c890299",
+    "published_sha256": "0743d37aba0f08631a85f61b271f6d163fa12f8d05900a870bd0e4007c890299",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-initial-send-absent/maap.xml",
+    "original_sha256": "b42dcb4b36c015f5a2c1f2bd3aba82bc949b6ee6e6f9a23800e6a62088aa496b",
+    "published_sha256": "b42dcb4b36c015f5a2c1f2bd3aba82bc949b6ee6e6f9a23800e6a62088aa496b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-intersection-too-long/maap.xml",
+    "original_sha256": "4ea1faccdc91aa1204a42a996ff7e0f68a5ac3ebe9534a005592e060a0059c3f",
+    "published_sha256": "4ea1faccdc91aa1204a42a996ff7e0f68a5ac3ebe9534a005592e060a0059c3f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-cdl-current/maap.xml",
+    "original_sha256": "b1444b021133d3b23d12301829fb21e51236644e62a0e587950cae40a091ec33",
+    "published_sha256": "b1444b021133d3b23d12301829fb21e51236644e62a0e587950cae40a091ec33",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-cdl-short/maap.xml",
+    "original_sha256": "1fba7124595f025ff49b80e4a9c51499b9d82529888647ee0739af2194402f81",
+    "published_sha256": "1fba7124595f025ff49b80e4a9c51499b9d82529888647ee0739af2194402f81",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-cdl-truncated/maap.xml",
+    "original_sha256": "64b0a9029992b0b7d2a4c5069915bd34b6e41a6513cf2b7b9a5ebd1e80063c38",
+    "published_sha256": "64b0a9029992b0b7d2a4c5069915bd34b6e41a6513cf2b7b9a5ebd1e80063c38",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-destination/maap.xml",
+    "original_sha256": "ab844d07994dc4b40f1489769e35d4e3a340e285a4a55a5ad3592326fd4fd7bf",
+    "published_sha256": "ab844d07994dc4b40f1489769e35d4e3a340e285a4a55a5ad3592326fd4fd7bf",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-ethertype/maap.xml",
+    "original_sha256": "cc304318d07449562a05a68d1a46a0097a2dfe9de656dfd0eaa6297201ee7de2",
+    "published_sha256": "cc304318d07449562a05a68d1a46a0097a2dfe9de656dfd0eaa6297201ee7de2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-own-probe/maap.xml",
+    "original_sha256": "925af24bc786b332522bec4b204c275440d6e9193fc61b76cd2bdc6c09995d44",
+    "published_sha256": "925af24bc786b332522bec4b204c275440d6e9193fc61b76cd2bdc6c09995d44",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-reserved-high/maap.xml",
+    "original_sha256": "cf1f175c72b6846f2b88f8bbe1ea6cce30dd86cf3b318f896f746befdf9705f2",
+    "published_sha256": "cf1f175c72b6846f2b88f8bbe1ea6cce30dd86cf3b318f896f746befdf9705f2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-reserved-zero/maap.xml",
+    "original_sha256": "a2cf09fc7a8b81a58f747a4c2f8663c336b4ce45691ad5194ac876f97abaf58a",
+    "published_sha256": "a2cf09fc7a8b81a58f747a4c2f8663c336b4ce45691ad5194ac876f97abaf58a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-source-group/maap.xml",
+    "original_sha256": "b58e41a2f0a063a68555680b7c32d5421de5204c494a4cb79dcfcb3e0c8a4a37",
+    "published_sha256": "b58e41a2f0a063a68555680b7c32d5421de5204c494a4cb79dcfcb3e0c8a4a37",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-source-zero/maap.xml",
+    "original_sha256": "d9b55931108962d5e7b6867f199db8334a4100ae60b31104525f85e9538f4bad",
+    "published_sha256": "d9b55931108962d5e7b6867f199db8334a4100ae60b31104525f85e9538f4bad",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-subtype/maap.xml",
+    "original_sha256": "86feb6d569bb8406b29f83e47d649559c0779b1c69432824d66b04c69f6d48d9",
+    "published_sha256": "86feb6d569bb8406b29f83e47d649559c0779b1c69432824d66b04c69f6d48d9",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-malformed-version/maap.xml",
+    "original_sha256": "d161a61ef76a89c9120db4de00454825d2c2dfba1d65ecdc30aae9cd57e30dc4",
+    "published_sha256": "d161a61ef76a89c9120db4de00454825d2c2dfba1d65ecdc30aae9cd57e30dc4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-numeric-mac-priority/maap.xml",
+    "original_sha256": "c608f6d52c14936d6c38cc21f60ea2ea758dc865fa37f0c7d21cc5ec880ecccc",
+    "published_sha256": "c608f6d52c14936d6c38cc21f60ea2ea758dc865fa37f0c7d21cc5ec880ecccc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-overflow-uncounted/maap.xml",
+    "original_sha256": "48ab98133c58238d2102fae4b99a9b5d37391cb23b0cb1a81f5cad2cddc89826",
+    "published_sha256": "48ab98133c58238d2102fae4b99a9b5d37391cb23b0cb1a81f5cad2cddc89826",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-poll-unbounded/maap.xml",
+    "original_sha256": "6f809bc5dba89b85bd9ee77e3db4c956a1763f67f1d82e635fc42037f52977af",
+    "published_sha256": "6f809bc5dba89b85bd9ee77e3db4c956a1763f67f1d82e635fc42037f52977af",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-port-up-keeps-claim/maap.xml",
+    "original_sha256": "9fe507485ed6af037c8545583bedd902cdffd81b0f0b39d40e7d4726a90fb3a3",
+    "published_sha256": "9fe507485ed6af037c8545583bedd902cdffd81b0f0b39d40e7d4726a90fb3a3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-probe-announce-reordered/maap.xml",
+    "original_sha256": "f4f1805e12cc198a6e7215519fdc8236e72713809f5171973655621777f7900c",
+    "published_sha256": "f4f1805e12cc198a6e7215519fdc8236e72713809f5171973655621777f7900c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-probe-count-not-decremented/maap.xml",
+    "original_sha256": "029d572f1eb0b213d322fd2700463b5ec89603f5af4007d1ff15bcd43c93e5f6",
+    "published_sha256": "029d572f1eb0b213d322fd2700463b5ec89603f5af4007d1ff15bcd43c93e5f6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-range-end-off-by-one/maap.xml",
+    "original_sha256": "051fba200679a2277e8fe48fd8ac94b50a31b5b9e2738274864a7e818a88295b",
+    "published_sha256": "051fba200679a2277e8fe48fd8ac94b50a31b5b9e2738274864a7e818a88295b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-reentry-not-counted/maap.xml",
+    "original_sha256": "4dcec980b73aaf8166ad145d3ed63e73bd497132a95674cd03048c0b047dcb2a",
+    "published_sha256": "4dcec980b73aaf8166ad145d3ed63e73bd497132a95674cd03048c0b047dcb2a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-release-keeps-enable/maap.xml",
+    "original_sha256": "c5c81876a9f2087a0c4aba97f016e8055e08b7ea3be72ea1d66aa6c2530c494b",
+    "published_sha256": "c5c81876a9f2087a0c4aba97f016e8055e08b7ea3be72ea1d66aa6c2530c494b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-release-leaves-output/maap.xml",
+    "original_sha256": "5833c628417ee3bf8234179e4b41865bc1e47aee5e105a4f0de160fd7ba6837a",
+    "published_sha256": "5833c628417ee3bf8234179e4b41865bc1e47aee5e105a4f0de160fd7ba6837a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-restart-reuses-range/maap.xml",
+    "original_sha256": "b590e1b29ff8cc58b08176ced3befc9eac95312703fbcabbe80b4ee1fde6952f",
+    "published_sha256": "b590e1b29ff8cc58b08176ced3befc9eac95312703fbcabbe80b4ee1fde6952f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-retransmit-count/maap.xml",
+    "original_sha256": "b34dc84e680361feb3a7b6cc3c56c9fe56d854a6882de8faa221544e2f39148f",
+    "published_sha256": "b34dc84e680361feb3a7b6cc3c56c9fe56d854a6882de8faa221544e2f39148f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-reverse-five-octets/maap.xml",
+    "original_sha256": "3627383ed73a52193957a532ce1d0350e07fa8829bcbf558b0dff2f98a78c3f3",
+    "published_sha256": "3627383ed73a52193957a532ce1d0350e07fa8829bcbf558b0dff2f98a78c3f3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-seed-clock-ignored/maap.xml",
+    "original_sha256": "b88797dc98c2a06e3d7f060400ec5d477bc645381b7bfbcc1e91ab1510ac163a",
+    "published_sha256": "b88797dc98c2a06e3d7f060400ec5d477bc645381b7bfbcc1e91ab1510ac163a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-stall-unqueued/maap.xml",
+    "original_sha256": "ab2af3a2adac3e54ad7766e790afe838c9b8d190505d3cf0935fb995405028a3",
+    "published_sha256": "ab2af3a2adac3e54ad7766e790afe838c9b8d190505d3cf0935fb995405028a3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-0/maap.xml",
+    "original_sha256": "4ed94d8118975357f7c12ce422b0ab141a549e0b0dc72f663248e004b02af507",
+    "published_sha256": "4ed94d8118975357f7c12ce422b0ab141a549e0b0dc72f663248e004b02af507",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-1/maap.xml",
+    "original_sha256": "df07481b585be5acf25a19849a1c2de3afc5a136d0bf05ede259c9f6b68ae0f3",
+    "published_sha256": "df07481b585be5acf25a19849a1c2de3afc5a136d0bf05ede259c9f6b68ae0f3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-10/maap.xml",
+    "original_sha256": "357d269a4a4d49d474c2f3dd1fa8171a4a134764b7586703f1680a5563b32a7e",
+    "published_sha256": "357d269a4a4d49d474c2f3dd1fa8171a4a134764b7586703f1680a5563b32a7e",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-11/maap.xml",
+    "original_sha256": "a9e9fb83cb99f4a0696f16e5fe14848efabad84413c541338ec5019d2caf6333",
+    "published_sha256": "a9e9fb83cb99f4a0696f16e5fe14848efabad84413c541338ec5019d2caf6333",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-12/maap.xml",
+    "original_sha256": "6c247a2120db02cf1fad75068863bcf9cb0f0e0e9b90b3eb3f58e97ebbdb3c79",
+    "published_sha256": "6c247a2120db02cf1fad75068863bcf9cb0f0e0e9b90b3eb3f58e97ebbdb3c79",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-13/maap.xml",
+    "original_sha256": "7b0f6f83316e11fbc2ee5e567fc2bae0a0869157bc498e68e3847fbc6476d417",
+    "published_sha256": "7b0f6f83316e11fbc2ee5e567fc2bae0a0869157bc498e68e3847fbc6476d417",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-14/maap.xml",
+    "original_sha256": "8ce795386f34eb1a3c9f4e4438f103fa4c76bc4c1f9fd4e0bb489366487f9af2",
+    "published_sha256": "8ce795386f34eb1a3c9f4e4438f103fa4c76bc4c1f9fd4e0bb489366487f9af2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-15/maap.xml",
+    "original_sha256": "a650b1fedb51353e9d974b06cfb2e015f8ff4de7d1ebf3d461457ce9970488a6",
+    "published_sha256": "a650b1fedb51353e9d974b06cfb2e015f8ff4de7d1ebf3d461457ce9970488a6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-16/maap.xml",
+    "original_sha256": "ef4428877ed2a9be44e985cda704eef8fc1104654793a070dd2ff467ecc61bd5",
+    "published_sha256": "ef4428877ed2a9be44e985cda704eef8fc1104654793a070dd2ff467ecc61bd5",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-17/maap.xml",
+    "original_sha256": "b99b18934457f3bfe30779d5fbd7c544414591b8fc2232239cb808fe7657e93d",
+    "published_sha256": "b99b18934457f3bfe30779d5fbd7c544414591b8fc2232239cb808fe7657e93d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-2/maap.xml",
+    "original_sha256": "22f97faa65863e49d6a6871058acdddb23e881fb6abb67e013855fc6ffc54b4d",
+    "published_sha256": "22f97faa65863e49d6a6871058acdddb23e881fb6abb67e013855fc6ffc54b4d",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-3/maap.xml",
+    "original_sha256": "1e72600fb04a4c2f50d55c3079b873a01c409154a87342a85fa25add0a4c7783",
+    "published_sha256": "1e72600fb04a4c2f50d55c3079b873a01c409154a87342a85fa25add0a4c7783",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-4/maap.xml",
+    "original_sha256": "3eb238a2c34386261ada7ceab0605a2507f4f684ac67c37b9d90b9e74d2eaa65",
+    "published_sha256": "3eb238a2c34386261ada7ceab0605a2507f4f684ac67c37b9d90b9e74d2eaa65",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-5/maap.xml",
+    "original_sha256": "03499a98b5962362a983eeb806012b315b8214986a046bca19e471a01a22117c",
+    "published_sha256": "03499a98b5962362a983eeb806012b315b8214986a046bca19e471a01a22117c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-6/maap.xml",
+    "original_sha256": "cf758ae2486d6795f60659239b37a25f6b658ab4eb0a72da92f2e109a77fd3c0",
+    "published_sha256": "cf758ae2486d6795f60659239b37a25f6b658ab4eb0a72da92f2e109a77fd3c0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-7/maap.xml",
+    "original_sha256": "da79e3325cdcab1ccfebaf1e175659c241956c172317c832d5b4144645e28997",
+    "published_sha256": "da79e3325cdcab1ccfebaf1e175659c241956c172317c832d5b4144645e28997",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-8/maap.xml",
+    "original_sha256": "2de53ce0b4c97c97d6db8c1737fe34ebe1541d77d47f86731d3c2c0dece2fe91",
+    "published_sha256": "2de53ce0b4c97c97d6db8c1737fe34ebe1541d77d47f86731d3c2c0dece2fe91",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-table-b7-9/maap.xml",
+    "original_sha256": "eb0d9462c743ea57ff162c7814f0ee95c8d27a8076ddafd8fb85d13a9d1a3c0a",
+    "published_sha256": "eb0d9462c743ea57ff162c7814f0ee95c8d27a8076ddafd8fb85d13a9d1a3c0a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-valid-minimum-refused/maap.xml",
+    "original_sha256": "04e2c2e6c37afcffc4f119e67489aa82fb90ed7fba3add95bdec649d72350fc3",
+    "published_sha256": "04e2c2e6c37afcffc4f119e67489aa82fb90ed7fba3add95bdec649d72350fc3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-wire-length/maap.xml",
+    "original_sha256": "fbca6205bb544df906dc638c4df3a6b3d92764b7af5e44e47d4244c5e9a4e358",
+    "published_sha256": "fbca6205bb544df906dc638c4df3a6b3d92764b7af5e44e47d4244c5e9a4e358",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-wire-padding/maap.xml",
+    "original_sha256": "aa17ca3b31d72cf5f539755bc574df075985abcbb7dc9b37ab904105da864f94",
+    "published_sha256": "aa17ca3b31d72cf5f539755bc574df075985abcbb7dc9b37ab904105da864f94",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-wire-source/maap.xml",
+    "original_sha256": "ffd8dea1d3ca9f963460b02eedcf9efedd180fe44688c3042b8e2aa1eea27b83",
+    "published_sha256": "ffd8dea1d3ca9f963460b02eedcf9efedd180fe44688c3042b8e2aa1eea27b83",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-wire-version/maap.xml",
+    "original_sha256": "c0058a2d8e6c8aaa4dde2c3f14a193e1f4b7f6786d3675cfabfa708f0caeb39c",
+    "published_sha256": "c0058a2d8e6c8aaa4dde2c3f14a193e1f4b7f6786d3675cfabfa708f0caeb39c",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-zero-count-conflicts/maap.xml",
+    "original_sha256": "44942d96eab65f7ee3869aa659a28e017581ee9f790ab7169ae8bb55fdc1e893",
+    "published_sha256": "44942d96eab65f7ee3869aa659a28e017581ee9f790ab7169ae8bb55fdc1e893",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/maap-zero-seed-sticks/maap.xml",
+    "original_sha256": "2d4000bdfa1515ad3b33f8af5a7b66085afff77c75b1f829ceb14715f05a20d3",
+    "published_sha256": "2d4000bdfa1515ad3b33f8af5a7b66085afff77c75b1f829ceb14715f05a20d3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/message-markers.json",
+    "original_sha256": "a93b04048dfbd9d37dfd3040f4ebe24323ac141cae84be07acf2bc155008a048",
+    "published_sha256": "a93b04048dfbd9d37dfd3040f4ebe24323ac141cae84be07acf2bc155008a048",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/other-subtype-accepted/adp.xml",
+    "original_sha256": "956ff86937a0457ec2d8732312a5e9a57014be501e6960ba694cbe2151f3d98a",
+    "published_sha256": "956ff86937a0457ec2d8732312a5e9a57014be501e6960ba694cbe2151f3d98a",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/own-discover-discarded/adp.xml",
+    "original_sha256": "0e82cc418fb678a562d12e4ae0a1f5758351e28b6252d07af44956af85ec7053",
+    "published_sha256": "0e82cc418fb678a562d12e4ae0a1f5758351e28b6252d07af44956af85ec7053",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/r2-saved-range-never-consumed/maap.xml",
+    "original_sha256": "e8a3111905438cead6aff91266b987e11572eab57a5424080d13d52c725bdfae",
+    "published_sha256": "e8a3111905438cead6aff91266b987e11572eab57a5424080d13d52c725bdfae",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/reentry-guard-removed/adp_debug.xml",
+    "original_sha256": "65fcf1914a0d7f5f884aa439a878e48077277c29e5ca179dd209a5f5bc8949de",
+    "published_sha256": "65fcf1914a0d7f5f884aa439a878e48077277c29e5ca179dd209a5f5bc8949de",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/reentry-guard-removed/adp_release.xml",
+    "original_sha256": "1a8906d13bd210f0ffebed66c68e71a354f944d608a72068a27478923f1ac9e2",
+    "published_sha256": "1a8906d13bd210f0ffebed66c68e71a354f944d608a72068a27478923f1ac9e2",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/reentry-not-ignored/adp_release.xml",
+    "original_sha256": "8fd8a0b8e359a491c78b3f5ab9f9d29931fac3d4d606668cac2cbe99176bf766",
+    "published_sha256": "8fd8a0b8e359a491c78b3f5ab9f9d29931fac3d4d606668cac2cbe99176bf766",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/reentry-uncounted/adp_release.xml",
+    "original_sha256": "749404ccf33761e91c0085f47f1e22df9f151f66f93c4f8ed967fcc0f255b992",
+    "published_sha256": "749404ccf33761e91c0085f47f1e22df9f151f66f93c4f8ed967fcc0f255b992",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/results.json",
+    "original_sha256": "cd8b7b37f344414a336bcf3880fa4a70218e79b229a44aa249616e7821bfb8d8",
+    "published_sha256": "cd8b7b37f344414a336bcf3880fa4a70218e79b229a44aa249616e7821bfb8d8",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/second-departing-dropped/adp.xml",
+    "original_sha256": "236eef31b54644446e797d56aa9804795a149a5d263d3aace5a0b1569f9f5e61",
+    "published_sha256": "236eef31b54644446e797d56aa9804795a149a5d263d3aace5a0b1569f9f5e61",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/second-shutdown-overwrites-index/adp.xml",
+    "original_sha256": "ced2ea15c0f54647297103316dd2a3c2b63f41a5512401a1594611f1a7395129",
+    "published_sha256": "ced2ea15c0f54647297103316dd2a3c2b63f41a5512401a1594611f1a7395129",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/seed-left-at-zero/adp.xml",
+    "original_sha256": "56c81b8fcb87d45717cbe2c848b4c9f8d52a09902cce03eff7a54f82ffb024f3",
+    "published_sha256": "56c81b8fcb87d45717cbe2c848b4c9f8d52a09902cce03eff7a54f82ffb024f3",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/shutdown-in-down-departs/adp.xml",
+    "original_sha256": "57604a1a00fa4cd84814500cc7b4868895c1da61be17a9fe0afedc32443d06ab",
+    "published_sha256": "57604a1a00fa4cd84814500cc7b4868895c1da61be17a9fe0afedc32443d06ab",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/mutations/stray-expiry-drops-owed-available/adp.xml",
+    "original_sha256": "ec628a8136215f2766afc4ef1002e31a4053f584327c86701e65f53cbffe1104",
+    "published_sha256": "ec628a8136215f2766afc4ef1002e31a4053f584327c86701e65f53cbffe1104",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/needles.log",
+    "original_sha256": "f2edbb71cd3fe13b62cf29bede908db14435d2b728c2d5cad22dffb2f522a591",
+    "published_sha256": "f2edbb71cd3fe13b62cf29bede908db14435d2b728c2d5cad22dffb2f522a591",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/needles.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/port-contracts.log",
+    "original_sha256": "13636aeb3b7281a7cf94bee65e8db07e0afa924051d075f6c6734258bd22212f",
+    "published_sha256": "13636aeb3b7281a7cf94bee65e8db07e0afa924051d075f6c6734258bd22212f",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/port-contracts.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/privacy-selftest.log",
+    "original_sha256": "13df338cf7b38185d44a50193bc7b2c9ec735c1747eb1f4108b0939e2e5183a0",
+    "published_sha256": "13df338cf7b38185d44a50193bc7b2c9ec735c1747eb1f4108b0939e2e5183a0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/privacy-selftest.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/privacy.log",
+    "original_sha256": "fd67cedc44d6c82a663ff813dc1d151e6ef325b79480fa1a6d6e1e19576c3230",
+    "published_sha256": "fd67cedc44d6c82a663ff813dc1d151e6ef325b79480fa1a6d6e1e19576c3230",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/privacy.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/registration-controls.log",
+    "original_sha256": "6fdccc821254e3bb1f1fbbe49604acd440e58996fc15c597c8b2d17499b794c0",
+    "published_sha256": "6fdccc821254e3bb1f1fbbe49604acd440e58996fc15c597c8b2d17499b794c0",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/registration-controls.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/static-analysis.log",
+    "original_sha256": "4224fec71dce96b16c7bdd9e77a869fea27e76420fdffe0cd09114fa0e0f8dbc",
+    "published_sha256": "4224fec71dce96b16c7bdd9e77a869fea27e76420fdffe0cd09114fa0e0f8dbc",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/static-analysis.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/test-inventory.log",
+    "original_sha256": "366a74feea705ef2705f24edb2e1030b56de984f0cbff39449087a9b2d42e5a6",
+    "published_sha256": "366a74feea705ef2705f24edb2e1030b56de984f0cbff39449087a9b2d42e5a6",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/test-inventory.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/traceability.log",
+    "original_sha256": "63ed7d58f985d260d5717773851a0fa49ccfe41872755d70b25e2c6a0c614b84",
+    "published_sha256": "63ed7d58f985d260d5717773851a0fa49ccfe41872755d70b25e2c6a0c614b84",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate/traceability.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate.log",
+    "original_sha256": "de6f08323fdccc54f2a4a3177b5112fab1fdf65add4d03c9d41ffbc53e8e9d76",
+    "published_sha256": "de6f08323fdccc54f2a4a3177b5112fab1fdf65add4d03c9d41ffbc53e8e9d76",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/receipts/validate.rc",
+    "original_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "published_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/anchor-audit.py",
+    "original_sha256": "1d1cc3b84a25b905dea709be2a15e52edcde95042fc48dcef2c73bfc3d0e3d18",
+    "published_sha256": "1d1cc3b84a25b905dea709be2a15e52edcde95042fc48dcef2c73bfc3d0e3d18",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/claim_probe.py",
+    "original_sha256": "8ac24479992f96b1246e7916454d507926d818a1ffa388c7733602f979f9f1d4",
+    "published_sha256": "8ac24479992f96b1246e7916454d507926d818a1ffa388c7733602f979f9f1d4",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/collect-receipts.py",
+    "original_sha256": "8000d1f3ae83f32810ae05757845fd219986349b60ef01008a79d3c5eca96101",
+    "published_sha256": "8000d1f3ae83f32810ae05757845fd219986349b60ef01008a79d3c5eca96101",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/integrity.py",
+    "original_sha256": "cfbbd040f7bd2dee2ff8ef9a4d55f8c64491fece11013b27b2f4220aba679d04",
+    "published_sha256": "cfbbd040f7bd2dee2ff8ef9a4d55f8c64491fece11013b27b2f4220aba679d04",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/provision-sdk.py",
+    "original_sha256": "02a452ae50b646c32a51791d9ecd4ac8cbfba2b652cf486aa9c29d16107af555",
+    "published_sha256": "02a452ae50b646c32a51791d9ecd4ac8cbfba2b652cf486aa9c29d16107af555",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/run-gates.py",
+    "original_sha256": "18618786ec0176a7703f213989630cfc76fedcfe39d83c0b242c65f589cff0ce",
+    "published_sha256": "18618786ec0176a7703f213989630cfc76fedcfe39d83c0b242c65f589cff0ce",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/run-probes.py",
+    "original_sha256": "4cfc369cff78ee60c4706e12c842c4511482f8e3cdd4e451a6972732d8318a5b",
+    "published_sha256": "4cfc369cff78ee60c4706e12c842c4511482f8e3cdd4e451a6972732d8318a5b",
+    "path_redacted": false
+  },
+  {
+    "file": "reviews/R561-2/scripts/with-sdk.py",
+    "original_sha256": "9ce8d9bf03416bdbb058c9f9cbab50eed98a4abe16fa6466eefc1b1479213f4d",
+    "published_sha256": "9ce8d9bf03416bdbb058c9f9cbab50eed98a4abe16fa6466eefc1b1479213f4d",
+    "path_redacted": false
   }
 ]

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T16:35:00.930" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T16:35:00.930">
+    <testcase name="A28TheEarliestDeadlineIsChosenAcrossTheWrap" file="$PACKET/scratch/validate/mutations/baseline/tests/test_acmp.cpp" line="1788" status="run" result="completed" time="0." timestamp="2026-10-09T16:35:00.930" classname="AcmpCore">
+      <failure message="$PACKET/scratch/validate/mutations/baseline/tests/test_acmp.cpp:1795&#x0A;Value of: fk.armed[0] &amp;&amp; fk.at[0] == kWrap - 55u&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_632419759a23739160eeb974b6316b31&#x0A;A28 the interface timer holds the earlier deadline, the numerically larger one before the wrap&#x0A;TSN_MESSAGE_END_8f6c8f11686670036da0de784bc23662&#x0A;&#x0A;" type=""><![CDATA[$PACKET/scratch/validate/mutations/baseline/tests/test_acmp.cpp:1795
+Value of: fk.armed[0] && fk.at[0] == kWrap - 55u
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_632419759a23739160eeb974b6316b31
+A28 the interface timer holds the earlier deadline, the numerically larger one before the wrap
+TSN_MESSAGE_END_8f6c8f11686670036da0de784bc23662
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

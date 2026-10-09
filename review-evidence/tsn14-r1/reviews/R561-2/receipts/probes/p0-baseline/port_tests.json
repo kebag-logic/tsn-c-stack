@@ -1,0 +1,32 @@
+{
+  "tests": 1,
+  "failures": 0,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-09T16:32:08Z",
+  "time": "0s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "ExamplePort",
+      "tests": 1,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-09T16:32:08Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "DefersExpiryAndRetainsBlockedOutput",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p0-baseline\/src-tree\/tests\/test_port.cpp",
+          "line": 8,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "ExamplePort"
+        }
+      ]
+    }
+  ]
+}

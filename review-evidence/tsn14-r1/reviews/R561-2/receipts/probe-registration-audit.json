@@ -1,0 +1,202 @@
+[
+  {
+    "probe": "p0-baseline",
+    "binary_count": 7,
+    "total_instances": 372,
+    "binaries": [
+      {
+        "binary": "acmp_tests",
+        "tests": 69,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_debug",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_release",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_tests",
+        "tests": 23,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_debug",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_tests",
+        "tests": 34,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "port_tests",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      }
+    ],
+    "no_skips_or_incomplete_cases": true
+  },
+  {
+    "probe": "p7-peer-loss-unbinds",
+    "binary_count": 7,
+    "total_instances": 372,
+    "binaries": [
+      {
+        "binary": "acmp_tests",
+        "tests": 69,
+        "failures": 5,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_debug",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_release",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_tests",
+        "tests": 23,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_debug",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_tests",
+        "tests": 34,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "port_tests",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      }
+    ],
+    "no_skips_or_incomplete_cases": true
+  },
+  {
+    "probe": "p8-peer-loss-stops-discovery",
+    "binary_count": 7,
+    "total_instances": 372,
+    "binaries": [
+      {
+        "binary": "acmp_tests",
+        "tests": 69,
+        "failures": 7,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_debug",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_release",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_tests",
+        "tests": 23,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_debug",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_tests",
+        "tests": 34,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "port_tests",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      }
+    ],
+    "no_skips_or_incomplete_cases": true
+  },
+  {
+    "probe": "p9-startup-draw-uses-4s",
+    "binary_count": 7,
+    "total_instances": 372,
+    "binaries": [
+      {
+        "binary": "acmp_tests",
+        "tests": 69,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_debug",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_release",
+        "tests": 122,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "adp_tests",
+        "tests": 23,
+        "failures": 1,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_debug",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "maap_tests",
+        "tests": 34,
+        "failures": 0,
+        "disabled": 0
+      },
+      {
+        "binary": "port_tests",
+        "tests": 1,
+        "failures": 0,
+        "disabled": 0
+      }
+    ],
+    "no_skips_or_incomplete_cases": true
+  }
+]

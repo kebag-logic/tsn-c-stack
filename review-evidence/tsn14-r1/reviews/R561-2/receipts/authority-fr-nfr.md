@@ -1,0 +1,630 @@
+# Milan v1.2 endpoint  -  Functional & Non-Functional Requirements (FR/NFR)
+
+**System:** a small **Milan v1.2** audio endpoint (PAAD  -  Professional Audio AVB
+Device)  -  a **stereo (2-channel) talker + listener at 48 kHz**  -  implemented on
+the fully-FPGA RISC-V platform (VexiiRiscv + LiteX on Alinx AX7101). The
+release uses one cacheless RV32I control hart and scales media capacity through
+fabric stream contexts, channels, sample rates, and, in future profiles,
+replicated physical ports.
+
+- **Current Milan v1.2 implementation verdict:** [`../testing/MILAN_V12_AUDIT_2026-08-16.md`](../testing/MILAN_V12_AUDIT_2026-08-16.md)
+- **Current entity definitions:** [`configs/endstation_*.yaml`](../../configs) through the [end-station builder](../ENDSTATION_BUILDER.md)
+- **Platform & phasing:** the completed PS-to-fabric migration plan (#259, in git history)
+- **Shipping HW AEM/AECP design:** the former root engine and its design page are
+  **deleted** (2026-08-13); AECP now lives in the pinned `protocol-processor`
+  submodule's AECP uCPU. The current served-command inventory and root
+  integration boundaries are recorded in the implementation-status ledger in
+  Section 2.0.
+
+Requirement keywords per RFC 2119 (**MUST / SHOULD / MAY**). Each requirement has a
+**priority** (M=MUST, S=SHOULD, C=MAY), a **source**, and a **verification method**
+(T=test, A=analysis, D=demonstration, I=inspection).
+
+---
+
+## Contents
+
+- **[1. Scope, actors, and the baseline system](#1-scope-actors-and-the-baseline-system)** -- What "the baseline endpoint" concretely means, plus the `P_CH`/`P_SI`/`P_SO`/`P_SR`/`P_PORTS` parameter table every later requirement is written against. States the asymmetry that drives Section 2.7: the talker is fixed stereo, the listener is format-adaptive.
+- **[2. Functional Requirements (FR)](#2-functional-requirements-fr)** -- Opens with **[Section 2.0, the implementation-status ledger](#20-implementation-status-after-the-protocol-processor-substitution-2026-08-13)**: which groups the protocol processor owns, which AECP commands it serves, which dynamic outputs the root integration does not yet consume, and which mandatory requirements remain open. Read it before any row, and read a refusal as a refusal. Then nine subsections of MUST/SHOULD rows with priority and verification method, covering ADP through AECP/MVU, ACMP, MAAP/SRP, clocking, streaming, QoS and management.
+- **[3. Non-Functional Requirements (NFR)](#3-non-functional-requirements-nfr)** -- The line-rate, packet-rate, timing, resource, fabric scale-up, and future multi-port bounds for the one-hart bare-metal product.
+- **[4. Scalability architecture](#4-scalability-architecture)** -- How configuration grows fabric streams, channels, rates, and optional endpoint replicas with one control hart, bounded protocol service and fabric media deadlines.
+- **[5. Steps to comply with Milan v1.2 (procedure)](#5-steps-to-comply-with-milan-v12-procedure)** -- The ordered twelve-step path from bare platform to conformance run, each step citing the FRs it discharges. Ends with the explicit out-of-scope list -- redundancy, gPTP delayAsymmetry, rates beyond 192 kHz, AEM authentication.
+- **[6. Traceability (summary)](#6-traceability-summary)** -- One compact table joining each functional area to its Milan clause, its entity-model artifact, and its plan milestone -- the index to use when you need "which requirement covers this".
+- **[7. Verification approach](#7-verification-approach)** -- Which evidence class answers which kind of requirement: Verilator harnesses for leaf blocks, controller, fabric-gPTP and CSR tooling for interop, YAML models for PDU byte-exactness, and repetition at full profile for the scale claims.
+
+## 1. Scope, actors, and the baseline system
+
+### 1.1 Baseline (the "small" endpoint)
+One entity, one network port, on **one softcore**:
+
+```
+   Controller (Hive / avdecc_l2.py)                Media (AVB peer / DAC)
+            │  1722.1 AVDECC (L2)                          │ audio
+            ▼                                              ▼
+   ┌───────────────────────── AX7101 (xc7a100t) ────────────────────────┐
+   │  VexiiRiscv core0, bare-metal RV32I firmware                       │
+   │   • boot policy, CSR init, identity, persistence, UART diagnostics │
+   │   • ADP/AECP/ACMP/MAAP + SRP: the protocol processor, in fabric    │
+   ├───────────────────────────────────────────────────────────────────┤
+   │  FPGA datapath (HW): integrated gPTP default owner + PHC steering  │
+   │    GMII MAC ─ AVTP talker/listener (no classifier/CBS in the trunk)│
+   └───────────────────────────────────────────────────────────────────┘
+                                   │ GMII 1 GbE
+                                   ▼  AVB/TSN network (bridge)
+```
+Baseline stream profile, 48 kHz, 32-bit, Class A (2 ms, 8000 pkt/s), + a CRF
+media-clock stream:
+- **Talker:** 1 AAF source, **fixed stereo (2 ch)**  -  "stereo" is a talker property.
+- **Listener:** 1 AAF sink, **format-adaptive**  -  advertises the Milan Base Audio
+  Formats (1/2/4/8 ch @48 kHz) and adapts `current_format` to the connected talker
+  via `SET_STREAM_FORMAT` (Milan v1.2 Section 5.4), rendering the mapped stereo subset.
+
+### 1.2 Scaling parameters (referenced throughout)
+| Param | Meaning | Baseline | Scale-up target | Scale-out lever |
+|-------|---------|----------|-----------------|-----------------|
+| `P_CH` | channels per stream | 2 | 8 → 64 |  -  |
+| `P_SI` / `P_SO` | stream sinks / sources | 1 / 1 | 8 / 8 | fabric contexts |
+| `P_SR` | sample-rate set | {48k} | {48,96,192k} |  -  |
+| `P_PORTS` | AVB interfaces / entities | 1 | 1 | future replicated fabric endpoint |
+
+The release CPU count is fixed at one.
+Media capacity grows through fabric contexts, channels and sample rates.
+Control state grows through static, entity-sized contexts in the selected owner.
+Each supported shape must meet Section 3.4 service bounds.
+
+The diagram above describes the current all-fabric shipping default.
+Mark II selects ADP, ACMP, AECP, MAAP and SRP per function.
+Its default is bare-metal control over packet mailboxes.
+The all-fabric option remains supported.
+The shipping default changes only after F2 to F5 acceptance.
+That acceptance includes all streams, all counters and the audio soak.
+See the [placement contract](../ARCHITECTURE_HW_SW_SPLIT.md#1-ownership-rule).
+
+### 1.3 Actors
+AVDECC **Controller**; peer **Talker**/**Listener** entities; **802.1AS**
+grandmaster/bridge; **SRP** bridge; local **media** app.
+
+---
+
+## 2. Functional Requirements (FR)
+
+### 2.0 Implementation status after the protocol-processor substitution (2026-08-13)
+
+**Read this before any row below.** A requirement is what the system must do;
+this ledger is what it currently does. **No requirement has been deleted or
+downgraded to make the page look green** — several are simply not met, and
+say so.
+
+One row changed level by a recorded decision, not to look green. FR-MVU-02
+now carries the RECOMMENDED level that Milan v1.2 itself gives its four
+commands ([owner decision on #510](https://github.com/kebag-logic/milan-fpga/issues/510#issuecomment-5789766089),
+2026-09-23). Those commands still answer `NOT_IMPLEMENTED`, and Section 2.3
+says so.
+
+This ledger describes the all-fabric shipping placement.
+It does not claim Mark II firmware integration or timing acceptance.
+F0 and F1 are merged, default-off foundations for that integration.
+
+On 2026-08-13 this repository's own ADP advertiser, ACMP talker and listener,
+AECP/AEM engine and lwSRP applicant were **deleted** and replaced by the
+pinned `protocol-processor` submodule (architecture of record v2.0), wrapped
+by `hdl/milan/KL_pp_shadow.sv` and instantiated unconditionally. The
+processor owns **ADP, ACMP, SRP — and now AECP**: its AECP uCPU has landed and
+the entity is reachable on AECP.
+
+**What that engine does, exactly.** The processor's concrete operation decode is
+the `OP_*_C` table in `protocol-processor/hdl/aecp/KL_aecp_engine.sv`. The
+canonical documented inventory is the Milan feature status ledger, whose check
+also matches the compliant bench's served-operation table. The engine includes
+`READ_DESCRIPTOR`, `ACQUIRE_ENTITY`, `LOCK_ENTITY`, entity and configuration
+operations, stream and clock getters, sampling-rate operations,
+`SET_CLOCK_SOURCE`, Identify control, `GET_STREAM_INFO`,
+`GET_AVB_INFO`, `GET_AS_PATH`, `GET_COUNTERS`, `GET_AUDIO_MAP`, unsolicited
+registration, and Milan `GET_MILAN_INFO`. `READ_DESCRIPTOR` has command-specific
+`SUCCESS`, `NO_SUCH_DESCRIPTOR`, and `BAD_ARGUMENTS` paths. `ACQUIRE_ENTITY`
+returns `NOT_SUPPORTED`, never `SUCCESS`, with the zero-owner command form
+required by Milan Delta 7. The validator silently refuses a foreign target and
+an AECP response presented as input. Unsupported commands receive a conformant
+fallback response, but that fallback does not implement their required behavior.
+
+**Read the ledger with that in mind: an echo is not an implementation.** A row
+below that reads NOT IMPLEMENTED is not describing silence. It describes a
+device that answers "no" correctly and does not perform the operation. The
+end-station builder generates `aem_desc.bin`, `aem_desc.json`, and
+`aem_desc.map` from the selected configuration. The tracked bare-metal deployment
+packages the paired artifacts; firmware verifies the generated length and CRC and copies the image to
+`PP_DESC_BASE_P` before entity enable. A custom integration that omits that step
+still fails closed with `BAD_ARGUMENTS`. The Table 5.22 counter-change producer,
+the other root-observed notification triggers, and the departing-controller
+monitor are implemented at 0x0055. Saved-state persistence is partial.
+
+These repeated claims are checked against the
+[Milan feature status ledger](MILAN_FEATURE_STATUS.md):
+
+<!-- milan-feature-status:start -->
+| Feature ID | Status | Canonical value |
+|---|---|---|
+| `aem.served-command-set` | `implemented` | - |
+| `aem.acquire-entity-refusal` | `not-supported` | - |
+| `aem.mandatory-missing-set` | `implemented` | - |
+| `crf.media-clock-consumption` | `implemented` | - |
+| `aaf.media-clock-following` | `implemented` | - |
+| `state.nonvolatile-persistence` | `partial` | - |
+| `notifications.change-events` | `implemented` | - |
+| `notifications.controller-liveness` | `implemented` | - |
+<!-- milan-feature-status:end -->
+
+| Requirement group | Verdict | Where it lives now |
+|---|---|---|
+| **FR-DISC-01..05** (ADP) | **OWNED BY THE PROTOCOL PROCESSOR** | `KL_adp_engine`. Advertisement content is the entity model via `adp_shape_defaults.svh`; `available_index` is published to the CSR plane. The historic `ADP_CTRL.en` still enables the entity (ORed with `PP_CTRL[0]`), but the ADPDU *content* CSR words are write-only scratch that reach nothing |
+| **FR-ENUM-01** (`READ_DESCRIPTOR`) | **IMPLEMENTED AND SUPPLIED** | The uCPU's descriptor store fetches over a read-only master at compile-time `PP_DESC_BASE_P`. The builder generates the image, JSON manifest, and map; bare-metal firmware verifies and copies the paired image from QSPI before entity enable. An omitted or invalid image fails closed with `BAD_ARGUMENTS`, a locate miss returns `NO_SUCH_DESCRIPTOR`, a late load heals without reset, and the 4096-cycle watchdog prevents a stalled memory path from hanging the responder |
+| **FR-ENUM-02** (the Milan-mandatory descriptor tree) | **IMPLEMENTED IN THE TRACKED BUILD FLOW** | The selected entity configuration generates the mandatory descriptor tree and flat image artifacts. The tracked board flow packages and loads them. Custom integrations must preserve the same load-before-enable ordering |
+| **FR-CTRL-01..05** (acquire/lock, get/set, unsolicited, counters, fast enumeration) | **PARTLY MET** | The processor serves the mandatory command inventory. `ACQUIRE_ENTITY` returns Milan Delta 7 `NOT_SUPPORTED` with no owner. FR-CTRL-03's registration, successful-command notifications, Table 5.22 scheduler, and departing-controller monitor are implemented. FR-CTRL-04 serves every supported counter bank and rate-limits each descriptor's push to at most once per second. The declared CRF Stream Input's bank is served and pushed since #529. Persistence remains open |
+| **FR-CTRL-06** (validate cdl / message_type / target, correct status) | **PARTLY MET** | Met: the duty to answer, correct response shape and identity fields, silent refusal of a foreign target or response-as-input, command-specific `BAD_ARGUMENTS`, `NOT_SUPPORTED`, and descriptor-locate statuses, and lock conflict behavior within the served inventory. The mandatory commands listed in the current audit still need their own payload validation and behavior before this group can be closed |
+| **FR-MVU-01..03** (Milan Vendor Unique, GET_MILAN_INFO) | **FR-MVU-01 and FR-MVU-03 MET; FR-MVU-02 (SHOULD) NOT SERVED BY DECISION** | The engine recognizes the Milan protocol ID and serves `GET_MILAN_INFO`. Its `features_flags` REDUNDANCY bit reads zero because this is a declared non-redundant end station ([decision on #394](https://github.com/kebag-logic/milan-fpga/issues/394#issuecomment-5789765478)). `SET/GET_SYSTEM_UNIQUE_ID` and `SET/GET_MEDIA_CLOCK_REFERENCE_INFO` are RECOMMENDED by Milan v1.2 Sections 5.4.4.2 to 5.4.4.5 and stay outside the served inventory by the [decision on #510](https://github.com/kebag-logic/milan-fpga/issues/510#issuecomment-5789766089): each answers MVU `NOT_IMPLEMENTED` (Milan Table 5.19) with the command echoed. Implementation moves to P4 (#416) if the conformance lab requires it |
+| **FR-CONN-01/02** (ACMP connect/disconnect/state, program the datapath) | **OWNED BY THE PROTOCOL PROCESSOR** | `KL_acmp_talker` + the listener half; the bind record and the talker declaration reach the fabric as class-D wires. The CBS/classifier programming has no object in the shipped datapath, since that chain is not instantiated (the scope note under FR-SRP-03) |
+| **FR-CONN-03/04** (fast-connect, nonvolatile connection state) | **PARTLY MET** | The binding is journaled into flash and restored by the boot walk; a bind survives a cold power cycle on silicon (2026-09-21, #70). Fast connect after the restore (FR-CONN-03) and the started-state restore across a cold cycle are unproven |
+| **FR-MAAP-01** | **MET, in this fabric** | `KL_maap` remains the shipping allocator. The processor also contains `KL_pp_maap`, but this integration disables it with `cfg_maap_internal_i = 0` and reaches the selected fabric engine through `KL_pp_maap_shim`. The talker cannot declare without an `ALLOC_DA` success, so the DA gate *is* the talker gate. Since #686 `KL_maap` follows IEEE 1722-2016 Annex B on the DEFEND destination and `control_data_length` (B.2.1), the timer intervals (B.3.4), the four-PROBE walk and the ANNOUNCE conflict cell (Table B.7); `tb/verilator/maap` grades each against the clause. The deviations it still carries are listed in [MAAP_FABRIC.md](../design/MAAP_FABRIC.md#annex-b-contract) |
+| **FR-SRP-01/02/03** | **OWNED BY THE PROTOCOL PROCESSOR** | Its SRP engine registers/deregisters and admits. Its ACTIVE (Talker Advertise declared, a Listener Ready or Ready Failed registered, admitted) drives every talker gate since #530, and the adopted domain drives the C-TAGs. No shaper is instantiated, so the granted slope and the raw admission bit are read back as status only (`LWSRP_SLOPE` `0x698`, `LWSRP_STATUS[9]`); see the scope note below and [EGRESS_QUEUE_MAP.md](EGRESS_QUEUE_MAP.md#credit-based-shaping) |
+| **FR-CLK-01/02/05** (gPTP, PHC, HW timestamps) | **MET** | Untouched by the substitution |
+| **FR-CLK-03/04** (select the media clock among INTERNAL, the CRF sink's source and one source per AAF Stream Input; recover it from the selected CRF or AAF stream) | **CRF following MET AT THE ROOT INTEGRATION (#74); AAF following implemented and graded in simulation (#629, PR #634); bench acceptance open** | The processor stores `SET_CLOCK_SOURCE` and refuses an index the CLOCK_DOMAIN does not list with `BAD_ARGUMENTS` (the current index answered, nothing stored or notified), `KL_pp_shadow.sv` exports the stored index, and the root's `media_clk_resolve` arms the MMCM-DRP servo and the `KL_media_grid_align` packet-grid chain from it: grid alignment proven in sim at the true 391/1591 ratio, `mr` reachable on both 4.4.4.3 triggers. **The #389 record, as reversed by #629.** Issue #389's decision (a) (2026-09-09) cut the advertised set to INTERNAL and the CRF sink's INPUT_STREAM source, with no CLOCK_SOURCE on an AAF listener and no stream-derived recovery, because a source was then advertised, stored and served with no recovery engine behind it. The owner decision recorded in #629's body (2026-10-01) reverses that decision for AAF Stream Inputs and keeps the CRF path: the entity follows either a CRF talker's or an AAF talker's media clock, one selected source at a time, by the design in [`MEDIA_CLOCK_FOLLOWING.md`](../design/MEDIA_CLOCK_FOLLOWING.md). FR-CLK-03 and FR-CLK-04 in Section 2.6 are amended to that decision. The silicon J11.8-vs-J11.9 probe stays open on issue #74, and the bench acceptance of AAF following is a later #629 bench lane |
+| **FR-STR-01/02/04/05** (AAF encapsulation, de-encapsulation, listener counters, parameterisation) | **MET** | The media plane is intact |
+| **FR-STR-03/03a/03b** (listener format adaptation via SET_STREAM_FORMAT) | **MET AT THE CONTROL PLANE (0x0053); wire reshape deferred** | `SET_STREAM_FORMAT` is served for both stream directions with the Milan 5.4.2.7 refusals and a per-row format verdict; a stored setting becomes the served current format and drives STREAM_INPUT 0's acceptance filter. The *wire-truth* rule still governs de-interleaving, so render adaptation follows channels_per_frame off the wire; what remains deferred is the framers re-shaping from a stored format, recorded in the audit with the SET_CONFIGURATION precedent |
+| **FR-QOS-01..03** | **MET** | Classifier + CBS untouched; the Σ idleSlope ceiling is enforced by the processor's admission now |
+| **FR-MGT-01** (IDENTIFY) | **IMPLEMENTED IN THE PROCESSOR, UNCONSUMED AT ROOT** | Identify `SET_CONTROL` and `GET_CONTROL` are served by the processor, and `KL_pp_shadow.sv` exports `aecp_identify_o` to the root wire `pp_aecp_identify_w`. Nothing consumes the wire and the root ties `o_identify` low. The controller-visible state exists while the physical Identify output remains dark. An inbound `IDENTIFY_NOTIFICATION` command is separately refused with `BAD_ARGUMENTS` as required by Section 7.4.39.2 |
+| **FR-MGT-02** (names settable and persisted) | **PARTLY MET** | `SET_NAME` and `GET_NAME` are served for every generated semantic name, and SET is coherent with READ_DESCRIPTOR. The writable names are volatile because nonvolatile restoration remains open |
+| **NFR-\*** | unchanged in kind | The budgets and bounds still apply. Two are worth re-reading against the new plane: **NFR-LAT-01** (the presentation-time bound is now the Milan **2 ms default and is not configurable**, since `SET_MAX_TRANSIT_TIME` is unimplemented — a default, not a zero) and **NFR-SCUP-04** (the AEM memory it sizes has moved out of the gateware into main memory) |
+
+The honest one-line summary: **this device discovers over ADP, connects over
+ACMP, reserves over SRP, streams audio and serves the processor's AECP command
+inventory, including READ_DESCRIPTOR and GET_COUNTERS.** The tracked builder
+and board flow supply the descriptor image. Unsupported commands receive the
+conformant fallback, and the current audit lists the remaining mandatory gaps.
+
+### 2.1 Discovery  -  ADP  *(1722.1-2021 Section 6; Milan v1.2 Section 5.2)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-DISC-01 | The entity MUST advertise `ENTITY_AVAILABLE` ADPDUs and re-advertise within `valid_time`; `available_index` MUST increment after each transmitted `ENTITY_AVAILABLE` and reset to 0 when an `ENTITY_DEPARTING` is transmitted or after a power cycle (1722.1-2021 Section 6.2.2.15). | M | T |
+| FR-DISC-02 | The entity MUST answer `ENTITY_DISCOVER` (global and targeted) with an advertisement. | M | T |
+| FR-DISC-03 | The entity MUST send `ENTITY_DEPARTING` on shutdown / link down. | M | T |
+| FR-DISC-04 | Advertised fields (`entity_id`, `entity_model_id`, capabilities, talker/listener counts, `gptp_grandmaster_id`, `identify_control_index`, `interface_index`) MUST equal the ENTITY descriptor in the entity model. | M | T,I |
+| FR-DISC-05 | `entity_id` MUST be an EUI-64 derived from the AVB_INTERFACE MAC and be stable across reboots. | M | A |
+
+### 2.2 Enumeration & control  -  AECP/AEM  *(1722.1-2021 Sections 7 and 9; Milan v1.2 Section 5.3–5.4)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-ENUM-01 | The entity MUST serve every descriptor in the model via `READ_DESCRIPTOR`, byte-matching the JSON entity model. | M | T |
+| FR-ENUM-02 | The AEM descriptor tree MUST include the Milan-mandatory set: ENTITY, CONFIGURATION, AUDIO_UNIT, STREAM_INPUT (AAF + CRF), STREAM_OUTPUT, AVB_INTERFACE, CLOCK_DOMAIN, CLOCK_SOURCE, STREAM_PORT_IN/OUT, AUDIO_CLUSTER, AUDIO_MAP, CONTROL(IDENTIFY), LOCALE, STRINGS. | M | I |
+| FR-CTRL-01 | `ACQUIRE_ENTITY` and `LOCK_ENTITY` MUST be supported with the Milan timeouts; a locked entity MUST reject conflicting SETs with `ENTITY_LOCKED`. | M | T |
+| FR-CTRL-02 | `GET/SET_CONFIGURATION`, `GET/SET_NAME`, `GET/SET_STREAM_FORMAT`, `GET/SET_CLOCK_SOURCE`, `SET_SAMPLING_RATE` MUST be supported for the descriptors that expose them (per the model's `dynamic`/`nonvolatile` fields). | M | T |
+| FR-CTRL-03 | `REGISTER/DEREGISTER_UNSOLICITED_NOTIFICATION` MUST be supported for ≥ 16 controllers; state changes MUST emit unsolicited responses to registered controllers. | M | T |
+| FR-CTRL-04 | Solicited `GET_COUNTERS` MUST return the 1722.1-2021/Milan counter sets for STREAM_INPUT, STREAM_OUTPUT and AVB_INTERFACE (see model `counters`) within NFR-LAT-02. Only unsolicited counter notifications are limited to at most one per descriptor per second (Milan v1.2 5.4.5.2, Table 5.22). | M | T |
+| FR-CTRL-05 | `GET_DYNAMIC_INFO` (fast enumeration) MUST be supported per Milan v1.2 5.4.2.29. | M | T |
+| FR-CTRL-06 | AECP MUST validate `control_data_length`, `message_type=AEM_COMMAND`, and target `entity_id`; malformed/unsupported commands MUST return the correct AECP status (`NOT_IMPLEMENTED`, `BAD_ARGUMENTS`, `ENTITY_LOCKED`, …). | M | T |
+
+### 2.3 Milan Vendor Unique  -  MVU  *(Milan v1.2 Section 5.4.3)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-MVU-01 | The entity MUST implement the MVU protocol (`protocol_id 00-1B-C5-0A-C1-00`) and answer `GET_MILAN_INFO` with `protocol_version`, `features_flags`, `certification_version`. | M | T |
+| FR-MVU-02 | `GET/SET_SYSTEM_UNIQUE_ID` and `GET/SET_MEDIA_CLOCK_REFERENCE_INFO` SHOULD be supported: Milan v1.2 Sections 5.4.4.2 to 5.4.4.5 (with Section 7.6) mark them a recommendation that a future revision will make a requirement. Directed limitation for the October release ([owner decision on #510](https://github.com/kebag-logic/milan-fpga/issues/510#issuecomment-5789766089), 2026-09-23): not served, so each answers MVU `NOT_IMPLEMENTED` (Milan Table 5.19) with the command echoed. Revisit: implementation moves to P4 (#416) if the conformance lab requires it; the processor's [donor issue 55](https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/issues/55) and [donor issue 56](https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/issues/56) carry the command behavior, and the parent owns any integration seam. | S | T |
+| FR-MVU-03 | `features_flags` bit 31 `REDUNDANCY` (Milan v1.2 Table 5.20) MUST report 0. Directed limitation: this is a declared non-redundant end station with one AVB_INTERFACE on one cabled port. Milan v1.2 Section 8 seamless network redundancy is optional (Sections 4.2.5 and 8.1) and out of scope for the October release ([owner decision on #394](https://github.com/kebag-logic/milan-fpga/issues/394#issuecomment-5789765478), 2026-09-23). Revisit with the P4/P5 PCB (#416/#417). | M | I |
+
+### 2.4 Connection management  -  ACMP  *(1722.1-2021 Section 8; Milan v1.2 Section 5.5)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-CONN-01 | The entity MUST support `CONNECT_TX/RX`, `DISCONNECT_TX/RX`, `GET_TX/RX_STATE` as talker and listener. | M | T |
+| FR-CONN-02 | On a successful connection the entity MUST program the HW datapath: classifier queue for the stream's VLAN/PCP and CBS idleSlope/hi/lo for the reservation. | M | T |
+| FR-CONN-03 | ACMP MUST implement the Milan **fast-connect** / state-restore behavior (re-establish saved connections on power-up/link-up). | M | T |
+| FR-CONN-04 | Connection state MUST persist (nonvolatile) across reboot for fast-connect. | S | T |
+
+### 2.5 Addressing & reservation  -  MAAP, SRP  *(1722 Annex B; 802.1Qat/Qak; Milan Section 5.6)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-MAAP-01 | The talker MUST allocate stream destination multicast MACs via MAAP (PROBE/DEFEND/ANNOUNCE) and defend them. | M | T |
+| FR-SRP-01 | The entity MUST register/deregister SRP (MSRP) Talker Advertise / Listener Ready and reserve bandwidth for Class A streams. | M | T |
+| FR-SRP-02 | The entity MUST register the stream VLAN via MVRP. | M | T |
+| FR-SRP-03 | On reservation grant the CBS shaper MUST be configured to the reserved idleSlope; on failure the stream MUST NOT transmit. | M | T |
+
+> **Scope (VERSION `0x0002_0060`):** FR-CONN-02's queue/CBS programming and
+> FR-SRP-03's shaper configuration have no object in the shipped datapath - the
+> classifier/CBS chain is not instantiated ([REQUIREMENTS.md section 5](../../REQUIREMENTS.md)).
+> FR-SRP-03 still requires silence when admission fails.
+> Every talker licence requires ACTIVE and its real admission grant.
+> ACTIVE includes the registered Listener Ready or Ready Failed (#530).
+> The real grant excludes the processor's optimistic admission term (#551).
+> Refused re-declarations cannot open CRF or AAF licences.
+> No STREAM_START/STREAM_STOP pair, Table 5.4 reset or PDU follows.
+> The `milan_dp` licence leg checks both sources and admission phases.
+> Its grant-removal mutants must fail the refused-case checks.
+>
+> The processor now evaluates the current TSpec before granting admission.
+> Every declaration clears its source's grant until that evaluation completes.
+> A round that meets any pending declaration publishes nothing.
+> Other grants, the slope sum and over-limit retain their published values.
+> This follows [processor #112](https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/issues/112), adopted through #508.
+> The default licence leg requires identical and changed TSpecs to pass.
+
+### 2.6 Time & media clock  -  gPTP, CRF  *(802.1AS; 1722-2016 Section 10; Milan Section 5.7)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-CLK-01 | The entity MUST run 802.1AS gPTP as a time-aware endpoint (Class A), sync to the grandmaster, and report GM changes. | M | T |
+| FR-CLK-02 | The PHC MUST use a fixed, free-running clock at the frequency declared by the product configuration, independent of link speed. Its increment and fractional adjustment MUST implement REQ-PTP-01 at that frequency. The timestamp resolution and error budget MUST be documented and verified against the existing synchronization requirement. | M | A,T |
+| FR-CLK-03 | The media clock MUST be selectable (CLOCK_DOMAIN → CLOCK_SOURCE) among INTERNAL, the CRF sink's INPUT_STREAM source and one INPUT_STREAM source per AAF Stream Input, located on that input (Milan v1.2 5.3.3.6 sets the CRF input's source as a minimum; IEEE 1722.1-2021 7.2.9.2 allows the location). Exactly one source is selected at a time. The CLOCK_DOMAIN lists them in class order: INTERNAL, then the CRF source, then AAF Stream Input k, so INTERNAL is index 0, CRF index 1 and AAF Stream Input k index 2 + k wherever INTERNAL and CRF are both declared. An index the CLOCK_DOMAIN does not list MUST be refused with `BAD_ARGUMENTS` (IEEE 1722.1-2021 7.2.32 and Table 7-141). Owner decision on #629 (2026-10-01), reversing #389 option (a) for AAF Stream Inputs; design [`MEDIA_CLOCK_FOLLOWING.md`](../design/MEDIA_CLOCK_FOLLOWING.md), decision D1. | M | T |
+| FR-CLK-04 | As a media-clock talker the entity MUST source a CRF stream. As a follower it MUST recover the media clock from the selected source: a CRF stream, or an AAF stream's presentation timestamps in Milan v1.2 6.2's 48 kHz Base format (6 samples per PDU, normal timestamp mode). On loss of the followed stream the media clock MUST hold over on the selected source, with no fallback to another source (this design's choice; Milan v1.2 5.4.2.15 requires it while a controller holds the lock), and MUST re-acquire when the stream returns. `mr` MUST toggle on a source change and on a disruption of the followed stream (IEEE 1722-2016 4.4.4.3; the literal shall names CRF, and the AAF case is the PICS AAF-5 reading the design applies). Owner decision on #629 (2026-10-01); design [`MEDIA_CLOCK_FOLLOWING.md`](../design/MEDIA_CLOCK_FOLLOWING.md). | M | T |
+| FR-CLK-05 | Hardware ingress and egress timestamps MUST represent each frame's event at the timestamp reference point required by the selected protocol edition. They MUST be delivered with correct frame identity to the fabric gPTP plane and diagnostics. Direct capture or reconstruction from a per-frame hardware observation is permitted only with an independently verified error bound. The digital observation point, clock-domain transfer error and measured physical correction MUST be documented separately; variable frame queueing MUST NOT be replaced by a guessed constant correction. | M | T |
+
+> **Scope (#511):** FR-CLK-01's time-aware endpoint does not model IEEE
+> 802.1AS-2011 `delayAsymmetry`. Section 8.3 does not require it, and Section
+> 10.2.4.8 makes the unmodelled value zero. REQ-PTP-06's two per-board
+> elaboration constants stay the only timestamp corrections, and the gPTP
+> processor's live UART tuner stays donor-bench-only. This is a directed
+> limitation by the
+> [owner decision on #511](https://github.com/kebag-logic/milan-fpga/issues/511#issuecomment-5789766257);
+> the revisit trigger and the adoption plan are in the
+> [gPTP plane record](../design/GPTP_PLANE.md#propagation-asymmetry-is-not-modelled).
+
+### 2.7 Streaming  -  AVTP AAF talker/listener  *(1722-2016 Section 7; Milan Section 6)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-STR-01 | The talker MUST encapsulate `P_CH`-channel AAF PCM (48 kHz, 32-bit, 6 samples/frame, Class A) with a valid AVTP presentation time = capture time + offset. | M | T |
+| FR-STR-02 | The listener MUST de-encapsulate AAF, validate `avtp_timestamp`, de-jitter to presentation time, and render at the media clock. | M | T |
+| FR-STR-03 | The **listener MUST be format-adaptive**: STREAM_INPUT MUST advertise every supported format (the Milan Base Audio Formats, `number_of_formats > 1`) and set its `current_format` to the **connected talker's** format via `SET_STREAM_FORMAT` at connection  -  it MUST NOT be fixed. A received AAF AVTPDU MUST match the adapted `current_format` (subtype/format/nsr/bit-depth/channels/sparse); mismatches MUST count `UNSUPPORTED_FORMAT`. | M | T |
+| FR-STR-03a | The **talker** sources a **fixed** format (this device: stereo/2 ch); "stereo" is a talker property only. A talker with multiple producible formats MAY list them, but the transmitted format is fixed per connection. | M | I,T |
+| FR-STR-03b | When adapting to a talker with more channels than the device renders, the listener MUST render the mapped subset (AUDIO_MAP) and MUST still lock/validate the full advertised format. | M | T |
+| FR-STR-04 | The listener MUST maintain the STREAM_INPUT counters (MEDIA_LOCKED/UNLOCKED, LATE/EARLY_TIMESTAMP, SEQ_NUM_MISMATCH, UNSUPPORTED_FORMAT, …) and recover from stream faults (MEDIA_RESET) per Milan. | M | T |
+| FR-STR-05 | Baseline: `P_SI=1`, `P_SO=1`, talker `P_CH=2`, listener advertises the base set; the design MUST be parameterized so `P_CH`, `P_SI`, `P_SO`, `P_SR` scale without protocol changes (see Section 4). | M | I,A |
+
+### 2.8 QoS datapath  -  802.1Q / 802.1Qav  *(already in HW)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-QOS-01 | Frames MUST be classified by PCP into traffic classes/queues (programmable tables) with Class A → its shaped queue. | M | T |
+| FR-QOS-02 | The CBS (802.1Qav) MUST shape SR queues to their idleSlope with hi/lo credit; non-SR traffic MUST use strict priority (unshaped). | M | T |
+| FR-QOS-03 | Σ idleSlope of shaped queues MUST NOT exceed 75 % of port rate. | M | A,T |
+
+### 2.9 Management  *(Milan Section 5.3.3.10)*
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| FR-MGT-01 | The IDENTIFY CONTROL MUST put the device into identification mode while its value ≠ 0. | M | T |
+| FR-MGT-02 | Names (entity/group/config) MUST be settable and persisted; factory reset MUST restore defaults. | S | T |
+
+---
+
+## 3. Non-Functional Requirements (NFR)
+
+### 3.1 Performance & real-time
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| NFR-PERF-01 | The datapath MUST sustain line-rate 1 GbE for the shaped streams without frame loss at baseline load. | M | T |
+| NFR-PERF-02 | The AVTP talker/listener MUST sustain the Class A packet rate (8000 pkt/s per stream) continuously. | M | T |
+| NFR-LAT-01 | End-to-end (talker capture → listener render) latency MUST meet the Milan Class A presentation-time bound using the product's 2 ms per-output default. | M | T |
+| NFR-LAT-02 | AVDECC command responses MUST meet their applicable normative limit in Section 3.4.1 in either placement. Firmware paths MUST also meet NFR-SCOUT-03; a 250 ms transaction timeout MUST NOT replace the 240 ms AECP response bound or the 200 ms Milan ACMP timeout. | M | T |
+| NFR-DET-01 | The media/AVTP path MUST be deterministic: bounded, jitter-controlled processing independent of best-effort/management load. | M | T |
+
+### 3.2 Time accuracy
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| NFR-TIME-01 | gPTP synchronization error to the grandmaster MUST be ≤ 1 µs (Milan endpoint target). | M | T |
+| NFR-TIME-02 | Media-clock recovery MUST hold long-term rate error within the AAF/CRF tolerance (no periodic MEDIA_RESET during a healthy stream). | M | T |
+| NFR-TIME-03 | PHC frequency-adjust (adjfine) resolution MUST be ≤ 1 ppb-class (Q8.24 ns increment). | S | A |
+
+### 3.3 Scale-**up** (same node, bigger workload)
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| NFR-SCUP-01 | The end-station model, generated artifacts, and fabric datapath MUST be parameterized by `P_CH`, `P_SI`, `P_SO`, `P_SR` so a larger endpoint (for example 8-channel, 48/96/192 kHz) is a configuration change, not a redesign. | M | A,I |
+| NFR-SCUP-02 | Increasing `P_CH`/`P_SR` MUST only linearly increase media bandwidth, buffer and DSP costs. ADP/AECP/ACMP wire semantics MUST remain unchanged; the selected control placement MUST meet NFR-SCOUT-03 at every supported shape. | M | A |
+| NFR-SCUP-03 | FPGA resource use MUST stay within the `xc7a100t` budget at the largest supported single-node profile (document the profile that first exceeds it). | S | A |
+| NFR-SCUP-04 | The builder MUST generate and size the flat AEM image from the selected entity model. Bare-metal boot MUST validate and install it before entity enable: at the descriptor base for fabric AECP, or in the validated image store for firmware AECP. Descriptor growth MUST NOT require an RTL edit. | S | I |
+
+### 3.4 Fabric scale-out and future ports
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| NFR-SCOUT-01 | The release architecture MUST use one cacheless RV32I control hart. Stream capacity MUST grow through fabric media contexts and static, entity-sized control contexts in the selected placement. Every supported shape MUST meet NFR-SCOUT-03 without adding harts or a software media path. | M | A,D |
+| NFR-SCOUT-02 | ADP, ACMP, AECP (including unsolicited notifications and counter serving), MAAP and SRP MUST each be build-selectable between bare-metal firmware and fabric. Mark II defaults to firmware; all-fabric remains supported and the shipping default until F2 to F5 pass suites and bench acceptance for all streams, counters and audio soak. Each function MUST have one state owner. Framing, timestamps, ingress filtering, gPTP and media MUST remain fabric-owned. The mailbox filter MUST exclude tagged frames, match each channel's exact VLAN-tag/destination-MAC/EtherType/AVTP-subtype tuple, then apply its identity term. Own unicast MUST mean the receiving AVB interface's MAC, never any unicast. AECP MUST accept (command AND target_entity_id = own) OR (response AND controller_entity_id = own). Untagged control frames failing their tuple MUST increment FILTER_MISMATCH. Per-channel token buckets MUST remain; NFR-SCOUT-08 defines the table and checks. | M | A |
+| NFR-SCOUT-03 | Each moved control path MUST meet the single project service budget T_svc = 10 ms, proposed for owner approval, under Section 3.4.1 and measured by Section 3.4.2. Numeric normative response timeouts MUST also hold with margin; ordering, spacing and timer obligations remain independently normative. Audio and gPTP deadlines MUST depend only on bounded fabric handshakes, independent of firmware service latency. | M | A,T |
+| NFR-SCOUT-04 | The PHC, MAC trunk, CSR window, and fabric egress arbiter MUST each have one coherent owner and deterministic arbitration across all elaborated streams. | M | A,T |
+| NFR-SCOUT-05 | A future `P_PORTS ≥ 2` profile MAY replicate complete fabric endpoint instances with distinct AVB interfaces and entity identities; the current release profile remains one port. Such a profile is not Milan v1.2 Section 8 redundancy, which pairs two AVB interfaces under one entity and is out of scope for v1.2 (#394, FR-MVU-03). | S | A,D |
+| NFR-SCOUT-06 | Increasing stream or endpoint instance counts MUST NOT change the CSR register definitions or end-station configuration schema. | M | I |
+| NFR-SCOUT-07 | Per-stream and per-port fabric resource costs MUST be documented so a target stream/channel/port shape can be checked against the device budget. | S | A |
+| NFR-SCOUT-08 | The fabric mailbox ingress filter MUST enforce the exact tuples and identity terms in [product ownership](../../REQUIREMENTS.md#1-product-ownership), including tagged-frame exclusion, per-interface own unicast, MAAP_DEFEND to own unicast (IEEE 1722-2016 B.2.1), both AECP directions and FILTER_MISMATCH for untagged control tuple failures, while retaining per-channel token buckets. The single-source [mailbox contract](../../sw/mailbox/mailbox.yaml) MUST carry these rules. Verify with H-ADP, H-ACMP, H-AECP, H-MAAP and H-SRP in Section 3.4.2, including planted filter defects through both bus adapters and the host mailbox model. | M | A,I,T |
+
+### 3.4.1 Control service budget and normative timing
+
+This section implements the [#664 service-budget ruling](https://github.com/kebag-logic/milan-fpga/issues/664#issuecomment-6009675758).
+**Proposed project budget: `T_svc = 10 ms`.**
+Owner approval of this value is required before merge.
+It is not a numeric timeout supplied by a standard.
+
+Each immediate path measures mailbox RX commitment to TX commitment.
+Events start at their occurrence, including time awaiting event-ring space.
+A timer event starts at its armed deadline, not dequeue.
+TX commitment means the complete record's accepted `TX_HEAD` write.
+The last required recipient's commit ends a notification fan-out.
+Backlog, preemption, state access and saved-state service consume this budget.
+TX-ring backpressure also consumes it; freeing space never restarts timing.
+
+Some paths intentionally wait under a normative timer or spacing rule.
+Their full RX/event-to-TX interval MUST also be recorded.
+Let `W` denote only that required or selected normative wait.
+The bound is `elapsed <= W + T_svc` for that action.
+All software overhead around the wait shares one `T_svc`.
+No extra budget is granted at timer arm, expiry or retry.
+A zero random draw gives `W=0`.
+For a periodic expiry alone, the deadline starts the service interval.
+State-machine inputs requiring no transmission finish at state/timer commitment.
+Their transition service has the same project bound.
+
+| Moved path | Normative timing and source | Derivation: related interval and 10% ceiling | Additional normative obligation |
+|---|---|---|---|
+| ADP startup AVAILABLE | Milan v1.2 5.6.3.5.2: random delay 0 to 2 s | 2 s random-window extent gives 200 ms; `T_svc=10 ms` fits. Zero draws are serviced immediately, never treated as a positive interval | Preserve the selected draw and startup state |
+| ADP DISCOVER, GM_CHANGE, LINK_UP and periodic AVAILABLE | Milan v1.2 5.6.3.5.3/.4/.5/.7/.9 and Table 5.50: 0 to 4 s random delay; fixed 5 s advertise timer. Milan 5.6.2: `valid_time=10`; IEEE 1722.1-2021 6.2.2.5: two-second units, hence 20 s validity | min(4 s, 5 s, 20 s) x 10% = 400 ms. For the whole ADP function, startup tightens this to 200 ms | Apply Table 5.51; a DISCOVER or GM change in DELAY does not restart it. Advertisement and discovery aging are separate timers |
+| ADP SHUTDOWN to DEPARTING | Milan v1.2 5.6.3.5.8/.11 requires transmission, without a numeric shutdown-response maximum | Related ADP minimum positive window extent is 2 s, giving 200 ms. The 10 ms service bound is project policy | Stop the applicable timer and send DEPARTING. Preserve its order before a restart's AVAILABLE |
+| Listener ADP AVAILABLE, DEPARTING and discovery aging | Milan v1.2 5.6.4.1, Table 5.54 and 5.6.4.5.1-.4: process each matching bound sink; arm/reset TMR_NO_ADP from received `valid_time`. IEEE 1722.1-2021 6.2.2.5: two-second units; Milan 5.6.2 sends 10, hence 20 s | Milan validity 20 s gives 2 s; the minimum legal received validity is 2 s, giving 200 ms (also the related ADP startup ceiling). A resulting ACMP action uses the tighter 200 ms transaction interval (Milan 5.5.2.3, Table 5.26), giving 20 ms. The same project service <= 10 ms covers reception or original expiry through discovery and connection commitments, including any resulting TX commit | Preserve received validity, interface/GM/domain guards and restart event ordering. Record normative connection waits separately; do not restart the service allowance at discovery-to-connection handoff |
+| ACMP PROBE_TX, GET_TX_STATE, BIND_RX, UNBIND_RX, GET_RX_STATE | Milan v1.2 5.5.2.3, Table 5.26: each transaction times out at 200 ms, replacing the applicable IEEE 1722.1-2021 Table 8-1 value | 200 ms x 10% = 20 ms; service <= 10 ms. The complete command transaction must finish inside 200 ms with measured margin | A retry cannot enlarge one attempt's timeout; delayed probe/backoff events retain Milan 5.5.3 timers |
+| AECP solicited AEM, descriptor and counter responses | IEEE 1722.1-2021 9.3.2.6: respond within 240 ms; transaction timeout 250 ms | min(240, 250) ms x 10% = 24 ms; service <= 10 ms. The complete response must meet 240 ms with margin | The existing no-IN_PROGRESS policy remains. If adopted later, its 120 ms cadence yields a tighter 12 ms ceiling, still above T_svc |
+| AECP MVU response | Milan v1.2 5.4.3.4: response within 240 ms; transaction timeout 250 ms | 240 ms x 10% = 24 ms; service <= 10 ms, with the same wire-response margin | Apply the MVU-specific response and refusal rules |
+| AECP successful-command and asynchronous notifications | Milan v1.2 5.4.5.2; IEEE 1722.1-2021 7.5.2: immediate notification after the successful state-changing response; Table 5.22 defines asynchronous triggers, without a numeric delivery maximum | Related AECP response interval 240 ms gives 24 ms. `T_svc=10 ms` is a project event-to-commit budget, not a new normative timeout | Response precedes its notification, including cross-protocol causality (#653). Do not wait out T_svc deliberately; notify immediately |
+| AECP GET_COUNTERS push | Milan v1.2 5.4.5.2, Table 5.22: at most one notification per descriptor per second. Counter updates: Milan 5.3.7.7/5.3.8.10, at most 1 s | Spacing gives 100 ms; shared AECP response interval tightens the ceiling to 24 ms. Service <= 10 ms once eligible; record the preceding rate-limit wait separately | One second is minimum spacing, not a maximum delivery latency. Coalesce pending changes; preserve counter observation and reset semantics |
+| AECP liveness, unlock and optional identification | Milan v1.2 5.4.5.3: 30 to 60 s monitor then CONTROLLER_AVAILABLE; 5.4.2.2: 60 s unlock. IEEE 1722.1-2021 7.5.1/7.5.1.2.1: three Identify notifications, spaced 150 ms when enabled | 150 ms x 10% = 15 ms is the tightest enabled notification interval; service <= 10 ms. Probe responses still obey 9.3.2.6 | Preserve registration, retry, removal and identification ordering; the optional feature is not enabled by this requirement |
+| MAAP PROBE and conflict DEFEND | IEEE 1722-2016 B.3.4.2 with constants B.3.3/Table B.8: strictly 500 ms < probe interval < 600 ms; `MAAP_PROBE_RETRANSMITS=3`. B.3.2/Table B.7 defines conflict handling; B.3.5.5 defines the conflicting-PROBE event and B.3.6.6 the DEFEND action | 500 ms x 10% = 50 ms; service <= 10 ms. Three retransmissions do not multiply the per-action budget | DEFEND on the applicable conflicting PROBE transition. The probe interval is not a normative received-PROBE response timeout |
+| MAAP ANNOUNCE and reallocation | IEEE 1722-2016 B.3.4.1 with constants B.3.3/Table B.8: strictly 30 s < announcement interval < 32 s; B.3.2/Table B.7 governs loss and retry | Announcement gives 3 s; the shared 500 ms probe interval tightens this to 50 ms | Preserve randomization, strict bounds and address-loss handling; service time cannot push a timer beyond its upper bound |
+| SRP/MRP MSRP and MVRP join, leave, periodic and LeaveAll | IEEE 802.1Q-2018 10.7.4/10.7.11, Table 10-7; Milan v1.2 4.2.7.1.1, Table 4.3 overrides: JoinTime 200 ms (180 to 240), LeaveTime 5000 ms (4500 to 7500), periodic 1000 ms (900 to 1500), LeaveAll 10 to 15 s (+/-0.5 s) | Conservative shortest allowed interval: 180 ms x 10% = 18 ms. LeaveTime gives 450 ms; periodic 90 ms; LeaveAll 950 ms. Service <= 10 ms fits each | A point-to-point requested transmit opportunity occurs within JoinTime, at most three per 1.5 x JoinTime. Timer resolution stays <= 1 centisecond; delayed service must not lose ticks |
+
+The tightest mandatory ceiling above is 18 ms for MRP.
+Optional identification tightens it to 15 ms.
+Even a future IN_PROGRESS cadence would allow 12 ms.
+Choosing 10 ms remains below each listed ceiling.
+MRP timer resolution is a separate precision requirement, not service allowance.
+
+Normative timer bounds include service and egress effects where applicable.
+At the 200 ms MRP default, 40 ms remains before 240 ms.
+The proposed 10 ms service uses only part of that slack.
+MAAP draws near 600 ms cannot absorb another 10 ms blindly.
+Schedule with measured error margins while preserving randomization and strict bounds.
+No budget converts a minimum interval into a response deadline.
+
+For numeric response deadlines, measure the complete interval separately.
+Ingress, service, TX queuing, arbitration, serialization and network allowance count.
+Require `T_ingress + T_svc + T_egress + T_network < timeout`.
+For AECP, also enforce its separate 240 ms response endpoint.
+Publish each measured allowance and the remaining positive margin.
+A mailbox commit alone cannot prove the wire deadline.
+Dropped or unserved accepted records fail, rather than disappearing from measurements.
+
+### 3.4.2 Control service test hooks
+
+These hooks are acceptance requirements for the integration lanes.
+They are not claims of implemented instrumentation or passing target timing.
+Use a monotonic elapsed-time clock, independent of PHC steps.
+Record placement, shape, core clock, input identity and timestamp resolution.
+A measured upper bound includes that resolution and instrumentation error.
+
+| Hook | Trace to requirements | Start and completion observations | Required checks |
+|---|---|---|---|
+| H-ADP | FR-DISC-01..05; NFR-SCOUT-01..03; NFR-SCOUT-08 | ADP `RX_HEAD` commit or startup/GM/link/shutdown occurrence; timer arm and original deadline; AVAILABLE/DEPARTING `TX_HEAD` commit and wire departure; filter checks observe ingress, RX publication, core delivery and FILTER_MISMATCH | Startup, DISCOVER, periodic, GM, both link edges, shutdown/restart; full rings; zero/max draws; ignored events and stale tags; DEPARTING before AVAILABLE; tagged-frame, wrong-destination and wrong-AVTP-subtype rejection; FILTER_MISMATCH count. |
+| H-DISC | FR-DISC-01..05; FR-CONN-01..04; NFR-SCOUT-01..03 | Received ENTITY_AVAILABLE/ENTITY_DEPARTING `RX_HEAD` commit or original TMR_NO_ADP deadline to every matching sink's discovery/timer and resulting connection-state commitment; include the last resulting `TX_HEAD` commit and wire observation where transmission follows | Every Table 5.54 cell; received-valid_time arm/reset and expiry; available_index restart; interface and GM/domain mismatch; departing; all matching bound sinks; late receive handling or aging must fail independently of H-ADP |
+| H-ACMP | FR-CONN-01..04; NFR-LAT-02; NFR-SCOUT-01..03; NFR-SCOUT-08 | ACMP `RX_HEAD` commit to the matched response `TX_HEAD`; originated command commit to response receipt; discovery/probe timer deadline to its action; filter checks observe ingress, RX publication, core delivery and FILTER_MISMATCH | Each Table 5.26 command, success/refusal, retry, distinct sequence/unique IDs, restore and fast connect; wire round-trip < 200 ms with margin; tagged-frame, wrong-destination and wrong-AVTP-subtype rejection; FILTER_MISMATCH count; own-unicast receive tolerance and foreign-unicast rejection. |
+| H-AECP | FR-ENUM-01/02; FR-CTRL-01..06; FR-MVU-01..03; NFR-SCUP-04; NFR-LAT-02; NFR-SCOUT-08 | AECP `RX_HEAD` commit to matched response `TX_HEAD`, plus received-command and emitted-response wire observations; filter checks observe ingress, RX publication, core delivery and FILTER_MISMATCH | AEM/MVU, descriptors, getters/setters, counters and refusals; longest image/state access; locks; malformed/truncated requests; response <= 240 ms with margin; own-target commands and own-controller responses pass; CONTROLLER_AVAILABLE response reaches the core (Milan v1.2 5.4.5.3), while a response for another controller_entity_id is dropped even when target_entity_id = own; a foreign-target command is dropped even when controller_entity_id = own. Reject another interface's unicast MAC and a foreign destination. |
+| H-NOTIFY | FR-CTRL-03; FR-MGT-01/02; NFR-SCOUT-02/03 | Causal command RX or asynchronous state-change occurrence to the last required notification `TX_HEAD`; record response commit and every recipient's wire departure | Successful-command ordering, cross-channel ACMP response then AECP notice, all registered recipients, departure probes, unlock, enabled Identify spacing, full transmit rings |
+| H-COUNTERS | FR-CTRL-04; FR-STR-04; NFR-OBS-01; NFR-SCOUT-02/03 | Fabric counter snapshot/update event to the last push `TX_HEAD`; previous notification wire time supplies eligibility; solicited GET_COUNTERS uses H-AECP | Every descriptor bank and stream, coherent snapshots, resets/wrap, multiple changes while rate-limited; >= 1 s per-descriptor wire spacing; <= 1 s counter update |
+| H-MAAP | FR-MAAP-01; NFR-SCOUT-02/03; NFR-SCOUT-08 | MAAP `RX_HEAD` commit or original timer deadline to PROBE/DEFEND/ANNOUNCE `TX_HEAD`; state completion when no frame is required; filter checks observe ingress, RX publication, core delivery and FILTER_MISMATCH | Conflict in each state, three probe retransmissions, allocation loss/retry, strict probe/announce intervals, ring stalls and boundary draws; tagged-frame, wrong-destination and wrong-AVTP-subtype rejection; FILTER_MISMATCH count; MAAP_DEFEND to own unicast reaches the core (IEEE 1722-2016 B.2.1), while MAAP_PROBE or MAAP_ANNOUNCE to own unicast and MAAP_DEFEND to a foreign unicast are rejected and counted. |
+| H-SRP | FR-SRP-01..03; FR-CONN-02; NFR-SCOUT-01..03; NFR-SCOUT-08 | SRP `RX_HEAD` commit or fabric timer deadline to MRPDU `TX_HEAD`; registrar/state-apply commitment for non-transmitting transitions; filter checks observe ingress, RX publication, core delivery and FILTER_MISMATCH | MSRP/MVRP joins, withdrawal, malformed vectors, LeaveAll/periodic expiry, coalesced tick backlog, reservation/licence updates; JoinTime and LeaveTime bounds; tagged-frame and wrong-destination rejection for MSRP and MVRP; wrong AVTP subtype cannot select srp; FILTER_MISMATCH count. MSRP/MVRP have no AVTP subtype field. |
+
+The five filter hooks also start before mailbox publication.
+Inject each table row's valid frame as a positive control.
+Change tag, destination, EtherType, subtype and identity separately where applicable.
+Rejected input MUST create neither an RX record nor core delivery.
+Use an unassigned AVTP subtype for the wrong-subtype rejection.
+Also inject untagged AAF and CRF; neither has a channel.
+For MSRP/MVRP, test AVTP substitutions without inventing an MRP subtype.
+Each untagged control tuple mismatch MUST increment FILTER_MISMATCH once.
+Valid input and tagged input MUST NOT increment that counter.
+Observe token-bucket enforcement separately from tuple and identity refusal.
+AECP rejection cases must also test the opposite ID matching.
+AECP acceptance cases use unrelated opposite IDs.
+The response case includes the CONTROLLER_AVAILABLE liveness reply.
+Repeat own-MAC checks for each configured AVB interface and record index.
+Plant each acceptance-rule defect; require its named hook to fail.
+PR #685 (#665 lane FC) implements these filter checks in the mailbox suite, before F2 to F5.
+
+H-DISC follows discovery events through their connection actions.
+All matching sinks share one service allowance for the received record.
+State commitment does not restart timing before a resulting TX.
+Only normative waits contribute `W`; total service remains <= 10 ms.
+Record the original aging deadline and the received validity separately.
+Test received validity 1, 10 and 31, without substituting 10.
+An unchanged discovery state still requires observing completed input handling.
+These checks follow Milan v1.2 Table 5.54:
+
+| Discovery input and state | Required H-DISC check | Milan v1.2 clause |
+|---|---|---|
+| AVAILABLE in TK_NOT_DISCOVERED | Reject GM/domain mismatch; otherwise save interface/index, arm received validity, commit discovery and EVT_TK_DISCOVERED's connection action | 5.6.4.5.1 |
+| AVAILABLE in TK_DISCOVERED | Ignore interface mismatch; a rising available_index refreshes index/validity. On index <= last, apply EVT_TK_DEPARTED first; GM/domain mismatch stops aging and leaves TK_NOT_DISCOVERED, otherwise apply EVT_TK_DISCOVERED then refresh index/validity | 5.6.4.5.2 |
+| DEPARTING in TK_DISCOVERED | Ignore interface mismatch; otherwise stop aging, commit TK_NOT_DISCOVERED and EVT_TK_DEPARTED's connection action | 5.6.4.5.3 |
+| Original TMR_NO_ADP expiry in TK_DISCOVERED | Commit TK_NOT_DISCOVERED and EVT_TK_DEPARTED's connection action within the same service allowance, including delayed event publication | 5.6.4.5.4 |
+| DEPARTING or stray expiry in TK_NOT_DISCOVERED | DEPARTING is ignored; no aging timer may remain armed. Inject a stale expiry and require no invented departure or connection action | Table 5.54, ignored and impossible cells |
+
+Each hook MUST run at every supported stream/channel/rate shape.
+Exercise simultaneous protocol traffic, maximum legal backlog and NVM write-back.
+Test saturation, reset, timer wrap, CPU stalls and both bus adapters.
+Test every supported placement combination across cross-protocol state changes.
+Plant late-service and reordered-output defects that the named checks reject.
+Late service remains a failed bound even if recovery succeeds.
+A stopped core must not leave a fabric ADP advertiser running.
+Audio and gPTP must retain their deadlines under these loads.
+
+F0 proves mailbox-access counts under stated assumptions, not target milliseconds.
+F1 proves model-time flash bounds, not the complete loop's CPU time.
+See [F0 service latency](../design/MAILBOX_SPLIT.md#service-latency)
+and [F1 service bounds](../../sw/firmware/ctrl_nvm/README.md#the-service-bound).
+Their integration must establish the proposed budget before changing defaults.
+
+### 3.5 Resource, reliability, and the rest
+| ID | Requirement | Pri | Ver |
+|----|-------------|-----|-----|
+| NFR-RES-01 | Baseline (1 core, stereo 48 k) MUST fit `xc7a100t` with headroom (target ≤ 60 % LUT) to leave room for scale-out. | M | A |
+| NFR-REL-01 | A stream fault (link flap, GM change, talker loss) MUST auto-recover without a reboot; counters MUST record the event. | M | T |
+| NFR-REL-02 | Fabric liveness monitors SHOULD detect a stalled time or media engine. Control liveness SHOULD detect a stalled selected protocol owner, including firmware, and recover or report it without a full-board reboot. Expired control-service bounds MUST NOT be hidden by continued advertising. | S | T |
+| NFR-OBS-01 | The system MUST expose fabric-gPTP status/publication counters and CSRs, AVDECC counters, MAC/RMON counters, and protocol/media liveness through the CSR contract. | S | D |
+| NFR-MAINT-01 | The entity model MUST be single-source (JSON) and shared HW/SW/test; divergence MUST be caught in CI. | M | I |
+| NFR-PORT-01 | The firmware MUST build for the shipping RV32I bare-metal profile with no OS dependency, and MUST stay buildable for a wider core should the profile grow. | S | A |
+| NFR-SEC-01 | Milan v1.2 does not mandate AEM authentication; the entity MUST advertise `AEM_AUTHENTICATION` = not-required and behave safely when unauthenticated. | M | I |
+
+---
+
+## 4. Scalability architecture
+
+### 4.1 One design, three axes
+- **Scale streams:** grow `P_SI/P_SO`; shared engines retain one context record
+  per stream and generated descriptors advertise the same shape.
+- **Scale media:** grow `P_CH` and `P_SR`; capture, packetize, map, and render
+  remain fabric paths whose resource and bandwidth costs are measured.
+- **Scale ports/entities:** a future `P_PORTS` profile may replicate a complete
+  fabric endpoint and physical interface. The current product remains one port
+  and one RV32 control hart.
+
+### 4.2 Plane partitioning (the basis for scale-out)
+| Plane | Functions | Real-time? | Product owner | Scales to |
+|-------|-----------|-----------|---------------|-----------|
+| **Control** | ADP, AECP/AEM+MVU, ACMP, MAAP, MSRP/MVRP | normative limits plus T_svc in firmware | one selected owner per function; Mark II firmware default, current shipping fabric default | static generated control contexts |
+| **Media** | AVTP talker/listener, sample transport, presentation-time, media-clock | hard (µs) | AAF/CRF and physical-audio fabric | channels and stream contexts |
+| **Time** | gPTP state machines/servo, PHC discipline, CRF generate/observe | hard (µs) | integrated fabric gPTP owner + PHC | one coherent time domain per endpoint |
+| **Boot/policy** | image verification, CSR initialization, persistence, diagnostics | not per frame | one bare-metal RV32I hart | fixed at one in release profiles |
+
+### 4.3 One control CPU, fabric capacity
+
+The single core handles selected control protocols through bounded mailbox service.
+Media and time processing remain continuous fabric paths.
+More streams grow fabric media contexts and static control-state pools.
+Firmware capacity is admitted only after worst-case service verification.
+No additional harts or software media workers supply stream capacity.
+
+```text
+  one-port endpoint:
+    RV32: boot, identity, saved state, diagnostics
+          selected ADP / ACMP / AECP / MAAP / SRP
+               | packet mailboxes and state-apply transactions
+    fabric: ingress filter, framing, timestamps, control timers
+            selected all-fabric control engines
+            AAF/CRF, physical audio, gPTP and PHC
+               | ordered fabric egress arbitration
+            one MAC / physical port
+```
+
+### 4.4 Multi-entity scale-out (`P_PORTS`)
+Any future additional port is an independent fabric endpoint slice: MAC,
+AVB_INTERFACE, distinct `entity_id`, protocol/media/time context, and generated
+entity model. The current release does not claim this profile; it is accepted
+only after the replicated source, clock, CSR, and wire evidence closes.
+
+### 4.5 Sizing (NFR-SCOUT-07)
+For every supported `P_SI/P_SO`, `P_CH`, `P_SR`, and `P_PORTS` shape, publish
+the builder estimate, open-synthesis delta, placed utilization, timing, and
+wire-rate result. The supported ceiling is the largest shape that fits and
+passes those gates; CPU count is not part of the formula.
+
+---
+
+## 5. Steps to comply with Milan v1.2 (procedure)
+
+The ordered path from the baseline endpoint to a Milan-conformant device. Each step
+cites the FRs it satisfies and the milestone in
+the completed PS-to-fabric migration plan (#259, in git history).
+
+1. **Platform up**  -  bare-metal RV32I firmware on the AX7101 with the HW
+   datapath (MAC/PHC/AVTP). *(M-A5)*
+2. **gPTP (802.1AS)**  -  enable the integrated fabric owner and verify its
+   wire/CSR/publication behavior plus ≤ 1 µs sync. Booted acceptance against
+   the Milan-validated reference peer remains #117. *(FR-CLK-01/02, NFR-TIME-01)*
+3. **Entity model**  -  select an `endstation_*.yaml` configuration. The
+   builder generates `aem_desc.bin`, `aem_desc.json`, and `aem_desc.map`; the
+   tracked bare-metal boot verifies and copies the paired image from QSPI to
+   `PP_DESC_BASE_P` before enabling the entity. Verify a byte-exact
+   `READ_DESCRIPTOR` walk. *(FR-ENUM-01/02)*
+4. **ADP**  -  advertise/discover/depart with correct `available_index`. *(FR-DISC-\*)*
+5. **AECP/AEM + MVU**  -  enumerate (READ_DESCRIPTOR byte-match), acquire/lock,
+   set/get, GET_COUNTERS, GET_MILAN_INFO. *(FR-ENUM/CTRL/MVU)*
+6. **Media clock**  -  CLOCK_DOMAIN/CLOCK_SOURCE selection; CRF talker + recovery.
+   *(FR-CLK-03/04)*
+7. **AVTP streaming**  -  AAF stereo 48 k talker + listener with presentation time.
+   *(FR-STR-\*)*
+8. **MAAP + SRP/MVRP**  -  allocate multicast, reserve Class A bandwidth, program CBS.
+   *(FR-MAAP/SRP, FR-CONN-02)*
+9. **ACMP**  -  connect/disconnect + Milan fast-connect/state-restore. *(FR-CONN-\*)*
+10. **Fault behavior**  -  stream-interruption and single-port link-loss
+    recovery (a non-redundant end station, #394), counters, IDENTIFY.
+    *(FR-STR-04, NFR-REL-01, FR-MGT-01)*
+11. **Conformance**  -  run the internal Milan conformance plan (bench suite) + `srcs/the-private-test-repo`
+    (`avdecc_l2.py`, fabric-gPTP capture/CSR oracles) and the `tsn-gen` AECP PDU
+    checks. *(all Ver=T)*
+12. **Scale**  -  re-run with every claimed fabric stream/channel/rate shape
+    and any future replicated-port profile to prove Sections 3.3/3.4.
+    *(NFR-SCUP/SCOUT)*
+
+> Features intentionally **out of scope for now** (documented, not required
+> here). The first two are recorded decisions: each is a directed limitation
+> with its revisit trigger, not an omission.
+>
+> - Seamless network **redundancy** (Milan v1.2 Section 8). This is a declared
+>   non-redundant end station: one AVB_INTERFACE on one cabled port, and
+>   `GET_MILAN_INFO` reports the REDUNDANCY flag as 0 (FR-MVU-03). Milan v1.2
+>   Sections 4.2.5 and 8.1 make redundancy optional. Section 8.3.1 requires at
+>   least two AVB-capable Ethernet ports, and the build elaborates one MAC on
+>   one selected port (`--eth-port e1|e2`). Out of scope for the October release by
+>   the [owner decision on #394](https://github.com/kebag-logic/milan-fpga/issues/394#issuecomment-5789765478)
+>   (2026-09-23); revisited with the P4/P5 PCB (#416/#417). A future
+>   `P_PORTS ≥ 2` profile (NFR-SCOUT-05) is a separate entity per port, not
+>   Section 8 redundancy.
+> - IEEE 802.1AS-2011 **delayAsymmetry** (Sections 8.3, 10.2.4.8 and 14.6.9).
+>   Not modelled, so its value is zero; the REQ-PTP-06 elaboration constants
+>   remain the only timestamp corrections, and the live UART tuner stays
+>   donor-bench-only. Excluded for v1.2 by the
+>   [owner decision on #511](https://github.com/kebag-logic/milan-fpga/issues/511#issuecomment-5789766257)
+>   (2026-09-23); revisit before a second cabled port or a claim of IEEE
+>   802.1AS management, whose Table 14-6 requires a read-write
+>   `delayAsymmetry` object (the Section 2.6 scope note and the
+>   [gPTP plane record](../design/GPTP_PLANE.md#propagation-asymmetry-is-not-modelled)).
+> - Sample rates beyond 48/96/192 kHz, and AEM authentication.
+
+---
+
+## 6. Traceability (summary)
+
+| Area | FR/NFR | Milan v1.2 | Entity model | Plan milestone |
+|------|--------|-----------|--------------|----------------|
+| Discovery | FR-DISC-\*, NFR-SCOUT-01..03 | Sections 5.6.2/5.6.3/5.6.4 | `adp`, ENTITY | Current fabric ledger: Section 2.0; split F0/F3, hooks H-ADP/H-DISC/H-ACMP |
+| Enum/Control | FR-ENUM/CTRL, NFR-LAT-02, NFR-SCOUT-01..03 | Sections 5.3/5.4 | full descriptor tree | Current fabric ledger: Section 2.0; split F5, hooks H-AECP/H-NOTIFY/H-COUNTERS |
+| MVU | FR-MVU-\* | Sections 5.4.3 and 5.4.4 | `milan_mvu` | M-B3 -- `GET_MILAN_INFO` served; the RECOMMENDED system-unique-id and media-clock-reference commands of FR-MVU-02 answer `NOT_IMPLEMENTED` by the #510 decision, P4 (#416) if the conformance lab requires them (Section 2.0) |
+| Connection | FR-CONN-\*, NFR-LAT-02, NFR-SCOUT-01..03 | Section 5.5; Table 5.26 | STREAM_\*, selected state owner | Current fabric ledger: Section 2.0; split F1/F3, H-ACMP; cold restore remains unproven |
+| MAAP/SRP | FR-MAAP/SRP, NFR-SCOUT-01..03 | Sections 4.3.1/4.2.7; Table 4.3 | STREAM_\*, admission | Current fabric ledger: Section 2.0; split F2/F4, H-MAAP/H-SRP |
+| Mailbox ingress filter | NFR-SCOUT-02/08 | 5.4.5.3; IEEE 1722.1-2021 8.2.1/Table B.1; IEEE 1722-2016 B.2.1; IEEE 802.1Q-2018 Table 10-1 | [mailbox YAML](../../sw/mailbox/mailbox.yaml), per-interface MAC and entity identity | PR #685 (#665 lane FC), before F2 to F5; H-ADP/H-ACMP/H-AECP/H-MAAP/H-SRP |
+| Time/clock | FR-CLK-\* | Section 5.7 | CLOCK_DOMAIN/SOURCE, CRF | M-A5, M-B4 |
+| Streaming | FR-STR-\* | Section 6 | STREAM_INPUT/OUTPUT | (D5) |
+| QoS | FR-QOS-\* | 802.1Q/Qav |  -  (HW) | M-A5 |
+| Scale-up | NFR-SCUP-\* |  -  | small ↔ full JSON | Section A/Section B params |
+| Scale-out | NFR-SCOUT-\*, NFR-SCUP-02/04, NFR-REL-02 | Sections 3.4.1/3.4.2 list timing clauses | fabric media / static selected-owner control contexts | Section 4; every shape, placement and hook |
+| Redundancy | FR-MVU-03, NFR-SCOUT-05 | Sections 4.2.5 and 8 | one AVB_INTERFACE | out of scope for v1.2 by the #394 decision; revisited with the P4/P5 PCB (#416/#417); Section 5 out-of-scope list |
+| gPTP asymmetry | FR-CLK-01, REQ-PTP-06 | Section 4.2.6 (IEEE 802.1AS-2011 8.3, 10.2.4.8) | no `gptp` asymmetry key | not modelled, zero, by the #511 decision; [gPTP plane record](../design/GPTP_PLANE.md#propagation-asymmetry-is-not-modelled) |
+
+## 7. Verification approach
+- **Split control:** Sections 3.4.1/3.4.2 bind every moved path.
+  Host-model, target-time and bench proofs are separate obligations.
+  The [unit-test contract](../ARCHITECTURE_HW_SW_SPLIT.md#6-verification-boundary) governs F2 to F5.
+- **HW leaf blocks:** Verilator self-checking harnesses (CBS, classifier, PTP,
+  CSR, the AAF/CRF chain). **The 13 suites that covered the deleted control
+  plane — aecp, acmp, adp, lwsrp and their siblings — are deleted with it**;
+  the processor's own verification lives in the pinned submodule, and the
+  datapath-level coverage is `tb/verilator/milan_dp`.
+- **Integration/interop:** Hive + `srcs/the-private-test-repo/controller/avdecc_l2.py`
+  (ADP and ACMP; on AECP, GET_COUNTERS serves the declared counter banks and
+  the tracked flow loads the descriptor image before entity enable), and fabric
+  gPTP wire/CSR/publication checks.
+- **PDU byte-exactness:** the AECP PDU model campaigns have a responder again.
+  `aecp_read_descriptor` is a real byte-exact test **once an image is in DRAM**;
+  the rest measure the echo's header discipline, which is the conformance floor
+  and not command coverage. The AAF campaign survives unchanged.
+- **Conformance:** the internal Milan conformance plan (bench suite). Expect
+  the AECP/AEM clause rows to fail, and record them as failing -- Section 2.0 is the
+  reason, not an excuse to re-grade them. **A conformant refusal is not a pass**:
+  a row asking what a command DOES is not answered by the fact that it replies.
+- **Scale:** repeat the suite at every claimed fabric stream/channel/rate shape
+  and at any future replicated-port profile.

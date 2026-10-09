@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T16:35:02.339" name="AllTests">
+  <testsuite name="MaapCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T16:35:02.339">
+    <testcase name="StalledOutputRetainsOrderAndOriginalExpiry" file="$PACKET/scratch/validate/mutations/baseline/tests/test_maap.cpp" line="361" status="run" result="completed" time="0." timestamp="2026-10-09T16:35:02.339" classname="MaapCore">
+      <failure message="$PACKET/scratch/validate/mutations/baseline/tests/test_maap.cpp:376&#x0A;Expected equality of these values:&#x0A;  r.frames[3][15]&#x0A;    Which is: &apos;\x3&apos; (3)&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_632419759a23739160eeb974b6316b31&#x0A;last PROBE precedes ANNOUNCE&#x0A;TSN_MESSAGE_END_8f6c8f11686670036da0de784bc23662&#x0A;&#x0A;" type=""><![CDATA[$PACKET/scratch/validate/mutations/baseline/tests/test_maap.cpp:376
+Expected equality of these values:
+  r.frames[3][15]
+    Which is: '\x3' (3)
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_632419759a23739160eeb974b6316b31
+last PROBE precedes ANNOUNCE
+TSN_MESSAGE_END_8f6c8f11686670036da0de784bc23662
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

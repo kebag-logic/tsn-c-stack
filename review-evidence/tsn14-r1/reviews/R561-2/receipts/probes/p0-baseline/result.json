@@ -1,0 +1,8 @@
+{
+  "probe": "p0-baseline",
+  "path": "src/acmp.c",
+  "old": "\ts->discovered = false;\n\tif (s->state == ACMP_PRB_W_DELAY",
+  "new": "__BASELINE__",
+  "build_rc": 0,
+  "failed": []
+}

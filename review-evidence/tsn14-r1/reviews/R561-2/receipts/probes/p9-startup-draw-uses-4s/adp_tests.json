@@ -1,0 +1,273 @@
+{
+  "tests": 23,
+  "failures": 1,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-09T16:32:08Z",
+  "time": "0.005s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "AdpCore",
+      "tests": 19,
+      "failures": 1,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-09T16:32:08Z",
+      "time": "0.005s",
+      "testsuite": [
+        {
+          "name": "A0toA2Schedule",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 535,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A3toA5DiscoverAndDiscard",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 539,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A6toA8DeferredSends",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 543,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A9DrawKinds",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 547,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp:477\nValue of: in_range\n  Actual: false\nExpected: true\nA9 every startup draw is 0..2 s and every other draw 0..4 s\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "A10toA14DepartingIndex",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 551,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A15OwedDepartingAcrossARestart",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 555,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A16SecondShutdownQueuesItsOwn",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 559,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A17RoomBackBeforeAPoll",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 563,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A18LinkLossKeepsTheOwedDeparting",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 567,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A19IgnoredInputsKeepTheOwedAvailable",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 571,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A20LinkLossDropsTheOwedAvailable",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 575,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A21DepartingCapacity",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 579,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0.004s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A22GeneratorNeverStuckAtZero",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 583,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A23RepeatedEnableOrDisableChangesNothing",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 585,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "A24OtherEtherTypeOrSubtypeDiscarded",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 587,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "LinkLevelsAndDisabledInputs",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 590,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "EntityFieldsUseIndependentCounts",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 612,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "AdvertisementFieldsMatchCaller",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 628,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        },
+        {
+          "name": "MockedPortOrder",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 671,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AdpCore"
+        }
+      ]
+    },
+    {
+      "name": "AllInputs\/AdpInputControl",
+      "tests": 4,
+      "failures": 0,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-09T16:32:08Z",
+      "time": "0s",
+      "testsuite": [
+        {
+          "name": "InheritedDiscoveryAcceptance\/0",
+          "value_param": "0",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 702,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AllInputs\/AdpInputControl"
+        },
+        {
+          "name": "InheritedDiscoveryAcceptance\/1",
+          "value_param": "1",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 702,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AllInputs\/AdpInputControl"
+        },
+        {
+          "name": "InheritedDiscoveryAcceptance\/2",
+          "value_param": "2",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 702,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AllInputs\/AdpInputControl"
+        },
+        {
+          "name": "InheritedDiscoveryAcceptance\/3",
+          "value_param": "3",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p9-startup-draw-uses-4s\/src-tree\/tests\/test_adp.cpp",
+          "line": 702,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:08Z",
+          "time": "0s",
+          "classname": "AllInputs\/AdpInputControl"
+        }
+      ]
+    }
+  ]
+}

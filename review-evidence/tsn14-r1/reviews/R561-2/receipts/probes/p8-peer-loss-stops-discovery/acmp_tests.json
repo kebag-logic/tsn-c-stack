@@ -1,0 +1,766 @@
+{
+  "tests": 69,
+  "failures": 7,
+  "disabled": 0,
+  "errors": 0,
+  "timestamp": "2026-10-09T16:32:09Z",
+  "time": "0.001s",
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "AcmpCore",
+      "tests": 69,
+      "failures": 7,
+      "disabled": 0,
+      "errors": 0,
+      "timestamp": "2026-10-09T16:32:09Z",
+      "time": "0.001s",
+      "testsuite": [
+        {
+          "name": "A0InitRefusesWhatTheStaticSizesCannotHold",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 209,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A0EverySinkStartsUnboundAndNothingIsCalled",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 248,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A1BindFromUnboundRespondsThenProbes",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 265,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A1BindWithoutStreamingWaitBindsStarted",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 315,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A2GetRxStateInEveryState",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 324,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 357,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A2UnknownSinkIsAnsweredListenerUnknownId",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 369,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A3UnbindInEveryState",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 392,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A4LockedByAnotherControllerRefusesBindAndUnbind",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 428,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A4TheLockingControllerPassesAndGetRxStateIsNotLocked",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 460,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A5RebindTheSameSourceUpdatesAndExits",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 473,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A6BindAnotherSourceRestartsTheSink",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 500,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A6TheSameTalkerAnotherSourceIsANewBinding",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 530,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A7ResponsesKeyOnTheListenerUniqueId",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 542,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A7EachGuardTermIsChecked",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 554,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A7TheGuardReadsTheSentProbeNotTheBinding",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 576,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A7ResponsesOutsideProbingAreIgnored",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 587,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A8SuccessSettles",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 612,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A9FailureWaitsForTheRetry",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 635,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A10NoResponseSendsTheDuplicateThenGivesUp",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 650,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A11RetryWaitsForTheTalkerOrDelays",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 671,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A12DelaySendsANewProbe",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 691,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:696\nExpected equality of these values:\n  fk.sent.size()\n    Which is: 0\n  1u\n    Which is: 1\nA12 TMR_DELAY sends the probe (5.5.3.5.10)\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "A13NoTalkerAttributeReprobes",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 706,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A14RegisteredSettlesTheReservation",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 728,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A15UnregisteredReprobes",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 753,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "KindChangesOnlyTheSettledView",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 786,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A16OneCounterForEveryNewProbe",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 817,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 831,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A18AZeroDelayProbesInTheSameExpiry",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 859,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A18TheSeedIsTakenAtTheFirstDraw",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 883,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:885\nExpected equality of these values:\n  fk.count(Call::SEED)\n    Which is: 0\n  1u\n    Which is: 1\nA18 the seed port is read at the first draw\n",
+              "type": ""
+            },
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:890\nExpected equality of these values:\n  fk.count(Call::SEED)\n    Which is: 0\n  1u\n    Which is: 1\nA18 and never again\n",
+              "type": ""
+            },
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:894\nValue of: a.rng != 0u && a.sinks[0].timer == ACMP_TIMER_DELAY\n  Actual: false\nExpected: true\nA18 a seed that cancels the state to 0 leaves it 1: xorshift never leaves 0\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "A20ProbeTxIsAnsweredFromTheSource",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 901,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A20DisconnectGetTxStateAndGetTxConnection",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 954,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A21MessagesNotForThisEntityAreIgnored",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1018,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A21MalformedFramesAreCounted",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1039,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A19AResponseWithoutRoomIsOwedAndItsChangeWaits",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1059,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A19NothingPassesAnOwedFrame",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1083,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A19AFullQueueDropsTheCommandBeforeItActs",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1097,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A19AProbeWithoutRoomIsLostAndRecovered",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1114,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:1121\nValue of: a.probes_lost == 1u && a.sinks[0].state == ACMP_PRB_W_RESP && a.sinks[0].timer == ACMP_TIMER_NO_RESP\n  Actual: false\nExpected: true\nA19 a probe the full queue cannot take is lost and counted; TMR_NO_RESP will send its duplicate\n",
+              "type": ""
+            },
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:1129\nValue of: fk.sent.size() == 1u && last().msg == spec::MSG_PROBE_TX_COMMAND && last().seq == a.sinks[0].probe_seq\n  Actual: false\nExpected: true\nA19 and it does\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "A19TwoOwedResponsesForOneSinkReleaseTogether",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1134,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A22AvailableDiscoversWhenTheGrandmasterMatches",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1152,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A22DiscoveredStartsTheProbeFromPrbWAvail",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1183,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A22DiscoveredStateCells",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1198,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A22DepartingAndAging",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1255,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "DepartingRetainsBindingAndReprobes",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1282,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:174\nValue of: a.sinks[0].discovered && a.sinks[0].state == ACMP_PRB_W_DELAY && a.sinks[0].timer == ACMP_TIMER_DELAY\n  Actual: false\nExpected: true\nreturning talker remains discoverable and starts a fresh probe delay\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "AdpTimeoutRetainsBindingAndReprobes",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1287,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:174\nValue of: a.sinks[0].discovered && a.sinks[0].state == ACMP_PRB_W_DELAY && a.sinks[0].timer == ACMP_TIMER_DELAY\n  Actual: false\nExpected: true\nreturning talker remains discoverable and starts a fresh probe delay\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "A22OnlyBoundSinksOfThatTalkerOnThatInterface",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1292,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A22OtherAdpFramesAreIgnored",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1315,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A23EveryEntryRefusesACallFromInsideAPort",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1335,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A23EveryPortIsGuarded",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1371,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A24ARestoredBindingFastConnects",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1396,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A24UnboundRecordsRefusalsAndRollback",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1416,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A24StartedIsSavedAndReported",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1445,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A24TheRecordIsTheProcessorsPayloadOneFlagAtATime",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1476,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A25OnlyTable522ItemsAreReported",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1510,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A26AnotherAvtpVersionIsDiscardedBeforeItIsRead",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1537,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1588,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A27AStalledDuplicateGetsItsWholeInterval",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1625,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1669,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1723,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A28TheEarliestDeadlineIsChosenAcrossTheWrap",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1788,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A29TheAdmitPortFollowsEachSinksBoundTalker",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1814,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A29RestoredBindingsAreAdmittedWhenTheTransportOpens",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1848,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1882,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1918,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1951,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "DepartingStopsEveryProbingTimer",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1973,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:1986\nExpected equality of these values:\n  fk.count(Call::CHANGED)\n    Which is: 0\n  1u\n    Which is: 1\ndeparting publishes the passive probing status\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "CommandPortBudgets",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 1991,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        },
+        {
+          "name": "TimerPortBudgets",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 2010,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore",
+          "failures": [
+            {
+              "failure": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp:2023\nExpected equality of these values:\n  fk.count(Call::NOW)\n    Which is: 0\n  clocks\n    Which is: 2\ntimer clock budget for state PRB_W_DELAY\n",
+              "type": ""
+            }
+          ]
+        },
+        {
+          "name": "DiscoveryPortBudgets",
+          "file": "\/data\/milan\/reviews\/tsn14-r561-2-packet\/scratch\/probes\/p8-peer-loss-stops-discovery\/src-tree\/tests\/test_acmp.cpp",
+          "line": 2029,
+          "status": "RUN",
+          "result": "COMPLETED",
+          "timestamp": "2026-10-09T16:32:09Z",
+          "time": "0s",
+          "classname": "AcmpCore"
+        }
+      ]
+    }
+  ]
+}

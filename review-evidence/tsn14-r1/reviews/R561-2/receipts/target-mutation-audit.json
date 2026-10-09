@@ -1,0 +1,57 @@
+[
+  {
+    "plant": "draw-kinds-merged",
+    "status": "CAUGHT",
+    "rc": 1,
+    "kills": [
+      {
+        "test": "AdpCore.A9DrawKinds",
+        "needle": "A9 every startup draw",
+        "observed": true
+      }
+    ],
+    "xml": [
+      "mutations/draw-kinds-merged/adp.xml"
+    ]
+  },
+  {
+    "plant": "acmp-peer-loss-clears-binding",
+    "status": "CAUGHT",
+    "rc": 1,
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller",
+        "observed": true
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "peer loss retains the binding and its talker, stream and controller",
+        "observed": true
+      }
+    ],
+    "xml": [
+      "mutations/acmp-peer-loss-clears-binding/acmp.xml"
+    ]
+  },
+  {
+    "plant": "acmp-peer-loss-stops-discovery",
+    "status": "CAUGHT",
+    "rc": 1,
+    "kills": [
+      {
+        "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay",
+        "observed": true
+      },
+      {
+        "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+        "needle": "returning talker remains discoverable and starts a fresh probe delay",
+        "observed": true
+      }
+    ],
+    "xml": [
+      "mutations/acmp-peer-loss-stops-discovery/acmp.xml"
+    ]
+  }
+]
