@@ -135,6 +135,7 @@ struct Rig {
 
 // Both original inline-expiry probes also prove the corresponding valid,
 // deferred expiry still advances the machine after the violating call.
+// REQ: PORT-01
 TEST(AdpReentry, AdvertiseInlineExpiry) {
     Rig r;
     adp_set_enable(&r.a, true);
@@ -162,6 +163,7 @@ TEST(AdpReentry, AdvertiseInlineExpiry) {
     EXPECT_TRUE(r.running);
 }
 
+// REQ: PORT-01
 TEST(AdpReentry, DelayInlineExpiryOnGmChange) {
     Rig r;
     adp_set_enable(&r.a, true);
@@ -189,6 +191,7 @@ TEST(AdpReentry, DelayInlineExpiryOnGmChange) {
 
 class AdpPortEntry : public ::testing::TestWithParam<std::tuple<Port, Entry, bool>> {};
 
+// REQ: PORT-01
 TEST_P(AdpPortEntry, RefusesBeforeTouchingState) {
     Rig r;
     std::tie(r.selected, r.entry, r.cross_instance) = GetParam();

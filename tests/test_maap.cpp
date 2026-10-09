@@ -91,6 +91,7 @@ struct CoreRig {
     void receive(const Frame& f, std::size_t len = 60) { maap_rx(&core, f.data(), len); }
 };
 
+// REQ: MAAP-02
 TEST(MaapCore, InitialAndThreeRetransmissions) {
     CoreRig r;
     EXPECT_EQ(r.core.state, MAAP_INITIAL);
@@ -113,6 +114,7 @@ TEST(MaapCore, InitialAndThreeRetransmissions) {
     EXPECT_FALSE(maap_poll(&r.core));
 }
 
+// REQ: MAAP-02
 TEST(MaapCore, ConstantsStrictTimersAndSeed) {
     EXPECT_EQ(MAAP_PROBE_BASE_MS, 500u); EXPECT_EQ(MAAP_PROBE_VARIATION_MS, 100u);
     EXPECT_EQ(MAAP_ANNOUNCE_BASE_MS, 30000u); EXPECT_EQ(MAAP_ANNOUNCE_VARIATION_MS, 2000u);
@@ -134,6 +136,7 @@ TEST(MaapCore, ConstantsStrictTimersAndSeed) {
 }
 
 class MaapCell : public ::testing::TestWithParam<int> {};
+// REQ: MAAP-03
 TEST_P(MaapCell, TableB7) {
     int key = GetParam();
     const unsigned state = key / 6, type = key % 3 + 1;
@@ -164,6 +167,7 @@ TEST_P(MaapCell, TableB7) {
 }
 INSTANTIATE_TEST_SUITE_P(AllStates, MaapCell, ::testing::Range(0, 18));
 
+// REQ: MAAP-03
 TEST(MaapCore, ReverseOctetPriority) {
     CoreRig r; r.begin();
     r.receive(pdu(1, kBase, 8, 0x040000000040ULL));
@@ -173,6 +177,7 @@ TEST(MaapCore, ReverseOctetPriority) {
 }
 
 // R528-1-F3: each octet must decide after all later octets tie.
+// REQ: MAAP-03
 TEST(MaapCore, PriorityAfterTiedOctets) {
     constexpr std::uint64_t local = 0x024040404080ULL;
     for (unsigned octet = 0; octet < 6; ++octet) {
@@ -189,6 +194,7 @@ TEST(MaapCore, PriorityAfterTiedOctets) {
     }
 }
 
+// REQ: MAAP-02
 TEST(MaapCore, RestartDrawsNewRange) {
     CoreRig r; r.acquire();
     r.receive(pdu(3));
@@ -201,6 +207,7 @@ TEST(MaapCore, RestartDrawsNewRange) {
     EXPECT_EQ(r.frames.back()[15], 1u);
 }
 
+// REQ: MAAP-02
 TEST(MaapCore, UniformDrawRejectsIncompleteBucket) {
     CoreRig r;
     // Inverse xorshift seed: the first word is UINT32_MAX, outside the
@@ -211,6 +218,7 @@ TEST(MaapCore, UniformDrawRejectsIncompleteBucket) {
     EXPECT_EQ(r.core.last_delay_ms, 587u) << "draw uses the next complete-bucket word";
 }
 
+// REQ: MAAP-03
 TEST(MaapCore, DefendEchoAndIntersection) {
     CoreRig r; r.acquire();
     for (const auto& range : std::array<std::array<unsigned, 3>, 4>{{
@@ -223,6 +231,7 @@ TEST(MaapCore, DefendEchoAndIntersection) {
     }
 }
 
+// REQ: MAAP-03
 TEST(MaapCore, DisjointAdjacentZeroAndDefendRange) {
     CoreRig r; r.acquire(); const auto n = r.frames.size();
     r.receive(pdu(1, kBase + 8, 1)); r.receive(pdu(1, kBase - 8, 8));
@@ -234,6 +243,7 @@ TEST(MaapCore, DisjointAdjacentZeroAndDefendRange) {
     EXPECT_EQ(r.core.conflicts, 1u) << "DEFEND conflict wins over echoed request";
 }
 
+// REQ: MAAP-01
 TEST(MaapCore, MalformedAndVersionCompatibility) {
     CoreRig r; r.begin();
     std::vector<Frame> bad;
@@ -260,6 +270,7 @@ TEST(MaapCore, MalformedAndVersionCompatibility) {
     extended.receive(f); EXPECT_EQ(extended.core.conflicts, 1u) << "unknown extension ignored";
 }
 
+// REQ: MAAP-02
 TEST(MaapCore, InitAndPreferredRangeBounds) {
     CoreRig r;
     for (auto mac : {0ULL, 0x1000000000000ULL, 0x010000000001ULL})
@@ -282,6 +293,7 @@ TEST(MaapCore, InitAndPreferredRangeBounds) {
     EXPECT_LE(random.core.base + 8, MAAP_POOL_BASE + MAAP_POOL_SIZE);
 }
 
+// REQ: MAAP-04
 TEST(MaapCore, ReleaseLossAndRetry) {
     CoreRig claimed; claimed.acquire();
     maap_port_operational(&claimed.core, true);
@@ -305,6 +317,7 @@ TEST(MaapCore, ReleaseLossAndRetry) {
 }
 
 // R528-1-F1: Table B.7 note a survives the normal link-down boot order.
+// REQ: MAAP-02
 TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
     CoreRig r;
     maap_port_operational(&r.core, false);
@@ -325,6 +338,7 @@ TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
 }
 
 // R528-2-S1: the documented one-use preference is consumed before a link bounce.
+// REQ: MAAP-02
 TEST(MaapCore, LinkBounceDrawsAfterSuppliedRange) {
     CoreRig r;
     maap_port_operational(&r.core, false);
@@ -347,6 +361,7 @@ TEST(MaapCore, LinkBounceDrawsAfterSuppliedRange) {
     EXPECT_EQ(r.frames.back(), pdu(1, r.core.base, 8, kMac));
 }
 
+// REQ: MAAP-04
 TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
     CoreRig r; r.room = false; r.begin();
     EXPECT_EQ(r.core.queued, 1u);
@@ -365,6 +380,7 @@ TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
     EXPECT_EQ(r.frames[3][15], 1u); EXPECT_EQ(r.frames[4][15], 3u) << "last PROBE precedes ANNOUNCE";
 }
 
+// REQ: MAAP-04
 TEST(MaapCore, QueueBoundAndWithdrawal) {
     CoreRig r; r.acquire(); r.room = false;
     for (unsigned k = 0; k < MAAP_QUEUE_FRAMES + 1; ++k) r.receive(pdu(1));
@@ -378,6 +394,7 @@ TEST(MaapCore, QueueBoundAndWithdrawal) {
     loss.room = true; maap_poll(&loss.core); EXPECT_EQ(loss.frames.back()[15], 1u);
 }
 
+// REQ: PORT-01
 TEST(MaapCore, ReentrantPortsAreCountedAndIgnored) {
     CoreRig r; r.recurse = true; r.begin();
     EXPECT_EQ(r.core.reentries, 6u) << "all input guards fire";

@@ -4,6 +4,7 @@
 // ADP core cases over fake ports.
 
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <cstddef>
 #include <cstdint>
@@ -550,44 +551,135 @@ void core_discard_kinds(void) {
     EXPECT_EQ(a.state, ADP_STATE_WAITING) << "A24 and leaves WAITING alone";
 }
 
+// REQ: ADP-02, PORT-01
 TEST(AdpCore, A0toA2Schedule) {
     core_schedule();
 }
+// REQ: ADP-01, ADP-02
 TEST(AdpCore, A3toA5DiscoverAndDiscard) {
     core_discard();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A6toA8DeferredSends) {
     core_deferred();
 }
+// REQ: ADP-02, PORT-01
 TEST(AdpCore, A9DrawKinds) {
     core_draws();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A10toA14DepartingIndex) {
     core_departing_index();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A15OwedDepartingAcrossARestart) {
     core_owed_departing();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A16SecondShutdownQueuesItsOwn) {
     core_owed_second_shutdown();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A17RoomBackBeforeAPoll) {
     core_owed_room_first();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A18LinkLossKeepsTheOwedDeparting) {
     core_owed_link_loss();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A19IgnoredInputsKeepTheOwedAvailable) {
     core_owed_inputs_ignored();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A20LinkLossDropsTheOwedAvailable) {
     core_owed_link_loss_drops();
 }
+// REQ: ADP-03, ADP-02
 TEST(AdpCore, A21DepartingCapacity) {
     core_departing_capacity();
 }
+// REQ: ADP-02, PORT-01
 TEST(AdpCore, A22GeneratorNeverStuckAtZero) { core_rng_never_zero(); }
+// REQ: ADP-02, PORT-01
 TEST(AdpCore, A23RepeatedEnableOrDisableChangesNothing) { core_enable_idempotent(); }
+// REQ: ADP-01, ADP-02
 TEST(AdpCore, A24OtherEtherTypeOrSubtypeDiscarded) { core_discard_kinds(); }
+
+
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, LinkLevelsAndDisabledInputs) {
+    adp a;
+    uint8_t f[ADP_FRAME_BYTES];
+    fresh(&a, true);
+    discover(f, ADP_MSG_ENTITY_DISCOVER, 0);
+    adp_rx(&a, f, sizeof f);
+    adp_gm_change(&a);
+    EXPECT_EQ(fk.sends, 0u);
+    EXPECT_EQ(fk.starts, 0u);
+    adp_set_enable(&a, true);
+    const auto starts = fk.starts;
+    adp_link_change(&a, true);
+    EXPECT_EQ(fk.starts, starts) << "duplicate link level keeps the timer";
+    adp_link_change(&a, false);
+    EXPECT_EQ(a.state, ADP_STATE_DOWN);
+    adp_rx(&a, f, sizeof f);
+    EXPECT_EQ(a.state, ADP_STATE_DOWN) << "DOWN ignores discovery";
+    adp_set_enable(&a, false);
+    EXPECT_EQ(fk.sends, 0u) << "shutdown in DOWN sends nothing";
+}
+
+// REQ: ADP-01, ADP-02
+TEST(AdpCore, EntityFieldsUseIndependentCounts) {
+    auto e = entity;
+    e.talker_stream_sources = 7;
+    e.listener_stream_sinks = 3;
+    adp a;
+    fresh(&a, true);
+    adp_init(&a, &e, a.ports, 2, 0x1234);
+    uint8_t f[ADP_FRAME_BYTES];
+    adp_build(&a, 0, 0x87654321, f);
+    EXPECT_EQ(wire_be16(f + 38), 7u) << "talker count is independent of listener count";
+    EXPECT_EQ(wire_be16(f + 42), 3u);
+    EXPECT_EQ(wire_be16(f + 64), 0x1234u);
+    EXPECT_EQ(wire_be16(f + 68), 2u);
+}
+
+class AdpPortMock {
+ public:
+    MOCK_METHOD(bool, Send, (const uint8_t*, size_t));
+    MOCK_METHOD(void, Start, (uint32_t));
+    MOCK_METHOD(void, Stop, ());
+    MOCK_METHOD(void, Gptp, (uint64_t*, uint8_t*));
+    MOCK_METHOD(bool, Link, ());
+    MOCK_METHOD(uint32_t, Seed, ());
+};
+
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, MockedPortOrder) {
+    using namespace testing;
+    StrictMock<AdpPortMock> mock;
+    adp_ports ports = {
+        &mock,
+        [](void* c, unsigned, const uint8_t* f, size_t n) { return static_cast<AdpPortMock*>(c)->Send(f, n); },
+        [](void* c, unsigned, uint32_t ms) { static_cast<AdpPortMock*>(c)->Start(ms); },
+        [](void* c, unsigned) { static_cast<AdpPortMock*>(c)->Stop(); },
+        [](void* c, unsigned, uint64_t* gm, uint8_t* d) { static_cast<AdpPortMock*>(c)->Gptp(gm, d); },
+        [](void* c, unsigned) { return static_cast<AdpPortMock*>(c)->Link(); },
+        [](void* c) { return static_cast<AdpPortMock*>(c)->Seed(); }
+    };
+    adp a;
+    adp_init(&a, &entity, &ports, 0, 0);
+    InSequence sequence;
+    EXPECT_CALL(mock, Seed()).WillOnce(Return(1u));
+    EXPECT_CALL(mock, Link()).WillOnce(Return(true));
+    EXPECT_CALL(mock, Start(Le(2000u)));
+    adp_set_enable(&a, true);
+    EXPECT_CALL(mock, Gptp(_, _)).WillOnce(DoAll(SetArgPointee<0>(1u), SetArgPointee<1>(0u)));
+    EXPECT_CALL(mock, Send(_, 82u)).WillOnce(Return(true));
+    EXPECT_CALL(mock, Start(5000u));
+    adp_timer_expired(&a);
+    EXPECT_EQ(a.state, ADP_STATE_WAITING);
+}
 
 } // namespace

@@ -185,6 +185,7 @@ constexpr acmp_sink_state kStates[] = {ACMP_UNBOUND,     ACMP_PRB_W_AVAIL,    AC
 
 // ---- A0: the configuration ----------------------------------------------------------
 
+// REQ: ACMP-01
 TEST_F(AcmpCore, A0InitRefusesWhatTheStaticSizesCannotHold) {
     // each configuration below is wrong in one way only, so no other check refuses it
     acmp b{};
@@ -224,6 +225,7 @@ TEST_F(AcmpCore, A0InitRefusesWhatTheStaticSizesCannotHold) {
     EXPECT_FALSE(acmp_init(&b, &bad, &kPorts, &kEnv)) << "A0 a source on an interface the entity lacks is refused";
 }
 
+// REQ: ACMP-01
 TEST_F(AcmpCore, A0EverySinkStartsUnboundAndNothingIsCalled) {
     for (unsigned k = 0; k < cfg.n_sinks; ++k) {
         acmp_sink_view v = view(k);
@@ -240,6 +242,7 @@ TEST_F(AcmpCore, A0EverySinkStartsUnboundAndNothingIsCalled) {
 
 // ---- A1: BIND_RX from UNBOUND (5.5.3.5.3) ------------------------------------------
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A1BindFromUnboundRespondsThenProbes) {
     rx(command(spec::MSG_BIND_RX_COMMAND, 0, kTkA, 1, kCtl1, spec::FLAG_STREAMING_WAIT | spec::FLAG_FAST_CONNECT, 0x4100));
     ASSERT_EQ(fk.sent.size(), 2u) << "A1 BIND_RX sends two frames: the response and the probe";
@@ -289,6 +292,7 @@ TEST_F(AcmpCore, A1BindFromUnboundRespondsThenProbes) {
         << "A1 the change is reported after the response was taken (#653)";
 }
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A1BindWithoutStreamingWaitBindsStarted) {
     bind(0, kTkA, 1, kCtl1, false);
     EXPECT_TRUE(a.sinks[0].started && !a.sinks[0].binding.streaming_wait && read(fk.sent[0].bytes.data()).flags == 0u)
@@ -297,6 +301,7 @@ TEST_F(AcmpCore, A1BindWithoutStreamingWaitBindsStarted) {
 
 // ---- A2: GET_RX_STATE (Tables 5.34, 5.37, 5.38, 5.39) ------------------------------
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A2GetRxStateInEveryState) {
     for (acmp_sink_state st : kStates) {
         SetUp();
@@ -329,6 +334,7 @@ TEST_F(AcmpCore, A2GetRxStateInEveryState) {
     }
 }
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A2GetRxStateReportsStreamingWaitAndRegisteringFailed) {
     bind(0, kTkA, 1, kCtl1, true);
     rx(probe_answer(0));
@@ -340,6 +346,7 @@ TEST_F(AcmpCore, A2GetRxStateReportsStreamingWaitAndRegisteringFailed) {
     EXPECT_TRUE(view(0).registering_failed && view(0).talker_registered) << "A2 and the view says so (5.3.8.8)";
 }
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A2UnknownSinkIsAnsweredListenerUnknownId) {
     for (std::uint8_t msg : {spec::MSG_BIND_RX_COMMAND, spec::MSG_UNBIND_RX_COMMAND, spec::MSG_GET_RX_STATE_COMMAND}) {
         fk.clear();
@@ -362,6 +369,7 @@ TEST_F(AcmpCore, A2UnknownSinkIsAnsweredListenerUnknownId) {
 
 // ---- A3: UNBIND_RX (Table 5.36) ----------------------------------------------------
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A3UnbindInEveryState) {
     for (acmp_sink_state st : kStates) {
         SetUp();
@@ -397,6 +405,7 @@ TEST_F(AcmpCore, A3UnbindInEveryState) {
 
 // ---- A4: the lock (5.5.2.4, 5.5.2.5) -----------------------------------------------
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A4LockedByAnotherControllerRefusesBindAndUnbind) {
     for (acmp_sink_state st : {ACMP_UNBOUND, ACMP_PRB_W_RESP, ACMP_SETTLED_RSV_OK}) {
         for (std::uint8_t msg : {spec::MSG_BIND_RX_COMMAND, spec::MSG_UNBIND_RX_COMMAND}) {
@@ -428,6 +437,7 @@ TEST_F(AcmpCore, A4LockedByAnotherControllerRefusesBindAndUnbind) {
     EXPECT_EQ(a.refused_locked, 1u) << "A4 each refusal is counted";
 }
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A4TheLockingControllerPassesAndGetRxStateIsNotLocked) {
     fk.locked = true;
     fk.holder = kCtl1;
@@ -442,6 +452,7 @@ TEST_F(AcmpCore, A4TheLockingControllerPassesAndGetRxStateIsNotLocked) {
 
 // ---- A5: re-bind of the same source (step 2 of every bound state's RCV_BIND_RX_CMD) --
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A5RebindTheSameSourceUpdatesAndExits) {
     for (acmp_sink_state st : kStates) {
         if (st == ACMP_UNBOUND) {
@@ -470,6 +481,7 @@ TEST_F(AcmpCore, A5RebindTheSameSourceUpdatesAndExits) {
 
 // ---- A6: BIND_RX of another source in every bound state ------------------------------
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A6BindAnotherSourceRestartsTheSink) {
     for (acmp_sink_state st : kStates) {
         if (st == ACMP_UNBOUND) {
@@ -499,6 +511,7 @@ TEST_F(AcmpCore, A6BindAnotherSourceRestartsTheSink) {
     }
 }
 
+// REQ: ACMP-03, ACMP-02
 TEST_F(AcmpCore, A6TheSameTalkerAnotherSourceIsANewBinding) {
     bind(0, kTkA, 1);
     fk.clear();
@@ -510,6 +523,7 @@ TEST_F(AcmpCore, A6TheSameTalkerAnotherSourceIsANewBinding) {
 
 // ---- A7: probe responses route on the consumer's unique ID (5.5.3.1, 5.5.3.5.18) ----
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A7ResponsesKeyOnTheListenerUniqueId) {
     bind(0, kTkA, 1);
     bind(1, kTkA, 1);
@@ -521,6 +535,7 @@ TEST_F(AcmpCore, A7ResponsesKeyOnTheListenerUniqueId) {
     EXPECT_EQ(a.sinks[0].state, ACMP_SETTLED_NO_RSV) << "A7 and sink 0 settles on its own response";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A7EachGuardTermIsChecked) {
     bind(0);
     Pdu good = probe_answer(0);
@@ -542,6 +557,7 @@ TEST_F(AcmpCore, A7EachGuardTermIsChecked) {
     EXPECT_EQ(a.sinks[0].state, ACMP_SETTLED_NO_RSV) << "A7 and the right one settles, so no guard refuses everything";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A7TheGuardReadsTheSentProbeNotTheBinding) {
     bind(0, kTkA, 1, kCtl1);
     Pdu answer = probe_answer(0);
@@ -552,6 +568,7 @@ TEST_F(AcmpCore, A7TheGuardReadsTheSentProbeNotTheBinding) {
         << "A7 the answer to the probe sent before a re-bind still matches the probe that was sent";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A7ResponsesOutsideProbingAreIgnored) {
     for (acmp_sink_state st : kStates) {
         if (st == ACMP_PRB_W_RESP || st == ACMP_PRB_W_RESP2) {
@@ -576,6 +593,7 @@ TEST_F(AcmpCore, A7ResponsesOutsideProbingAreIgnored) {
 
 // ---- A8, A9: the probe answered (5.5.3.5.18, 5.5.3.5.25) --------------------------------
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A8SuccessSettles) {
     for (acmp_sink_state st : {ACMP_PRB_W_RESP, ACMP_PRB_W_RESP2}) {
         SetUp();
@@ -598,6 +616,7 @@ TEST_F(AcmpCore, A8SuccessSettles) {
     }
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A9FailureWaitsForTheRetry) {
     for (acmp_sink_state st : {ACMP_PRB_W_RESP, ACMP_PRB_W_RESP2}) {
         SetUp();
@@ -614,6 +633,7 @@ TEST_F(AcmpCore, A9FailureWaitsForTheRetry) {
 
 // ---- A10 to A13: the timers --------------------------------------------------------------
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A10NoResponseSendsTheDuplicateThenGivesUp) {
     bind(0);
     auto first = fk.sent.back();
@@ -634,6 +654,7 @@ TEST_F(AcmpCore, A10NoResponseSendsTheDuplicateThenGivesUp) {
         << "A10 the second: no frame, LISTENER_TALKER_TIMEOUT, TMR_RETRY 4 s (5.5.3.5.23)";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A11RetryWaitsForTheTalkerOrDelays) {
     to_state(0, ACMP_PRB_W_RETRY);
     fire(0);
@@ -653,6 +674,7 @@ TEST_F(AcmpCore, A11RetryWaitsForTheTalkerOrDelays) {
         << "A11 and the ACMP status stays: step 2 sets none";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A12DelaySendsANewProbe) {
     to_state(0, ACMP_PRB_W_DELAY);
     std::uint16_t seq = a.sequence_id;
@@ -667,6 +689,7 @@ TEST_F(AcmpCore, A12DelaySendsANewProbe) {
         << "A12 PRB_W_RESP, TMR_NO_RESP 200 ms";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A13NoTalkerAttributeReprobes) {
     to_state(0, ACMP_SETTLED_NO_RSV);
     fk.clear();
@@ -690,6 +713,7 @@ TEST_F(AcmpCore, A13NoTalkerAttributeReprobes) {
 
 // ---- A14, A15: the SRP side --------------------------------------------------------------
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A14RegisteredSettlesTheReservation) {
     to_state(0, ACMP_SETTLED_NO_RSV);
     fk.clear();
@@ -714,6 +738,7 @@ TEST_F(AcmpCore, A14RegisteredSettlesTheReservation) {
     EXPECT_EQ(a.impossible, 2u) << "A14 as is one for a sink the entity lacks";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A15UnregisteredReprobes) {
     to_state(0, ACMP_SETTLED_RSV_OK);
     fk.clear();
@@ -746,6 +771,7 @@ TEST_F(AcmpCore, A15UnregisteredReprobes) {
     EXPECT_EQ(a.impossible, 2u) << "A15 as is one for a sink the entity lacks";
 }
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, KindChangesOnlyTheSettledView) {
     to_state(0, ACMP_SETTLED_RSV_OK);
     for (bool failed : {true, false}) {
@@ -776,6 +802,7 @@ TEST_F(AcmpCore, KindChangesOnlyTheSettledView) {
 
 // ---- A16: sequence IDs (IEEE 1722.1-2021 8.2.1.15) ----------------------------------------
 
+// REQ: ACMP-04
 TEST_F(AcmpCore, A16OneCounterForEveryNewProbe) {
     bind(0);
     bind(1, kTkB, 2);
@@ -791,6 +818,7 @@ TEST_F(AcmpCore, A16OneCounterForEveryNewProbe) {
 
 // ---- A17, A18: one timer per interface, the earliest deadline -------------------------------
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A17EachInterfaceTimerHoldsItsEarliestDeadline) {
     bind(0);                                             // TMR_NO_RESP at now + 200 on interface 0
     bind(2);                                             // the same deadline on interface 1
@@ -818,6 +846,7 @@ TEST_F(AcmpCore, A17EachInterfaceTimerHoldsItsEarliestDeadline) {
     EXPECT_EQ(a.impossible, 1u) << "A17 an expiry of an interface the entity lacks is counted";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A18AZeroDelayProbesInTheSameExpiry) {
     bind(0);
     adp(Adp{});
@@ -841,6 +870,7 @@ TEST_F(AcmpCore, A18AZeroDelayProbesInTheSameExpiry) {
         << "A18 TMR_RETRY drawing 0 ms sends its probe in the same expiry";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A18TheSeedIsTakenAtTheFirstDraw) {
     to_state(0, ACMP_PRB_W_DELAY);
     EXPECT_EQ(fk.count(Call::SEED), 1u) << "A18 the seed port is read at the first draw";
@@ -858,6 +888,7 @@ TEST_F(AcmpCore, A18TheSeedIsTakenAtTheFirstDraw) {
 
 // ---- A20: the talker (5.5.4) ----------------------------------------------------------------
 
+// REQ: ACMP-08
 TEST_F(AcmpCore, A20ProbeTxIsAnsweredFromTheSource) {
     Pdu cmd;
     cmd.msg = spec::MSG_PROBE_TX_COMMAND;
@@ -910,6 +941,7 @@ TEST_F(AcmpCore, A20ProbeTxIsAnsweredFromTheSource) {
         << "A20 on its own interface source 1 is answered there";
 }
 
+// REQ: ACMP-08
 TEST_F(AcmpCore, A20DisconnectGetTxStateAndGetTxConnection) {
     Pdu cmd;
     cmd.controller = kCtl1;
@@ -975,6 +1007,7 @@ TEST_F(AcmpCore, A20DisconnectGetTxStateAndGetTxConnection) {
 
 // ---- A21: what the core does not take ----------------------------------------------------------
 
+// REQ: ACMP-02
 TEST_F(AcmpCore, A21MessagesNotForThisEntityAreIgnored) {
     Pdu p = command(spec::MSG_BIND_RX_COMMAND, 0);
     p.listener = kTkB;
@@ -995,6 +1028,7 @@ TEST_F(AcmpCore, A21MessagesNotForThisEntityAreIgnored) {
            "types are ignored (5.5.3.1, 8.2.1.9, 8.2.1.10)";
 }
 
+// REQ: ACMP-02
 TEST_F(AcmpCore, A21MalformedFramesAreCounted) {
     auto f = acmpdu(command(spec::MSG_BIND_RX_COMMAND, 0));
     acmp_rx(&a, 0, f.data(), spec::FRAME_BYTES - 1u);
@@ -1017,6 +1051,7 @@ TEST_F(AcmpCore, A21MalformedFramesAreCounted) {
 
 // ---- A19: owed frames, in order, and the response before its notification (#653) ---------
 
+// REQ: ACMP-09
 TEST_F(AcmpCore, A19AResponseWithoutRoomIsOwedAndItsChangeWaits) {
     fk.room = false;
     bind(0);
@@ -1040,6 +1075,7 @@ TEST_F(AcmpCore, A19AResponseWithoutRoomIsOwedAndItsChangeWaits) {
     EXPECT_FALSE(acmp_poll(&a)) << "A19 a poll with nothing owed sends nothing";
 }
 
+// REQ: ACMP-09
 TEST_F(AcmpCore, A19NothingPassesAnOwedFrame) {
     fk.room = false;
     rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 1));
@@ -1053,6 +1089,7 @@ TEST_F(AcmpCore, A19NothingPassesAnOwedFrame) {
         << "A19 they leave in the order they were made";
 }
 
+// REQ: ACMP-09
 TEST_F(AcmpCore, A19AFullQueueDropsTheCommandBeforeItActs) {
     fk.room = false;
     for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
@@ -1069,6 +1106,7 @@ TEST_F(AcmpCore, A19AFullQueueDropsTheCommandBeforeItActs) {
         << "A19 a command whose response would find the queue full is dropped before it changes anything";
 }
 
+// REQ: ACMP-09
 TEST_F(AcmpCore, A19AProbeWithoutRoomIsLostAndRecovered) {
     to_state(0, ACMP_PRB_W_DELAY);
     fk.room = false;
@@ -1088,6 +1126,7 @@ TEST_F(AcmpCore, A19AProbeWithoutRoomIsLostAndRecovered) {
         << "A19 and it does";
 }
 
+// REQ: ACMP-09
 TEST_F(AcmpCore, A19TwoOwedResponsesForOneSinkReleaseTogether) {
     fk.room = false;
     bind(0);
@@ -1105,6 +1144,7 @@ TEST_F(AcmpCore, A19TwoOwedResponsesForOneSinkReleaseTogether) {
 
 // ---- A22: the listener's discovery machine (5.6.4, Table 5.54) ---------------------------------
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22AvailableDiscoversWhenTheGrandmasterMatches) {
     rx(command(spec::MSG_BIND_RX_COMMAND, 0));
     Adp d;
@@ -1135,6 +1175,7 @@ TEST_F(AcmpCore, A22AvailableDiscoversWhenTheGrandmasterMatches) {
     }
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22DiscoveredStartsTheProbeFromPrbWAvail) {
     std::uint8_t record[spec::BINDING_BYTES] = {0x03, 0, 0, 1};
     wire_put_be(record + 4, kTkA, 8);
@@ -1149,6 +1190,7 @@ TEST_F(AcmpCore, A22DiscoveredStartsTheProbeFromPrbWAvail) {
     EXPECT_EQ(fk.count(Call::GPTP), 1u) << "A22 the grandmaster is sampled once for the frame";
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22DiscoveredStateCells) {
     // TK_DISCOVERED with the connection machine in PRB_W_RESP, where EVT_TK_DISCOVERED
     // is noted and EVT_TK_DEPARTED goes to PRB_W_AVAIL, so each event shows.
@@ -1206,6 +1248,7 @@ TEST_F(AcmpCore, A22DiscoveredStateCells) {
         << "A22 a rising index reads no grandmaster: step 2 alone does";
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22DepartingAndAging) {
     bind(0);
     Adp gone;
@@ -1232,6 +1275,7 @@ TEST_F(AcmpCore, A22DepartingAndAging) {
         << "A22 TMR_NO_ADP: TK_NOT_DISCOVERED and EVT_TK_DEPARTED (5.6.4.5.4)";
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22OnlyBoundSinksOfThatTalkerOnThatInterface) {
     bind(0, kTkA);
     bind(1, kTkA, 2);
@@ -1254,6 +1298,7 @@ TEST_F(AcmpCore, A22OnlyBoundSinksOfThatTalkerOnThatInterface) {
         << "A22 an unbound sink runs no discovery";
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A22OtherAdpFramesAreIgnored) {
     bind(0);
     auto f = adpdu(Adp{});
@@ -1275,6 +1320,7 @@ TEST_F(AcmpCore, A22OtherAdpFramesAreIgnored) {
 
 // ---- A23: the no-callback rule (#678) ------------------------------------------------------------
 
+// REQ: PORT-01
 TEST_F(AcmpCore, A23EveryEntryRefusesACallFromInsideAPort) {
     std::uint8_t record[spec::BINDING_BYTES] = {0x01};
     auto bindf = acmpdu(command(spec::MSG_BIND_RX_COMMAND, 1));
@@ -1310,6 +1356,7 @@ TEST_F(AcmpCore, A23EveryEntryRefusesACallFromInsideAPort) {
     }
 }
 
+// REQ: PORT-01
 TEST_F(AcmpCore, A23EveryPortIsGuarded) {
     const Call::Kind kinds[] = {Call::TIMER, Call::NOW, Call::GPTP, Call::SEED, Call::LOCKED,
                                 Call::SOURCE, Call::SRP, Call::PERSIST, Call::CHANGED, Call::ADMIT};
@@ -1336,6 +1383,7 @@ TEST_F(AcmpCore, A23EveryPortIsGuarded) {
 
 // ---- A24: the saved binding record --------------------------------------------------------------
 
+// REQ: ACMP-07
 TEST_F(AcmpCore, A24ARestoredBindingFastConnects) {
     std::uint8_t record[spec::BINDING_BYTES] = {0x07, 0xAA, 0x12, 0x34};
     wire_put_be(record + 4, kTkB, 8);
@@ -1355,6 +1403,7 @@ TEST_F(AcmpCore, A24ARestoredBindingFastConnects) {
     EXPECT_EQ(std::memcmp(back, record, sizeof back), 0) << "A24 the latch gives the same record back";
 }
 
+// REQ: ACMP-07
 TEST_F(AcmpCore, A24UnboundRecordsRefusalsAndRollback) {
     std::uint8_t record[spec::BINDING_BYTES] = {0x06, 0, 0, 1};
     EXPECT_EQ(acmp_restore_binding(&a, 0, record, sizeof record), ACMP_RESTORE_APPLIED)
@@ -1383,6 +1432,7 @@ TEST_F(AcmpCore, A24UnboundRecordsRefusalsAndRollback) {
     EXPECT_FALSE(acmp_binding_latch(&a, cfg.n_sinks, back)) << "A24 there is no record of a sink the entity lacks";
 }
 
+// REQ: ACMP-07
 TEST_F(AcmpCore, A24StartedIsSavedAndReported) {
     EXPECT_FALSE(acmp_set_started(&a, 0, true)) << "A24 an unbound sink has no started state (5.3.8.7)";
     EXPECT_FALSE(acmp_set_started(&a, cfg.n_sinks, true)) << "A24 nor a sink the entity lacks";
@@ -1417,6 +1467,7 @@ std::array<std::uint8_t, spec::BINDING_BYTES> payload(std::uint8_t flags, std::u
             static_cast<std::uint8_t>(ctlr >> 8), static_cast<std::uint8_t>(ctlr)};
 }
 
+// REQ: ACMP-07
 TEST_F(AcmpCore, A24TheRecordIsTheProcessorsPayloadOneFlagAtATime) {
     std::array<std::uint8_t, spec::BINDING_BYTES> back{};
     bind(0, kTkA, 0x1234u, kCtl1);                       // no STREAMING_WAIT: started
@@ -1450,6 +1501,7 @@ TEST_F(AcmpCore, A24TheRecordIsTheProcessorsPayloadOneFlagAtATime) {
 
 // ---- A25: the notification follows Table 5.22's items ---------------------------------------------
 
+// REQ: ACMP-02
 TEST_F(AcmpCore, A25OnlyTable522ItemsAreReported) {
     to_state(0, ACMP_SETTLED_NO_RSV);
     fk.clear();
@@ -1477,6 +1529,7 @@ std::array<std::uint8_t, N> versioned(std::array<std::uint8_t, N> f, unsigned v)
     return f;
 }
 
+// REQ: ACMP-02
 TEST_F(AcmpCore, A26AnotherAvtpVersionIsDiscardedBeforeItIsRead) {
     for (unsigned v = 1; v < 8u; ++v) {
         SetUp();
@@ -1527,6 +1580,7 @@ TEST_F(AcmpCore, A26AnotherAvtpVersionIsDiscardedBeforeItIsRead) {
 
 // ---- A27: TMR_NO_RESP from the accepted send of each attempt (5.5.3.5.3, 5.5.3.5.16) ---------------
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A27AnOwedProbeStartsItsTimerWhenItLeaves) {
     const std::uint32_t t0 = fk.now;
     fk.room = false;
@@ -1563,6 +1617,7 @@ TEST_F(AcmpCore, A27AnOwedProbeStartsItsTimerWhenItLeaves) {
         << "A27 an expiry of the interface while the probe is owed takes nothing: a held timer is never due";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A27AStalledDuplicateGetsItsWholeInterval) {
     std::uint32_t t0 = fk.now;
     bind(0);                                             // the probe leaves at t0
@@ -1606,6 +1661,7 @@ TEST_F(AcmpCore, A27AStalledDuplicateGetsItsWholeInterval) {
         << "A27 the second expiry at 200 ms: no third probe, LISTENER_TALKER_TIMEOUT (5.5.3.5.23)";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing) {
     fk.room = false;
     bind(0);
@@ -1662,6 +1718,7 @@ void expire_at(acmp* a, std::uint32_t at, unsigned interface = 0) {
 
 constexpr std::uint32_t kWrap = 0xFFFFFFFFu;            // the last millisecond before NOW_MS wraps to 0
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap) {
     fk.now = kWrap - 99u;
     bind(0);
@@ -1726,6 +1783,7 @@ TEST_F(AcmpCore, A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap) {
     EXPECT_FALSE(a.sinks[0].discovered) << "A28 TMR_NO_ADP expires at its deadline across the wrap (5.6.4.5.4)";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A28TheEarliestDeadlineIsChosenAcrossTheWrap) {
     fk.now = kWrap - 255u;
     bind(0);                                             // TMR_NO_RESP at the wrap less 55 ms
@@ -1753,6 +1811,7 @@ std::vector<Call> admits() {
     return v;
 }
 
+// REQ: ACMP-06
 TEST_F(AcmpCore, A29TheAdmitPortFollowsEachSinksBoundTalker) {
     bind(0, kTkA);
     auto v = admits();
@@ -1786,6 +1845,7 @@ TEST_F(AcmpCore, A29TheAdmitPortFollowsEachSinksBoundTalker) {
     EXPECT_TRUE(admits().empty() && a.sinks[1].state == ACMP_UNBOUND) << "A29 a BIND_RX the lock refuses admits nothing";
 }
 
+// REQ: ACMP-07
 TEST_F(AcmpCore, A29RestoredBindingsAreAdmittedWhenTheTransportOpens) {
     const auto bound = payload(kRecValid, 1u, kTkB, kCtl1);
     const auto none = payload(0u, 0u, 0u, 0u);
@@ -1819,6 +1879,7 @@ TEST_F(AcmpCore, A29RestoredBindingsAreAdmittedWhenTheTransportOpens) {
 // ---- A30: TMR_NO_RESP from the clock after the port took the probe (R531-2-F1; 5.5.3.5.3 steps 5 to 7,
 // 5.5.3.5.16 steps 1 and 2), with the clock moving inside every send ------------------------------------
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend) {
     fk.send_ms = 5u;
     bind(0);                                             // the response, then the probe: each moves the clock
@@ -1854,6 +1915,7 @@ TEST_F(AcmpCore, A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend) {
         << "A30 an owed probe: TMR_NO_RESP 200 ms from the clock after the poll's send";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend) {
     bind(0);
     const acmp_sink& s = a.sinks[0];
@@ -1886,6 +1948,7 @@ TEST_F(AcmpCore, A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend) {
         << "A30 the second expiry at the full 200 ms after the duplicate was taken: no third probe, the timeout";
 }
 
+// REQ: ACMP-05
 TEST_F(AcmpCore, A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry) {
     bind(1);                                             // sink 1 on interface 0: failed, TMR_RETRY, talker discovered
     adp(Adp{});
@@ -1905,6 +1968,76 @@ TEST_F(AcmpCore, A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry) {
     EXPECT_TRUE(fk.sent.size() == 2u && a.sinks[0].state == ACMP_PRB_W_RESP2 && a.sinks[1].state == ACMP_PRB_W_RESP &&
                 a.sinks[1].timer_deadline == fk.sent[1].at + spec::TMR_NO_RESP_MS)
         << "A30 sink 1's 0 ms TMR_DELAY, drawn after sink 0's duplicate moved the clock, probes in the same expiry";
+}
+
+
+// REQ: ACMP-06
+TEST_F(AcmpCore, DepartingStopsEveryProbingTimer) {
+    for (const auto state : {ACMP_PRB_W_DELAY, ACMP_PRB_W_RESP, ACMP_PRB_W_RESP2, ACMP_PRB_W_RETRY}) {
+        SetUp();
+        to_state(0, state);
+        adp(Adp{});
+        fk.clear();
+        Adp departing;
+        departing.msg = spec::ADPDU_ENTITY_DEPARTING;
+        adp(departing);
+        EXPECT_EQ(a.sinks[0].state, ACMP_PRB_W_AVAIL);
+        EXPECT_EQ(a.sinks[0].timer, ACMP_TIMER_NONE);
+        EXPECT_FALSE(a.sinks[0].discovered);
+        EXPECT_EQ(a.sinks[0].probing, ACMP_PROBING_PASSIVE);
+        EXPECT_EQ(fk.count(Call::CHANGED), 1u) << "departing publishes the passive probing status";
+    }
+}
+
+// REQ: PORT-01
+TEST_F(AcmpCore, CommandPortBudgets) {
+    bind(0);
+    EXPECT_EQ(fk.count(Call::NOW), 1u) << "BIND reads the clock after the accepted probe";
+    fk.clear();
+    rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0));
+    EXPECT_EQ(fk.count(Call::NOW), 0u) << "GET_RX_STATE needs no clock";
+    fk.clear();
+    rx(probe_answer(0));
+    EXPECT_EQ(fk.count(Call::NOW), 1u) << "successful probe response starts one reservation timer";
+    fk.clear();
+    rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
+    EXPECT_EQ(fk.count(Call::NOW), 0u) << "UNBIND needs no clock";
+    fk.clear();
+    Pdu p; p.msg = spec::MSG_GET_TX_STATE_COMMAND; p.talker = kOwn;
+    rx(p);
+    EXPECT_EQ(fk.count(Call::NOW), 0u) << "talker response needs no clock";
+}
+
+// REQ: PORT-01
+TEST_F(AcmpCore, TimerPortBudgets) {
+    for (const auto state : {ACMP_PRB_W_DELAY, ACMP_PRB_W_RESP, ACMP_PRB_W_RESP2,
+                             ACMP_PRB_W_RETRY, ACMP_SETTLED_NO_RSV}) {
+        SetUp();
+        to_state(0, state);
+        if (state == ACMP_PRB_W_RETRY) { adp(Adp{}); }
+        fk.clear();
+        fire(0);
+        const unsigned clocks = (state == ACMP_PRB_W_DELAY || state == ACMP_PRB_W_RESP) ? 2u : 1u;
+        EXPECT_EQ(fk.count(Call::NOW), clocks) << "timer clock budget for state " << state;
+        EXPECT_EQ(fk.count(Call::GPTP), 0u) << "timer expiry never samples the grandmaster";
+    }
+}
+
+// REQ: PORT-01
+TEST_F(AcmpCore, DiscoveryPortBudgets) {
+    bind(0);
+    fk.clear();
+    adp(Adp{});
+    EXPECT_EQ(fk.count(Call::NOW), 1u) << "AVAILABLE starts one discovery deadline";
+    EXPECT_EQ(fk.count(Call::GPTP), 1u);
+    fk.clear();
+    Adp gone; gone.msg = spec::ADPDU_ENTITY_DEPARTING;
+    adp(gone);
+    EXPECT_EQ(fk.count(Call::GPTP), 0u) << "DEPARTING needs no grandmaster";
+    adp(Adp{});
+    fk.clear();
+    fire_adp(0);
+    EXPECT_EQ(fk.count(Call::GPTP), 0u) << "aging needs no grandmaster";
 }
 
 }  // namespace
