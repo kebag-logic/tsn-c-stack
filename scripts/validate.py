@@ -53,6 +53,7 @@ def main():
     for name, script, switches in (
         ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
         ('needles', 'needle_audit.py', ['--selftest']),
+        ('comments', 'check_comments.py', ['--selftest']),
         ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
         ('license', 'check_license.py', ['--selftest']),
         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),

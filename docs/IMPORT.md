@@ -56,8 +56,8 @@ The 311 substitutions derive from the
 [source mutation tables](https://github.com/kebag-logic/milan-fpga/tree/6aa25dec977c6ad78bf4ff6275de47fb81d0c246/sw/firmware/ctrl/test).
 The [test inventory](TESTS.md) shows the core assertions that replace adapter killers.
 
-Production C and header bytes match the pinned source after the SPDX replacement.
-No protocol behavior is changed. The consumer submodule and firmware-image checks
+At the original import, production C and header bytes matched the pinned source after the SPDX replacement.
+No protocol behavior changed. The consumer submodule and firmware-image checks
 are a later change under [issue 697](https://github.com/kebag-logic/milan-fpga/issues/697).
 
 ## Validation changes
@@ -69,7 +69,25 @@ No imported case body changes in that commit.
 
 The review follow-up adds assertion messages to eight inherited MAAP controls and strengthens the added callback-budget tests.
 It adds four parameterized ADP input controls for the [preserved receiver limit](DEVIATIONS.md).
-All 311 imported source substitutions remain unchanged. Production files remain unchanged.
+The review corrections leave production files unchanged.
+
+## Comment reduction
+
+The [follow-up decision](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074811248)
+limits code comments to SPDX lines, requirement IDs and standard clause, table or figure references.
+Port contracts now live in the [porting guide](PORTING.md) and [architecture](ARCHITECTURE.md).
+The [comment gate](../scripts/check_comments.py) enforces this rule, including mutation fragments.
+
+The reduction preserves every non-comment token in source, headers, tests and examples.
+All 311 planted programs also retain identical code tokens and killer mappings.
+Comment-based mutation anchors are regenerated against the reduced source.
+Core line positions stay fixed to preserve assertion locations and coverage instrumentation.
+Generated [test links](TESTS.md) and [traceability](TRACEABILITY.md) follow the new test line positions.
+
+The object comparison uses the Linux and RV32 CI compile commands with `-g0`.
+Both sides use `-frandom-seed=0` to make gcov build stamps deterministic.
+All 22 core objects match byte for byte, including coverage, sanitizer, debug and release variants.
+The full Linux suite and both RV32 smoke configurations must still pass.
 
 ## Retained commit map
 

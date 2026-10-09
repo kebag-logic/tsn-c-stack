@@ -6,6 +6,7 @@ Require fresh complete mutation reports, specific assertion messages, compiler b
 Link each standard separately. Record the inherited ADP input limits and caller validation obligations.
 Require Linux and freestanding RV32 validation in [CI](.github/workflows/quality.yml).
 Link the complete RV32 library against a minimal port and run protocol smoke checks in Debug and Release.
+Reduce code comments to licence, requirement and standard tracing. Keep port contracts in the [porting guide](docs/PORTING.md).
 
 
 ## Unreleased

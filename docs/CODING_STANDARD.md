@@ -1,5 +1,9 @@
 # Coding standard
 
+Code comments contain only SPDX lines, requirement IDs, or short references to standard clauses, tables and figures.
+Put integration contracts in the [porting guide](PORTING.md) and [architecture](ARCHITECTURE.md).
+The [comment gate](../scripts/check_comments.py) checks sources, headers, tests, examples and mutation fragments.
+
 The library uses ISO C11. Public headers also compile as C++20.
 Use `-Wall -Wextra -Werror` with GCC and Clang.
 The [build](../CMakeLists.txt) disables language extensions.

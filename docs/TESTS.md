@@ -9,111 +9,111 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 
 | Test | Defect caught | Requirements |
 |---|---|---|
-| [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L229) | acmp-init-reads-the-seed | ACMP-01 |
-| [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L189) | acmp-init-no-interface; acmp-init-too-many-sinks; acmp-init-too-many-sources; acmp-init-sink-interface; acmp-init-source-interface | ACMP-01 |
-| [AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp](../tests/test_acmp.cpp#L637) | acmp-duplicate-takes-a-new-sequence-id; acmp-second-timeout-keeps-status-0; acmp-no-duplicate | ACMP-04 |
-| [AcmpCore.A11RetryWaitsForTheTalkerOrDelays](../tests/test_acmp.cpp#L658) | acmp-retry-ignores-discovery; acmp-retry-zeroes-the-status | ACMP-04 |
-| [AcmpCore.A12DelaySendsANewProbe](../tests/test_acmp.cpp#L678) | acmp-sequence-id-never-advances; acmp-delay-resends-the-old-probe | ACMP-04 |
-| [AcmpCore.A13NoTalkerAttributeReprobes](../tests/test_acmp.cpp#L693) | acmp-no-tk-keeps-srp; acmp-reprobe-ignores-discovery | ACMP-04 |
-| [AcmpCore.A14RegisteredSettlesTheReservation](../tests/test_acmp.cpp#L717) | acmp-registered-anywhere; acmp-registered-keeps-no-tk | ACMP-04 |
-| [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L742) | acmp-reprobe-ignores-discovery; acmp-unregistered-anywhere; acmp-unregistered-keeps-srp | ACMP-04 |
-| [AcmpCore.A16OneCounterForEveryNewProbe](../tests/test_acmp.cpp#L806) | acmp-sequence-id-never-advances; acmp-sequence-id-per-sink | ACMP-04 |
-| [AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline](../tests/test_acmp.cpp#L822) | acmp-timer-at-the-latest-deadline; acmp-timer-port-called-every-time; acmp-timer-never-stopped; acmp-expiry-takes-every-interface; acmp-expiry-not-consumed | ACMP-05 |
-| [AcmpCore.A18AZeroDelayProbesInTheSameExpiry](../tests/test_acmp.cpp#L850) | acmp-zero-delay-waits; acmp-delay-up-to-4s | ACMP-05 |
-| [AcmpCore.A18TheSeedIsTakenAtTheFirstDraw](../tests/test_acmp.cpp#L874) | acmp-seed-at-every-draw; acmp-rng-left-at-0 | ACMP-05 |
-| [AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs](../tests/test_acmp.cpp#L1093) | acmp-full-queue-acts | ACMP-09 |
-| [AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered](../tests/test_acmp.cpp#L1110) | acmp-lost-probe-uncounted; acmp-lost-probe-held | ACMP-09 |
-| [AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits](../tests/test_acmp.cpp#L1055) | acmp-poll-drains-everything; acmp-change-not-held-for-its-response | ACMP-09 |
-| [AcmpCore.A19NothingPassesAnOwedFrame](../tests/test_acmp.cpp#L1079) | acmp-response-passes-an-owed-frame; acmp-poll-newest-first | ACMP-09 |
-| [AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether](../tests/test_acmp.cpp#L1130) | acmp-first-owed-releases-every-change | ACMP-09 |
-| [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L246) | acmp-header-no-resp-2s; acmp-header-cdl-84; acmp-bind-count-0; acmp-probe-without-fast-connect; acmp-probe-before-response; acmp-no-resp-2s; acmp-bind-starts-no-discovery; acmp-bind-change-before-response; acmp-nothing-persisted; acmp-streaming-wait-ignored; acmp-frames-to-the-own-mac; acmp-header-version-1 | ACMP-03, ACMP-02 |
-| [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L296) | acmp-new-bind-never-started; acmp-bind-response-always-streaming-wait | ACMP-03, ACMP-02 |
-| [AcmpCore.A20DisconnectGetTxStateAndGetTxConnection](../tests/test_acmp.cpp#L945) | acmp-disconnect-always-succeeds; acmp-get-tx-state-echoes-the-listener; acmp-get-tx-state-registering-failed-0; acmp-get-tx-state-unheld-mac; acmp-get-tx-connection-supported | ACMP-08 |
-| [AcmpCore.A20ProbeTxIsAnsweredFromTheSource](../tests/test_acmp.cpp#L892) | acmp-probe-tx-reports-asking-failed; acmp-probe-tx-echoes-every-flag; acmp-probe-tx-any-interface; acmp-probe-tx-no-destination-mac-check; acmp-unknown-source-answered | ACMP-08 |
-| [AcmpCore.A21MalformedFramesAreCounted](../tests/test_acmp.cpp#L1032) | acmp-short-pdu-read; acmp-longer-pdu-refused | ACMP-02 |
-| [AcmpCore.A21MessagesNotForThisEntityAreIgnored](../tests/test_acmp.cpp#L1011) | acmp-every-listener-is-this-one; acmp-every-talker-is-this-one | ACMP-02 |
-| [AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches](../tests/test_acmp.cpp#L1148) | acmp-header-valid-time-in-seconds; acmp-discovery-reads-no-grandmaster; acmp-discovery-reads-no-domain; acmp-valid-time-in-seconds | ACMP-06 |
-| [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1252) | acmp-departing-taken-undiscovered; acmp-departing-interface-unchecked; acmp-departing-keeps-aging; acmp-no-aging | ACMP-06 |
-| [AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail](../tests/test_acmp.cpp#L1179) | acmp-discovered-probing-stays-passive; acmp-grandmaster-read-twice | ACMP-06 |
-| [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1194) | acmp-discovered-interface-unchecked; acmp-restart-on-a-smaller-index-only; acmp-restart-raises-no-discovered; acmp-restart-mismatch-keeps-aging; acmp-refresh-notes-no-index; acmp-grandmaster-sampled-for-the-refresh | ACMP-06 |
-| [AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface](../tests/test_acmp.cpp#L1279) | acmp-discovery-on-every-interface; acmp-discovery-on-unbound-sinks; acmp-grandmaster-sampled-per-sink; acmp-discovery-takes-the-first-sink | ACMP-06 |
-| [AcmpCore.A22OtherAdpFramesAreIgnored](../tests/test_acmp.cpp#L1302) | acmp-adp-short-frame-taken; acmp-adp-ethertype-unchecked; acmp-adp-subtype-unchecked; acmp-adp-discover-taken | ACMP-06 |
-| [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1324) | acmp-reentry-unguarded; acmp-reentry-untrapped; acmp-send-port-unflagged; acmp-owed-probe-timer-runs; acmp-open-unguarded | PORT-01 |
-| [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1360) | acmp-reentry-unguarded; acmp-timer-port-unflagged; acmp-gptp-port-unflagged; acmp-clock-port-unflagged; acmp-seed-port-unflagged; acmp-lock-port-unflagged; acmp-source-port-unflagged; acmp-srp-port-unflagged; acmp-persist-port-unflagged; acmp-changed-port-unflagged; acmp-bind-reads-the-clock-twice; acmp-admit-port-unflagged | PORT-01 |
-| [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1387) | acmp-restore-lands-in-prb-w-resp; acmp-restore-starts-no-discovery; acmp-record-unique-id-little-endian; acmp-restore-unique-id-little-endian | ACMP-07 |
-| [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1436) | acmp-started-not-saved | ACMP-07 |
-| [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1471) | acmp-record-flags-swapped; acmp-record-flag-defines-swapped; acmp-record-valid-bit-moved | ACMP-07 |
-| [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1407) | acmp-roll-back-keeps-the-bindings; acmp-unbound-record-not-zero; acmp-longer-record-applied | ACMP-07 |
-| [AcmpCore.A25OnlyTable522ItemsAreReported](../tests/test_acmp.cpp#L1505) | acmp-second-timeout-keeps-status-0; acmp-discovery-notifies; acmp-status-not-notified | ACMP-02 |
-| [AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead](../tests/test_acmp.cpp#L1533) | acmp-version-unchecked; acmp-adp-version-unchecked; acmp-version-bits-misread | ACMP-02 |
-| [AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing](../tests/test_acmp.cpp#L1665) | acmp-owed-probe-sequence-unchecked; acmp-stop-keeps-the-hold | ACMP-05 |
-| [AcmpCore.A27AStalledDuplicateGetsItsWholeInterval](../tests/test_acmp.cpp#L1621) | acmp-owed-probe-timer-runs; acmp-owed-probe-never-starts | ACMP-05 |
-| [AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves](../tests/test_acmp.cpp#L1584) | acmp-owed-probe-timer-runs; acmp-owed-probe-never-starts; acmp-owed-probe-no-resp-2s; acmp-owed-probe-unnamed; acmp-owed-probe-names-the-next-sink; acmp-held-timer-expires; acmp-held-timer-armed | ACMP-05 |
-| [AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap](../tests/test_acmp.cpp#L1722) | acmp-due-unsigned; acmp-no-adp-due-unsigned; acmp-no-resp-deadline-saturates; acmp-retry-deadline-saturates; acmp-no-tk-deadline-saturates; acmp-delay-deadline-saturates; acmp-no-adp-deadline-saturates | ACMP-05 |
-| [AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap](../tests/test_acmp.cpp#L1787) | acmp-due-unsigned; acmp-earliest-unsigned | ACMP-05 |
-| [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1849) | acmp-restore-announced; acmp-reset-forgets-the-admitted; acmp-open-does-nothing | ACMP-07 |
-| [AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker](../tests/test_acmp.cpp#L1815) | acmp-admit-never-called; acmp-admit-on-every-entry; acmp-admit-ignores-another-talker; acmp-admit-on-interface-0 | ACMP-06 |
-| [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L305) | acmp-getrx-count-unbound; acmp-getrx-no-fast-connect | ACMP-03, ACMP-02 |
-| [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L338) | acmp-header-registering-failed-bit; acmp-sw-read-from-fast-connect; acmp-getrx-no-registering-failed; acmp-registered-kind-dropped; acmp-view-without-registering-failed | ACMP-03, ACMP-02 |
-| [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L350) | acmp-header-listener-unknown-is-2; acmp-unknown-sink-silent | ACMP-03, ACMP-02 |
-| [AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1919) | acmp-probe-timer-before-its-send; acmp-taken-probe-timer-from-the-entry-clock | ACMP-05 |
-| [AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1883) | acmp-probe-timer-before-its-send | ACMP-05 |
-| [AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry](../tests/test_acmp.cpp#L1952) | acmp-expiry-due-at-its-first-read | ACMP-05 |
-| [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L373) | acmp-unbind-not-persisted; acmp-unbind-echoes-the-talker; acmp-unbind-keeps-srp; acmp-unbind-srp-after-response; acmp-unbind-keeps-discovery; acmp-unbind-change-before-response | ACMP-03, ACMP-02 |
-| [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L409) | acmp-not-authorized-is-13; acmp-lock-ignored | ACMP-03, ACMP-02 |
-| [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L441) | acmp-lock-refuses-the-holder; acmp-get-rx-state-locked | ACMP-03, ACMP-02 |
-| [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L456) | acmp-rebind-same-reprobes; acmp-rebind-same-keeps-the-controller | ACMP-03, ACMP-02 |
-| [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L485) | acmp-rebind-not-persisted; acmp-bind-new-keeps-srp | ACMP-03, ACMP-02 |
-| [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L515) | acmp-bind-same-talker-is-the-same-source | ACMP-03, ACMP-02 |
-| [AcmpCore.A7EachGuardTermIsChecked](../tests/test_acmp.cpp#L539) | acmp-guard-controller-dropped; acmp-guard-talker-dropped; acmp-guard-unique-id-dropped; acmp-guard-sequence-id-dropped | ACMP-04 |
-| [AcmpCore.A7ResponsesKeyOnTheListenerUniqueId](../tests/test_acmp.cpp#L527) | acmp-response-keyed-on-the-source | ACMP-04 |
-| [AcmpCore.A7ResponsesOutsideProbingAreIgnored](../tests/test_acmp.cpp#L572) | acmp-responses-taken-outside-probing | ACMP-04 |
-| [AcmpCore.A7TheGuardReadsTheSentProbeNotTheBinding](../tests/test_acmp.cpp#L561) | acmp-guard-reads-the-binding | ACMP-04 |
-| [AcmpCore.A8SuccessSettles](../tests/test_acmp.cpp#L597) | acmp-header-no-tk-5s; acmp-vlan-masked; acmp-no-tk-1s; acmp-settle-starts-no-srp; acmp-settle-swaps-stream-fields | ACMP-04 |
-| [AcmpCore.A9FailureWaitsForTheRetry](../tests/test_acmp.cpp#L620) | acmp-header-retry-2s; acmp-failure-status-dropped; acmp-failure-retries-at-200ms | ACMP-04 |
-| [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1993) | acmp-get-rx-state-reads-the-clock; acmp-probe-response-reads-the-clock-twice; acmp-unbind-reads-the-clock; acmp-talker-reads-the-clock | PORT-01 |
-| [AcmpCore.DepartingStopsEveryProbingTimer](../tests/test_acmp.cpp#L1975) | acmp-probing-status-not-notified | ACMP-06 |
-| [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2031) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
-| [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L775) | acmp-kind-lost; acmp-kind-any-state | ACMP-04 |
-| [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2012) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
-| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L555) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01 |
-| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L571) | departing-sends-zero | ADP-03, ADP-02 |
-| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L575) | available-replaces-owed-departing | ADP-03, ADP-02 |
-| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L579) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
-| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L583) | available-passes-owed-departing | ADP-03, ADP-02 |
-| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L587) | link-loss-drops-owed-departing | ADP-03, ADP-02 |
-| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L591) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
-| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L595) | link-loss-keeps-owed-available | ADP-03, ADP-02 |
-| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L599) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
-| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L603) | seed-left-at-zero | ADP-02, PORT-01 |
-| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L605) | enable-not-idempotent | ADP-02, PORT-01 |
-| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L607) | other-subtype-accepted | ADP-01, ADP-02 |
-| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L559) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02 |
-| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L563) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
-| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L567) | draw-kinds-merged | ADP-02, PORT-01 |
-| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L633) | frame-sources-from-sinks | ADP-01, ADP-02 |
-| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L611) | link-down-departs | ADP-02, PORT-01 |
-| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L659) | advertise-period-wrong | ADP-02, PORT-01 |
-| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L691) | own-discover-discarded | ADP-01, ADP-02 |
-| [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L195) | reentry-not-ignored | PORT-01 |
-| [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L139) | reentry-guard-removed; reentry-uncounted | PORT-01 |
-| [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L167) | reentry-guard-removed | PORT-01 |
+| [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L206) | acmp-init-reads-the-seed | ACMP-01 |
+| [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L167) | acmp-init-no-interface; acmp-init-too-many-sinks; acmp-init-too-many-sources; acmp-init-sink-interface; acmp-init-source-interface | ACMP-01 |
+| [AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp](../tests/test_acmp.cpp#L608) | acmp-duplicate-takes-a-new-sequence-id; acmp-second-timeout-keeps-status-0; acmp-no-duplicate | ACMP-04 |
+| [AcmpCore.A11RetryWaitsForTheTalkerOrDelays](../tests/test_acmp.cpp#L629) | acmp-retry-ignores-discovery; acmp-retry-zeroes-the-status | ACMP-04 |
+| [AcmpCore.A12DelaySendsANewProbe](../tests/test_acmp.cpp#L649) | acmp-sequence-id-never-advances; acmp-delay-resends-the-old-probe | ACMP-04 |
+| [AcmpCore.A13NoTalkerAttributeReprobes](../tests/test_acmp.cpp#L664) | acmp-no-tk-keeps-srp; acmp-reprobe-ignores-discovery | ACMP-04 |
+| [AcmpCore.A14RegisteredSettlesTheReservation](../tests/test_acmp.cpp#L686) | acmp-registered-anywhere; acmp-registered-keeps-no-tk | ACMP-04 |
+| [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L711) | acmp-reprobe-ignores-discovery; acmp-unregistered-anywhere; acmp-unregistered-keeps-srp | ACMP-04 |
+| [AcmpCore.A16OneCounterForEveryNewProbe](../tests/test_acmp.cpp#L775) | acmp-sequence-id-never-advances; acmp-sequence-id-per-sink | ACMP-04 |
+| [AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline](../tests/test_acmp.cpp#L789) | acmp-timer-at-the-latest-deadline; acmp-timer-port-called-every-time; acmp-timer-never-stopped; acmp-expiry-takes-every-interface; acmp-expiry-not-consumed | ACMP-05 |
+| [AcmpCore.A18AZeroDelayProbesInTheSameExpiry](../tests/test_acmp.cpp#L817) | acmp-zero-delay-waits; acmp-delay-up-to-4s | ACMP-05 |
+| [AcmpCore.A18TheSeedIsTakenAtTheFirstDraw](../tests/test_acmp.cpp#L841) | acmp-seed-at-every-draw; acmp-rng-left-at-0 | ACMP-05 |
+| [AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs](../tests/test_acmp.cpp#L1055) | acmp-full-queue-acts | ACMP-09 |
+| [AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered](../tests/test_acmp.cpp#L1072) | acmp-lost-probe-uncounted; acmp-lost-probe-held | ACMP-09 |
+| [AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits](../tests/test_acmp.cpp#L1017) | acmp-poll-drains-everything; acmp-change-not-held-for-its-response | ACMP-09 |
+| [AcmpCore.A19NothingPassesAnOwedFrame](../tests/test_acmp.cpp#L1041) | acmp-response-passes-an-owed-frame; acmp-poll-newest-first | ACMP-09 |
+| [AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether](../tests/test_acmp.cpp#L1092) | acmp-first-owed-releases-every-change | ACMP-09 |
+| [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L223) | acmp-header-no-resp-2s; acmp-header-cdl-84; acmp-bind-count-0; acmp-probe-without-fast-connect; acmp-probe-before-response; acmp-no-resp-2s; acmp-bind-starts-no-discovery; acmp-bind-change-before-response; acmp-nothing-persisted; acmp-streaming-wait-ignored; acmp-frames-to-the-own-mac; acmp-header-version-1 | ACMP-03, ACMP-02 |
+| [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L273) | acmp-new-bind-never-started; acmp-bind-response-always-streaming-wait | ACMP-03, ACMP-02 |
+| [AcmpCore.A20DisconnectGetTxStateAndGetTxConnection](../tests/test_acmp.cpp#L912) | acmp-disconnect-always-succeeds; acmp-get-tx-state-echoes-the-listener; acmp-get-tx-state-registering-failed-0; acmp-get-tx-state-unheld-mac; acmp-get-tx-connection-supported | ACMP-08 |
+| [AcmpCore.A20ProbeTxIsAnsweredFromTheSource](../tests/test_acmp.cpp#L859) | acmp-probe-tx-reports-asking-failed; acmp-probe-tx-echoes-every-flag; acmp-probe-tx-any-interface; acmp-probe-tx-no-destination-mac-check; acmp-unknown-source-answered | ACMP-08 |
+| [AcmpCore.A21MalformedFramesAreCounted](../tests/test_acmp.cpp#L997) | acmp-short-pdu-read; acmp-longer-pdu-refused | ACMP-02 |
+| [AcmpCore.A21MessagesNotForThisEntityAreIgnored](../tests/test_acmp.cpp#L976) | acmp-every-listener-is-this-one; acmp-every-talker-is-this-one | ACMP-02 |
+| [AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches](../tests/test_acmp.cpp#L1110) | acmp-header-valid-time-in-seconds; acmp-discovery-reads-no-grandmaster; acmp-discovery-reads-no-domain; acmp-valid-time-in-seconds | ACMP-06 |
+| [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1213) | acmp-departing-taken-undiscovered; acmp-departing-interface-unchecked; acmp-departing-keeps-aging; acmp-no-aging | ACMP-06 |
+| [AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail](../tests/test_acmp.cpp#L1141) | acmp-discovered-probing-stays-passive; acmp-grandmaster-read-twice | ACMP-06 |
+| [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1156) | acmp-discovered-interface-unchecked; acmp-restart-on-a-smaller-index-only; acmp-restart-raises-no-discovered; acmp-restart-mismatch-keeps-aging; acmp-refresh-notes-no-index; acmp-grandmaster-sampled-for-the-refresh | ACMP-06 |
+| [AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface](../tests/test_acmp.cpp#L1240) | acmp-discovery-on-every-interface; acmp-discovery-on-unbound-sinks; acmp-grandmaster-sampled-per-sink; acmp-discovery-takes-the-first-sink | ACMP-06 |
+| [AcmpCore.A22OtherAdpFramesAreIgnored](../tests/test_acmp.cpp#L1263) | acmp-adp-short-frame-taken; acmp-adp-ethertype-unchecked; acmp-adp-subtype-unchecked; acmp-adp-discover-taken | ACMP-06 |
+| [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1283) | acmp-reentry-unguarded; acmp-reentry-untrapped; acmp-send-port-unflagged; acmp-owed-probe-timer-runs; acmp-open-unguarded | PORT-01 |
+| [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1319) | acmp-reentry-unguarded; acmp-timer-port-unflagged; acmp-gptp-port-unflagged; acmp-clock-port-unflagged; acmp-seed-port-unflagged; acmp-lock-port-unflagged; acmp-source-port-unflagged; acmp-srp-port-unflagged; acmp-persist-port-unflagged; acmp-changed-port-unflagged; acmp-bind-reads-the-clock-twice; acmp-admit-port-unflagged | PORT-01 |
+| [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1344) | acmp-restore-lands-in-prb-w-resp; acmp-restore-starts-no-discovery; acmp-record-unique-id-little-endian; acmp-restore-unique-id-little-endian | ACMP-07 |
+| [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1393) | acmp-started-not-saved | ACMP-07 |
+| [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1424) | acmp-record-flags-swapped; acmp-record-flag-defines-swapped; acmp-record-valid-bit-moved | ACMP-07 |
+| [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1364) | acmp-roll-back-keeps-the-bindings; acmp-unbound-record-not-zero; acmp-longer-record-applied | ACMP-07 |
+| [AcmpCore.A25OnlyTable522ItemsAreReported](../tests/test_acmp.cpp#L1458) | acmp-second-timeout-keeps-status-0; acmp-discovery-notifies; acmp-status-not-notified | ACMP-02 |
+| [AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead](../tests/test_acmp.cpp#L1485) | acmp-version-unchecked; acmp-adp-version-unchecked; acmp-version-bits-misread | ACMP-02 |
+| [AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing](../tests/test_acmp.cpp#L1617) | acmp-owed-probe-sequence-unchecked; acmp-stop-keeps-the-hold | ACMP-05 |
+| [AcmpCore.A27AStalledDuplicateGetsItsWholeInterval](../tests/test_acmp.cpp#L1573) | acmp-owed-probe-timer-runs; acmp-owed-probe-never-starts | ACMP-05 |
+| [AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves](../tests/test_acmp.cpp#L1536) | acmp-owed-probe-timer-runs; acmp-owed-probe-never-starts; acmp-owed-probe-no-resp-2s; acmp-owed-probe-unnamed; acmp-owed-probe-names-the-next-sink; acmp-held-timer-expires; acmp-held-timer-armed | ACMP-05 |
+| [AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap](../tests/test_acmp.cpp#L1671) | acmp-due-unsigned; acmp-no-adp-due-unsigned; acmp-no-resp-deadline-saturates; acmp-retry-deadline-saturates; acmp-no-tk-deadline-saturates; acmp-delay-deadline-saturates; acmp-no-adp-deadline-saturates | ACMP-05 |
+| [AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap](../tests/test_acmp.cpp#L1736) | acmp-due-unsigned; acmp-earliest-unsigned | ACMP-05 |
+| [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1796) | acmp-restore-announced; acmp-reset-forgets-the-admitted; acmp-open-does-nothing | ACMP-07 |
+| [AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker](../tests/test_acmp.cpp#L1762) | acmp-admit-never-called; acmp-admit-on-every-entry; acmp-admit-ignores-another-talker; acmp-admit-on-interface-0 | ACMP-06 |
+| [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L282) | acmp-getrx-count-unbound; acmp-getrx-no-fast-connect | ACMP-03, ACMP-02 |
+| [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L315) | acmp-header-registering-failed-bit; acmp-sw-read-from-fast-connect; acmp-getrx-no-registering-failed; acmp-registered-kind-dropped; acmp-view-without-registering-failed | ACMP-03, ACMP-02 |
+| [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L327) | acmp-header-listener-unknown-is-2; acmp-unknown-sink-silent | ACMP-03, ACMP-02 |
+| [AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1866) | acmp-probe-timer-before-its-send; acmp-taken-probe-timer-from-the-entry-clock | ACMP-05 |
+| [AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1830) | acmp-probe-timer-before-its-send | ACMP-05 |
+| [AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry](../tests/test_acmp.cpp#L1899) | acmp-expiry-due-at-its-first-read | ACMP-05 |
+| [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L350) | acmp-unbind-not-persisted; acmp-unbind-echoes-the-talker; acmp-unbind-keeps-srp; acmp-unbind-srp-after-response; acmp-unbind-keeps-discovery; acmp-unbind-change-before-response | ACMP-03, ACMP-02 |
+| [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L386) | acmp-not-authorized-is-13; acmp-lock-ignored | ACMP-03, ACMP-02 |
+| [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L418) | acmp-lock-refuses-the-holder; acmp-get-rx-state-locked | ACMP-03, ACMP-02 |
+| [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L431) | acmp-rebind-same-reprobes; acmp-rebind-same-keeps-the-controller | ACMP-03, ACMP-02 |
+| [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L458) | acmp-rebind-not-persisted; acmp-bind-new-keeps-srp | ACMP-03, ACMP-02 |
+| [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L488) | acmp-bind-same-talker-is-the-same-source | ACMP-03, ACMP-02 |
+| [AcmpCore.A7EachGuardTermIsChecked](../tests/test_acmp.cpp#L512) | acmp-guard-controller-dropped; acmp-guard-talker-dropped; acmp-guard-unique-id-dropped; acmp-guard-sequence-id-dropped | ACMP-04 |
+| [AcmpCore.A7ResponsesKeyOnTheListenerUniqueId](../tests/test_acmp.cpp#L500) | acmp-response-keyed-on-the-source | ACMP-04 |
+| [AcmpCore.A7ResponsesOutsideProbingAreIgnored](../tests/test_acmp.cpp#L545) | acmp-responses-taken-outside-probing | ACMP-04 |
+| [AcmpCore.A7TheGuardReadsTheSentProbeNotTheBinding](../tests/test_acmp.cpp#L534) | acmp-guard-reads-the-binding | ACMP-04 |
+| [AcmpCore.A8SuccessSettles](../tests/test_acmp.cpp#L570) | acmp-header-no-tk-5s; acmp-vlan-masked; acmp-no-tk-1s; acmp-settle-starts-no-srp; acmp-settle-swaps-stream-fields | ACMP-04 |
+| [AcmpCore.A9FailureWaitsForTheRetry](../tests/test_acmp.cpp#L593) | acmp-header-retry-2s; acmp-failure-status-dropped; acmp-failure-retries-at-200ms | ACMP-04 |
+| [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1939) | acmp-get-rx-state-reads-the-clock; acmp-probe-response-reads-the-clock-twice; acmp-unbind-reads-the-clock; acmp-talker-reads-the-clock | PORT-01 |
+| [AcmpCore.DepartingStopsEveryProbingTimer](../tests/test_acmp.cpp#L1921) | acmp-probing-status-not-notified | ACMP-06 |
+| [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L1977) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
+| [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L744) | acmp-kind-lost; acmp-kind-any-state | ACMP-04 |
+| [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L1958) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
+| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01 |
+| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551) | departing-sends-zero | ADP-03, ADP-02 |
+| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555) | available-replaces-owed-departing | ADP-03, ADP-02 |
+| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
+| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563) | available-passes-owed-departing | ADP-03, ADP-02 |
+| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567) | link-loss-drops-owed-departing | ADP-03, ADP-02 |
+| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
+| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575) | link-loss-keeps-owed-available | ADP-03, ADP-02 |
+| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
+| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583) | seed-left-at-zero | ADP-02, PORT-01 |
+| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585) | enable-not-idempotent | ADP-02, PORT-01 |
+| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587) | other-subtype-accepted | ADP-01, ADP-02 |
+| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02 |
+| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
+| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547) | draw-kinds-merged | ADP-02, PORT-01 |
+| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612) | frame-sources-from-sinks | ADP-01, ADP-02 |
+| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590) | link-down-departs | ADP-02, PORT-01 |
+| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L638) | advertise-period-wrong | ADP-02, PORT-01 |
+| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L669) | own-discover-discarded | ADP-01, ADP-02 |
+| [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
+| [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
+| [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
 | [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) | departing-keeps-index | PORT-01 |
-| [MaapCell.TableB7](../tests/test_maap.cpp#L140) | maap-table-b7-0; maap-table-b7-1; maap-table-b7-2; maap-table-b7-3; maap-table-b7-4; maap-table-b7-5; maap-table-b7-6; maap-table-b7-7; maap-table-b7-8; maap-table-b7-9; maap-table-b7-10; maap-table-b7-11; maap-table-b7-12; maap-table-b7-13; maap-table-b7-14; maap-table-b7-15; maap-table-b7-16; maap-table-b7-17; maap-generic-initial-handles-conflict; maap-generic-probe-state-defends; maap-generic-probe-defend-uses-priority | MAAP-03 |
-| [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L321) | maap-begin-down-forgets-range | MAAP-02 |
-| [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L118) | maap-constant-probe_base; maap-constant-probe_variation; maap-constant-announce_base; maap-constant-announce_variation; maap-seed-clock-ignored; maap-zero-seed-sticks | MAAP-02 |
-| [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L222) | maap-defend-multicast; maap-defend-echo-own-range; maap-intersection-too-long | MAAP-03 |
-| [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L235) | maap-adjacent-overlaps; maap-zero-count-conflicts; maap-defend-checks-request | MAAP-03 |
-| [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L274) | maap-range-end-off-by-one | MAAP-02 |
-| [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L95) | maap-initial-send-absent; maap-retransmit-count; maap-probe-count-not-decremented; maap-wire-version; maap-wire-length; maap-wire-source; maap-wire-padding; maap-allocation-seam-disconnected | MAAP-02 |
-| [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L342) | r2-saved-range-never-consumed | MAAP-02 |
-| [MaapCore.MalformedAndVersionCompatibility](../tests/test_maap.cpp#L247) | maap-malformed-ethertype; maap-malformed-subtype; maap-malformed-version; maap-malformed-reserved-zero; maap-malformed-reserved-high; maap-malformed-cdl-short; maap-malformed-cdl-truncated; maap-malformed-cdl-current; maap-malformed-source-zero; maap-malformed-source-group; maap-malformed-destination; maap-malformed-own-probe; maap-valid-minimum-refused; maap-future-version-refused | MAAP-01 |
-| [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L181) | maap-reverse-five-octets; maap-compare-mac-lsb-only | MAAP-03 |
-| [MaapCore.QueueBoundAndWithdrawal](../tests/test_maap.cpp#L384) | maap-overflow-uncounted; maap-poll-unbounded; maap-release-leaves-output | MAAP-04 |
-| [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L398) | maap-reentry-not-counted | PORT-01 |
-| [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L297) | maap-down-start-keeps-owner; maap-port-up-keeps-claim; maap-release-keeps-enable | MAAP-04 |
-| [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L198) | maap-restart-reuses-range | MAAP-02 |
-| [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L171) | maap-numeric-mac-priority; maap-generic-equal-mac-wins | MAAP-03 |
-| [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L365) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
-| [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L211) | maap-biased-random-bucket | MAAP-02 |
-| [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L10) | maap-debug-no-assert | PORT-01 |
+| [MaapCell.TableB7](../tests/test_maap.cpp#L139) | maap-table-b7-0; maap-table-b7-1; maap-table-b7-2; maap-table-b7-3; maap-table-b7-4; maap-table-b7-5; maap-table-b7-6; maap-table-b7-7; maap-table-b7-8; maap-table-b7-9; maap-table-b7-10; maap-table-b7-11; maap-table-b7-12; maap-table-b7-13; maap-table-b7-14; maap-table-b7-15; maap-table-b7-16; maap-table-b7-17; maap-generic-initial-handles-conflict; maap-generic-probe-state-defends; maap-generic-probe-defend-uses-priority | MAAP-03 |
+| [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318) | maap-begin-down-forgets-range | MAAP-02 |
+| [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117) | maap-constant-probe_base; maap-constant-probe_variation; maap-constant-announce_base; maap-constant-announce_variation; maap-seed-clock-ignored; maap-zero-seed-sticks | MAAP-02 |
+| [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L219) | maap-defend-multicast; maap-defend-echo-own-range; maap-intersection-too-long | MAAP-03 |
+| [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L232) | maap-adjacent-overlaps; maap-zero-count-conflicts; maap-defend-checks-request | MAAP-03 |
+| [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271) | maap-range-end-off-by-one | MAAP-02 |
+| [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94) | maap-initial-send-absent; maap-retransmit-count; maap-probe-count-not-decremented; maap-wire-version; maap-wire-length; maap-wire-source; maap-wire-padding; maap-allocation-seam-disconnected | MAAP-02 |
+| [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) | r2-saved-range-never-consumed | MAAP-02 |
+| [MaapCore.MalformedAndVersionCompatibility](../tests/test_maap.cpp#L244) | maap-malformed-ethertype; maap-malformed-subtype; maap-malformed-version; maap-malformed-reserved-zero; maap-malformed-reserved-high; maap-malformed-cdl-short; maap-malformed-cdl-truncated; maap-malformed-cdl-current; maap-malformed-source-zero; maap-malformed-source-group; maap-malformed-destination; maap-malformed-own-probe; maap-valid-minimum-refused; maap-future-version-refused | MAAP-01 |
+| [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L179) | maap-reverse-five-octets; maap-compare-mac-lsb-only | MAAP-03 |
+| [MaapCore.QueueBoundAndWithdrawal](../tests/test_maap.cpp#L380) | maap-overflow-uncounted; maap-poll-unbounded; maap-release-leaves-output | MAAP-04 |
+| [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394) | maap-reentry-not-counted | PORT-01 |
+| [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L294) | maap-down-start-keeps-owner; maap-port-up-keeps-claim; maap-release-keeps-enable | MAAP-04 |
+| [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196) | maap-restart-reuses-range | MAAP-02 |
+| [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L170) | maap-numeric-mac-priority; maap-generic-equal-mac-wins | MAAP-03 |
+| [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
+| [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
+| [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Kebag Logic
 // SPDX-License-Identifier: MIT
-// Independent Table B.7 expectations and B.2 wire fixtures.
+// IEEE 1722-2016 Table B.7; IEEE 1722-2016 B.2
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "maap.h"
-
 
 namespace {
 using Frame = std::array<std::uint8_t, 60>;
@@ -147,7 +146,7 @@ TEST_P(MaapCell, TableB7) {
     if (state == 2) r.acquire();
     auto before = r.frames.size();
     auto base = r.core.base;
-    // Reverse-octet comparison: local 0x80 loses to 0x40, wins over 0xc0.
+
     auto peer = local_wins ? 0x0200000000c0ULL : kPeer;
     r.receive(pdu(type, kBase, 8, peer, type == 2 ? kMac : MAAP_MULTICAST));
     const bool defend = state == 2 && type == 1;
@@ -176,7 +175,6 @@ TEST(MaapCore, ReverseOctetPriority) {
     EXPECT_EQ(equal.core.conflicts, 1u) << "equal MAC is not lower";
 }
 
-// R528-1-F3: each octet must decide after all later octets tie.
 // REQ: MAAP-03
 TEST(MaapCore, PriorityAfterTiedOctets) {
     constexpr std::uint64_t local = 0x024040404080ULL;
@@ -210,8 +208,7 @@ TEST(MaapCore, RestartDrawsNewRange) {
 // REQ: MAAP-02
 TEST(MaapCore, UniformDrawRejectsIncompleteBucket) {
     CoreRig r;
-    // Inverse xorshift seed: the first word is UINT32_MAX, outside the
-    // largest complete multiple of 79. The next word is 0x0003e01f.
+
     r.clock = 0x5e6cfc67u;
     r.begin();
     EXPECT_EQ(r.core.rng, 0x0003e01fu) << "incomplete random bucket rejected";
@@ -316,7 +313,7 @@ TEST(MaapCore, ReleaseLossAndRetry) {
     EXPECT_EQ(r.frames.size(), n) << "released instance stays idle";
 }
 
-// R528-1-F1: Table B.7 note a survives the normal link-down boot order.
+// IEEE 1722-2016 Table B.7
 // REQ: MAAP-02
 TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
     CoreRig r;
@@ -337,7 +334,6 @@ TEST(MaapCore, BeginBeforePortOperationalRetainsRange) {
     EXPECT_NE(r.core.base, kBase) << "new Begin without preferred range draws";
 }
 
-// R528-2-S1: the documented one-use preference is consumed before a link bounce.
 // REQ: MAAP-02
 TEST(MaapCore, LinkBounceDrawsAfterSuppliedRange) {
     CoreRig r;
@@ -402,5 +398,4 @@ TEST(MaapCore, ReentrantPortsAreCountedAndIgnored) {
     EXPECT_EQ(r.frames.size(), 1u); EXPECT_TRUE(r.core.enabled);
 }
 
-
-} // namespace
+}
