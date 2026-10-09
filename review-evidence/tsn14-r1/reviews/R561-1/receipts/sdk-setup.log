@@ -1,0 +1,83 @@
+clang-18 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 6b23c30bd68a86e9485cafd0806d3aa46a812089fba74d8283befa611825b42b
+clang-tidy-18 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 229a3367e33fe747961cd6472ca2d626f905f31f3db57c416d52802f88b84e1f
+libclang-common-18-dev 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 c8775e56339bcbf050994ed97ab4cc442350d3583a86cb29de4a06aec7576dde
+libclang-cpp18 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 6abcc0f657b09434acfa561afb73791323f326782a0ea513f9747ef49440941d
+libclang-rt-18-dev 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 4ed41d6bf3ea099151caef270dff331fe8b4f06063793ef605aa81af025cdc49
+libclang1-18 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 208abb2defadc4bf204ffc4cd74da0419aa66ae00763ba6e4a7aae48a5bbfb46
+libllvm18 1:18.1.8~++20240731025043+3b5b5c1ec4a3-1~exp1~20240731145144.92 4c2ccb3bdca15e5741f57bb025a05d79cdd57becfd5e23633ce82f120007cece
+libbsd0 0.12.1-1build1 8e97b7d541416512a81e7845c5f21910344c9c5c610893cf265d3298e0caad6b
+libedit2 3.1-20230828-1build1 3afbc8ddf835049dd4d88275b9d13680e4c4cdd59e191cbd63424152cc08e00e
+libgcc-13-dev 13.2.0-23ubuntu4 d36c9acb969dd37fdc0496120715d8bba67a5cc43a0c2569717314e6ad80020c
+libicu74 74.2-1ubuntu3 d29c97a21a3e3254731cfac186e4d4e611e5e67d2c9a0430f6acfbd9acaefa2e
+libmd0 1.1.0-2build1 77f8cdbf03a43656bbf6604e18bd16834fc8bf2c949d4fbdf24ac297869b667a
+libstdc++-13-dev 13.2.0-23ubuntu4 0e34b7a6ad0d9db6c718301a0c30a077590decbb31099d0fd6ac957222d77a94
+libxml2 2.9.14+dfsg-1.3ubuntu3 8c4efd7abe155df3cf0f9b64d659f2d866215785f8e8c44234fbb341d58cc967
+googletest f8d7d77c06936315286eb55f8de22cd23c188571 7ff5db23de232a39cbb5c9f5143c355885e30ac596161a6b9fc50c4538bfbf01
+-- Configuring done (0.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: $PACKET/scratch/gtest-build
+[ 25%] Built target gtest
+[ 62%] Built target gmock
+[ 75%] Built target gtest_main
+[100%] Built target gmock_main
+-- Install configuration: "Release"
+-- Up-to-date: $PACKET/scratch/gtest/include
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-function-mocker.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-actions.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-more-actions.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-more-matchers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-matchers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/gmock-internal-utils.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/custom
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/custom/README.md
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/custom/gmock-generated-actions.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/custom/gmock-port.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/custom/gmock-matchers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/gmock-pp.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/internal/gmock-port.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-spec-builders.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-nice-strict.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock-cardinalities.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gmock/gmock.h
+-- Up-to-date: $PACKET/scratch/gtest/lib/libgmock.a
+-- Up-to-date: $PACKET/scratch/gtest/lib/libgmock_main.a
+-- Up-to-date: $PACKET/scratch/gtest/lib/pkgconfig/gmock.pc
+-- Up-to-date: $PACKET/scratch/gtest/lib/pkgconfig/gmock_main.pc
+-- Up-to-date: $PACKET/scratch/gtest/lib/cmake/GTest/GTestTargets.cmake
+-- Up-to-date: $PACKET/scratch/gtest/lib/cmake/GTest/GTestTargets-release.cmake
+-- Up-to-date: $PACKET/scratch/gtest/lib/cmake/GTest/GTestConfigVersion.cmake
+-- Up-to-date: $PACKET/scratch/gtest/lib/cmake/GTest/GTestConfig.cmake
+-- Up-to-date: $PACKET/scratch/gtest/include
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest_prod.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-matchers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-printers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-assertion-result.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-death-test.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-message.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest_pred_impl.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-port.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/custom
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/custom/gtest-port.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/custom/gtest-printers.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/custom/README.md
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/custom/gtest.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-string.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-death-test-internal.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-internal.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-param-util.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-port-arch.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-filepath.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/internal/gtest-type-util.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-param-test.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-spi.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-typed-test.h
+-- Up-to-date: $PACKET/scratch/gtest/include/gtest/gtest-test-part.h
+-- Up-to-date: $PACKET/scratch/gtest/lib/libgtest.a
+-- Up-to-date: $PACKET/scratch/gtest/lib/libgtest_main.a
+-- Up-to-date: $PACKET/scratch/gtest/lib/pkgconfig/gtest.pc
+-- Up-to-date: $PACKET/scratch/gtest/lib/pkgconfig/gtest_main.pc

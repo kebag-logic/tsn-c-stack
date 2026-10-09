@@ -1,0 +1,207 @@
+{
+  "aggregate": "REVIEW READY under manager ruling",
+  "head": "69a312e3914f96c2db5fa51f07b087a6cd6ff349",
+  "exception": "Only privacy fails on the required base identity; PR 17 supplies the fix.",
+  "ruling": "https://github.com/kebag-logic/tsn-c-stack/issues/14#issuecomment-6081168071",
+  "fix": "https://github.com/kebag-logic/tsn-c-stack/pull/17",
+  "gates": [
+    {
+      "gate": "boundary",
+      "rc": 0
+    },
+    {
+      "gate": "needles",
+      "rc": 0
+    },
+    {
+      "gate": "assertion-templates",
+      "rc": 0
+    },
+    {
+      "gate": "dependencies",
+      "rc": 0
+    },
+    {
+      "gate": "comments",
+      "rc": 0
+    },
+    {
+      "gate": "conditionals",
+      "rc": 0
+    },
+    {
+      "gate": "port-contracts",
+      "rc": 0
+    },
+    {
+      "gate": "registration-controls",
+      "rc": 0
+    },
+    {
+      "gate": "license",
+      "rc": 0
+    },
+    {
+      "gate": "traceability",
+      "rc": 0
+    },
+    {
+      "gate": "test-inventory",
+      "rc": 0
+    },
+    {
+      "gate": "coverage-controls",
+      "rc": 0
+    },
+    {
+      "gate": "privacy",
+      "rc": 1
+    },
+    {
+      "gate": "gcc-configure",
+      "command": [
+        "cmake",
+        "-S",
+        "$LANES/tsn-c-stack-import",
+        "-B",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/gcc",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_C_COMPILER=gcc",
+        "-DCMAKE_CXX_COMPILER=g++",
+        "-DTSN_COVERAGE=ON"
+      ],
+      "rc": 0,
+      "seconds": 0.731914758682251
+    },
+    {
+      "gate": "gcc-build",
+      "command": [
+        "cmake",
+        "--build",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/gcc",
+        "-j16"
+      ],
+      "rc": 0,
+      "seconds": 5.1368138790130615
+    },
+    {
+      "gate": "gcc-test",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/gcc",
+        "--output-on-failure",
+        "-j16"
+      ],
+      "rc": 0,
+      "seconds": 0.18257427215576172
+    },
+    {
+      "gate": "coverage",
+      "command": [
+        "python3",
+        "scripts/coverage.py",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/gcc"
+      ],
+      "rc": 0,
+      "seconds": 0.09354686737060547
+    },
+    {
+      "gate": "clang-sanitizers-configure",
+      "command": [
+        "cmake",
+        "-S",
+        "$LANES/tsn-c-stack-import",
+        "-B",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/clang-sanitizers",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_C_COMPILER=clang",
+        "-DCMAKE_CXX_COMPILER=clang++",
+        "-DTSN_SANITIZERS=ON"
+      ],
+      "rc": 0,
+      "seconds": 0.9169456958770752
+    },
+    {
+      "gate": "clang-sanitizers-build",
+      "command": [
+        "cmake",
+        "--build",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/clang-sanitizers",
+        "-j16"
+      ],
+      "rc": 0,
+      "seconds": 5.470932245254517
+    },
+    {
+      "gate": "clang-sanitizers-test",
+      "command": [
+        "ctest",
+        "--test-dir",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/clang-sanitizers",
+        "--output-on-failure",
+        "-j16"
+      ],
+      "rc": 0,
+      "seconds": 0.43552398681640625
+    },
+    {
+      "gate": "mutation",
+      "command": [
+        "python3",
+        "scripts/mutation.py",
+        "--work",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/mutations",
+        "--jobs",
+        "16"
+      ],
+      "rc": 0,
+      "seconds": 19.947612762451172
+    },
+    {
+      "gate": "static-analysis",
+      "command": [
+        "python3",
+        "scripts/static_analysis.py"
+      ],
+      "rc": 0,
+      "seconds": 9.8031747341156
+    },
+    {
+      "gate": "mutation-controls",
+      "command": [
+        "python3",
+        "scripts/mutation_selftest.py",
+        "--work",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/mutation-controls",
+        "--jobs",
+        "16"
+      ],
+      "rc": 0,
+      "seconds": 29.40071964263916
+    },
+    {
+      "gate": "graphs",
+      "command": [
+        "python3",
+        "scripts/render_graphs.py",
+        "--output",
+        "$VALIDATION_STORAGE/tsn14-a571/resume/step2/linux/graphs"
+      ],
+      "rc": 0,
+      "seconds": 2.6660678386688232
+    },
+    {
+      "gate": "rv32-debug",
+      "rc": 0
+    },
+    {
+      "gate": "rv32-release",
+      "rc": 0
+    },
+    {
+      "gate": "new-commit-identities",
+      "rc": 0
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+exact_head db950cfa959f501932a47d4113733a671f882a83
+tracked_blob_bytes_and_modes 76 PASS
+index_tree_equals_HEAD PASS
+src_and_include_equal_source_base PASS
+required_gitlinks []
+source_inventory FR_NFR.md 68 7ca56fa950c00c0a9623087fc141b8a0aa99db0fa0e421c5bf667e0d2d7067f1
+source_inventory REQUIREMENTS.md 46 10bac6a48664f607fb99b3ed89505da4ebc4ee80282582f4200b1b8227e75ab5
+all_114_numbered_sources_and_line_links PASS
+source_dispositions {'ported': 12, 'port obligation': 8, 'excluded': 96}
+imported_requirements 24 {'test': 9, 'port obligation': 12, 'verified by inspection': 3}
+MFDISC-01 test AdpCore.A0toA2Schedule,AdpCore.A10toA14DepartingIndex
+MFDISC-02 test AdpCore.A3toA5DiscoverAndDiscard
+MFDISC-03 test AdpCore.A10toA14DepartingIndex,AdpCore.A15OwedDepartingAcrossARestart,AdpCore.A18LinkLossKeepsTheOwedDeparting,AdpCore.A20LinkLossDropsTheOwedAvailable,AdpCore.LinkLevelsAndDisabledInputs
+MFDISC-04 test AdpCore.A0toA2Schedule,AdpCore.EntityFieldsUseIndependentCounts,AdpCore.AdvertisementFieldsMatchCaller
+MFENTITY-01 port obligation linked reason and evidence
+MFENTITY-02 port obligation linked reason and evidence
+MFCONN-01 test AcmpCore.A1BindFromUnboundRespondsThenProbes,AcmpCore.A2GetRxStateInEveryState,AcmpCore.A3UnbindInEveryState,AcmpCore.A20ProbeTxIsAnsweredFromTheSource,AcmpCore.A20DisconnectGetTxStateAndGetTxConnection
+MFCONN-02 port obligation linked reason and evidence
+MFCONN-03 test AcmpCore.A22DiscoveredStateCells,AcmpCore.A22DepartingAndAging,AcmpCore.A24ARestoredBindingFastConnects,AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens
+MFCONN-04 port obligation linked reason and evidence
+MFMAAP-01 test MaapCore.InitialAndThreeRetransmissions,MaapCell.TableB7,MaapCore.DefendEchoAndIntersection,MaapCore.ReleaseLossAndRetry
+MFMAAP-02 port obligation linked reason and evidence
+MFSRP-01 test AcmpCore.A3UnbindInEveryState,AcmpCore.A8SuccessSettles,AcmpCore.A14RegisteredSettlesTheReservation,AcmpCore.A15UnregisteredReprobes,AcmpCore.KindChangesOnlyTheSettledView
+MFSRP-02 port obligation linked reason and evidence
+MFSRP-03 port obligation linked reason and evidence
+MFSRP-04 port obligation linked reason and evidence
+MFOWNER-01 port obligation linked reason and evidence
+MFSERVICE-01 port obligation linked reason and evidence
+MFLATENCY-01 port obligation linked reason and evidence
+MFRECOVERY-01 test AcmpCore.A15UnregisteredReprobes,AcmpCore.A22DiscoveredStateCells,AcmpCore.A22DepartingAndAging,AdpCore.A0toA2Schedule,AdpCore.LinkLevelsAndDisabledInputs,MaapCore.ReleaseLossAndRetry,MaapCore.LinkBounceDrawsAfterSuppliedRange
+MFRECOVERY-02 port obligation linked reason and evidence
+MFBUILD-01 verified by inspection linked reason and evidence
+MFMEMORY-01 verified by inspection linked reason and evidence
+MFQUALITY-01 verified by inspection linked reason and evidence
+requirements_and_generated_source_map PASS
+test_declarations 109 plants 322
+eleven_ADP_vector_plants_unique_and_named PASS

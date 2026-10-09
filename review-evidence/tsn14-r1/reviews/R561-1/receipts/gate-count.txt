@@ -1,0 +1,11 @@
+head: db950cfa959f501932a47d4113733a671f882a83
+PR URL: https://github.com/kebag-logic/tsn-c-stack/pull/18
+PR body updated_at: 2026-10-09T13:49:12Z
+PR validation paragraph: The branch merges `main` at `74445d28`, which includes the privacy gate fix ([PR 17](https://github.com/kebag-logic/tsn-c-stack/pull/17)). With GoogleTest 1.14.0 and Clang 18, all 24 `validate.py` gates pass at the head.
+claimed gate count: 24
+completed local gate count: 25
+completed hosted gate count: 25
+all local return codes zero: true
+hosted and local gate-name sets match: true
+additional gate introduced by the manager merge: privacy-selftest
+finding R561-1-F1: reproduced: incorrect PR validation figure

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-09T15:59:18.145" name="AllTests">
+  <testsuite name="MaapCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-09T15:59:18.146">
+    <testcase name="InitialAndThreeRetransmissions" file="$PACKET/scratch/validate-compatible/mutations/baseline/tests/test_maap.cpp" line="94" status="run" result="completed" time="0." timestamp="2026-10-09T15:59:18.146" classname="MaapCore">
+      <failure message="$PACKET/scratch/validate-compatible/mutations/baseline/tests/test_maap.cpp:110&#x0A;Value of: r.valid&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_ca2ee64b77bc00e4ebabc5d1827a2faa&#x0A;accepted ANNOUNCE publishes allocation&#x0A;TSN_MESSAGE_END_42b07698e50e26e988622c12d55efd9b&#x0A;&#x0A;" type=""><![CDATA[$PACKET/scratch/validate-compatible/mutations/baseline/tests/test_maap.cpp:110
+Value of: r.valid
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_ca2ee64b77bc00e4ebabc5d1827a2faa
+accepted ANNOUNCE publishes allocation
+TSN_MESSAGE_END_42b07698e50e26e988622c12d55efd9b
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
