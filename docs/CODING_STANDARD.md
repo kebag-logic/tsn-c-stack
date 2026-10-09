@@ -4,6 +4,8 @@ Code comments contain only SPDX lines, requirement IDs, or short references to s
 Put integration contracts in the [porting guide](PORTING.md) and [architecture](ARCHITECTURE.md).
 The [comment gate](../scripts/check_comments.py) enforces the contributor rule through this closed contract.
 It checks every comment under these rules; it makes no broader text-classification claim.
+The gate keeps honest contributors to the comment rule. It does not detect deliberately hidden text.
+A deliberately obfuscated construction outside the listed rules is a review suggestion unless it occurs in the shipped tree.
 
 1. Files under `src/`, `include/`, `tests/` and `examples/` contain only printable ASCII, tab and LF.
    CR, form feed, vertical tab, other controls and non-ASCII bytes are refused before lexing.
@@ -24,6 +26,8 @@ It checks every comment under these rules; it makes no broader text-classificati
    `EXPECT_EQ`, `ASSERT_EQ`, `EXPECT_NE`, `ASSERT_NE`, `EXPECT_LE`, `ASSERT_LE`,
    `EXPECT_GE`, `ASSERT_GE`, `EXPECT_EXIT` and `EXPECT_CALL`.
    The [assertion gate](../scripts/needle_audit.py) refuses other forms, including `EXPECT_NEAR`.
+   Refused public macros are generated from the pinned headers with `-dM -E`.
+   Token pasting (`##`) is forbidden in tests.
    Assertion lexing uses C++20. Literal comment text is not an assertion.
    Needles have at least eight characters and occur in exactly one owned message literal.
    They must not be substrings of the [generated default diagnostics](../scripts/assertion-defaults.json).

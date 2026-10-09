@@ -25,7 +25,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
 | Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle has at least eight characters and identifies exactly one assertion message literal in its named test or helper. Substrings of the generated default diagnostics are refused. Other assertion forms are refused. |
-| Assertion templates | `python3 scripts/assertion_templates.py --check --selftest --work build-assertion-templates` | Compile and run one failing instance of each of the 14 allowed forms with GoogleTest 1.14.0. Blank streamed messages and compare the generated default diagnostics. A compiling `EXPECT_NEAR` control is refused. |
+| Assertion templates | `python3 scripts/assertion_templates.py --check --selftest --work build-assertion-templates` | Compile and run one failing instance of each of the 14 allowed forms with GoogleTest 1.14.0. Blank streamed messages and compare the generated default diagnostics. Compiling `EXPECT_NEAR`, `GTEST_ASSERT_LT`, `GTEST_FAIL` and token-pasted controls are refused. |
 | Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
 | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
@@ -64,6 +64,8 @@ Compiling controls include plain and spliced directives and macro-produced prose
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract:
+The gate keeps honest contributors to the comment rule. It does not detect deliberately hidden text.
+A deliberately obfuscated construction outside the listed rules is a review suggestion unless it occurs in the shipped tree.
 
 | Rule | Accepted subset | Compiling control |
 |---|---|---|
@@ -74,9 +76,13 @@ The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment 
 | Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp` or `.irpc`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
 | Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
 
-The assertion gate scans the named macros in all C and C++ files below `tests/`.
+The assertion gate refuses token pasting (`##`) and scans the named macros in all C and C++ files below `tests/`.
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
 CMake requires the same version; the mutation driver checks it too.
+The same generator preprocesses `gtest/gtest.h` and `gmock/gmock.h` with `-dM -E`.
+It records public assertion and result macros outside the fourteen allowed forms.
+This includes `EXPECT_*`, `ASSERT_*`, `GTEST_*`, `FAIL*`, `SUCCEED` and `ADD_FAILURE*`.
+CI regenerates both the refused names and the diagnostics.
 Templates record one failing instance of each permitted form, including an unmet mock expectation.
 Streamed messages are removed. Only source line numbers are normalized.
 The template list does not claim to enumerate every value-dependent diagnostic variation.

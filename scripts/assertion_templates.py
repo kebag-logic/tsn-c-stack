@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import xml.etree.ElementTree as ET
-from assertion_forms import ALLOWED, GTEST_VERSION, errors, require_version
+from assertion_forms import ALLOWED, GTEST_VERSION, errors, package_flags, refused_macros, require_version
 from assertion_messages import instrument
 from test_registry import environment
 
@@ -69,7 +69,8 @@ def generate(work):
         if not message.strip() or 'discarded stream' in message or any(m in message for m in MARKERS):
             raise RuntimeError('invalid default template')
         templates[case.get('name')] = message
-    return {'googletest_version': GTEST_VERSION, 'templates': dict(sorted(templates.items()))}
+    return {'googletest_version': GTEST_VERSION, 'refused_macros': refused_macros(),
+            'templates': dict(sorted(templates.items()))}
 
 
 def selftest(work, generated):
@@ -77,6 +78,7 @@ def selftest(work, generated):
     path = work / 'near.cpp'
     path.write_text(source)
     subprocess.run([os.environ.get('CXX', 'g++'), '-std=c++20', '-Wall', '-Wextra', '-Werror',
+                    *package_flags('--cflags'),
                     '-c', str(path), '-o', str(work / 'near.o')], check=True)
     if errors(source) != ['unsupported assertion form: EXPECT_NEAR']:
         raise RuntimeError('numeric-nearness form accepted')
@@ -93,6 +95,28 @@ def selftest(work, generated):
             raise RuntimeError('generated default text accepted: ' + name)
     if errors('TEST(Control, Allowed) { EXPECT_TRUE(false) << "owned diagnostic"; }'):
         raise RuntimeError('allowed assertion refused')
+    for name, definition, statement, expected in (
+            ('alias', '', 'GTEST_ASSERT_LT(2, 1);', 'unsupported assertion form: GTEST_ASSERT_LT'),
+            ('failure', '', 'GTEST_FAIL();', 'unsupported assertion form: GTEST_FAIL'),
+            ('pasted', '#define JOIN(a, b) a##b\n', 'JOIN(EXPE, CT_NEAR)(1.0, 2.0, 0.1);',
+             'token pasting is forbidden in tests')):
+        source = '#include <gtest/gtest.h>\n' + definition + 'TEST(Control, Probe) { ' + statement + ' }\n'
+        path = work / (name + '.cpp')
+        path.write_text(source)
+        binary, report = work / name, work / (name + '.xml')
+        subprocess.run([os.environ.get('CXX', 'g++'), '-std=c++20', '-Wall', '-Wextra', '-Werror',
+                        *package_flags('--cflags'), str(path), *package_flags('--libs'),
+                        '-lgtest_main', '-o', str(binary)], check=True)
+        report.unlink(missing_ok=True)
+        result = subprocess.run([str(binary), '--gtest_output=xml:' + str(report)],
+                                capture_output=True, env=environment(), timeout=30)
+        if result.returncode != 1 or int(ET.parse(report).getroot().get('failures', '0')) != 1:
+            raise RuntimeError(name + ': control did not execute its failing assertion')
+        if errors(source) != [expected]:
+            raise RuntimeError(name + ': unsupported assertion accepted')
+        print('assertion control ' + name + ': compiled, failed at runtime and refused by source gate')
+    if errors('// GTEST_FAIL() ##\nconst char *text = "GTEST_FAIL ##";'):
+        raise RuntimeError('literal assertion text refused')
     print('assertion controls: EXPECT_NEAR compiles and is refused; all 14 generated defaults are refused')
 
 
