@@ -1,0 +1,733 @@
+diff --git a/docs/DEVIATIONS.md b/docs/DEVIATIONS.md
+index 681e901..b45cb6c 100644
+--- a/docs/DEVIATIONS.md
++++ b/docs/DEVIATIONS.md
+@@ -1,6 +1,7 @@
+ # Deviations and scope
+ 
+-This import preserves core behavior. Passing unit tests is not a claim of complete
++The import baseline preserves core behavior. The [ADP correction](REQUIREMENTS.md#adp-input-validation) follows [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3).
++Passing unit tests is not a claim of complete
+ Milan or IEEE device certification. The [requirements](REQUIREMENTS.md) list the
+ covered clauses. The [traceability matrix](TRACEABILITY.md) names their tests.
+ 
+@@ -13,7 +14,6 @@ covered clauses. The [traceability matrix](TRACEABILITY.md) names their tests.
+ | DEV-05 | [IEEE 1722-2016 Annex B, Table B.7](https://standards.ieee.org/ieee/1722/5979/) | MAAP uses a fixed output queue. Overload is counted and requires prompt port service. Timing on a real transport is outside host unit tests. |
+ | DEV-06 | [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) | Receivers expect untagged frame layout. The integrator removes VLAN tags. This keeps parsing independent of the network driver. |
+ | DEV-07 | [Milan v1.2 5.5.3.5.2](https://avnu.org/resource/milan-specification/) | Binding serialization is a local 20-byte format. This library supplies no persistent store. The integrator provides durable transaction semantics. |
+-| DEV-08 | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | The ADP receiver validates only the prefix it reads, EtherType, subtype, message nibble and target. Matching discovery with version 1, length 26 bytes, or zero control_data_length still enters DELAY from WAITING. Each restarts the timer without increasing discarded. The [owner decision](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074721212) preserves this inherited behavior. The adapter must validate complete input as described in [PORTING](PORTING.md#adp-input-validation). The correction is tracked in [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3). |
+ 
+ The 2021 and 2016 editions above are the import baseline.
+ Later amendments and corrigenda have not been audited by this lane.
+diff --git a/docs/PORTING.md b/docs/PORTING.md
+index 79b49fd..fbd010f 100644
+--- a/docs/PORTING.md
++++ b/docs/PORTING.md
+@@ -71,15 +71,19 @@ Use `acmp_change_pending` to inspect a notification held behind a response.
+ 
+ ## ADP input validation
+ 
+-Validate the full ADPDU before calling `adp_rx`.
+-Check AVTP version zero, the complete ADPDU length and `control_data_length` against the received buffer.
+-These checks belong to the adapter until [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3) corrects the inherited receiver.
+-The core checks only its readable prefix, EtherType, subtype, message nibble and target.
+-In WAITING, matching discovery input with version 1, length 26 bytes, or `control_data_length` zero still enters DELAY.
+-It restarts the timer without increasing `discarded`. Valid discovery follows the same path.
+-See [ADP-01](REQUIREMENTS.md#adp-input-limit), [DEV-08](DEVIATIONS.md), and the [input controls](../tests/test_adp.cpp).
+-The affected clauses are [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/)
+-and [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/).
++Supply the actual readable buffer length to `adp_rx` on the correct interface.
++Keep the [untagged frame and buffer contract](#frames-and-buffers).
++The core checks the complete 82-byte frame minimum before reading header or target fields.
++It requires AVTP version zero and the 11-bit `control_data_length` value 56.
++It also checks EtherType, subtype, discovery message type and target.
++Each refusal increments `discarded` once, with no other state change or port call.
++This applies in DOWN, DELAY and WAITING, including disabled input and an owed advertisement.
++Valid discovery for zero or the local entity starts a delay only in enabled WAITING.
++Extra trailing bytes are accepted. Destination filtering and interface selection remain adapter duties.
++See [ADP-01](REQUIREMENTS.md#adp-input-validation) and the [input controls](../tests/test_adp.cpp).
++The format authorities are [IEEE 1722.1-2021 Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/)
++and [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/).
++Target and state handling follow [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
+ 
+ ## Callback checklist
+ 
+@@ -150,7 +154,7 @@ These [diagnostics](../include/adp.h) count modulo 2^32. Read them from the seri
+ | `draws` | Random delays drawn. |
+ | `last_draw_ms`, `last_draw` | Most recent delay and its draw kind; these are diagnostic values, not counters. |
+ | `stray_expiries` | Timer expiries received when no timer is running. |
+-| `discarded` | ADPDUs discarded by the inherited receiver checks. |
++| `discarded` | Malformed or irrelevant ADPDUs refused by receive validation. |
+ | `deferred_sends` | Send attempts refused for lack of room. |
+ | `departing_coalesced` | Shutdowns coalesced into an already queued departure. |
+ | `adp_reentry_count` | Lifetime count of refused port callbacks across all instances, returned by the function of that name. |
+diff --git a/docs/REQUIREMENTS.md b/docs/REQUIREMENTS.md
+index 4243c17..81c2eec 100644
+--- a/docs/REQUIREMENTS.md
++++ b/docs/REQUIREMENTS.md
+@@ -17,7 +17,7 @@ Build, memory and testing policies are local decisions. They have source links r
+ 
+ | ID | Required behavior | Clause |
+ |---|---|---|
+-| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble, target and input shorter than 26 bytes. Preserve the [DEV-08 input limits](DEVIATIONS.md). | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) |
++| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls. | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) |
+ | ADP-02 | Follow advertise, discover, link, grandmaster and shutdown transitions. | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) |
+ | ADP-03 | Keep refused departures ordered before an advertisement. Bound storage and count coalescing. | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) |
+ | PORT-01 | Serialize input. Refuse synchronous callback re-entry. Preserve state on refusal. | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) |
+@@ -35,15 +35,23 @@ Build, memory and testing policies are local decisions. They have source links r
+ | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
+ | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
+ 
+-## ADP input limit
++## ADP input validation
+ 
+-ADP-01 records the inherited receiver checks. It does not promise complete ADPDU validation.
+-In WAITING, a matching discovery with AVTP version 1, length 26 bytes, or `control_data_length` zero enters DELAY.
+-Each restarts its timer and leaves `discarded` zero. A valid discovery has the same effect.
+-The [input controls](../tests/test_adp.cpp) pin all four cases.
+-The [porting obligations](PORTING.md#adp-input-validation) and [DEV-08](DEVIATIONS.md) explain the integration boundary.
+-The [round 2 decision](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074721212) preserves this behavior.
+-The protocol correction is tracked in [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3).
++ADP-01 applies before target parsing in every receive state, including disabled input.
++Each refused frame increments `discarded` once. Other core storage and all port callbacks remain unchanged.
++
++| Refused input | Authority |
++|---|---|
++| AVTP version 1 through 7 | [IEEE 1722.1-2021 6.2.2.3](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4](https://standards.ieee.org/ieee/1722/5979/) |
++| Fewer than 82 bytes, including the 14-byte untagged Ethernet header and 68-byte ADPDU | [IEEE 1722.1-2021 Figure 6-1 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/) |
++| Any 11-bit `control_data_length` other than 56, including zero | [IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) |
++
++A complete valid discovery for zero or the local entity enters DELAY from WAITING.
++Other states preserve their timers and pending output under [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
++Trailing buffer bytes are permitted. The adapter supplies the actual readable length and untagged layout.
++The [hosted input controls](../tests/test_adp.cpp) and [RV32 smoke checks](../examples/rv32/smoke.c) cover these rules.
++The [porting contract](PORTING.md#adp-input-validation) retains framing and interface duties.
++This resolves the inherited input deviation under the [issue 3 assignment](https://github.com/kebag-logic/tsn-c-stack/issues/3#issuecomment-6085285119).
+ 
+ ## Clause checks
+ 
+@@ -62,7 +70,7 @@ They are not established by a successful library build.
+ In particular, neither target's test suite proves the 10 ms service bound, wire deadlines, cold-power persistence or complete recovery counters.
+ The integration must supply that evidence before claiming those requirements are met.
+ No core behavior change is needed for this mapping.
+-The inherited [ADP input limit](#adp-input-limit) remains explicit.
++The [ADP input validation](#adp-input-validation) is enforced by the core on both targets.
+ 
+ The unnumbered [product ownership and protocol table](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#1-product-ownership) has this disposition:
+ 
+diff --git a/docs/STATIC_ANALYSIS.md b/docs/STATIC_ANALYSIS.md
+index 7f2ed4b..2594ad6 100644
+--- a/docs/STATIC_ANALYSIS.md
++++ b/docs/STATIC_ANALYSIS.md
+@@ -10,7 +10,7 @@ System-header diagnostics are excluded by the analyzer default.
+ |---|---|---|
+ | cppcheck | `constParameterPointer` | The decoder parameter at [maap.c](../src/maap.c#L262) could be const. Preserve the imported signature in this move. The function only reads it. |
+ | cppcheck | `constParameterCallback` | The read-only example callbacks at [gptp](../examples/adp_port.c#L32), [link_up](../examples/adp_port.c#L40) and [seed](../examples/adp_port.c#L46) must match the public mutable-context callback type. Changing it would require an incompatible function-pointer cast. |
+-| cppcheck | `redundantAssignment` | The [RV32 backpressure control](../examples/rv32/smoke.c#L137) changes transmit availability across a core call. The send callback reads the earlier value through its context pointer. |
++| cppcheck | `redundantAssignment` | The [RV32 backpressure control](../examples/rv32/smoke.c#L136) changes transmit availability across a core call. The send callback reads the earlier value through its context pointer. |
+ | clang-tidy | `bugprone-signed-bitwise` | C integer promotion makes byte operands and literal shift counts signed. Values are nonnegative and bounded. The [wire tests](TESTS.md) and undefined-behavior run exercise these operations. |
+ | clang-tidy | `bugprone-easily-swappable-parameters` | Callback and wire helper signatures deliberately place related integer fields together. Preserve the source API. Field-level and interface-isolation tests check order. |
+ | clang-tidy | `clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling` | Optional Annex K memory routines are not available on all embedded C libraries. Fixed-length copies use explicit bounds. Buffer boundary tests and the address sanitizer validate exercised accesses. |
+diff --git a/docs/TESTS.md b/docs/TESTS.md
+index ef5a745..13f6467 100644
+--- a/docs/TESTS.md
++++ b/docs/TESTS.md
+@@ -78,26 +78,29 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
+ | [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
+ | [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L786) | acmp-kind-lost; acmp-kind-any-state | ACMP-04, MFSRP-01 |
+ | [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
+-| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
+-| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
+-| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
+-| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
+-| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563) | available-passes-owed-departing | ADP-03, ADP-02 |
+-| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567) | link-loss-drops-owed-departing | ADP-03, ADP-02, MFDISC-03 |
+-| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
+-| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575) | link-loss-keeps-owed-available | ADP-03, ADP-02, MFDISC-03 |
+-| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
+-| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583) | seed-left-at-zero | ADP-02, PORT-01 |
+-| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585) | enable-not-idempotent | ADP-02, PORT-01 |
+-| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587) | other-subtype-accepted | ADP-01, ADP-02 |
+-| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02, MFDISC-02 |
+-| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
+-| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547) | draw-kinds-merged | ADP-02, PORT-01, MFDISC-01 |
+-| [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628) | adp-config-entity-id; adp-config-model-id; adp-config-entity-capabilities; adp-config-talker-count; adp-config-talker-capabilities; adp-config-listener-count; adp-config-listener-capabilities; adp-config-grandmaster; adp-config-domain; adp-config-identify-index; adp-config-interface-index | ADP-01, MFDISC-04 |
+-| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612) | frame-sources-from-sinks | ADP-01, ADP-02, MFDISC-04 |
+-| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590) | link-down-departs | ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01 |
+-| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671) | advertise-period-wrong | ADP-02, PORT-01 |
+-| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) | own-discover-discarded | ADP-01, ADP-02 |
++| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
++| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
++| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
++| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L561) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
++| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L565) | available-passes-owed-departing | ADP-03, ADP-02 |
++| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569) | link-loss-drops-owed-departing | ADP-03, ADP-02, MFDISC-03 |
++| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L573) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
++| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577) | link-loss-keeps-owed-available | ADP-03, ADP-02, MFDISC-03 |
++| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L581) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
++| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585) | seed-left-at-zero | ADP-02, PORT-01 |
++| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587) | enable-not-idempotent | ADP-02, PORT-01 |
++| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L589) | other-subtype-accepted | ADP-01, ADP-02 |
++| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02, MFDISC-02 |
++| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L545) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
++| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549) | draw-kinds-merged | ADP-02, PORT-01, MFDISC-01 |
++| [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L630) | adp-config-entity-id; adp-config-model-id; adp-config-entity-capabilities; adp-config-talker-count; adp-config-talker-capabilities; adp-config-listener-count; adp-config-listener-capabilities; adp-config-grandmaster; adp-config-domain; adp-config-identify-index; adp-config-interface-index | ADP-01, MFDISC-04 |
++| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614) | frame-sources-from-sinks | ADP-01, ADP-02, MFDISC-04 |
++| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592) | link-down-departs | ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01 |
++| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673) | advertise-period-wrong | ADP-02, PORT-01 |
++| [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L753) | adp-short-frame-accepted | ADP-01 |
++| [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L736) | adp-unsupported-version-accepted | ADP-01 |
++| [AdpInputControl.RejectsWrongControlDataLength](../tests/test_adp.cpp#L770) | adp-wrong-control-length-accepted | ADP-01 |
++| [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) | own-discover-discarded | ADP-01, ADP-02, MFDISC-02 |
+ | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
+ | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
+ | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
+diff --git a/docs/TRACEABILITY.md b/docs/TRACEABILITY.md
+index b5bc4c6..54a7205 100644
+--- a/docs/TRACEABILITY.md
++++ b/docs/TRACEABILITY.md
+@@ -8,10 +8,10 @@ Port obligations are not claims of completed integration or measured target timi
+ 
+ | Requirement | Origin | Clause | Verification and tests |
+ |---|---|---|---|
+-| [ADP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+-| [ADP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+-| [ADP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579) |
+-| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
++| [ADP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L589); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L630); [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L736); [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L753); [AdpInputControl.RejectsWrongControlDataLength](../tests/test_adp.cpp#L770); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) |
++| [ADP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L545); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L561); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L565); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L573); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L581); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L589); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) |
++| [ADP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L545); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L561); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L565); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L573); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L581) |
++| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
+ | [ACMP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local capacity contract supporting Milan v1.2 5.5.3.5.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L209); [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L248) |
+ | [ACMP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.5.2.2 and 5.5.3.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530); [AcmpCore.A21MessagesNotForThisEntityAreIgnored](../tests/test_acmp.cpp#L1018); [AcmpCore.A21MalformedFramesAreCounted](../tests/test_acmp.cpp#L1039); [AcmpCore.A25OnlyTable522ItemsAreReported](../tests/test_acmp.cpp#L1510); [AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead](../tests/test_acmp.cpp#L1537) |
+ | [ACMP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.2.4, 5.5.2.5 and 5.5.3.5, Tables 5.30 and 5.32](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530) |
+@@ -25,10 +25,10 @@ Port obligations are not claims of completed integration or measured target timi
+ | [MAAP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94); [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117); [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196); [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209); [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271); [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+ | [MAAP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) | [MaapCell.TableB7](../tests/test_maap.cpp#L139); [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L170); [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L179); [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L219); [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L232) |
+ | [MAAP-04](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) | [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L294); [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361); [MaapCore.QueueBoundAndWithdrawal](../tests/test_maap.cpp#L380) |
+-| [MFDISC-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L187) | [IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2 and 5.6.3.5](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551) |
+-| [MFDISC-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L188) | [IEEE 1722.1-2021 6.2.2.4 and 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5 and Table 5.51](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539) |
+-| [MFDISC-03](REQUIREMENTS.md) | [milan-fpga FR-DISC-03](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L189) | [Milan v1.2 5.6.3.5.6, 5.6.3.5.8, 5.6.3.5.10 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/) | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590) |
+-| [MFDISC-04](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628) |
++| [MFDISC-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L187) | [IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2 and 5.6.3.5](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) |
++| [MFDISC-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L188) | [IEEE 1722.1-2021 6.2.2.4 and 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5 and Table 5.51](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) |
++| [MFDISC-03](REQUIREMENTS.md) | [milan-fpga FR-DISC-03](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L189) | [Milan v1.2 5.6.3.5.6, 5.6.3.5.8, 5.6.3.5.10 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/) | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592) |
++| [MFDISC-04](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L630) |
+ | [MFENTITY-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | port obligation: The library encodes caller data. It has no descriptor store or gPTP implementation. [Entity configuration contract](PORTING.md#entity-configuration) |
+ | [MFENTITY-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-05](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L191) | [IEEE 1722.1-2021 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/) | port obligation: MAC derivation and restart stability are source product policy. IEEE permits MAC derivation; the core accepts a caller-supplied identifier. [Entity identity contract](PORTING.md#entity-configuration) |
+ | [MFENTITY-03](REQUIREMENTS.md) | [milan-fpga NFR-SEC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L470) | [IEEE 1722.1-2021 6.2.2.9 and Table 6-2](https://standards.ieee.org/ieee/1722.1/6670/) | port obligation: The no-required-authentication policy comes from the source product. ADP encodes caller capabilities. The library implements neither AECP authentication nor application authorization. [Entity configuration contract](PORTING.md#entity-configuration) |
+@@ -45,7 +45,7 @@ Port obligations are not claims of completed integration or measured target timi
+ | [MFOWNER-01](REQUIREMENTS.md) | [milan-fpga NFR-SCOUT-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L322) | [Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | port obligation: Single ownership is portable. Placement switches and platform ingress hardware are excluded parts of the source row. [Dispatch contract](PORTING.md#ownership-and-dispatch) |
+ | [MFSERVICE-01](REQUIREMENTS.md) | [milan-fpga NFR-SCOUT-03](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L323) | [Milan v1.2 5.5.2.3, 5.6.3.5 and 5.6.4.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3.4](https://standards.ieee.org/ieee/1722/5979/) | port obligation: Ten milliseconds is project policy, proposed in the source register. Execution time depends on the scheduler and transport; no target timing is claimed. [Service measurement contract](PORTING.md#service-measurement) |
+ | [MFLATENCY-01](REQUIREMENTS.md) | [milan-fpga NFR-LAT-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L300) | [Milan v1.2 5.5.2.3 and Table 5.26](https://avnu.org/resource/milan-specification/) | port obligation: Added because the source latency row also applies to ACMP. The core timer tests do not establish a wire deadline. AECP timing is excluded. [Service measurement contract](PORTING.md#service-measurement) |
+-| [MFRECOVERY-01](REQUIREMENTS.md) | [milan-fpga NFR-REL-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L465) | [Milan v1.2 5.5.3.5, 5.6.3.5 and 5.6.4.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3.2, Table B.7](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L753); [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1198); [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1255); [AcmpCore.DepartingRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1282); [AcmpCore.AdpTimeoutRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1287); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L294); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
++| [MFRECOVERY-01](REQUIREMENTS.md) | [milan-fpga NFR-REL-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L465) | [Milan v1.2 5.5.3.5, 5.6.3.5 and 5.6.4.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3.2, Table B.7](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L753); [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1198); [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1255); [AcmpCore.DepartingRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1282); [AcmpCore.AdpTimeoutRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1287); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L294); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+ | [MFRECOVERY-02](REQUIREMENTS.md) | [milan-fpga NFR-REL-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L465) | [Milan v1.2 5.6.3.5 and 5.6.4.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3.2](https://standards.ieee.org/ieee/1722/5979/) | port obligation: The cores expose selected counters, not a complete recovery event ledger. Media recovery and complete event counting belong to the application. [Recovery accounting contract](PORTING.md#recovery-accounting) |
+ | [MFBUILD-01](REQUIREMENTS.md) | [milan-fpga NFR-PORT-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L469) | [Source portability requirement](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#35-resource-reliability-and-the-rest) | verified by inspection: This is a build property. Hosted dependency audits and Debug and Release RV32 links inspect every core object. [Hosted boundary audit](../scripts/check_boundary.py); [RV32 link and execution gate](../scripts/baremetal.py); [Both target verification](VERIFICATION.md) |
+ | [MFMEMORY-01](REQUIREMENTS.md) | [milan-fpga #665 memory](https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815) | [Mark II memory decision](https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815) | verified by inspection: Static arrays are the pools. Source and symbol audits check the cores on both targets; test framework allocation is outside the core contract. [C subset](CODING_STANDARD.md); [Hosted boundary audit](../scripts/check_boundary.py); [RV32 audit](../scripts/baremetal.py) |
+diff --git a/docs/VERIFICATION.md b/docs/VERIFICATION.md
+index 9b6268b..1b48e69 100644
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@ -20,7 +20,7 @@ No failing build, skipped test or empty test binary can establish a pass.
+ |---|---|---|
+ | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
+ | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
+-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 324 core plants caught by their named assertions. |
++| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 327 core plants caught by their named assertions. |
+ | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
+ | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
+ | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
+@@ -130,7 +130,7 @@ The [smoke checks](../examples/rv32/smoke.c) reuse cases from the hosted tests:
+ | Check | Defect caught |
+ |---|---|
+ | ADP schedule and wire fields | Wrong advertisement period, frame size or entity byte order. |
+-| ADP valid and inherited malformed discovery | Changed acceptance of version 1, 26-byte input or zero control length. |
++| ADP valid and malformed discovery in every receive state | Acceptance of version 1, 26-byte input or zero control length; missing discard accounting; state, timer or callback side effects. |
+ | ADP blocked departure | Dropped queued frame or failure to reset the next advertisement index. |
+ | ACMP restore, admission, latch and rollback | Wrong binding byte order, startup state, admission or rollback. |
+ | MAAP pool bounds and probe schedule | Off-by-one range end, wrong retransmit count, premature validity or missing withdrawal. |
+diff --git a/docs/requirements.json b/docs/requirements.json
+index 56cc960..0513ab6 100644
+--- a/docs/requirements.json
++++ b/docs/requirements.json
+@@ -1,12 +1,16 @@
+ [
+   {
+     "id": "ADP-01",
+-    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble, target and input shorter than 26 bytes. Preserve the [DEV-08 input limits](DEVIATIONS.md).",
++    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls.",
+     "clauses": [
+       {
+-        "text": "IEEE 1722.1-2021 6.2.2",
++        "text": "IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6",
+         "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+       },
++      {
++        "text": "IEEE 1722-2016 4.4.3.4 and 4.4.5.4",
++        "url": "https://standards.ieee.org/ieee/1722/5979/"
++      },
+       {
+         "text": "Milan v1.2 5.6.3.1",
+         "url": "https://avnu.org/resource/milan-specification/"
+diff --git a/examples/rv32/smoke.c b/examples/rv32/smoke.c
+index 8a82b53..af71b4d 100644
+--- a/examples/rv32/smoke.c
++++ b/examples/rv32/smoke.c
+@@ -10,7 +10,7 @@
+ struct port {
+     uint8_t frame[ADP_FRAME_BYTES];
+     size_t length;
+-    unsigned sends, starts, stops, admissions;
++    unsigned sends, starts, stops, admissions, calls;
+     uint32_t delay;
+     bool room, valid;
+ };
+@@ -19,6 +19,7 @@ static bool send_frame(void *ctx, unsigned interface, const uint8_t *frame, size
+ {
+     struct port *p = ctx;
+     (void)interface;
++    ++p->calls;
+     if (!p->room || length > sizeof p->frame) return false;
+     memcpy(p->frame, frame, length);
+     p->length = length;
+@@ -30,6 +31,7 @@ static void start(void *ctx, unsigned interface, uint32_t delay)
+ {
+     struct port *p = ctx;
+     (void)interface;
++    ++p->calls;
+     p->delay = delay;
+     ++p->starts;
+ }
+@@ -37,12 +39,13 @@ static void start(void *ctx, unsigned interface, uint32_t delay)
+ static void stop(void *ctx, unsigned interface)
+ {
+     (void)interface;
++    ++((struct port *)ctx)->calls;
+     ++((struct port *)ctx)->stops;
+ }
+ 
+ static void gptp(void *ctx, unsigned interface, uint64_t *gm, uint8_t *domain)
+ {
+-    (void)ctx;
++    ++((struct port *)ctx)->calls;
+     (void)interface;
+     *gm = UINT64_C(0x0102030405060708);
+     *domain = 0;
+@@ -50,14 +53,14 @@ static void gptp(void *ctx, unsigned interface, uint64_t *gm, uint8_t *domain)
+ 
+ static bool link_up(void *ctx, unsigned interface)
+ {
+-    (void)ctx;
++    ++((struct port *)ctx)->calls;
+     (void)interface;
+     return true;
+ }
+ 
+ static uint32_t clock_ms(void *ctx)
+ {
+-    (void)ctx;
++    ++((struct port *)ctx)->calls;
+     return 123;
+ }
+ 
+@@ -123,14 +126,10 @@ static int adp_smoke(void)
+     adp_timer_expired(&core);
+     CHECK(core.state == ADP_STATE_WAITING && p.sends == 1 && p.delay == 5000, 2);
+     CHECK(p.length == ADP_FRAME_BYTES && p.frame[15] == 0 && wire_be64(p.frame + 18) == 1, 3);
+-    for (unsigned control = 0; control < 4; ++control) {
+-        adp_build(&core, ADP_MSG_ENTITY_DISCOVER, 0, frame);
+-        if (control == 1) frame[15] |= 0x10;
+-        if (control == 3) frame[17] = 0;
+-        adp_rx(&core, frame, control == 2 ? 26 : sizeof frame);
+-        CHECK(core.state == ADP_STATE_DELAY && core.discarded == 0, 4);
+-        adp_timer_expired(&core);
+-    }
++    adp_build(&core, ADP_MSG_ENTITY_DISCOVER, 0, frame);
++    adp_rx(&core, frame, sizeof frame);
++    CHECK(core.state == ADP_STATE_DELAY && core.discarded == 0, 4);
++    adp_timer_expired(&core);
+     p.room = false;
+     adp_set_enable(&core, false);
+     CHECK(core.departing_owed == 1 && core.available_index == 0, 5);
+@@ -139,6 +138,48 @@ static int adp_smoke(void)
+     return 0;
+ }
+ 
++// IEEE 1722.1-2021 Figure 6-1
++// IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
++// IEEE 1722-2016 4.4.3.4 and 4.4.5.4
++// Milan v1.2 Table 5.51
++// REQ: ADP-01, ADP-02
++static int adp_discovery_smoke(void)
++{
++    for (unsigned state = 0; state < 5; ++state) {
++        for (unsigned control = 0; control < 4; ++control) {
++            struct port p = {.room = true};
++            const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
++            const struct adp_entity entity = {.entity_id = 1};
++            struct adp core, expected;
++            uint8_t frame[82] = {0};
++            adp_init(&core, &entity, &ports, 0, 0);
++            if (state != 0) adp_set_enable(&core, true);
++            if (state == 1) adp_link_change(&core, false);
++            if (state == 3) p.room = false;
++            if (state >= 3) adp_timer_expired(&core);
++            wire_put_be(frame + 12, 0x22f0, 2);
++            frame[14] = 0xfa;
++            frame[15] = control == 1 ? 0x12 : 0x02;
++            frame[17] = control == 3 ? 0 : 56;
++            wire_put_be(frame + 18, 1, 8);
++            memcpy(&expected, &core, sizeof expected);
++            const unsigned calls = p.calls, sends = p.sends, starts = p.starts, stops = p.stops;
++            adp_rx(&core, frame, control == 2 ? 26 : sizeof frame);
++            if (control != 0) ++expected.discarded;
++            if (control != 0 || state != 4) {
++                const uint8_t *actual = (const uint8_t *)&core;
++                const uint8_t *saved = (const uint8_t *)&expected;
++                for (size_t i = 0; i < sizeof core; ++i) CHECK(actual[i] == saved[i], 40 + control);
++                CHECK(p.calls == calls, 44 + control);
++            } else {
++                CHECK(core.state == ADP_STATE_DELAY && core.timer == ADP_TIMER_DELAY && core.discarded == 0, 48);
++                CHECK(p.starts == starts + 1 && p.stops == stops + 1 && p.sends == sends, 49);
++            }
++        }
++    }
++    return 0;
++}
++
+ // REQ: ACMP-01, ACMP-07, PORT-01
+ static int acmp_smoke(void)
+ {
+@@ -186,6 +227,7 @@ static int maap_smoke(void)
+ int main(void)
+ {
+     int result = adp_smoke();
++    if (!result) result = adp_discovery_smoke();
+     if (!result) result = acmp_smoke();
+     if (!result) result = maap_smoke();
+     return result;
+diff --git a/scripts/static_analysis.py b/scripts/static_analysis.py
+index 1bf346a..fd2152f 100644
+--- a/scripts/static_analysis.py
++++ b/scripts/static_analysis.py
+@@ -7,7 +7,7 @@ import subprocess
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ files = sorted(str(p.relative_to(ROOT)) for directory in ("src", "examples") for p in (ROOT / directory).rglob("*.c"))
+-commands = [["cppcheck", "--enable=warning,style,performance,portability", "--error-exitcode=1", "--std=c11", "--suppress=constParameterPointer:src/maap.c:262", "--suppress=constParameterCallback:examples/adp_port.c:32", "--suppress=constParameterCallback:examples/adp_port.c:40", "--suppress=constParameterCallback:examples/adp_port.c:46", "--suppress=redundantAssignment:examples/rv32/smoke.c:137", "-Iinclude", "-j16", *files]]
++commands = [["cppcheck", "--enable=warning,style,performance,portability", "--error-exitcode=1", "--std=c11", "--suppress=constParameterPointer:src/maap.c:262", "--suppress=constParameterCallback:examples/adp_port.c:32", "--suppress=constParameterCallback:examples/adp_port.c:40", "--suppress=constParameterCallback:examples/adp_port.c:46", "--suppress=redundantAssignment:examples/rv32/smoke.c:136", "-Iinclude", "-j16", *files]]
+ commands += [["clang-tidy", "--warnings-as-errors=*", "--checks=-*,clang-analyzer-*,bugprone-*,performance-*,-bugprone-signed-bitwise,-bugprone-easily-swappable-parameters,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling", file, "--", "-std=c11", "-Iinclude", "-DNDEBUG"] for file in files]
+ 
+ 
+diff --git a/src/adp.c b/src/adp.c
+index d96be5b..764396c 100644
+--- a/src/adp.c
++++ b/src/adp.c
+@@ -304,9 +304,13 @@ void adp_rx(struct adp *a, const uint8_t *frame, size_t len)
+ 		return;
+ 	}
+ 	// Milan v1.2 5.6.3.1
+-
+-	if (len < ADP_HEADER_BYTES + 12u || wire_be16(frame + 12) != ADP_ETHERTYPE ||
++	// IEEE 1722.1-2021 Figure 6-1
++	// IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
++	// IEEE 1722-2016 4.4.3.4 and 4.4.5.4
++	if (len < ADP_FRAME_BYTES || wire_be16(frame + 12) != ADP_ETHERTYPE ||
+ 	    frame[ADP_HEADER_BYTES] != ADP_SUBTYPE ||
++	    (frame[ADP_HEADER_BYTES + 1u] & 0x70u) != 0u ||
++	    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||
+ 	    (frame[ADP_HEADER_BYTES + 1u] & 0x0Fu) != ADP_MSG_ENTITY_DISCOVER) {
+ 		a->discarded++;
+ 		return;
+diff --git a/tests/coverage.ratchet b/tests/coverage.ratchet
+index e7561e2..873cdae 100644
+--- a/tests/coverage.ratchet
++++ b/tests/coverage.ratchet
+@@ -3,5 +3,5 @@
+ # Generated by scripts/coverage.py --write.
+ include/wire.h  lines 10/10  branches 2/2
+ src/acmp.c  lines 742/742  branches 348/348
+-src/adp.c  lines 203/203  branches 93/93
++src/adp.c  lines 205/205  branches 97/97
+ src/maap.c  lines 209/209  branches 140/140
+diff --git a/tests/mutations.json b/tests/mutations.json
+index 03aab98..7b0f8cc 100644
+--- a/tests/mutations.json
++++ b/tests/mutations.json
+@@ -306,20 +306,8 @@
+         "needle": "A4 a DISCOVER for this entity stops TMR_ADVERTISE and enters DELAY (5.6.3.5.4)"
+       },
+       {
+-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0",
+-        "needle": "inherited discovery enters DELAY"
+-      },
+-      {
+-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1",
+-        "needle": "inherited discovery enters DELAY"
+-      },
+-      {
+-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2",
+-        "needle": "inherited discovery enters DELAY"
+-      },
+-      {
+-        "test": "AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3",
+-        "needle": "inherited discovery enters DELAY"
++        "test": "AllStates/AdpInputControl.ValidDiscovery/4",
++        "needle": "valid discovery enters DELAY from WAITING"
+       }
+     ],
+     "original_tests": [
+@@ -5004,5 +4992,89 @@
+       "AcmpCore.DepartingRetainsBindingAndReprobes",
+       "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+     ]
++  },
++  {
++    "name": "adp-unsupported-version-accepted",
++    "path": "src/adp.c",
++    "old": "\t    (frame[ADP_HEADER_BYTES + 1u] & 0x70u) != 0u ||\n",
++    "new": "",
++    "kills": [
++      {
++        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/4",
++        "needle": "malformed discovery increments discarded exactly once"
++      }
++    ]
++  },
++  {
++    "name": "adp-short-frame-accepted",
++    "path": "src/adp.c",
++    "old": "len < ADP_FRAME_BYTES ||",
++    "new": "len < ADP_HEADER_BYTES + 12u ||",
++    "kills": [
++      {
++        "test": "AllStates/AdpInputControl.RejectsShortFrame/0",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsShortFrame/1",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsShortFrame/2",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsShortFrame/3",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsShortFrame/4",
++        "needle": "malformed discovery increments discarded exactly once"
++      }
++    ]
++  },
++  {
++    "name": "adp-wrong-control-length-accepted",
++    "path": "src/adp.c",
++    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||\n",
++    "new": "",
++    "kills": [
++      {
++        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
++        "needle": "malformed discovery increments discarded exactly once"
++      },
++      {
++        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/4",
++        "needle": "malformed discovery increments discarded exactly once"
++      }
++    ]
+   }
+ ]
+diff --git a/tests/test_adp.cpp b/tests/test_adp.cpp
+index c4dc793..c90855a 100644
+--- a/tests/test_adp.cpp
++++ b/tests/test_adp.cpp
+@@ -9,6 +9,7 @@
+ #include <cstdio>
+ #include <cstring>
+ #include <tuple>
++#include <vector>
+ 
+ #include "adp.h"
+ #include "wire.h"
+@@ -97,6 +98,7 @@ void discover(uint8_t* f, uint8_t msg, uint64_t eid) {
+     wire_put_be(f + 12, ADP_ETHERTYPE, 2);
+     f[14] = ADP_SUBTYPE;
+     f[15] = msg;
++    wire_put_be(f + 16, 56u, 2);
+     wire_put_be(f + 18, eid, 8);
+ }
+ 
+@@ -698,30 +700,120 @@ TEST(AdpCore, MockedPortOrder) {
+ 
+ class AdpInputControl : public ::testing::TestWithParam<unsigned> {};
+ 
+-// REQ: ADP-01, ADP-02
+-TEST_P(AdpInputControl, InheritedDiscoveryAcceptance) {
++void discovery_state(adp* a, unsigned state) {
++    fresh(a, state != 1u);
++    if (state != 0u) adp_set_enable(a, true);
++    if (state == 3u) fk.room = false;
++    if (state >= 3u) adp_timer_expired(a);
++}
++
++void refused_discovery(adp* a, const uint8_t* frame, size_t length) {
++    testing::StrictMock<AdpPortMock> mock;
++    const adp_ports silent = {
++        &mock,
++        [](void* c, unsigned, const uint8_t* f, size_t n) { return static_cast<AdpPortMock*>(c)->Send(f, n); },
++        [](void* c, unsigned, uint32_t ms) { static_cast<AdpPortMock*>(c)->Start(ms); },
++        [](void* c, unsigned) { static_cast<AdpPortMock*>(c)->Stop(); },
++        [](void* c, unsigned, uint64_t* gm, uint8_t* d) { static_cast<AdpPortMock*>(c)->Gptp(gm, d); },
++        [](void* c, unsigned) { return static_cast<AdpPortMock*>(c)->Link(); },
++        [](void* c) { return static_cast<AdpPortMock*>(c)->Seed(); }
++    };
++    const adp_ports* saved_ports = a->ports;
++    a->ports = &silent;
++    adp expected;
++    std::memcpy(&expected, a, sizeof expected);
++    ++expected.discarded;
++    adp_rx(a, frame, length);
++    EXPECT_EQ(a->discarded, expected.discarded) << "malformed discovery increments discarded exactly once";
++    EXPECT_EQ(std::memcmp(a, &expected, sizeof expected), 0)
++        << "malformed discovery preserves all other core storage";
++    a->ports = saved_ports;
++}
++
++// IEEE 1722.1-2021 6.2.2.3
++// IEEE 1722-2016 4.4.3.4
++// REQ: ADP-01
++TEST_P(AdpInputControl, RejectsUnsupportedVersion) {
+     adp a;
+-    fresh(&a, true);
+-    adp_set_enable(&a, true);
+-    adp_timer_expired(&a);
+-    ASSERT_EQ(a.state, ADP_STATE_WAITING);
+-    uint8_t frame[ADP_FRAME_BYTES];
+-    adp_build(&a, ADP_MSG_ENTITY_DISCOVER, 0, frame);
+-    size_t length = sizeof frame;
+-    const unsigned control = GetParam();
+-    if (control == 1) frame[15] |= 0x10;
+-    if (control == 2) length = 26;
+-    if (control == 3) frame[17] = 0;
+-    const unsigned starts = fk.starts;
+-    const unsigned stops = fk.stops;
+-    adp_rx(&a, frame, length);
+-    EXPECT_EQ(a.state, ADP_STATE_DELAY) << "inherited discovery enters DELAY";
+-    EXPECT_EQ(a.discarded, 0u) << "inherited discovery input is not discarded";
+-    EXPECT_EQ(fk.starts, starts + 1u) << "inherited discovery restarts delay timer";
+-    EXPECT_EQ(fk.stops, stops + 1u) << "inherited discovery stops advertisement timer";
+-    EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "inherited discovery selects delay timer";
++    discovery_state(&a, GetParam());
++    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
++        for (unsigned version = 1; version < 8; ++version) {
++            uint8_t frame[82];
++            discover(frame, 2u, target);
++            frame[15] |= static_cast<uint8_t>(version << 4);
++            refused_discovery(&a, frame, sizeof frame);
++            if (HasFailure()) return;
++        }
++    }
++}
++
++// IEEE 1722.1-2021 Figure 6-1
++// IEEE 1722.1-2021 6.2.2.6
++// REQ: ADP-01
++TEST_P(AdpInputControl, RejectsShortFrame) {
++    adp a;
++    discovery_state(&a, GetParam());
++    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
++        uint8_t frame[82];
++        discover(frame, 2u, target);
++        for (size_t length = 0; length < sizeof frame; ++length) {
++            const std::vector<uint8_t> short_frame(frame, frame + length);
++            refused_discovery(&a, short_frame.data(), short_frame.size());
++            if (HasFailure()) return;
++        }
++    }
++}
++
++// IEEE 1722.1-2021 6.2.2.6
++// IEEE 1722-2016 4.4.5.4
++// REQ: ADP-01
++TEST_P(AdpInputControl, RejectsWrongControlDataLength) {
++    adp a;
++    discovery_state(&a, GetParam());
++    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
++        uint8_t frame[82];
++        discover(frame, 2u, target);
++        for (unsigned length = 0; length < 2048; ++length) {
++            if (length == 56) continue;
++            wire_put_be(frame + 16, length, 2);
++            refused_discovery(&a, frame, sizeof frame);
++            if (HasFailure()) return;
++        }
++    }
++}
++
++// Milan v1.2 5.6.3.1
++// Milan v1.2 Table 5.51
++// REQ: ADP-01, ADP-02, MFDISC-02
++TEST_P(AdpInputControl, ValidDiscovery) {
++    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
++        for (size_t length : {82u, 83u, 128u}) {
++            adp a;
++            discovery_state(&a, GetParam());
++            uint8_t frame[128] = {};
++            discover(frame, 2u, target);
++            adp before;
++            fake port_before;
++            std::memcpy(&before, &a, sizeof a);
++            std::memcpy(&port_before, &fk, sizeof fk);
++            adp_rx(&a, frame, length);
++            EXPECT_EQ(a.discarded, 0u) << "valid discovery is never discarded";
++            EXPECT_EQ(fk.sends, port_before.sends) << "valid discovery defers transmission until expiry";
++            if (GetParam() == 4u) {
++                EXPECT_EQ(a.state, ADP_STATE_DELAY) << "valid discovery enters DELAY from WAITING";
++                EXPECT_EQ(fk.starts, port_before.starts + 1u) << "valid discovery starts one delay timer";
++                EXPECT_EQ(fk.stops, port_before.stops + 1u) << "valid discovery stops the advertisement timer";
++                EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "valid discovery selects the delay timer";
++                EXPECT_EQ(a.draws, before.draws + 1u) << "valid discovery draws one delay";
++                EXPECT_EQ(a.last_draw, ADP_DRAW_DELAY) << "valid discovery uses the normal delay range";
++            } else {
++                EXPECT_EQ(std::memcmp(&a, &before, sizeof a), 0) << "valid discovery preserves inactive or delaying state";
++                EXPECT_EQ(std::memcmp(&fk, &port_before, sizeof fk), 0) << "valid discovery preserves inactive or delaying ports";
++            }
++        }
++    }
+ }
+ 
+-INSTANTIATE_TEST_SUITE_P(AllInputs, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u));
++INSTANTIATE_TEST_SUITE_P(AllStates, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u, 4u));
+ 
+ }

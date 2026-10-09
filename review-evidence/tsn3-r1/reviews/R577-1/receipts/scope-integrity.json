@@ -1,0 +1,32 @@
+{
+  "base": "1a9f651cdf7846b8e10ac246a6ef6916960fbb92",
+  "head": "66b3a75746fbbca3cffdfc7d89f013ab14aa1cc0",
+  "tree": "231e90357e5efe0101ed7fdd42c8b5ae2b25a89f",
+  "commit_count": 1,
+  "commit_subject": "Discard malformed ADP discovery frames",
+  "commit_body_empty": true,
+  "changed_files": [
+    "docs/DEVIATIONS.md",
+    "docs/PORTING.md",
+    "docs/REQUIREMENTS.md",
+    "docs/STATIC_ANALYSIS.md",
+    "docs/TESTS.md",
+    "docs/TRACEABILITY.md",
+    "docs/VERIFICATION.md",
+    "docs/requirements.json",
+    "examples/rv32/smoke.c",
+    "scripts/static_analysis.py",
+    "src/adp.c",
+    "tests/coverage.ratchet",
+    "tests/mutations.json",
+    "tests/test_adp.cpp"
+  ],
+  "unchanged_boundary_files": [
+    "include/adp.h",
+    "include/wire.h",
+    "CMakeLists.txt"
+  ],
+  "deviation_and_old_anchor_removed": true,
+  "hdl_files": [],
+  "diff_check_rc": 0
+}

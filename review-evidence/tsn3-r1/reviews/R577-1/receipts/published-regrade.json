@@ -1,0 +1,4107 @@
+{
+  "plants": 327,
+  "required_killer_entries": 356,
+  "caught": 327,
+  "escaped": 0,
+  "errors": 0,
+  "results": [
+    {
+      "name": "reentry-guard-removed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpReentry.AdvertiseInlineExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "inline ADVERTISE expiry asserts"
+        },
+        {
+          "test": "AdpReentry.DelayInlineExpiryOnGmChange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "inline DELAY expiry asserts"
+        },
+        {
+          "test": "AdpReentry.AdvertiseInlineExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "inline ADVERTISE expiry is counted"
+        },
+        {
+          "test": "AdpReentry.DelayInlineExpiryOnGmChange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "inline DELAY expiry is counted"
+        }
+      ]
+    },
+    {
+      "name": "reentry-uncounted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpReentry.AdvertiseInlineExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "inline ADVERTISE expiry is counted"
+        }
+      ]
+    },
+    {
+      "name": "reentry-not-ignored",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllPorts/AdpPortEntry.RefusesBeforeTouchingState/",
+          "selected": 120,
+          "matched": 85,
+          "needle": "callback leaves core state unchanged"
+        }
+      ]
+    },
+    {
+      "name": "departing-keeps-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A6toA8DeferredSends",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 SHUTDOWN with no room keeps ENTITY_DEPARTING owed, index reset"
+        },
+        {
+          "test": "ExamplePort.DefersExpiryAndRetainsBlockedOutput",
+          "selected": 1,
+          "matched": 1,
+          "needle": "shutdown resets"
+        }
+      ]
+    },
+    {
+      "name": "departing-sends-zero",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A10toA14DepartingIndex",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A10 SHUTDOWN in WAITING"
+        }
+      ]
+    },
+    {
+      "name": "available-replaces-owed-departing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A15OwedDepartingAcrossARestart",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A15 with room, the next poll sends the owed ENTITY_DEPARTING first"
+        }
+      ]
+    },
+    {
+      "name": "available-passes-owed-departing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A17RoomBackBeforeAPoll",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 room back and TMR_DELAY expiring before a poll"
+        }
+      ]
+    },
+    {
+      "name": "second-departing-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A16SecondShutdownQueuesItsOwn",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A16 a SHUTDOWN while one is owed queues its own"
+        }
+      ]
+    },
+    {
+      "name": "second-shutdown-overwrites-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A16SecondShutdownQueuesItsOwn",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A16 a SHUTDOWN while one is owed queues its own"
+        }
+      ]
+    },
+    {
+      "name": "link-loss-drops-owed-departing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A18LinkLossKeepsTheOwedDeparting",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A18 a link loss during the restart stops it and keeps the owed ENTITY_DEPARTING"
+        }
+      ]
+    },
+    {
+      "name": "gm-change-drops-owed-available",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A19IgnoredInputsKeepTheOwedAvailable",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 a GM change in DELAY leaves the owed ENTITY_AVAILABLE owed"
+        }
+      ]
+    },
+    {
+      "name": "discover-drops-owed-available",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A19IgnoredInputsKeepTheOwedAvailable",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 so does an ENTITY_DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "stray-expiry-drops-owed-available",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A19IgnoredInputsKeepTheOwedAvailable",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 and a stray expiry, which is counted"
+        }
+      ]
+    },
+    {
+      "name": "link-loss-keeps-owed-available",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A20LinkLossDropsTheOwedAvailable",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 a link loss drops the owed ENTITY_AVAILABLE at once"
+        }
+      ]
+    },
+    {
+      "name": "departing-queue-unbounded",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A21DepartingCapacity",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 then the running restart's ENTITY_AVAILABLE, index 0, at its TMR_DELAY expiry; WAITING"
+        }
+      ]
+    },
+    {
+      "name": "coalesced-departing-uncounted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A21DepartingCapacity",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 the next SHUTDOWN is coalesced into the queued one and counted"
+        }
+      ]
+    },
+    {
+      "name": "coalesce-drops-queued-departing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A21DepartingCapacity",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 the next SHUTDOWN is coalesced into the queued one and counted"
+        }
+      ]
+    },
+    {
+      "name": "coalesce-overwrites-oldest-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A21DepartingCapacity",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 the next SHUTDOWN is coalesced into the queued one and counted"
+        }
+      ]
+    },
+    {
+      "name": "own-discover-discarded",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A3toA5DiscoverAndDiscard",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 a DISCOVER for this entity stops TMR_ADVERTISE and enters DELAY (5.6.3.5.4)"
+        },
+        {
+          "test": "AllStates/AdpInputControl.ValidDiscovery/4",
+          "selected": 1,
+          "matched": 1,
+          "needle": "valid discovery enters DELAY from WAITING"
+        }
+      ]
+    },
+    {
+      "name": "down-answers-discover",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A3toA5DiscoverAndDiscard",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 RCV_ADP_DISCOVER in DELAY is ignored (Table 5.51)"
+        }
+      ]
+    },
+    {
+      "name": "link-down-departs",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.LinkLevelsAndDisabledInputs",
+          "selected": 1,
+          "matched": 1,
+          "needle": "shutdown in DOWN sends nothing"
+        }
+      ]
+    },
+    {
+      "name": "gm-change-ignored",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A0toA2Schedule",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 with the new current_configuration_index (6.2.2.18)"
+        }
+      ]
+    },
+    {
+      "name": "delay-ignores-link-down",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A6toA8DeferredSends",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 a link loss drops an owed ENTITY_AVAILABLE and departs nothing (5.6.3.5.10)"
+        }
+      ]
+    },
+    {
+      "name": "shutdown-in-down-departs",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A6toA8DeferredSends",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 SHUTDOWN in DOWN sends nothing (Table 5.51)"
+        }
+      ]
+    },
+    {
+      "name": "advertise-expiry-skips-delay",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A0toA2Schedule",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 GM_CHANGE in WAITING re-advertises (5.6.3.5.7)"
+        }
+      ]
+    },
+    {
+      "name": "advertise-period-wrong",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A0toA2Schedule",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 TMR_DELAY: ENTITY_AVAILABLE, WAITING, TMR_ADVERTISE 5 s (5.6.3.5.9)"
+        },
+        {
+          "test": "AdpCore.MockedPortOrder",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 TMR_DELAY starts the advertisement period"
+        }
+      ]
+    },
+    {
+      "name": "link-up-draws-startup-kind",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A0toA2Schedule",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 LINK_UP: DELAY with a 0..4 s draw (5.6.3.5.3)"
+        }
+      ]
+    },
+    {
+      "name": "draw-kinds-merged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A9DrawKinds",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A9 every startup draw"
+        }
+      ]
+    },
+    {
+      "name": "foreign-discover-answered",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A3toA5DiscoverAndDiscard",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 a foreign DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "frame-misses-config-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A0toA2Schedule",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 with the new current_configuration_index (6.2.2.18)"
+        }
+      ]
+    },
+    {
+      "name": "frame-sources-from-sinks",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.EntityFieldsUseIndependentCounts",
+          "selected": 1,
+          "matched": 1,
+          "needle": "talker count is independent of listener count"
+        }
+      ]
+    },
+    {
+      "name": "seed-left-at-zero",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A22GeneratorNeverStuckAtZero",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 an entity id whose words cancel the seed constant"
+        }
+      ]
+    },
+    {
+      "name": "enable-not-idempotent",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A23RepeatedEnableOrDisableChangesNothing",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 an enable while enabled draws and arms nothing"
+        }
+      ]
+    },
+    {
+      "name": "other-subtype-accepted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.A24OtherEtherTypeOrSubtypeDiscarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 a DISCOVER under another EtherType or subtype is discarded"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-no-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 no interface is refused"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-too-many-sinks",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 more sinks than ACMP_MAX_SINKS"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-too-many-sources",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 more sources than ACMP_MAX_SOURCES"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-sink-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 a sink on an interface the entity lacks is refused"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-source-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 a source on an interface the entity lacks is refused"
+        }
+      ]
+    },
+    {
+      "name": "acmp-init-reads-the-seed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A0 init calls no port"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-no-resp-2s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 and TMR_NO_RESP armed 200 ms"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-retry-2s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A9FailureWaitsForTheRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A9 and TMR_RETRY 4 s"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-no-tk-5s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A8SuccessSettles",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-valid-time-in-seconds",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TMR_NO_ADP is the received valid_time in two-second units"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-listener-unknown-is-2",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 LISTENER_UNKNOWN_ID, the command's fields echoed"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-registering-failed-bit",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "REGISTERING_FAILED 1 (Table 5.39)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-cdl-84",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 every frame goes to the ACMP multicast address"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-count-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 BIND_RX_RESPONSE is Table 5.32"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-without-fast-connect",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 PROBE_TX_COMMAND is Table 5.33"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-before-response",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 BIND_RX_RESPONSE is Table 5.32"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-resp-2s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 and TMR_NO_RESP armed 200 ms"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-starts-no-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 the discovery machine starts"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-change-before-response",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 the change is reported after the response"
+        }
+      ]
+    },
+    {
+      "name": "acmp-nothing-persisted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 the binding is saved"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-not-persisted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 the cleared binding is saved, unless there was none, in state"
+        }
+      ]
+    },
+    {
+      "name": "acmp-rebind-not-persisted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A6BindAnotherSourceRestartsTheSink",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A6 the new binding is saved"
+        }
+      ]
+    },
+    {
+      "name": "acmp-streaming-wait-ignored",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "STREAMING_WAIT binds it stopped"
+        }
+      ]
+    },
+    {
+      "name": "acmp-sw-read-from-fast-connect",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "STREAMING_WAIT saved"
+        }
+      ]
+    },
+    {
+      "name": "acmp-getrx-count-unbound",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 GET_RX_STATE_RESPONSE is Table 5.34/5.37/5.38/5.39"
+        }
+      ]
+    },
+    {
+      "name": "acmp-getrx-no-fast-connect",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 GET_RX_STATE_RESPONSE is Table 5.34/5.37/5.38/5.39"
+        }
+      ]
+    },
+    {
+      "name": "acmp-getrx-no-registering-failed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "REGISTERING_FAILED 1 (Table 5.39)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unknown-sink-silent",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 a command for a sink the entity lacks"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-echoes-the-talker",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 UNBIND_RX_RESPONSE is Table 5.36"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-keeps-srp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 a settled sink stops SRP before the response"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-srp-after-response",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 a settled sink stops SRP before the response"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-keeps-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 then UNBOUND, binding cleared"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-change-before-response",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A3UnbindInEveryState",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A3 the change is reported after the response (#653)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-not-authorized-is-13",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 CONTROLLER_NOT_AUTHORIZED (16"
+        }
+      ]
+    },
+    {
+      "name": "acmp-lock-ignored",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 one response"
+        }
+      ]
+    },
+    {
+      "name": "acmp-lock-refuses-the-holder",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 the locking controller binds"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-rx-state-locked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A4 GET_RX_STATE asks no lock"
+        }
+      ]
+    },
+    {
+      "name": "acmp-rebind-same-reprobes",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A5RebindTheSameSourceUpdatesAndExits",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A5 a re-bind of the same source sends the response alone"
+        }
+      ]
+    },
+    {
+      "name": "acmp-rebind-same-keeps-the-controller",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A5RebindTheSameSourceUpdatesAndExits",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A5 the controller and STREAMING_WAIT are updated"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-new-keeps-srp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A6BindAnotherSourceRestartsTheSink",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A6 SRP is stopped and its parameters cleared"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-same-talker-is-the-same-source",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A6 the same talker with another talker_unique_id is a new source"
+        }
+      ]
+    },
+    {
+      "name": "acmp-sequence-id-never-advances",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A12DelaySendsANewProbe",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A12 a new PROBE_TX_COMMAND with the next sequence_id"
+        },
+        {
+          "test": "AcmpCore.A16OneCounterForEveryNewProbe",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A16 each new PROBE_TX_COMMAND takes the next"
+        }
+      ]
+    },
+    {
+      "name": "acmp-sequence-id-per-sink",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A16OneCounterForEveryNewProbe",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A16 each new PROBE_TX_COMMAND takes the next"
+        }
+      ]
+    },
+    {
+      "name": "acmp-response-keyed-on-the-source",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7ResponsesKeyOnTheListenerUniqueId",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 the response belongs to the sink"
+        }
+      ]
+    },
+    {
+      "name": "acmp-guard-controller-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7EachGuardTermIsChecked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 a response with another controller"
+        }
+      ]
+    },
+    {
+      "name": "acmp-guard-talker-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7EachGuardTermIsChecked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 a response with another controller"
+        }
+      ]
+    },
+    {
+      "name": "acmp-guard-unique-id-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7EachGuardTermIsChecked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 a response with another controller"
+        }
+      ]
+    },
+    {
+      "name": "acmp-guard-sequence-id-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7EachGuardTermIsChecked",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 a response with another controller"
+        }
+      ]
+    },
+    {
+      "name": "acmp-guard-reads-the-binding",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7TheGuardReadsTheSentProbeNotTheBinding",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 the answer to the probe sent before a re-bind still matches"
+        }
+      ]
+    },
+    {
+      "name": "acmp-responses-taken-outside-probing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A7ResponsesOutsideProbingAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A7 RCV_PROBE_TX_RESP is ignored outside"
+        }
+      ]
+    },
+    {
+      "name": "acmp-vlan-masked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A8SuccessSettles",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 with the response's stream_id, stream_dest_mac and stream_vlan_id exactly"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-tk-1s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A8SuccessSettles",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 TMR_NO_RESP stopped and TMR_NO_TK 10 s started"
+        }
+      ]
+    },
+    {
+      "name": "acmp-settle-starts-no-srp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A8SuccessSettles",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A8 SRP is started"
+        }
+      ]
+    },
+    {
+      "name": "acmp-settle-swaps-stream-fields",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A8SuccessSettles",
+          "selected": 1,
+          "matched": 1,
+          "needle": "stream_vlan_id exactly"
+        }
+      ]
+    },
+    {
+      "name": "acmp-failure-status-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A9FailureWaitsForTheRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A9 a failed response: PRB_W_RETRY, the ACMP status is its status"
+        }
+      ]
+    },
+    {
+      "name": "acmp-failure-retries-at-200ms",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A9FailureWaitsForTheRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A9 and TMR_RETRY 4 s"
+        }
+      ]
+    },
+    {
+      "name": "acmp-duplicate-takes-a-new-sequence-id",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A10 an exact duplicate of the first probe"
+        }
+      ]
+    },
+    {
+      "name": "acmp-second-timeout-keeps-status-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A10 the second: no frame, LISTENER_TALKER_TIMEOUT"
+        },
+        {
+          "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A25 the ACMP status LISTENER_TALKER_TIMEOUT does"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-duplicate",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A10 the first TMR_NO_RESP sends one frame"
+        }
+      ]
+    },
+    {
+      "name": "acmp-retry-ignores-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A11RetryWaitsForTheTalkerOrDelays",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A11 TMR_RETRY, talker discovered: TMR_DELAY"
+        }
+      ]
+    },
+    {
+      "name": "acmp-retry-zeroes-the-status",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A11RetryWaitsForTheTalkerOrDelays",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A11 and the ACMP status stays"
+        }
+      ]
+    },
+    {
+      "name": "acmp-delay-resends-the-old-probe",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A12DelaySendsANewProbe",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A12 a new PROBE_TX_COMMAND with the next sequence_id"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-tk-keeps-srp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A13NoTalkerAttributeReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A13 TMR_NO_TK clears the SRP parameters and stops SRP"
+        }
+      ]
+    },
+    {
+      "name": "acmp-reprobe-ignores-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A13NoTalkerAttributeReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A13 talker discovered: TMR_DELAY, PRB_W_DELAY"
+        },
+        {
+          "test": "AcmpCore.A15UnregisteredReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A15 talker discovered: TMR_DELAY, PRB_W_DELAY"
+        }
+      ]
+    },
+    {
+      "name": "acmp-registered-anywhere",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A14RegisteredSettlesTheReservation",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A14 EVT_TK_REGISTERED anywhere else"
+        }
+      ]
+    },
+    {
+      "name": "acmp-registered-keeps-no-tk",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A14RegisteredSettlesTheReservation",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A14 EVT_TK_REGISTERED: TMR_NO_TK cleared"
+        }
+      ]
+    },
+    {
+      "name": "acmp-registered-kind-dropped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "REGISTERING_FAILED 1 (Table 5.39)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unregistered-anywhere",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A15UnregisteredReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A15 EVT_TK_UNREGISTERED anywhere else"
+        }
+      ]
+    },
+    {
+      "name": "acmp-kind-lost",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.KindChangesOnlyTheSettledView",
+          "selected": 1,
+          "matched": 1,
+          "needle": "kind updates the reported view"
+        }
+      ]
+    },
+    {
+      "name": "acmp-kind-any-state",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.KindChangesOnlyTheSettledView",
+          "selected": 1,
+          "matched": 1,
+          "needle": "kind refuses non-settled state"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unregistered-keeps-srp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A15UnregisteredReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A15 EVT_TK_UNREGISTERED, talker not discovered: SRP stopped"
+        }
+      ]
+    },
+    {
+      "name": "acmp-timer-at-the-latest-deadline",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 each interface's timer is armed at the earliest"
+        }
+      ]
+    },
+    {
+      "name": "acmp-timer-port-called-every-time",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 the port is called only when the earliest deadline moves"
+        }
+      ]
+    },
+    {
+      "name": "acmp-timer-never-stopped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 an interface whose sinks hold no deadline"
+        }
+      ]
+    },
+    {
+      "name": "acmp-expiry-takes-every-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 an expiry takes the due timers only"
+        }
+      ]
+    },
+    {
+      "name": "acmp-expiry-not-consumed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A17 an expiry with nothing due changes nothing and re-arms the timer it consumed"
+        }
+      ]
+    },
+    {
+      "name": "acmp-zero-delay-waits",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A18AZeroDelayProbesInTheSameExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A18 TMR_RETRY drawing 0 ms sends its probe in the same expiry"
+        }
+      ]
+    },
+    {
+      "name": "acmp-delay-up-to-4s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A18AZeroDelayProbesInTheSameExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A18 the longest draw is 1000 ms"
+        }
+      ]
+    },
+    {
+      "name": "acmp-seed-at-every-draw",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A18TheSeedIsTakenAtTheFirstDraw",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A18 and never again"
+        }
+      ]
+    },
+    {
+      "name": "acmp-rng-left-at-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A18TheSeedIsTakenAtTheFirstDraw",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A18 a seed that cancels the state to 0 leaves it 1"
+        }
+      ]
+    },
+    {
+      "name": "acmp-response-passes-an-owed-frame",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19NothingPassesAnOwedFrame",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 a response does not pass one already owed"
+        }
+      ]
+    },
+    {
+      "name": "acmp-poll-drains-everything",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 one frame per poll"
+        }
+      ]
+    },
+    {
+      "name": "acmp-change-not-held-for-its-response",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 but its change is not reported while its response waits (#653)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-full-queue-acts",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 a command whose response would find the queue full is dropped"
+        }
+      ]
+    },
+    {
+      "name": "acmp-lost-probe-uncounted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 a probe the full queue cannot take is lost and counted"
+        }
+      ]
+    },
+    {
+      "name": "acmp-first-owed-releases-every-change",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 the bind's response left but the unbind's is still owed"
+        }
+      ]
+    },
+    {
+      "name": "acmp-poll-newest-first",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19NothingPassesAnOwedFrame",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 they leave in the order they were made"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-tx-reports-asking-failed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20ProbeTxIsAnsweredFromTheSource",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 PROBE_TX_RESPONSE is Table 5.43"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-tx-echoes-every-flag",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20ProbeTxIsAnsweredFromTheSource",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 PROBE_TX_RESPONSE is Table 5.43: cc 0, FAST_CONNECT and STREAMING_WAIT echoed, REGISTERING_FAILED 0"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-tx-any-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20ProbeTxIsAnsweredFromTheSource",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 a probe from another interface than the source's"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-tx-no-destination-mac-check",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20ProbeTxIsAnsweredFromTheSource",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 no destination MAC: TALKER_DEST_MAC_FAILED"
+        }
+      ]
+    },
+    {
+      "name": "acmp-disconnect-always-succeeds",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20DisconnectGetTxStateAndGetTxConnection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 DISCONNECT_TX of an unknown source: TALKER_UNKNOWN_ID"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unknown-source-answered",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20ProbeTxIsAnsweredFromTheSource",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 an unknown source: TALKER_UNKNOWN_ID"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-tx-state-echoes-the-listener",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20DisconnectGetTxStateAndGetTxConnection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 GET_TX_STATE: listener fields 0"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-tx-state-registering-failed-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20DisconnectGetTxStateAndGetTxConnection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "REGISTERING_FAILED live"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-tx-state-unheld-mac",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20DisconnectGetTxStateAndGetTxConnection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 with no destination MAC held, none is reported"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-tx-connection-supported",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A20DisconnectGetTxStateAndGetTxConnection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A20 GET_TX_CONNECTION: NOT_SUPPORTED"
+        }
+      ]
+    },
+    {
+      "name": "acmp-every-listener-is-this-one",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A21MessagesNotForThisEntityAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 commands for another listener or talker"
+        }
+      ]
+    },
+    {
+      "name": "acmp-every-talker-is-this-one",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A21MessagesNotForThisEntityAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 commands for another listener or talker"
+        }
+      ]
+    },
+    {
+      "name": "acmp-short-pdu-read",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A21MalformedFramesAreCounted",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 a frame shorter than the Milan ACMPDU"
+        }
+      ]
+    },
+    {
+      "name": "acmp-longer-pdu-refused",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A21MalformedFramesAreCounted",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A21 the longer IEEE 1722.1-2021 PDU is accepted"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-reads-no-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TK_NOT_DISCOVERED: an AVAILABLE from another grandmaster"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-reads-no-domain",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 and from another domain"
+        }
+      ]
+    },
+    {
+      "name": "acmp-valid-time-in-seconds",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TMR_NO_ADP is the received valid_time in two-second units"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovered-interface-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TK_DISCOVERED: an AVAILABLE with another interface_index is ignored"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restart-on-a-smaller-index-only",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 available_index"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restart-raises-no-discovered",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "EVT_TK_DEPARTED then EVT_TK_DISCOVERED"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restart-mismatch-keeps-aging",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 index <= last from another grandmaster"
+        }
+      ]
+    },
+    {
+      "name": "acmp-refresh-notes-no-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a rising available_index is noted"
+        }
+      ]
+    },
+    {
+      "name": "acmp-departing-taken-undiscovered",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DepartingAndAging",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a DEPARTING in TK_NOT_DISCOVERED is ignored"
+        }
+      ]
+    },
+    {
+      "name": "acmp-departing-interface-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DepartingAndAging",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a DEPARTING with another interface_index is ignored"
+        }
+      ]
+    },
+    {
+      "name": "acmp-departing-keeps-aging",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DepartingAndAging",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a DEPARTING: TMR_NO_ADP stopped"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-aging",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DepartingAndAging",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TMR_NO_ADP: TK_NOT_DISCOVERED and EVT_TK_DEPARTED"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-on-every-interface",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 every bound sink of the talker processes it"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-on-unbound-sinks",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 an unbound sink runs no discovery"
+        }
+      ]
+    },
+    {
+      "name": "acmp-grandmaster-sampled-for-the-refresh",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStateCells",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 TK_DISCOVERED: an AVAILABLE with another interface_index is ignored"
+        }
+      ]
+    },
+    {
+      "name": "acmp-grandmaster-sampled-per-sink",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 and the grandmaster is sampled once for the frame"
+        }
+      ]
+    },
+    {
+      "name": "acmp-reentry-unguarded",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryEntryRefusesACallFromInsideAPort",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 a call made from inside the send port is refused"
+        },
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-reentry-untrapped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryEntryRefusesACallFromInsideAPort",
+          "selected": 1,
+          "matched": 1,
+          "needle": "refused, counted and trapped"
+        }
+      ]
+    },
+    {
+      "name": "acmp-send-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryEntryRefusesACallFromInsideAPort",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 a call made from inside the send port is refused"
+        }
+      ]
+    },
+    {
+      "name": "acmp-timer-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-gptp-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-clock-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-seed-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-lock-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-source-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-srp-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-persist-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-changed-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restore-lands-in-prb-w-resp",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24ARestoredBindingFastConnects",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 startup with a saved binding"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restore-starts-no-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24ARestoredBindingFastConnects",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 startup with a saved binding"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restore-announced",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 sink 1's talker on its interface, and nothing else: no timer, nothing to save or report"
+        }
+      ]
+    },
+    {
+      "name": "acmp-record-flags-swapped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 bound with STREAMING_WAIT: flags 0x05"
+        }
+      ]
+    },
+    {
+      "name": "acmp-record-unique-id-little-endian",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24ARestoredBindingFastConnects",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 the latch gives the same record back"
+        }
+      ]
+    },
+    {
+      "name": "acmp-restore-unique-id-little-endian",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24ARestoredBindingFastConnects",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 the record's flags and parameters, big-endian"
+        }
+      ]
+    },
+    {
+      "name": "acmp-roll-back-keeps-the-bindings",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24UnboundRecordsRefusalsAndRollback",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 the roll-back drops every restored binding"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbound-record-not-zero",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24UnboundRecordsRefusalsAndRollback",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 an unbound sink's record is all zeros"
+        }
+      ]
+    },
+    {
+      "name": "acmp-started-not-saved",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24StartedIsSavedAndReported",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 the started state is saved (5.3.8.7)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-notifies",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A25 discovery noted while settled moves no Table 5.22 item"
+        }
+      ]
+    },
+    {
+      "name": "acmp-status-not-notified",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A25 the ACMP status LISTENER_TALKER_TIMEOUT does"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probing-status-not-notified",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DepartingStopsEveryProbingTimer",
+          "selected": 1,
+          "matched": 1,
+          "needle": "departing publishes the passive probing status"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-reads-the-clock-twice",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-get-rx-state-reads-the-clock",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.CommandPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "GET_RX_STATE needs no clock"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-response-reads-the-clock-twice",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.CommandPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "successful probe response starts one reservation timer"
+        }
+      ]
+    },
+    {
+      "name": "acmp-unbind-reads-the-clock",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.CommandPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "UNBIND needs no clock"
+        }
+      ]
+    },
+    {
+      "name": "acmp-talker-reads-the-clock",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.CommandPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "talker response needs no clock"
+        }
+      ]
+    },
+    {
+      "name": "acmp-expiry-reads-the-clock-twice",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.TimerPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "timer clock budget for state"
+        }
+      ]
+    },
+    {
+      "name": "acmp-available-reads-the-clock-twice",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DiscoveryPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "AVAILABLE starts one discovery deadline"
+        }
+      ]
+    },
+    {
+      "name": "acmp-departing-samples-the-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DiscoveryPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "DEPARTING needs no grandmaster"
+        }
+      ]
+    },
+    {
+      "name": "acmp-aging-samples-the-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DiscoveryPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "aging needs no grandmaster"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovery-takes-the-first-sink",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 every bound sink of the talker processes it (5.6.4.1), only on the interface it arrived on"
+        }
+      ]
+    },
+    {
+      "name": "acmp-second-no-resp-samples-the-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.TimerPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "timer expiry never samples the grandmaster in"
+        }
+      ]
+    },
+    {
+      "name": "acmp-retry-samples-the-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.TimerPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "timer expiry never samples the grandmaster in"
+        }
+      ]
+    },
+    {
+      "name": "acmp-delay-reads-the-clock-again",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.TimerPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "timer clock budget for state"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-tk-samples-the-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.TimerPortBudgets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "timer expiry never samples the grandmaster in"
+        }
+      ]
+    },
+    {
+      "name": "acmp-new-bind-never-started",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindWithoutStreamingWaitBindsStarted",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 a bind without STREAMING_WAIT lands started"
+        }
+      ]
+    },
+    {
+      "name": "acmp-bind-response-always-streaming-wait",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindWithoutStreamingWaitBindsStarted",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 a bind without STREAMING_WAIT lands started"
+        }
+      ]
+    },
+    {
+      "name": "acmp-view-without-registering-failed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A2 and the view says so"
+        }
+      ]
+    },
+    {
+      "name": "acmp-discovered-probing-stays-passive",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 EVT_TK_DISCOVERED in PRB_W_AVAIL"
+        }
+      ]
+    },
+    {
+      "name": "acmp-grandmaster-read-twice",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 the grandmaster is sampled once for the frame"
+        }
+      ]
+    },
+    {
+      "name": "acmp-adp-short-frame-taken",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OtherAdpFramesAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a short ADPDU, a DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "acmp-adp-ethertype-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OtherAdpFramesAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a short ADPDU, a DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "acmp-adp-subtype-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OtherAdpFramesAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a short ADPDU, a DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "acmp-adp-discover-taken",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A22OtherAdpFramesAreIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A22 a short ADPDU, a DISCOVER"
+        }
+      ]
+    },
+    {
+      "name": "acmp-frames-to-the-own-mac",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 every frame goes to the ACMP multicast address from the interface's MAC, cdl 44 (8.2.1, 5.5.2.2)"
+        }
+      ]
+    },
+    {
+      "name": "acmp-version-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A26 a BIND_RX of AVTP version"
+        }
+      ]
+    },
+    {
+      "name": "acmp-adp-version-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A26 an ENTITY_AVAILABLE of version"
+        }
+      ]
+    },
+    {
+      "name": "acmp-version-bits-misread",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A26 a BIND_RX of AVTP version"
+        }
+      ]
+    },
+    {
+      "name": "acmp-header-version-1",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A1 BIND_RX sends two frames: the response and the probe"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-timer-runs",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 a probe with no transmit room: PRB_W_RESP, its TMR_NO_RESP held"
+        },
+        {
+          "test": "AcmpCore.A27AStalledDuplicateGetsItsWholeInterval",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the first TMR_NO_RESP finds no room"
+        },
+        {
+          "test": "AcmpCore.A23EveryEntryRefusesACallFromInsideAPort",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 and the outer call completes as if it had not been made"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-never-starts",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the probe leaves 5 ms late and TMR_NO_RESP runs 200 ms from that send"
+        },
+        {
+          "test": "AcmpCore.A27AStalledDuplicateGetsItsWholeInterval",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the duplicate, the first probe's"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-no-resp-2s",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the probe leaves 5 ms late and TMR_NO_RESP runs 200 ms from that send"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-sequence-unchecked",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the old probe leaving starts no timer for the new one"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-unnamed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the probe leaves 5 ms late and TMR_NO_RESP runs 200 ms from that send"
+        }
+      ]
+    },
+    {
+      "name": "acmp-owed-probe-names-the-next-sink",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 the probe leaves 5 ms late and TMR_NO_RESP runs 200 ms from that send"
+        }
+      ]
+    },
+    {
+      "name": "acmp-probe-timer-before-its-send",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A30 the probe taken at once: TMR_NO_RESP 200 ms from the clock after its send"
+        },
+        {
+          "test": "AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A30 the duplicate taken at once"
+        }
+      ]
+    },
+    {
+      "name": "acmp-taken-probe-timer-from-the-entry-clock",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A30 the duplicate taken at once: TMR_NO_RESP 200 ms from the clock after its send, not the expiry's"
+        }
+      ]
+    },
+    {
+      "name": "acmp-expiry-due-at-its-first-read",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A30 sink 1's 0 ms TMR_DELAY, drawn after sink 0's duplicate moved the clock"
+        }
+      ]
+    },
+    {
+      "name": "acmp-held-timer-expires",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 an expiry of the interface while the probe is owed takes nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-held-timer-armed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 a probe with no transmit room: PRB_W_RESP, its TMR_NO_RESP held, no timer armed"
+        }
+      ]
+    },
+    {
+      "name": "acmp-lost-probe-held",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A19 and it does"
+        }
+      ]
+    },
+    {
+      "name": "acmp-stop-keeps-the-hold",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A27 an UNBIND_RX while the probe is owed stops its timer"
+        }
+      ]
+    },
+    {
+      "name": "acmp-record-flag-defines-swapped",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 bound and started: flags 0x03"
+        }
+      ]
+    },
+    {
+      "name": "acmp-record-valid-bit-moved",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A24 bound and stopped: the valid flag alone, 0x01"
+        }
+      ]
+    },
+    {
+      "name": "acmp-longer-record-applied",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A24UnboundRecordsRefusalsAndRollback",
+          "selected": 1,
+          "matched": 1,
+          "needle": "bytes is refused, the longer ones too, before a byte is read"
+        }
+      ]
+    },
+    {
+      "name": "acmp-due-unsigned",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_NO_RESP: nothing at the wrap or 1 ms before its deadline"
+        },
+        {
+          "test": "AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 the first expiry takes sink 0 only"
+        }
+      ]
+    },
+    {
+      "name": "acmp-earliest-unsigned",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 the interface timer holds the earlier deadline"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-adp-due-unsigned",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_NO_ADP: nothing before"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-resp-deadline-saturates",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_NO_RESP: nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-retry-deadline-saturates",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_RETRY: nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-tk-deadline-saturates",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_NO_TK: nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-delay-deadline-saturates",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_DELAY: nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-no-adp-deadline-saturates",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A28 TMR_NO_ADP: nothing before"
+        }
+      ]
+    },
+    {
+      "name": "acmp-admit-never-called",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 a BIND_RX admits its talker once"
+        }
+      ]
+    },
+    {
+      "name": "acmp-admit-on-every-entry",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 a re-bind to the same talker, from any controller or source, admits nothing"
+        }
+      ]
+    },
+    {
+      "name": "acmp-admit-ignores-another-talker",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 re-binding emits one admission"
+        }
+      ]
+    },
+    {
+      "name": "acmp-admit-on-interface-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 sink 2's talker on interface 1"
+        }
+      ]
+    },
+    {
+      "name": "acmp-admit-port-unflagged",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryPortIsGuarded",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 the port kind"
+        }
+      ]
+    },
+    {
+      "name": "acmp-reset-forgets-the-admitted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 opening after reset emits one withdrawal"
+        }
+      ]
+    },
+    {
+      "name": "acmp-open-does-nothing",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A29 acmp_open admits each restored binding's talker"
+        }
+      ]
+    },
+    {
+      "name": "acmp-open-unguarded",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.A23EveryEntryRefusesACallFromInsideAPort",
+          "selected": 1,
+          "matched": 1,
+          "needle": "A23 a call made from inside the send port is refused, counted and trapped, entry"
+        }
+      ]
+    },
+    {
+      "name": "maap-down-start-keeps-owner",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReleaseLossAndRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "starting down withdraws the prior owner"
+        }
+      ]
+    },
+    {
+      "name": "maap-initial-send-absent",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "initial PROBE is immediate"
+        }
+      ]
+    },
+    {
+      "name": "maap-retransmit-count",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "three retransmissions remain"
+        }
+      ]
+    },
+    {
+      "name": "maap-probe-count-not-decremented",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "retransmission decrements once"
+        }
+      ]
+    },
+    {
+      "name": "maap-wire-version",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2 complete PROBE bytes"
+        }
+      ]
+    },
+    {
+      "name": "maap-wire-length",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2 complete PROBE bytes"
+        }
+      ]
+    },
+    {
+      "name": "maap-wire-source",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2 complete PROBE bytes"
+        }
+      ]
+    },
+    {
+      "name": "maap-wire-padding",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2 complete PROBE bytes"
+        }
+      ]
+    },
+    {
+      "name": "maap-constant-probe_base",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "probe base interval"
+        }
+      ]
+    },
+    {
+      "name": "maap-constant-probe_variation",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "probe interval variation"
+        }
+      ]
+    },
+    {
+      "name": "maap-constant-announce_base",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "announce base interval"
+        }
+      ]
+    },
+    {
+      "name": "maap-constant-announce_variation",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "announce interval variation"
+        }
+      ]
+    },
+    {
+      "name": "maap-seed-clock-ignored",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "clock seed spans the probe interval"
+        }
+      ]
+    },
+    {
+      "name": "maap-zero-seed-sticks",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ConstantsStrictTimersAndSeed",
+          "selected": 1,
+          "matched": 1,
+          "needle": "zero sum cannot lock generator"
+        }
+      ]
+    },
+    {
+      "name": "maap-biased-random-bucket",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.UniformDrawRejectsIncompleteBucket",
+          "selected": 1,
+          "matched": 1,
+          "needle": "incomplete random bucket rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-numeric-mac-priority",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReverseOctetPriority",
+          "selected": 1,
+          "matched": 1,
+          "needle": "least significant octet decides first"
+        }
+      ]
+    },
+    {
+      "name": "maap-defend-multicast",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DefendEchoAndIntersection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "echo request and exact intersection"
+        }
+      ]
+    },
+    {
+      "name": "maap-defend-echo-own-range",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DefendEchoAndIntersection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "echo request and exact intersection"
+        }
+      ]
+    },
+    {
+      "name": "maap-intersection-too-long",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DefendEchoAndIntersection",
+          "selected": 1,
+          "matched": 1,
+          "needle": "echo request and exact intersection"
+        }
+      ]
+    },
+    {
+      "name": "maap-adjacent-overlaps",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DisjointAdjacentZeroAndDefendRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "half open intervals"
+        }
+      ]
+    },
+    {
+      "name": "maap-zero-count-conflicts",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DisjointAdjacentZeroAndDefendRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "half open intervals"
+        }
+      ]
+    },
+    {
+      "name": "maap-defend-checks-request",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.DisjointAdjacentZeroAndDefendRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "DEFEND tests conflict fields"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-ethertype",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-subtype",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-version",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-reserved-zero",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-reserved-high",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-cdl-short",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-cdl-truncated",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-cdl-current",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-source-zero",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-source-group",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-destination",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-malformed-own-probe",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed input is rejected"
+        }
+      ]
+    },
+    {
+      "name": "maap-valid-minimum-refused",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2.3 recognized future"
+        }
+      ]
+    },
+    {
+      "name": "maap-future-version-refused",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.MalformedAndVersionCompatibility",
+          "selected": 1,
+          "matched": 1,
+          "needle": "B.2.3 recognized future"
+        }
+      ]
+    },
+    {
+      "name": "maap-range-end-off-by-one",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitAndPreferredRangeBounds",
+          "selected": 1,
+          "matched": 1,
+          "needle": "range past pool end is refused"
+        }
+      ]
+    },
+    {
+      "name": "maap-port-up-keeps-claim",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReleaseLossAndRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "loss of PortOperational invalidates the acquired address"
+        }
+      ]
+    },
+    {
+      "name": "maap-release-keeps-enable",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReleaseLossAndRetry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "released instance stays idle"
+        }
+      ]
+    },
+    {
+      "name": "maap-expiry-forgotten-on-stall",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.StalledOutputRetainsOrderAndOriginalExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "original expiry remains owed"
+        }
+      ]
+    },
+    {
+      "name": "maap-allocation-before-commit",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.StalledOutputRetainsOrderAndOriginalExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "allocation waits for committed ANNOUNCE"
+        }
+      ]
+    },
+    {
+      "name": "maap-probe-announce-reordered",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.StalledOutputRetainsOrderAndOriginalExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "last PROBE precedes ANNOUNCE"
+        }
+      ]
+    },
+    {
+      "name": "maap-overflow-uncounted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.QueueBoundAndWithdrawal",
+          "selected": 1,
+          "matched": 1,
+          "needle": "overload is counted as failure"
+        }
+      ]
+    },
+    {
+      "name": "maap-poll-unbounded",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.QueueBoundAndWithdrawal",
+          "selected": 1,
+          "matched": 1,
+          "needle": "poll has bounded work"
+        }
+      ]
+    },
+    {
+      "name": "maap-release-leaves-output",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.QueueBoundAndWithdrawal",
+          "selected": 1,
+          "matched": 1,
+          "needle": "release clears pending output"
+        }
+      ]
+    },
+    {
+      "name": "maap-reentry-not-counted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReentrantPortsAreCountedAndIgnored",
+          "selected": 1,
+          "matched": 1,
+          "needle": "all input guards fire"
+        }
+      ]
+    },
+    {
+      "name": "maap-debug-no-assert",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapDebug.SynchronousExpiryAsserts",
+          "selected": 1,
+          "matched": 1,
+          "needle": "debug reentry assertion"
+        }
+      ]
+    },
+    {
+      "name": "maap-stall-unqueued",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.StalledOutputRetainsOrderAndOriginalExpiry",
+          "selected": 1,
+          "matched": 1,
+          "needle": "both owed frames and ANNOUNCE leave once room returns"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-0",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/0",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-1",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/1",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-2",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/2",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-3",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/3",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-4",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/4",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-5",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/5",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-6",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/6",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-7",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/7",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-8",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/8",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-9",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/9",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-10",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/10",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-11",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/11",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-12",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/12",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-13",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/13",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-14",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/14",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-15",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/15",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-16",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/16",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-table-b7-17",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/17",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-allocation-seam-disconnected",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.InitialAndThreeRetransmissions",
+          "selected": 1,
+          "matched": 1,
+          "needle": "accepted ANNOUNCE publishes allocation"
+        }
+      ]
+    },
+    {
+      "name": "maap-begin-down-forgets-range",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.BeginBeforePortOperationalRetainsRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Begin supplied range survives port down"
+        }
+      ]
+    },
+    {
+      "name": "maap-restart-reuses-range",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.RestartDrawsNewRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "fixed seed Restart draws a new range"
+        }
+      ]
+    },
+    {
+      "name": "maap-reverse-five-octets",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.PriorityAfterTiedOctets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "every reversed octet decides"
+        }
+      ]
+    },
+    {
+      "name": "maap-compare-mac-lsb-only",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.PriorityAfterTiedOctets",
+          "selected": 1,
+          "matched": 1,
+          "needle": "every reversed octet decides"
+        }
+      ]
+    },
+    {
+      "name": "maap-generic-initial-handles-conflict",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/0",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-generic-probe-state-defends",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/12",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 conflict decision"
+        }
+      ]
+    },
+    {
+      "name": "maap-generic-probe-defend-uses-priority",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/MaapCell.TableB7/10",
+          "selected": 1,
+          "matched": 1,
+          "needle": "Table B.7 output count"
+        }
+      ]
+    },
+    {
+      "name": "maap-generic-equal-mac-wins",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.ReverseOctetPriority",
+          "selected": 1,
+          "matched": 1,
+          "needle": "equal MAC is not lower"
+        }
+      ]
+    },
+    {
+      "name": "r2-saved-range-never-consumed",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "MaapCore.LinkBounceDrawsAfterSuppliedRange",
+          "selected": 1,
+          "matched": 1,
+          "needle": "link bounce draws after consuming supplied range"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-entity-id",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-model-id",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-entity-capabilities",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-talker-count",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-talker-capabilities",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-listener-count",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-listener-capabilities",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-grandmaster",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-domain",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-identify-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "adp-config-interface-index",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AdpCore.AdvertisementFieldsMatchCaller",
+          "selected": 1,
+          "matched": 1,
+          "needle": "advertisement bytes match the independent entity vector"
+        }
+      ]
+    },
+    {
+      "name": "acmp-peer-loss-clears-binding",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "peer loss retains the binding and its talker, stream and controller"
+        },
+        {
+          "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "peer loss retains the binding and its talker, stream and controller"
+        }
+      ]
+    },
+    {
+      "name": "acmp-peer-loss-stops-discovery",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AcmpCore.DepartingRetainsBindingAndReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "returning talker remains discoverable and starts a fresh probe delay"
+        },
+        {
+          "test": "AcmpCore.AdpTimeoutRetainsBindingAndReprobes",
+          "selected": 1,
+          "matched": 1,
+          "needle": "returning talker remains discoverable and starts a fresh probe delay"
+        }
+      ]
+    },
+    {
+      "name": "adp-unsupported-version-accepted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/4",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        }
+      ]
+    },
+    {
+      "name": "adp-short-frame-accepted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/AdpInputControl.RejectsShortFrame/0",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsShortFrame/1",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsShortFrame/2",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsShortFrame/3",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsShortFrame/4",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        }
+      ]
+    },
+    {
+      "name": "adp-wrong-control-length-accepted",
+      "status": "CAUGHT",
+      "required_killers": [
+        {
+          "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        },
+        {
+          "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/4",
+          "selected": 1,
+          "matched": 1,
+          "needle": "malformed discovery increments discarded exactly once"
+        }
+      ]
+    }
+  ]
+}

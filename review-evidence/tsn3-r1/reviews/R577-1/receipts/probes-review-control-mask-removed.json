@@ -1,0 +1,14 @@
+[
+  {
+    "name": "baseline",
+    "compile_rc": 0,
+    "run_rc": 0,
+    "expected_rc": 0
+  },
+  {
+    "name": "review-control-mask-removed",
+    "compile_rc": 0,
+    "run_rc": 1,
+    "expected_rc": 1
+  }
+]
