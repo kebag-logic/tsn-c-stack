@@ -1,0 +1,53 @@
+{
+  "total": 330,
+  "caught": 330,
+  "escaped": 0,
+  "errors": 0,
+  "named_assertions_verified": 359,
+  "generated_configuration_plants": [
+    {
+      "name": "entity-wrong-count",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1,
+      "named_assertions": 1
+    },
+    {
+      "name": "entity-swapped-interface",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1,
+      "named_assertions": 1
+    },
+    {
+      "name": "entity-dropped-field",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 1,
+      "named_assertions": 1
+    }
+  ],
+  "new_adp_plants": [
+    {
+      "name": "adp-unsupported-version-accepted",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 5,
+      "named_assertions": 5
+    },
+    {
+      "name": "adp-short-frame-accepted",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 5,
+      "named_assertions": 5
+    },
+    {
+      "name": "adp-wrong-control-length-accepted",
+      "status": "CAUGHT",
+      "rc": 1,
+      "tests": 5,
+      "named_assertions": 5
+    }
+  ]
+}
