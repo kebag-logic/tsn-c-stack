@@ -23,6 +23,7 @@ WORK = None
 class EntityTests(unittest.TestCase):
     def setUp(self):
         self.document = entity.load(ROOT / 'configs/duplex.yaml')
+        self.fixture = json.loads((ROOT / 'configs/compat/ax7101.json').read_text())
         self.temp = tempfile.TemporaryDirectory(dir=WORK)
         self.addCleanup(self.temp.cleanup)
         self.directory = Path(self.temp.name)
@@ -174,19 +175,156 @@ class EntityTests(unittest.TestCase):
             self.assertEqual([row['interface'] for row in mapped[path]], [0, 0])
 
     def test_mapping_refusals(self):
-        fixture = json.loads((ROOT / 'configs/compat/ax7101.json').read_text())
-        for defect in ('version', 'unknown', 'missing', 'pin', 'caps', 'oui', 'clock'):
-            with self.subTest(defect=defect):
-                doc = copy.deepcopy(fixture['input'])
-                if defect == 'version': doc['schema_version'] = '1.3.0'
-                if defect == 'unknown': doc['entity']['typo'] = 1
-                if defect == 'missing': del doc['platform']['mac_address']
-                if defect == 'pin': doc['entity']['model_id_pin'] = 1
-                if defect == 'caps': doc['entity']['entity_capabilities'] = 1
-                if defect == 'oui': doc['entity']['vendor_oui'] = 1
-                if defect == 'clock': doc['clocking']['crf_sink'] = 'yes'
-                with self.assertRaises(entity.Invalid):
-                    project(doc, fixture['expected_adp']['entity_model_id'], fixture['expected_adp']['entity_capabilities'])
+        cases = (
+            (('schema_version',), '1.3.0', 'milan.schema_version: expected kebag-logic/milan-endstation-config 1.2.0'),
+            (('entity', 'typo'), 1, 'milan.entity: unknown field or invalid mapping'),
+            (('entity', 'entity_model_id'), '1', 'milan.entity.entity_model_id: resolved value contradicts literal or pin'),
+            (('entity', 'model_id_pin'), '1', 'milan.entity.entity_model_id: resolved value contradicts literal or pin'),
+            (('entity', 'entity_capabilities'), '1', 'milan.entity.entity_capabilities: contradicts resolved capabilities'),
+            (('entity', 'vendor_oui'), '1', 'milan.entity.vendor_oui: contradicts resolved model ID'),
+            (('entity', 'vendor_oui'), '010000', 'milan.entity.vendor_oui: I/G bit must be clear'),
+            (('clocking', 'crf_sink'), 'yes', 'milan.clocking: CRF enables must be booleans'),
+        )
+        for path, value, message in cases:
+            with self.subTest(path=path, value=value):
+                doc = copy.deepcopy(self.fixture['input'])
+                parent = doc
+                for key in path[:-1]:
+                    parent = parent[key]
+                parent[path[-1]] = value
+                self.mapping_refuse(doc, message)
+        doc = copy.deepcopy(self.fixture['input'])
+        del doc['platform']['mac_address']
+        self.mapping_refuse(doc, "milan: missing or invalid mapping input: 'mac_address'")
+
+    def mapped(self, doc):
+        old = self.fixture['expected_adp']
+        return project(doc, old['entity_model_id'], old['entity_capabilities'])
+
+    def mapping_refuse(self, doc, message):
+        with self.assertRaises(entity.Invalid) as caught:
+            self.mapped(doc)
+        self.assertEqual(str(caught.exception), message)
+
+    def test_mapping_digit_only_entity_id(self):
+        doc = self.fixture['input']
+        doc['entity']['entity_id'] = '1234567890123456'
+        self.assertEqual(self.mapped(doc)['identity']['entity_id'], 0x1234567890123456)
+
+    def test_mapping_unprefixed_entity_id(self):
+        doc = self.fixture['input']
+        doc['entity']['entity_id'] = '020000FFFE000001'
+        self.assertEqual(self.mapped(doc)['identity']['entity_id'], 0x020000FFFE000001)
+
+    def test_mapping_hex_spellings(self):
+        fields = {'entity_id': '020000FFFE000001', 'entity_model_id': '001BC5C1935893E1',
+                  'model_id_pin': '001BC5C1935893E1', 'vendor_oui': '001BC5',
+                  'entity_capabilities': '0000C588'}
+        for field, digits in fields.items():
+            for value in (digits, digits.lower(), '0x' + digits, '0X' + digits, '_'.join(digits), '0x' + '_'.join(digits)):
+                with self.subTest(field=field, value=value):
+                    doc = copy.deepcopy(self.fixture['input'])
+                    doc['entity'][field] = value
+                    expected = self.mapped(self.fixture['input'])
+                    if field == 'entity_id':
+                        expected['identity']['entity_id'] = 0x020000FFFE000001
+                    self.assertEqual(self.mapped(doc), expected)
+
+    def test_mapping_hex_boundaries(self):
+        for field in ('entity_id', 'entity_model_id', 'model_id_pin'):
+            for value, number in (('1', 1), ('FFFFFFFFFFFFFFFE', 0xFFFFFFFFFFFFFFFE)):
+                with self.subTest(field=field, value=value):
+                    doc = copy.deepcopy(self.fixture['input'])
+                    doc['entity'][field] = value
+                    mid = self.fixture['expected_adp']['entity_model_id'] if field == 'entity_id' else number
+                    mapped = project(doc, mid, 0xC588)
+                    self.assertEqual(entity.validate(mapped)['entity_id' if field == 'entity_id' else 'model_id'], number)
+        for digits, mid in (('000000', 1), ('FEFFFF', 0xFEFFFF0000000001)):
+            doc = copy.deepcopy(self.fixture['input'])
+            doc['entity']['vendor_oui'] = digits
+            self.assertEqual(project(doc, mid, 0xC588)['identity']['model_id'], mid)
+        doc = copy.deepcopy(self.fixture['input'])
+        doc['entity']['entity_capabilities'] = '03F8CFFF'
+        self.assertEqual(project(doc, 1, 0x03F8CFFF)['capabilities']['entity'], 0x03F8CFFF)
+
+    def test_mapping_pin_precedence_and_literal_validation(self):
+        doc = self.fixture['input']
+        doc['entity']['model_id_pin'] = '001BC5C1935893E1'
+        doc['entity']['entity_model_id'] = '1'
+        self.assertEqual(self.mapped(doc)['identity']['model_id'], 0x001BC5C1935893E1)
+        doc['entity']['entity_model_id'] = 1
+        self.mapping_refuse(doc, 'milan.entity.entity_model_id: quote the hexadecimal value as a YAML string')
+
+    def test_mapping_reserved_models(self):
+        for field in ('entity_model_id', 'model_id_pin'):
+            for value in ('0', 'FFFFFFFFFFFFFFFF'):
+                with self.subTest(field=field, value=value):
+                    doc = copy.deepcopy(self.fixture['input'])
+                    doc['entity'][field] = value
+                    self.mapping_refuse(doc, f'milan.entity.{field}: model identity must not be zero or all ones')
+
+    def test_mapping_default_vendor_name(self):
+        doc = self.fixture['input']
+        del doc['entity']['vendor_name']
+        self.assertEqual(self.mapped(doc)['identity']['vendor_name'], 'Kebag Logic')
+
+    def test_mapping_default_group_name(self):
+        doc = self.fixture['input']
+        del doc['entity']['group_name']
+        self.assertEqual(self.mapped(doc)['identity']['group_name'], '')
+
+    def test_mapping_default_entity_id(self):
+        doc = self.fixture['input']
+        del doc['entity']['entity_id']
+        mapped = self.mapped(doc)
+        self.assertEqual(mapped['identity']['entity_id'], 'mac-derived')
+        self.assertEqual(entity.validate(mapped)['entity_id'], 0x020000FFFE000001)
+
+    def test_mapping_mac_spellings(self):
+        for value in ('02:00:00:00:00:01', '02-00-00-00-00-01', '020000000001', '0x02_0000_000001', '0X020000000001'):
+            with self.subTest(value=value):
+                doc = copy.deepcopy(self.fixture['input'])
+                doc['platform']['mac_address'] = value
+                mapped = self.mapped(doc)
+                self.assertEqual(mapped['interfaces'][0]['mac'], '02:00:00:00:00:01')
+                self.assertEqual(entity.validate(mapped)['entity_id'], 0x020000FFFE000001)
+
+    def test_mapping_mac_refusals(self):
+        cases = (
+            (1, 'quote the hexadecimal value as a YAML string'),
+            ('02000000001', 'expected exactly 12 hexadecimal digits (48 bits)'),
+            ('0020000000001', 'expected at most 12 hexadecimal digits (48 bits), including leading zeros'),
+            ('02-00:00-00-00-01', 'expected hexadecimal digits with optional 0x and single underscores between digits; no sign or whitespace'),
+            ('00-00-00-00-00-00', 'expected nonzero unicast MAC'),
+            ('01-00-00-00-00-01', 'expected nonzero unicast MAC'),
+        )
+        for value, message in cases:
+            with self.subTest(value=value):
+                doc = copy.deepcopy(self.fixture['input'])
+                doc['platform']['mac_address'] = value
+                self.mapping_refuse(doc, 'milan.platform.mac_address: ' + message)
+
+    def test_mapping_cli_compiled_identity(self):
+        doc = self.fixture['input']
+        doc['entity']['entity_id'] = '1234567890'
+        source = self.directory / 'source.yaml'
+        source.write_text(yaml.safe_dump(doc))
+        mapped = self.directory / 'mapped.yaml'
+        command = [sys.executable, str(ROOT / 'scripts/milan_entity.py'), str(source), '--model-id', '0x001BC5C1935893E1', '--capabilities', '0xC588', '--output', str(mapped)]
+        subprocess.run(command, check=True, capture_output=True)
+        subprocess.run([sys.executable, str(ROOT / 'scripts/entity_yaml.py'), str(mapped), '--output', str(self.directory)], check=True, capture_output=True)
+        check = self.directory / 'check.c'
+        check.write_text('#include "entity_config.h"\nint main(void) { return entity_adp[0].entity_id != UINT64_C(0x0000001234567890) || entity_acmp.entity_id != UINT64_C(0x0000001234567890); }\n')
+        binary = self.directory / 'check'
+        subprocess.run(['gcc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-I' + str(ROOT / 'include'), str(self.directory / 'entity_config.c'), str(check), '-o', str(binary)], check=True, capture_output=True)
+        self.assertEqual(subprocess.run([str(binary)]).returncode, 0)
+
+    def test_yaml_integer_compatibility(self):
+        for text, number in (('1:00', 60), ('010', 8), ('0x10', 16), ('10', 10)):
+            with self.subTest(text=text):
+                source = self.directory / 'integer.yaml'
+                source.write_text(yaml.safe_dump(self.document).replace('identify_control_index: 0', 'identify_control_index: ' + text))
+                self.assertEqual(entity.validate(entity.load(source))['identify'], number)
 
 
 REFUSALS = {
@@ -238,6 +376,32 @@ def refusal_test(path, value, diagnostic):
 
 for refusal, arguments in REFUSALS.items():
     setattr(EntityTests, 'test_refuse_' + refusal, refusal_test(*arguments))
+
+
+def mapping_hex_refusal(field, value, message):
+    def test(self):
+        doc = self.fixture['input']
+        doc['entity'][field] = value
+        self.mapping_refuse(doc, f'milan.entity.{field}: {message}')
+    return test
+
+
+for field, bits in (('entity_id', 64), ('entity_model_id', 64), ('model_id_pin', 64),
+                    ('vendor_oui', 24), ('entity_capabilities', 32)):
+    for form, value in (('integer', 1), ('boolean', True), ('float', 1.0), ('null', None), ('list', []), ('mapping', {})):
+        setattr(EntityTests, f'test_mapping_refuse_{field}_{form}',
+                mapping_hex_refusal(field, value, 'quote the hexadecimal value as a YAML string'))
+    for form, value in (('empty', ''), ('prefix_only', '0x'), ('leading_underscore', '_1'),
+                        ('prefix_underscore', '0x_1'), ('trailing_underscore', '1_'),
+                        ('double_underscore', '1__2'), ('sign', '+1'), ('negative', '-1'),
+                        ('leading_space', ' 1'), ('trailing_space', '1 '), ('newline', '1\n'),
+                        ('nonhex', 'G1'), ('unicode', '１２'), ('separator', '1:2')):
+        setattr(EntityTests, f'test_mapping_refuse_{field}_{form}', mapping_hex_refusal(field, value,
+                'expected hexadecimal digits with optional 0x and single underscores between digits; no sign or whitespace'))
+    for form, value in (('overflow', '1' * (bits // 4 + 1)), ('extra_zero', '0' * (bits // 4) + '1'),
+                        ('wide_underscores', '0x' + '_'.join('0' * (bits // 4) + '1'))):
+        setattr(EntityTests, f'test_mapping_refuse_{field}_{form}', mapping_hex_refusal(field, value,
+                f'expected at most {bits // 4} hexadecimal digits ({bits} bits), including leading zeros'))
 
 
 def main():

@@ -12,6 +12,7 @@ TARGETS = ['Linux', 'bare-metal RV32']
 METHODS = {'test', 'verified by inspection', 'port obligation'}
 BEGIN = '<!-- requirements-port:start -->'
 END = '<!-- requirements-port:end -->'
+LOCAL_ORIGINS = {'ENTITY-01': ('tsn-c-stack issue 2', 'https://github.com/kebag-logic/tsn-c-stack/issues/2')}
 
 
 def source_ids():
@@ -184,14 +185,21 @@ def validate(requirements, catalog):
     by_id = {r['id']: r for r in requirements}
     for r in requirements:
         imported = r['id'].startswith('MF')
-        if not imported:
+        local = r['id'] in LOCAL_ORIGINS
+        if not imported and not local:
             if 'origin' in r or 'verification' in r:
                 errors.append('legacy requirement cannot acquire an unchecked exemption: ' + r['id'])
             continue
         origin = r.get('origin')
-        source = by_origin.get(origin, {})
-        if r['id'] not in source.get('requirements', []):
-            errors.append('imported requirement has no matching origin row: ' + r['id'])
+        if local:
+            if origin != LOCAL_ORIGINS[r['id']][0]:
+                errors.append('local requirement has no matching issue origin: ' + r['id'])
+            if method(r) != 'test':
+                errors.append('local requirement must remain tested: ' + r['id'])
+        else:
+            source = by_origin.get(origin, {})
+            if r['id'] not in source.get('requirements', []):
+                errors.append('imported requirement has no matching origin row: ' + r['id'])
         if r.get('targets') != TARGETS:
             errors.append('imported requirement must address both targets: ' + r['id'])
         if not isinstance(r.get('text'), str) or not r['text'].strip():
@@ -243,13 +251,20 @@ def verification(record):
 
 def render(requirements, catalog):
     rows = {r['origin']: r for r in catalog['rows']}
-    text = BEGIN + '\n\n## Imported requirements\n\n'
+    text = BEGIN + '\n\n## Local requirements\n\n'
+    text += 'These requirements originate in repository issues. Each applies to Linux and bare-metal RV32.\n\n'
+    text += '| ID | Origin | Required behavior | Authority | Verification |\n|---|---|---|---|---|\n'
+    for r in requirements:
+        if r['id'] in LOCAL_ORIGINS:
+            text += f'| <a id="{r["id"].lower()}"></a>{r["id"]} | {origin_link(r, catalog)} | {r["text"]} | '
+            text += '; '.join(link(c) for c in r['clauses']) + ' | ' + verification(r) + ' |\n'
+    text += '\n## Imported requirements\n\n'
     text += 'Every row applies to Linux and bare-metal RV32. Port obligations require integration evidence on each target.\n'
     text += 'Inspection rows name build or source evidence. Protocol tests run on Linux; RV32 executes the documented smoke subset.\n'
     text += 'The [traceability matrix](TRACEABILITY.md) names every supporting test.\n\n'
     text += '| ID | Origin | Portable requirement | Authority | Verification |\n|---|---|---|---|---|\n'
     for r in requirements:
-        if 'origin' not in r:
+        if 'origin' not in r or r['id'] in LOCAL_ORIGINS:
             continue
         source = rows[r['origin']]
         text += f'| <a id="{r["id"].lower()}"></a>{r["id"]} | [{r["origin"]}]({source["url"]}) | {r["text"]} | '
@@ -266,6 +281,21 @@ def render(requirements, catalog):
     return text + '\n' + END
 
 
+def origin_link(record, catalog):
+    if record['id'] in LOCAL_ORIGINS:
+        text, url = LOCAL_ORIGINS[record['id']]
+        return link(dict(text=text, url=url))
+    if 'origin' in record:
+        source = next(row for row in catalog['rows'] if row['origin'] == record['origin'])
+        return link(dict(text=record['origin'], url=source['url']))
+    return '[Import baseline](REQUIREMENTS.md)'
+
+
+def documented(requirements, text):
+    ids = set(re.findall(r'^\|\s*(?:<a id="[^"]+"></a>)?([A-Z][A-Z0-9-]+)\s*\|', text, re.M))
+    return ['requirement missing from REQUIREMENTS.md: ' + r['id'] for r in requirements if r['id'] not in ids]
+
+
 def check_document(requirements, catalog, write=False):
     path = ROOT / 'docs/REQUIREMENTS.md'
     text = path.read_text()
@@ -273,6 +303,9 @@ def check_document(requirements, catalog, write=False):
     if text.count(BEGIN) != 1 or text.count(END) != 1:
         return ['requirements document needs one generated section']
     updated = re.sub(re.escape(BEGIN) + r'.*?' + re.escape(END), lambda _: generated, text, flags=re.S)
+    missing = documented(requirements, updated if write else text)
+    if missing:
+        return missing
     if write:
         path.write_text(updated)
     elif updated != text:
@@ -315,12 +348,27 @@ def selftest(requirements, catalog):
         ('duplicate local ID', lambda r, c: c['rows'][source]['requirements'].append(c['rows'][source]['requirements'][0])),
         ('missing exclusion reason', lambda r, c: c['rows'][-3].update(reason='')),
     ]
+    local = next(i for i, r in enumerate(requirements) if r['id'] == 'ENTITY-01')
+    controls += [
+        ('missing issue origin', lambda r, c: r[local].pop('origin')),
+        ('wrong issue origin', lambda r, c: r[local].update(origin='tsn-c-stack issue 3')),
+        ('local exemption', lambda r, c: r[local]['verification'].update(method='port obligation')),
+    ]
     for name, plant in controls:
         r, c = copy.deepcopy(requirements), copy.deepcopy(catalog)
         plant(r, c)
         if not validate(r, c):
             raise RuntimeError('metadata defect escaped: ' + name)
         print('requirement control caught: ' + name)
+    document = (ROOT / 'docs/REQUIREMENTS.md').read_text()
+    if documented(requirements, document):
+        raise RuntimeError(documented(requirements, document))
+    for record in requirements:
+        rid = record['id']
+        planted = re.sub(r'^\|\s*(?:<a id="[^"]+"></a>)?' + re.escape(rid) + r'\s*\|[^\n]*\n', '', document, flags=re.M)
+        if documented(requirements, planted) != ['requirement missing from REQUIREMENTS.md: ' + rid]:
+            raise RuntimeError('missing requirement definition escaped: ' + rid)
+    print(f'requirement definitions: {len(requirements)} missing-row controls caught')
     print(f'requirement records: {len(controls)} metadata defects caught')
 
 

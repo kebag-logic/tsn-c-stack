@@ -51,8 +51,11 @@ This is a single-configuration subset of the maximum-count rules in [Milan v1.2 
 All listed fields are required. Unknown keys are refused at every level.
 No field has a silent default. Empty stream and MAAP lists are explicit.
 Integer fields accept YAML integer scalars, including hexadecimal notation.
+Schema 1.0.0 retains [PyYAML's YAML 1.1 integer forms](https://yaml.org/type/int.html).
+For example, `010` means 8 and `1:00` means 60. Prefer decimal without leading zeros or `0x` hexadecimal.
 Booleans, floats and quoted integers are refused.
-Quote MAC addresses and names. Strings use UTF-8 and cannot contain control characters.
+Quote a MAC address or name when YAML would otherwise read it as a number, boolean or date.
+A value of another type is refused. Strings use UTF-8 and cannot contain control characters.
 The parser refuses duplicate keys, aliases, merge keys, custom tags and multiple documents.
 
 The container names and version are local conventions from [issue 2][issue].
@@ -159,12 +162,12 @@ The manager owns the follow-up that replaces the firmware generators with this i
 
 | Source 1.2.0 fact | Portable 1.0.0 field or treatment |
 |---|---|
-| `entity.entity_id` | `identity.entity_id`. Preserve explicit identity or `mac-derived`. |
-| `entity.entity_model_id`, optional `model_id_pin`, `vendor_oui` | `identity.model_id`, resolved by the complete source builder. A literal, pin or OUI must agree with the supplied resolved value. |
-| `entity.name`, `vendor_name`, `serial_number`, `group_name` | Corresponding fields in `identity`, unchanged. |
+| `entity.entity_id` | `identity.entity_id`. Preserve explicit hexadecimal identity. Omission defaults to `mac-derived`. |
+| `entity.entity_model_id`, optional `model_id_pin`, `vendor_oui` | `identity.model_id`, resolved by the complete source builder. A pin takes precedence over a valid literal. The selected literal or pin and any declared OUI must agree with the supplied resolved value. |
+| `entity.name`, `vendor_name`, `serial_number`, `group_name` | Corresponding fields in `identity`. Omitted `vendor_name` defaults to `Kebag Logic`. Omitted `group_name` defaults to the empty string. Name and serial remain required. |
 | `entity.locale` | AEM localization only. Retained by the product descriptor generator. No core field. |
 | Optional `entity.entity_capabilities` | Must agree with the resolved capability value. Source authority is the [protocol package](https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/blob/2ad2f845dd583f8310075fa2380cb60a04fd091a/hdl/adp/pp_adp_pkg.sv). |
-| `platform.mac_address` | `interfaces[0].mac`. The supported projection has one protocol interface. |
+| `platform.mac_address` | `interfaces[0].mac`. Normalize source MAC spellings to colon-separated octets. The supported projection has one protocol interface. |
 | `streams.listeners`, `streams.talkers` | Audio `inputs`, `outputs` in source order, all on interface 0. Preserve stream names. |
 | `clocking.crf_sink`, `clocking.crf_output.enabled` | Append one clock input or output when true. Omitted source `crf_output` means disabled. |
 | Stream channel counts, formats and map modes | Kept in the source AEM and media generators. No fields in these cores. |
@@ -173,10 +176,29 @@ The manager owns the follow-up that replaces the firmware generators with this i
 | Board, SoC, gPTP dataset, transport, audio and reservation fields | Remain product responsibilities. They are outside this projection. |
 
 The [AX7101 fact fixture](../configs/compat/ax7101.json) records the source hash and size, selected input facts, and all nine old ADP values.
-The mapping test produces the tracked AX7101 YAML exactly and checks every ADP value.
+The mapping test produces a mapping equal to the tracked AX7101 YAML and checks every ADP value.
 One audio plus one CRF stream gives two inputs and two outputs.
 Both stream capability values are 0x4801. Entity capabilities are 0xC588.
 Its model ID is 0x001BC5C1935893E1 and its entity ID is 0x020000FFFE000001.
+
+Source scalar rules follow the pinned [hexadecimal parser](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L1349).
+Explicit `entity_id`, literal `entity_model_id`, `model_id_pin`, `vendor_oui` and `entity_capabilities` must be strings.
+Quote them in YAML. They use base 16, even when they contain only decimal digits.
+An optional `0x` or `0X` prefix and single underscores between digits are accepted.
+Signs, whitespace, repeated underscores and non-hexadecimal characters are refused.
+Count leading zeros in the width: identities allow at most 16 hex digits, OUI allows 6, and capabilities allow 8.
+Reserved model identities and the OUI I/G bit are refused.
+The portable schema's identity and capability ranges still apply after projection.
+For example, `"1234567890123456"` maps to integer `0x1234567890123456`.
+An unquoted source integer is refused with a field-specific request to quote it.
+These source string rules are separate from the portable schema's integer fields and the resolved CLI arguments.
+
+The source [MAC parser](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3279)
+accepts six two-digit octets with a shared `:` or `-` separator.
+It also accepts exactly 12 hexadecimal digits using the string grammar above.
+The mapper accepts these forms and requires a nonzero unicast value.
+The [builder defaults](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3731)
+apply only to omitted keys. An explicit null does not request a default.
 
 For the pinned AX7101 source, run:
 

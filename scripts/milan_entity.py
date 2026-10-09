@@ -4,11 +4,48 @@
 import argparse
 import copy
 from pathlib import Path
+import re
 import sys
 
 import yaml
 
-from entity_yaml import Invalid, integer, load, validate
+from entity_yaml import Invalid, load, mac, validate
+
+
+def hex_text(value, bits, path):
+    if not isinstance(value, str):
+        raise Invalid(f'{path}: quote the hexadecimal value as a YAML string')
+    match = re.fullmatch(r'(?:0[xX])?([0-9A-Fa-f](?:_?[0-9A-Fa-f])*)', value)
+    if not match:
+        raise Invalid(f'{path}: expected hexadecimal digits with optional 0x and single underscores between digits; no sign or whitespace')
+    digits = match[1].replace('_', '')
+    if len(digits) > bits // 4:
+        raise Invalid(f'{path}: expected at most {bits // 4} hexadecimal digits ({bits} bits), including leading zeros')
+    return int(digits, 16)
+
+
+def model_identity(value, path):
+    number = hex_text(value, 64, path)
+    if number in (0, (1 << 64) - 1):
+        raise Invalid(f'{path}: model identity must not be zero or all ones')
+    return number
+
+
+def station_mac(value):
+    path = 'milan.platform.mac_address'
+    if not isinstance(value, str):
+        raise Invalid(f'{path}: quote the hexadecimal value as a YAML string')
+    if re.fullmatch(r'[0-9A-Fa-f]{2}([:-])[0-9A-Fa-f]{2}(?:\1[0-9A-Fa-f]{2}){4}', value):
+        digits = value.replace(':', '').replace('-', '')
+    else:
+        number = hex_text(value, 48, path)
+        digits = re.sub(r'^0[xX]', '', value).replace('_', '')
+        if len(digits) != 12:
+            raise Invalid(f'{path}: expected exactly 12 hexadecimal digits (48 bits)')
+        digits = f'{number:012X}'
+    normalized = ':'.join(digits[i:i + 2] for i in range(0, 12, 2))
+    mac(normalized, path)
+    return normalized
 
 
 def project(document, model_id, capabilities):
@@ -19,18 +56,26 @@ def project(document, model_id, capabilities):
         fields = {'entity_id', 'entity_model_id', 'model_id_pin', 'name', 'vendor_name', 'serial_number', 'group_name', 'vendor_oui', 'locale', 'entity_capabilities'}
         if not isinstance(source, dict) or set(source) - fields:
             raise Invalid('milan.entity: unknown field or invalid mapping')
-        identity = {key: copy.deepcopy(source[key]) for key in ('entity_id', 'name', 'vendor_name', 'serial_number', 'group_name')}
-        if identity['entity_id'] != 'mac-derived' and isinstance(identity['entity_id'], str):
-            identity['entity_id'] = int(identity['entity_id'], 0)
-        declared = source.get('model_id_pin', source['entity_model_id'])
-        if declared != 'hash-derived':
-            declared = int(declared, 0) if isinstance(declared, str) else declared
-            if declared != model_id:
-                raise Invalid('milan.entity.entity_model_id: resolved value contradicts literal or pin')
+        identity = {key: copy.deepcopy(source[key]) for key in ('name', 'serial_number')}
+        identity.update(entity_id=source.get('entity_id', 'mac-derived'),
+                        vendor_name=source.get('vendor_name', 'Kebag Logic'),
+                        group_name=source.get('group_name', ''))
+        if identity['entity_id'] != 'mac-derived':
+            identity['entity_id'] = hex_text(identity['entity_id'], 64, 'milan.entity.entity_id')
+        raw = source['entity_model_id']
+        declared = None if raw == 'hash-derived' else model_identity(raw, 'milan.entity.entity_model_id')
+        if 'model_id_pin' in source:
+            declared = model_identity(source['model_id_pin'], 'milan.entity.model_id_pin')
+        if declared is not None and declared != model_id:
+            raise Invalid('milan.entity.entity_model_id: resolved value contradicts literal or pin')
         identity['model_id'] = model_id
-        if 'vendor_oui' in source and integer(source['vendor_oui'], 0, 0xFFFFFF, 'milan.entity.vendor_oui') != model_id >> 40:
-            raise Invalid('milan.entity.vendor_oui: contradicts resolved model ID')
-        if 'entity_capabilities' in source and source['entity_capabilities'] != capabilities:
+        if 'vendor_oui' in source:
+            oui = hex_text(source['vendor_oui'], 24, 'milan.entity.vendor_oui')
+            if oui & 0x010000:
+                raise Invalid('milan.entity.vendor_oui: I/G bit must be clear')
+            if oui != model_id >> 40:
+                raise Invalid('milan.entity.vendor_oui: contradicts resolved model ID')
+        if 'entity_capabilities' in source and hex_text(source['entity_capabilities'], 32, 'milan.entity.entity_capabilities') != capabilities:
             raise Invalid('milan.entity.entity_capabilities: contradicts resolved capabilities')
         clocking = document['clocking']
         crf_in = clocking['crf_sink']
@@ -39,7 +84,7 @@ def project(document, model_id, capabilities):
             raise Invalid('milan.clocking: CRF enables must be booleans')
         result = dict(schema_version='1.0.0', identity=identity,
                       capabilities=dict(entity=capabilities, identify_control_index=0),
-                      interfaces=[dict(mac=document['platform']['mac_address'])], maap=[])
+                      interfaces=[dict(mac=station_mac(document['platform']['mac_address']))], maap=[])
         for direction, old, crf in (('inputs', 'listeners', crf_in), ('outputs', 'talkers', crf_out)):
             result[direction] = [dict(name=row['name'], interface=0, kind='audio') for row in document['streams'][old]]
             if crf:

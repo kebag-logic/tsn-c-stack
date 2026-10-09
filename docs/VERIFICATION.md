@@ -184,6 +184,8 @@ The [record checker](../scripts/requirement_records.py) keeps its pinned invento
 It generates the import and disposition tables in [requirements](REQUIREMENTS.md).
 The traceability self-test plants missing origins, target omissions, lost source rows, false exclusions, broken links and unsupported exemptions.
 Each must fail. A tested import with its last test removed must also fail.
+Local issue requirements retain their linked origin and tests.
+Removing any requirement definition from the requirements table must fail, even if its ID remains elsewhere in the document.
 Inspection evidence establishes build or source properties on the stated targets.
 Port obligations retain the integration checks in [PORTING](PORTING.md), including the unmeasured service bound.
 A coverage update uses `python3 scripts/coverage.py build-gcc --write` and refuses

@@ -883,6 +883,9 @@
   },
   {
     "id": "ENTITY-01",
+    "origin": "tsn-c-stack issue 2",
+    "targets": ["Linux", "bare-metal RV32"],
+    "verification": {"method": "test"},
     "text": "Generate consistent const configuration from versioned YAML. Validate and regenerate examples. Exercise each core on both targets.",
     "clauses": [
       {
