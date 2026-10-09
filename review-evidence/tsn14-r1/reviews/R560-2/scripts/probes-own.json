@@ -1,0 +1,168 @@
+[
+ {
+  "name": "r0-baseline",
+  "baseline": true
+ },
+ {
+  "name": "r0-stepped-timeout",
+  "baseline": true,
+  "edits": [
+   {
+    "path": "tests/test_acmp.cpp",
+    "old": "// REQ: ACMP-06\nTEST_F(AcmpCore, A22OnlyBoundSinksOfThatTalkerOnThatInterface) {",
+    "new": "// REQ: MFCONN-03, MFRECOVERY-01\nTEST_F(AcmpCore, ReviewerSteppedAdpTimeout) {\n    bind(0);\n    adp(Adp{});\n    const std::uint32_t deadline = a.sinks[0].adp_deadline;\n    unsigned probes = 0;\n    while (a.sinks[0].adp_armed && fk.now - 50000u < 30000u) {\n        fk.clear();\n        fk.now += 50u;\n        acmp_timer_expired(&a, 0);\n        probes += static_cast<unsigned>(fk.sent.size());\n    }\n    EXPECT_TRUE(fk.now >= deadline && fk.now < deadline + 50u) << \"reviewer stepped expiry occurs at the deadline\";\n    EXPECT_TRUE(probes >= 2u) << \"reviewer stepped retries are sent before expiry\";\n    const auto v = view(0);\n    EXPECT_TRUE(v.bound && v.binding.talker_entity_id == kTkA && v.binding.controller_entity_id == kCtl1 &&\n                v.state == ACMP_PRB_W_AVAIL && !a.sinks[0].discovered) << \"reviewer stepped expiry retains the binding\";\n    fk.clear();\n    Adp back;\n    back.index = 2;\n    adp(back);\n    fire(0);\n    ASSERT_EQ(fk.sent.size(), 1u) << \"reviewer stepped rediscovery sends one probe\";\n    EXPECT_TRUE(last().msg == spec::MSG_PROBE_TX_COMMAND && last().talker == kTkA && view(0).bound)\n        << \"reviewer stepped rediscovery probes the retained binding\";\n}\n\n// REQ: ACMP-06\nTEST_F(AcmpCore, A22OnlyBoundSinksOfThatTalkerOnThatInterface) {"
+   }
+  ]
+ },
+ {
+  "name": "d1-startup-draw-0-4s",
+  "breaks": [
+   "MFDISC-01"
+  ],
+  "edits": [
+   {
+    "path": "src/adp.c",
+    "old": "uint32_t max_ms = kind == ADP_DRAW_STARTUP ? ADP_DELAY_STARTUP_MAX_MS : ADP_DELAY_MAX_MS;",
+    "new": "uint32_t max_ms = ADP_DELAY_MAX_MS;"
+   }
+  ]
+ },
+ {
+  "name": "d2-startup-kind-delay",
+  "breaks": [
+   "MFDISC-01"
+  ],
+  "edits": [
+   {
+    "path": "src/adp.c",
+    "old": "enter_delay(a, ADP_DRAW_STARTUP);",
+    "new": "enter_delay(a, ADP_DRAW_DELAY);"
+   }
+  ]
+ },
+ {
+  "name": "d3-armed-delay-not-draw",
+  "breaks": [
+   "MFDISC-01"
+  ],
+  "edits": [
+   {
+    "path": "src/adp.c",
+    "old": "timer_start(a, ADP_TIMER_DELAY, draw_ms(a, kind));",
+    "new": "timer_start(a, ADP_TIMER_DELAY, draw_ms(a, kind) + 2500u);"
+   }
+  ]
+ },
+ {
+  "name": "c1-departed-no-passive",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\t\tsm_stop(s);\n\t\tpassive(s);\n\t}\n}\n\nstatic void adp_arm",
+    "new": "\t\tsm_stop(s);\n\t}\n}\n\nstatic void adp_arm"
+   }
+  ]
+ },
+ {
+  "name": "c2-expiry-not-departed",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile",
+    "new": "\t\t\ts->adp_armed = false;\n\t\t}\n\t\twhile"
+   }
+  ]
+ },
+ {
+  "name": "c3-departing-unbinds",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\ts->adp_armed = false;\n\ttk_departed(s);\n}",
+    "new": "\ts->adp_armed = false;\n\ttk_departed(s);\n\ts->bound = false;\n}"
+   }
+  ]
+ },
+ {
+  "name": "c4-expiry-unbinds",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile",
+    "new": "\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t\ts->bound = false;\n\t\t}\n\t\twhile"
+   }
+  ]
+ },
+ {
+  "name": "c5-expiry-stops-discovery",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile",
+    "new": "\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t\ts->disc_running = false;\n\t\t}\n\t\twhile"
+   }
+  ]
+ },
+ {
+  "name": "c6-reprobe-reuses-sequence",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\ts->probe_seq = a->sequence_id;\n\ta->sequence_id = (uint16_t)(a->sequence_id + 1u);",
+    "new": "\ts->probe_seq = a->sequence_id;"
+   }
+  ]
+ },
+ {
+  "name": "c7-rediscovery-no-delay",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\ts->discovered = true;\n\tif (s->state == ACMP_PRB_W_AVAIL) {",
+    "new": "\ts->discovered = true;\n\tif (s->state == ACMP_PRB_W_AVAIL && s->disc_available_index == 1u) {"
+   }
+  ]
+ },
+ {
+  "name": "c8-departing-keeps-aging",
+  "breaks": [
+   "MFCONN-03",
+   "MFRECOVERY-01"
+  ],
+  "edits": [
+   {
+    "path": "src/acmp.c",
+    "old": "\ts->adp_armed = false;\n\ttk_departed(s);\n}",
+    "new": "\ttk_departed(s);\n}"
+   }
+  ]
+ }
+]

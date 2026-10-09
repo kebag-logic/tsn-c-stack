@@ -1,0 +1,6 @@
+run 37944216211 event=push sha=663f14de4a07bb1a777282fdfc83d30fd03843d4 concl=success
+  job bare-metal success steps=success:7
+  job quality success steps=success:7
+run 37944235910 event=pull_request sha=663f14de4a07bb1a777282fdfc83d30fd03843d4 concl=success
+  job quality success steps=success:7
+  job bare-metal success steps=success:7

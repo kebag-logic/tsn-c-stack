@@ -1,0 +1,26 @@
+p0: build_rc=0 needs=[] -> PASS
+p7: build_rc=0 needs=['MFCONN-03'] -> PASS
+   failed AcmpCore.A2GetRxStateInEveryState tags=['ACMP-03', 'ACMP-02', 'MFCONN-01']
+   failed AcmpCore.A3UnbindInEveryState tags=['ACMP-03', 'ACMP-02', 'MFCONN-01', 'MFSRP-01']
+   failed AcmpCore.A5RebindTheSameSourceUpdatesAndExits tags=['ACMP-03', 'ACMP-02']
+   failed AcmpCore.AdpTimeoutRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+   failed AcmpCore.DepartingRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+p8: build_rc=0 needs=['MFRECOVERY-01'] -> PASS
+   failed AcmpCore.A12DelaySendsANewProbe tags=['ACMP-04']
+   failed AcmpCore.A18TheSeedIsTakenAtTheFirstDraw tags=['ACMP-05']
+   failed AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered tags=['ACMP-09']
+   failed AcmpCore.AdpTimeoutRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+   failed AcmpCore.DepartingRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+   failed AcmpCore.DepartingStopsEveryProbingTimer tags=['ACMP-06']
+   failed AcmpCore.TimerPortBudgets tags=['PORT-01']
+p8-also: build_rc=0 needs=['MFCONN-03'] -> PASS
+   failed AcmpCore.A12DelaySendsANewProbe tags=['ACMP-04']
+   failed AcmpCore.A18TheSeedIsTakenAtTheFirstDraw tags=['ACMP-05']
+   failed AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered tags=['ACMP-09']
+   failed AcmpCore.AdpTimeoutRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+   failed AcmpCore.DepartingRetainsBindingAndReprobes tags=['ACMP-06', 'MFCONN-03', 'MFRECOVERY-01']  <- tagged killer
+   failed AcmpCore.DepartingStopsEveryProbingTimer tags=['ACMP-06']
+   failed AcmpCore.TimerPortBudgets tags=['PORT-01']
+p9: build_rc=0 needs=['MFDISC-01'] -> PASS
+   failed AdpCore.A9DrawKinds tags=['ADP-02', 'PORT-01', 'MFDISC-01']  <- tagged killer
+rc=0
