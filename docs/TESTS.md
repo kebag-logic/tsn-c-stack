@@ -91,10 +91,11 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02 |
 | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
 | [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547) | draw-kinds-merged | ADP-02, PORT-01 |
+| [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628) | adp-config-entity-id; adp-config-model-id; adp-config-entity-capabilities; adp-config-talker-count; adp-config-talker-capabilities; adp-config-listener-count; adp-config-listener-capabilities; adp-config-grandmaster; adp-config-domain; adp-config-identify-index; adp-config-interface-index | ADP-01 |
 | [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612) | frame-sources-from-sinks | ADP-01, ADP-02 |
 | [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590) | link-down-departs | ADP-02, PORT-01 |
-| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L638) | advertise-period-wrong | ADP-02, PORT-01 |
-| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L669) | own-discover-discarded | ADP-01, ADP-02 |
+| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671) | advertise-period-wrong | ADP-02, PORT-01 |
+| [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) | own-discover-discarded | ADP-01, ADP-02 |
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
