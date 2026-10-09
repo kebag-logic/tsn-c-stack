@@ -68,9 +68,7 @@ Linked controls refuse assembly source includes, binary includes and text after 
 Compiling controls include plain and spliced directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
-The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract:
-The gate keeps honest contributors to the comment rule. It does not detect deliberately hidden text.
-A deliberately obfuscated construction outside the listed rules is a review suggestion unless it occurs in the shipped tree.
+The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract.
 
 | Rule | Accepted subset | Compiling control |
 |---|---|---|
@@ -80,6 +78,9 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 | Linker scripts | No single quotes, backslashes, hashes or `VERSION`; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
 | Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp`, `.irpc`, `.include`, `.incbin` or `.end`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
 | Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
+
+The gate keeps honest contributors to the comment rule. It does not detect deliberately hidden text.
+A deliberately obfuscated construction outside the listed rules is a review suggestion unless it occurs in the shipped tree.
 
 The assertion gate refuses token pasting (`##`) and scans the named macros in all C and C++ files below `tests/`.
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
