@@ -1,0 +1,97 @@
+[
+  {
+    "source": "endstation_arty_4x4.yaml",
+    "sha256": "a9557227351bbe91ed52d4e545d3192b5c3eae9ba4287fcc06c3b53daed15c89",
+    "bytes": 11416,
+    "adp_fields": {
+      "entity_id": 144116287553929218,
+      "entity_model_id": 7816743851073804,
+      "mac": 2199023255554,
+      "entity_capabilities": 50568,
+      "talker_stream_sources": 5,
+      "talker_capabilities": 18433,
+      "listener_stream_sinks": 5,
+      "listener_capabilities": 18433,
+      "identify_control_index": 0
+    },
+    "mapped_inputs": 5,
+    "mapped_outputs": 5,
+    "rc": 0
+  },
+  {
+    "source": "endstation_arty_8ch.yaml",
+    "sha256": "a86b3e85eb08f931663f0d288694a64d1c38ee5f69d88a41b8f1c33a0afd0a1f",
+    "bytes": 12609,
+    "adp_fields": {
+      "entity_id": 144116287553929218,
+      "entity_model_id": 7816791385221787,
+      "mac": 2199023255554,
+      "entity_capabilities": 50568,
+      "talker_stream_sources": 5,
+      "talker_capabilities": 18433,
+      "listener_stream_sinks": 5,
+      "listener_capabilities": 18433,
+      "identify_control_index": 0
+    },
+    "mapped_inputs": 5,
+    "mapped_outputs": 5,
+    "rc": 0
+  },
+  {
+    "source": "endstation_arty_current.yaml",
+    "sha256": "87940d8d3ffc947ac8a5faf4b3b9e464a5e28913fc84b4d6a5f02eb18999a744",
+    "bytes": 15686,
+    "adp_fields": {
+      "entity_id": 144116287553929218,
+      "entity_model_id": 7816474349535238,
+      "mac": 2199023255554,
+      "entity_capabilities": 50568,
+      "talker_stream_sources": 1,
+      "talker_capabilities": 16385,
+      "listener_stream_sinks": 2,
+      "listener_capabilities": 18433,
+      "identify_control_index": 0
+    },
+    "mapped_inputs": 2,
+    "mapped_outputs": 1,
+    "rc": 0
+  },
+  {
+    "source": "endstation_ax7101_1x1_tdm8.yaml",
+    "sha256": "6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1",
+    "bytes": 12389,
+    "adp_fields": {
+      "entity_id": 144116287553929217,
+      "entity_model_id": 7817259562603489,
+      "mac": 2199023255553,
+      "entity_capabilities": 50568,
+      "talker_stream_sources": 2,
+      "talker_capabilities": 18433,
+      "listener_stream_sinks": 2,
+      "listener_capabilities": 18433,
+      "identify_control_index": 0
+    },
+    "mapped_inputs": 2,
+    "mapped_outputs": 2,
+    "rc": 0
+  },
+  {
+    "source": "endstation_ax7101_8x8.yaml",
+    "sha256": "ca491ba5c172fce3e4a99ef9ecbe7412804b8234320c8459e6b8e150e5e3635b",
+    "bytes": 20432,
+    "adp_fields": {
+      "entity_id": 144116287553929217,
+      "entity_model_id": 7816802434789173,
+      "mac": 2199023255553,
+      "entity_capabilities": 50568,
+      "talker_stream_sources": 9,
+      "talker_capabilities": 18433,
+      "listener_stream_sinks": 9,
+      "listener_capabilities": 18433,
+      "identify_control_index": 0
+    },
+    "mapped_inputs": 9,
+    "mapped_outputs": 9,
+    "rc": 0
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "source_revision": "5603c353137e90c1fa95429f6d00ef7a2298d9ee",
+  "source_path": "configs/endstation_ax7101_1x1_tdm8.yaml",
+  "source_sha256": "6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1",
+  "builder_sha256": "4372d698990537b1d7ca8b43c66283be8b70989a1cb18542975dde53cd20838f",
+  "baseline_mapping": "PASS",
+  "controls": [
+    {
+      "field": "entity_id",
+      "input": "1234567890",
+      "source_expected": "0x1234567890",
+      "mapper": "accepted",
+      "actual": "0x1234567890",
+      "matches": true
+    },
+    {
+      "field": "entity_id",
+      "input": "020000FFFE000001",
+      "source_expected": "0x20000fffe000001",
+      "mapper": "accepted",
+      "actual": "0x20000fffe000001",
+      "matches": true
+    },
+    {
+      "field": "entity_model_id",
+      "input": "001BC5C1935893E1",
+      "source_expected": "0x1bc5c1935893e1",
+      "mapper": "accepted",
+      "actual": "0x1bc5c1935893e1",
+      "matches": true
+    },
+    {
+      "field": "model_id_pin",
+      "input": "001BC5C1935893E1",
+      "source_expected": "0x1bc5c1935893e1",
+      "mapper": "accepted",
+      "actual": "0x1bc5c1935893e1",
+      "matches": true
+    },
+    {
+      "field": "vendor_oui",
+      "input": "0x001BC5",
+      "source_expected": "0x1bc5",
+      "mapper": "accepted",
+      "actual": "0x1bc5",
+      "matches": true
+    },
+    {
+      "field": "entity_capabilities",
+      "input": "0x0000C588",
+      "source_expected": "0xc588",
+      "mapper": "accepted",
+      "actual": "0xc588",
+      "matches": true
+    }
+  ]
+}

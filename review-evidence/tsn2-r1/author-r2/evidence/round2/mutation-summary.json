@@ -1,0 +1,27 @@
+{
+  "head": "6f4ecc9036f9ac2694b05a749cc9105d9c15c05f",
+  "counts": {
+    "CAUGHT": 330
+  },
+  "required_assertions": 359,
+  "named_entity_assertions": [
+    {
+      "plant": "entity-wrong-count",
+      "test": "EntityYaml.AdpRoundTrip",
+      "needle": "generated ADP fields match the independent entity oracle",
+      "arm": "entity"
+    },
+    {
+      "plant": "entity-swapped-interface",
+      "test": "EntityYaml.AcmpRoundTrip",
+      "needle": "generated ACMP interfaces preserve binding admission routes",
+      "arm": "entity"
+    },
+    {
+      "plant": "entity-dropped-field",
+      "test": "EntityYaml.MaapRoundTrip",
+      "needle": "generated MAAP arguments preserve range and interface ownership",
+      "arm": "entity"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "input_entity_id": "1234567890",
+  "source_expected": "0000001234567890",
+  "actual": "0000001234567890",
+  "commands": [
+    {
+      "stage": "milan_entity.py",
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "stage": "entity_yaml.py",
+      "rc": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "stage": "compiled configuration",
+      "rc": 0,
+      "stdout": "adp=0000001234567890 acmp=0000001234567890\n"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "plant": "base-zero",
+    "killer": "test_mapping_digit_only_entity_id",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "unbounded-digits",
+    "killer": "test_mapping_refuse_entity_id_extra_zero",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "unquoted-accepted",
+    "killer": "test_mapping_refuse_entity_id_integer",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "double-underscore",
+    "killer": "test_mapping_refuse_entity_id_double_underscore",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "vendor-default",
+    "killer": "test_mapping_default_vendor_name",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "group-default",
+    "killer": "test_mapping_default_group_name",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "entity-default",
+    "killer": "test_mapping_default_entity_id",
+    "rc": 1,
+    "status": "CAUGHT"
+  },
+  {
+    "plant": "pin-agreement",
+    "killer": "test_mapping_refusals",
+    "rc": 1,
+    "status": "CAUGHT"
+  }
+]
