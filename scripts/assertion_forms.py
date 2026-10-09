@@ -26,8 +26,20 @@ def errors(text):
 
 
 def package_flags(*options):
-    return shlex.split(subprocess.check_output(
-        ['pkg-config', *options, 'gmock', 'gtest'], text=True))
+    flags = iter(shlex.split(subprocess.check_output(
+        ['pkg-config', *options, 'gmock', 'gtest'], text=True)))
+    result = []
+    for flag in flags:
+        if flag == '-I':
+            path = next(flags, None)
+            if not path:
+                raise RuntimeError('package include option has no path')
+            result.extend(['-isystem', path])
+        elif flag.startswith('-I'):
+            result.extend(['-isystem', flag[2:]])
+        else:
+            result.append(flag)
+    return result
 
 
 def refused_macros():

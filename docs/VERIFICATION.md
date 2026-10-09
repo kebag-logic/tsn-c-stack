@@ -85,6 +85,12 @@ The assertion gate refuses token pasting (`##`) and scans the named macros in al
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
 CMake requires the exact package-config version and does not fall back to an unversioned library search.
 The mutation driver uses the compile and link flags from the same `pkg-config` packages whose versions it checks.
+Package `-I` paths become `-isystem` paths, matching CMake's dependency-header handling.
+Project warnings remain enabled, including signed comparisons under `-Werror`.
+The dependency control copies the real pinned headers into a scratch prefix and supplies its path through package flags.
+It catches a header plant without ambient include or library paths and confirms that project signedness errors still fail.
+For a separate install, set `CMAKE_PREFIX_PATH` to its prefix and `PKG_CONFIG_PATH` to its `lib/pkgconfig` directory.
+Run the same validation command without `CPATH`, `CPLUS_INCLUDE_PATH`, `C_INCLUDE_PATH` or `LIBRARY_PATH`.
 The same generator preprocesses every public header in the installed `gtest/` and `gmock/` directories with `-dM -E`.
 This includes `gtest/gtest-spi.h` and its failure-capturing assertions.
 It records public assertion and result macros outside the fourteen allowed forms.
