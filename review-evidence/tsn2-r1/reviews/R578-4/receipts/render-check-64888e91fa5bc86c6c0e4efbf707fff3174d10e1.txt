@@ -1,0 +1,27 @@
+source plant rows: 13
+source line after last row: 'The [quality workflow](../.github/workflows/quality.yml) runs regeneration and all host checks.'
+source line after that: 'The [RV32 gate](../scripts/baremetal.py) checks each generat'
+rendered tables with mapper Plant header: 1
+rendered plant body rows: 17
+  row: base-zero
+  row: unbounded-digits
+  row: unquoted-accepted
+  row: double-underscore
+  row: vendor-default
+  row: group-default
+  row: entity-default
+  row: pin-agreement
+  row: firmware-rev-unknown
+  row: firmware-rev-boolean
+  row: firmware-rev-negative
+  row: firmware-version-pointer
+  row: unknown-key-generic
+  row: The quality workflow runs regeneration and all host checks.
+  row: The RV32 gate checks each generated object has no imports and only permitted freestanding headers.
+  row: The existing coverage denominator stays unchanged and must remain at 100%.
+  row: It measures production cores and wire helpers. It does not claim Python generator branch coverage.
+FAIL: rendered row names differ from source rows
+FAIL: malformed rendered rows: [['The quality workflow runs regeneration and all host checks.', '', ''], ['The RV32 gate checks each generated object has no imports and only permitted freestanding headers.', '', ''], ['The existing coverage denominator stays unchanged and must remain at 100%.', '', ''], ['It measures production cores and wire helpers. It does not claim Python generator branch coverage.', '', '']]
+following prose rendered as paragraph: False
+RESULT: FAIL
+check rc=1

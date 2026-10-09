@@ -1,0 +1,37 @@
+check_render.py git blob f14e01e7285d01d8d81399f1037670bb24dcb45e, sha256 ad0e929f722b1a32907e582e241844c7b7f1856c3ef500636f05f71735958394
+== 0c5ef532cb782f9e7c73855b41c397679d176ea7
+ 1 base-zero
+ 2 unbounded-digits
+ 3 unquoted-accepted
+ 4 double-underscore
+ 5 vendor-default
+ 6 group-default
+ 7 entity-default
+ 8 pin-agreement
+ 9 firmware-rev-unknown
+10 firmware-rev-boolean
+11 firmware-rev-negative
+12 firmware-version-pointer
+13 unknown-key-generic
+rendered plant-table body rows: 13
+rc=0
+== 64888e91fa5bc86c6c0e4efbf707fff3174d10e1
+ 1 base-zero
+ 2 unbounded-digits
+ 3 unquoted-accepted
+ 4 double-underscore
+ 5 vendor-default
+ 6 group-default
+ 7 entity-default
+ 8 pin-agreement
+ 9 firmware-rev-unknown
+10 firmware-rev-boolean
+11 firmware-rev-negative
+12 firmware-version-pointer
+13 unknown-key-generic
+14 The  quality workflow  runs regeneration and all host checks.
+15 The  RV32 gate  checks each generated object has no imports and only permitted freestanding headers.
+16 The existing  coverage denominator  stays unchanged and must remain at 100%.
+17 It measures production cores and wire helpers. It does not claim Python generator branch coverage.
+rendered plant-table body rows: 17
+rc=1

@@ -1,0 +1,460 @@
+<div id="file" class="md" data-path="docs/ENTITY_YAML.md"><article class="markdown-body entry-content container-lg" itemprop="text"><div class="markdown-heading" dir="auto"><h1 class="heading-element" dir="auto">Entity YAML</h1><a id="user-content-entity-yaml" class="anchor" aria-label="Permalink: Entity YAML" href="#entity-yaml"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">Describe one static entity in YAML. Generate its C configuration on the host.
+The <a href="../scripts/entity_yaml.py">generator</a> needs Python 3.10 or later and <a href="https://pyyaml.org/wiki/PyYAMLDocumentation" rel="nofollow">PyYAML</a>.
+The generated files need only the <a href="../include/">portable headers</a>.
+They contain const initializers. They allocate no runtime memory.</p>
+<section class="js-render-needs-enrichment render-needs-enrichment position-relative" data-identity="a18e294c-304b-4898-aafc-13d5ba9a6aed" data-host="https://viewscreen.githubusercontent.com" data-src="https://viewscreen.githubusercontent.com/markdown/mermaid?docs_host=https%3A%2F%2Fdocs.github.com" data-type="mermaid" aria-label="mermaid rendered output container">
+  <div class="js-render-enrichment-target" data-json="{&quot;data&quot;:&quot;flowchart TD\n  yaml[Entity YAML] --&gt; validate[Version and field checks]\n  validate --&gt; identity[Shared identity and stream mapping]\n  identity --&gt; adp[ADP records per interface]\n  identity --&gt; acmp[ACMP configuration]\n  identity --&gt; maap[MAAP arguments per interface]\n  adp --&gt; port[Application port]\n  acmp --&gt; port\n  maap --&gt; port\n&quot;}" data-plain="flowchart TD
+  yaml[Entity YAML] --&gt; validate[Version and field checks]
+  validate --&gt; identity[Shared identity and stream mapping]
+  identity --&gt; adp[ADP records per interface]
+  identity --&gt; acmp[ACMP configuration]
+  identity --&gt; maap[MAAP arguments per interface]
+  adp --&gt; port[Application port]
+  acmp --&gt; port
+  maap --&gt; port
+" dir="auto">
+    <div class="render-plaintext-hidden" dir="auto">
+      <pre lang="mermaid" aria-label="Raw mermaid code">flowchart TD
+  yaml[Entity YAML] --&gt; validate[Version and field checks]
+  validate --&gt; identity[Shared identity and stream mapping]
+  identity --&gt; adp[ADP records per interface]
+  identity --&gt; acmp[ACMP configuration]
+  identity --&gt; maap[MAAP arguments per interface]
+  adp --&gt; port[Application port]
+  acmp --&gt; port
+  maap --&gt; port
+</pre>
+    </div>
+  </div>
+  <span class="js-render-enrichment-loader d-flex flex-justify-center flex-items-center width-full" style="min-height:100px" role="presentation">
+    <span data-view-component="true">
+  <svg style="box-sizing: content-box; color: var(--color-icon-primary);" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" data-view-component="true" class="octospinner mx-auto tmp-mx-auto anim-rotate">
+    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2" vector-effect="non-scaling-stroke" fill="none"></circle>
+    <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+</svg>    <span class="sr-only">Loading</span>
+</span>
+  </span>
+</section>
+
+<div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Integration</h2><a id="user-content-integration" class="anchor" aria-label="Permalink: Integration" href="#integration"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">For an integrator, start with the <a href="../configs/listener.yaml">listener</a>,
+<a href="../configs/talker.yaml">talker</a>, or <a href="../configs/duplex.yaml">duplex</a> example.
+The duplex has two interfaces. Its first input uses interface 1.
+The <a href="../configs/ax7101.yaml">AX7101 example</a> preserves the mapped firmware identity.
+Example identities are demonstration values. Assign unique production identities.
+The vendor owns model identity when the complete descriptor model changes.</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="python3 scripts/entity_yaml.py configs/duplex.yaml --output build-entity --prefix entity"><pre>python3 scripts/entity_yaml.py configs/duplex.yaml --output build-entity --prefix entity</pre></div>
+<p dir="auto">Compile the resulting <code>entity_config.c</code> and include <code>entity_config.h</code> in the port.
+For each interface <code>i</code>, pass <code>&amp;entity_adp[i]</code> to <code>adp_init</code>, with interface <code>i</code> and configuration index zero.
+Pass <code>&amp;entity_acmp</code> to <code>acmp_init</code>.
+For each <code>entity_maap[i]</code> with nonzero <code>count</code>, pass its <code>interface</code>, <code>mac</code>, and <code>count</code> to <code>maap_init</code>.
+Pass its <code>preferred</code> value to <code>maap_begin</code> when transport is ready.
+An interface with no outputs has a zero-count record. Do not initialize MAAP from that record.
+Keep mutable core instances and callback tables in application storage.
+The <a href="PORTING.md#ownership-and-dispatch">porting guide</a> defines their lifetime and dispatch rules.</p>
+<p dir="auto">The schema describes one configuration, audio and media-clock streams, and at most four interfaces.
+It does not generate AEM descriptors, media formats, SRP configuration, redundancy pairs, or controller behavior.
+The application must implement the features it advertises, including AEM and Identify.
+The <a href="DEVIATIONS.md">supported profile</a> and <a href="PORTING.md#entity-configuration">port obligations</a> still apply.
+Stream list order supplies the ACMP unique ID. Interface list order supplies the AVB interface index.
+This is a single-configuration subset of the maximum-count rules in <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.6.2</a>.</p>
+<div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Schema 1.0.0</h2><a id="user-content-schema-100" class="anchor" aria-label="Permalink: Schema 1.0.0" href="#schema-100"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">All listed fields are required. Unknown keys are refused at every level.
+No field has a silent default. Empty stream and MAAP lists are explicit.
+Integer fields accept YAML integer scalars, including hexadecimal notation.
+Schema 1.0.0 retains <a href="https://yaml.org/type/int.html" rel="nofollow">PyYAML's YAML 1.1 integer forms</a>.
+For example, <code>010</code> means 8 and <code>1:00</code> means 60. Prefer decimal without leading zeros or <code>0x</code> hexadecimal.
+Booleans, floats and quoted integers are refused.
+Quote a MAC address or name when YAML would otherwise read it as a number, boolean or date.
+A value of another type is refused. Strings use UTF-8 and cannot contain control characters.
+The parser refuses duplicate keys, aliases, merge keys, custom tags and multiple documents.</p>
+<p dir="auto">The container names and version are local conventions from <a href="https://github.com/kebag-logic/tsn-c-stack/issues/2" data-hovercard-type="issue" data-hovercard-url="/kebag-logic/tsn-c-stack/issues/2/hovercard">issue 2</a>.
+The clauses below define the represented protocol facts.
+Local capacity limits are stricter than their wire fields.</p>
+<markdown-accessiblity-table><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Range and meaning</th>
+<th>Authority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema_version</code></td>
+<td>String <code>1.0.0</code> only. Local format version.</td>
+<td><a href="https://github.com/kebag-logic/tsn-c-stack/issues/2" data-hovercard-type="issue" data-hovercard-url="/kebag-logic/tsn-c-stack/issues/2/hovercard">Issue 2</a></td>
+</tr>
+<tr>
+<td><code>identity</code></td>
+<td>Mapping containing the six fields below.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1</a></td>
+</tr>
+<tr>
+<td><code>identity.entity_id</code></td>
+<td>Integer 1 through 2^64-2, or <code>mac-derived</code>. Derive from interface 0 by inserting FF FE after its first three MAC octets. Preserve the U/L bit.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.7</a>; <a href="PORTING.md#entity-configuration">source identity policy</a></td>
+</tr>
+<tr>
+<td><code>identity.model_id</code></td>
+<td>Integer 1 through 2^64-2. Resolve the complete product model outside this generator.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.8</a>; <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.6.2</a></td>
+</tr>
+<tr>
+<td><code>identity.name</code></td>
+<td>0 through 64 UTF-8 bytes. Entity name metadata.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1</a></td>
+</tr>
+<tr>
+<td><code>identity.vendor_name</code></td>
+<td>0 through 64 UTF-8 bytes. Vendor string metadata.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1 and 7.2.12</a></td>
+</tr>
+<tr>
+<td><code>identity.serial_number</code></td>
+<td>0 through 64 UTF-8 bytes. Serial metadata.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1</a></td>
+</tr>
+<tr>
+<td><code>identity.group_name</code></td>
+<td>0 through 64 UTF-8 bytes. Group metadata.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1</a></td>
+</tr>
+<tr>
+<td><code>capabilities</code></td>
+<td>Mapping containing the two fields below.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.9 and 6.2.2.19</a></td>
+</tr>
+<tr>
+<td><code>capabilities.entity</code></td>
+<td>Integer 0 through 0x03FFFFFF. All bits in 0xC588 must be set. All bits in 0x73000 must be clear.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 Table 6-2</a>; <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.6.2</a>; <a href="PORTING.md#entity-configuration">authentication policy</a></td>
+</tr>
+<tr>
+<td><code>capabilities.identify_control_index</code></td>
+<td>Integer 0 through 65535. Application Identify control index.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.19</a>; <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.3.3</a></td>
+</tr>
+<tr>
+<td><code>interfaces</code></td>
+<td>List of 1 through 4 mappings. Local ACMP capacity. Indices are 0 through length minus one.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.8 and 6.2.2.20</a>; <a href="../include/acmp.h">ACMP header</a></td>
+</tr>
+<tr>
+<td><code>interfaces[].mac</code></td>
+<td>Six hexadecimal octets separated by colons. Nonzero, unicast, distinct 48-bit values.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.8</a>; <a href="PORTING.md#callback-checklist">MAAP initialization contract</a></td>
+</tr>
+<tr>
+<td><code>inputs</code>, <code>outputs</code></td>
+<td>Lists of 0 through 16 stream mappings each. Local ACMP capacity. Indices are consecutive.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.10, 6.2.2.12 and 7.2.6</a>; <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.6.2</a></td>
+</tr>
+<tr>
+<td><code>inputs[].name</code>, <code>outputs[].name</code></td>
+<td>0 through 64 UTF-8 bytes. Source labels for integration. The cores have no stream-name field.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.6</a></td>
+</tr>
+<tr>
+<td><code>inputs[].interface</code>, <code>outputs[].interface</code></td>
+<td>Integer 0 through interface count minus one.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.6</a>; <a href="https://avnu.org/resource/milan-specification/" rel="nofollow">Milan v1.2 5.5.3.5.1</a></td>
+</tr>
+<tr>
+<td><code>inputs[].kind</code>, <code>outputs[].kind</code></td>
+<td><code>audio</code> or <code>clock</code>. Derive AUDIO or MEDIA_CLOCK capabilities.</td>
+<td><a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 Tables 6-3 and 6-4</a></td>
+</tr>
+<tr>
+<td><code>maap</code></td>
+<td>List of 0 through interface count mappings. Exactly one entry for each interface with outputs.</td>
+<td><a href="https://standards.ieee.org/ieee/1722/5979/" rel="nofollow">IEEE 1722-2016 B.3.2</a></td>
+</tr>
+<tr>
+<td><code>maap[].interface</code></td>
+<td>Integer 0 through interface count minus one. Must own an output. No duplicates.</td>
+<td><a href="https://standards.ieee.org/ieee/1722/5979/" rel="nofollow">IEEE 1722-2016 B.3.2</a>; <a href="PORTING.md#maap-callbacks-and-public-fields">local instance contract</a></td>
+</tr>
+<tr>
+<td><code>maap[].preferred</code></td>
+<td>Integer zero for random allocation, or 0x91E0F0000000 through 0x91E0F000FE00 minus the output count on that interface. Reserve one address per output.</td>
+<td><a href="https://standards.ieee.org/ieee/1722/5979/" rel="nofollow">IEEE 1722-2016 B.3.2, Table B.7, B.4 and Table B.9</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">ADP and ACMP entity IDs come from the same resolved value.
+Every ADP record uses the same model ID, counts and capability bits. Its MAC comes from its own interface.
+Talker and listener IMPLEMENTED are set only for a nonempty direction.
+AUDIO is set when that direction contains an audio stream. MEDIA_CLOCK is set when it contains a clock stream.
+These fields are derived, so the schema has no separately writable counts or direction capabilities.
+The generated identity record preserves four strings in 65-byte C arrays, including a trailing NUL.
+This record is metadata for the port. It is not an AEM descriptor image.</p>
+<p dir="auto">The MAAP dynamic pool ends before FE00. The source firmware's SRP address FE01 belongs to a different allocation policy.
+The mapper requests a random MAAP allocation instead of treating FE01 as a dynamic preferred address.
+See <a href="https://standards.ieee.org/ieee/1722/5979/" rel="nofollow">IEEE 1722-2016 B.4 and Tables B.9 and B.10</a>.</p>
+<div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Validation and tests</h2><a id="user-content-validation-and-tests" class="anchor" aria-label="Permalink: Validation and tests" href="#validation-and-tests"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">For a tester, run the full <a href="VERIFICATION.md">verification kit</a>.
+The focused host checks are:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="python3 scripts/entity_yaml.py --examples --check
+python3 scripts/entity_selftest.py --work build-entity-controls
+python3 scripts/mutation.py --work build-entity-mutations --select entity- --jobs 16
+python3 scripts/baremetal.py --work build-rv32 --jobs 16"><pre>python3 scripts/entity_yaml.py --examples --check
+python3 scripts/entity_selftest.py --work build-entity-controls
+python3 scripts/mutation.py --work build-entity-mutations --select entity- --jobs 16
+python3 scripts/baremetal.py --work build-rv32 --jobs 16</pre></div>
+<p dir="auto">The <a href="../scripts/entity_selftest.py">schema tests</a> compare exact refusal messages.
+Each required field is deleted once. Every mapping receives an unknown-field control.
+The range tests cover list capacities, missing interfaces, MAC syntax and uniqueness, names, identity, capabilities and MAAP bounds.
+The CLI refuses invalid input with status 2 before writing either output file.
+It leaves previous output bytes intact on validation failure.
+An I/O failure is reported separately. The two output writes are not an atomic transaction.</p>
+<p dir="auto">Golden checks compare both generated files with the tracked examples byte for byte.
+The same input mapping with reordered keys gives the same bytes.
+There are no timestamps, source paths or random values in the output.
+The schema version appears in the include guard and in a macro.
+Each generated source statically asserts that macro's exact version.
+A planted stale header fails compilation. Both C11 and C++20 header modes are in the <a href="CODING_STANDARD.md#conditional-compilation">conditional matrix</a>.
+The prefix option chooses C symbol names. It accepts a lower-case letter followed by lower-case letters, digits or underscores.
+Do not link two configurations with the same prefix.</p>
+<p dir="auto">The <a href="../examples/entity_roundtrip.c">round-trip checks</a> run through all three cores for all four examples.
+The hosted <a href="../tests/test_entity.cpp">GoogleTest cases</a> and the <a href="../examples/rv32/smoke.c">RV32 smoke image</a> call the same checks.
+Their oracles spell expected fields independently of the generated structs.
+ADP checks transmitted fields. ACMP restores bindings and checks interface admission.
+MAAP checks probes, counts, preferred ranges, validity and withdrawal.
+The <a href="../tests/mutations.json">mutation campaign</a> plants three named defects:</p>
+<markdown-accessiblity-table><table>
+<thead>
+<tr>
+<th>Plant</th>
+<th>Changed configuration</th>
+<th>Required catch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entity-wrong-count</code></td>
+<td>AX7101 ADP source count becomes one.</td>
+<td><code>EntityYaml.AdpRoundTrip</code></td>
+</tr>
+<tr>
+<td><code>entity-swapped-interface</code></td>
+<td>Duplex sink interfaces are exchanged.</td>
+<td><code>EntityYaml.AcmpRoundTrip</code></td>
+</tr>
+<tr>
+<td><code>entity-dropped-field</code></td>
+<td>Talker MAAP preferred field is removed. C supplies zero.</td>
+<td><code>EntityYaml.MaapRoundTrip</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All three plants still compile. Each must fail its named assertion in a completed run.
+The golden test also refuses each planted file as drift.</p>
+<p dir="auto">The schema tests also register 13 mapper plants.
+Each plant edits one unique fragment of the <a href="../scripts/milan_entity.py">mapper</a> in memory.
+Its named test must pass on the unedited mapper and fail an assertion on the planted one.
+An error, a skip, a failure in another test or an ambiguous fragment does not count as a catch.
+Rerun only these controls with:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="python3 scripts/entity_selftest.py --work build-entity-controls --select mapper_plant"><pre>python3 scripts/entity_selftest.py --work build-entity-controls --select mapper_plant</pre></div>
+<markdown-accessiblity-table><table>
+<thead>
+<tr>
+<th>Plant</th>
+<th>Planted defect</th>
+<th>Required failing test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base-zero</code></td>
+<td>Source hexadecimal text uses prefix-based base detection.</td>
+<td><code>test_mapping_digit_only_entity_id</code></td>
+</tr>
+<tr>
+<td><code>unbounded-digits</code></td>
+<td>The digit-count bound is removed.</td>
+<td><code>test_mapping_refuse_entity_id_extra_zero</code></td>
+</tr>
+<tr>
+<td><code>unquoted-accepted</code></td>
+<td>Unquoted source integers are accepted.</td>
+<td><code>test_mapping_refuse_entity_id_integer</code></td>
+</tr>
+<tr>
+<td><code>double-underscore</code></td>
+<td>Repeated underscores are accepted.</td>
+<td><code>test_mapping_refuse_entity_id_double_underscore</code></td>
+</tr>
+<tr>
+<td><code>vendor-default</code></td>
+<td>An omitted vendor name gets another default.</td>
+<td><code>test_mapping_default_vendor_name</code></td>
+</tr>
+<tr>
+<td><code>group-default</code></td>
+<td>An omitted group name gets another default.</td>
+<td><code>test_mapping_default_group_name</code></td>
+</tr>
+<tr>
+<td><code>entity-default</code></td>
+<td>An omitted entity ID gets another default.</td>
+<td><code>test_mapping_default_entity_id</code></td>
+</tr>
+<tr>
+<td><code>pin-agreement</code></td>
+<td>The literal or pin is not compared with the resolved model ID.</td>
+<td><code>test_mapping_refusals</code></td>
+</tr>
+<tr>
+<td><code>firmware-rev-unknown</code></td>
+<td><code>firmware_rev</code> is removed from the accepted keys.</td>
+<td><code>test_mapping_firmware_rev_zero</code></td>
+</tr>
+<tr>
+<td><code>firmware-rev-boolean</code></td>
+<td>A boolean <code>firmware_rev</code> is accepted.</td>
+<td><code>test_mapping_refuse_firmware_rev_boolean</code></td>
+</tr>
+<tr>
+<td><code>firmware-rev-negative</code></td>
+<td>A negative <code>firmware_rev</code> is accepted.</td>
+<td><code>test_mapping_refuse_firmware_rev_negative</code></td>
+</tr>
+<tr>
+<td><code>firmware-version-pointer</code></td>
+<td><code>firmware_version</code> gets the generic unknown-key refusal.</td>
+<td><code>test_mapping_refuse_firmware_version</code></td>
+</tr>
+<tr>
+<td><code>unknown-key-generic</code></td>
+<td>The unknown-key refusal no longer names the key.</td>
+<td><code>test_mapping_refuse_unknown_entity_key</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="../.github/workflows/quality.yml">quality workflow</a> runs regeneration and all host checks.
+The <a href="../scripts/baremetal.py">RV32 gate</a> checks each generated object has no imports and only permitted freestanding headers.
+The existing <a href="VERIFICATION.md#measurement-and-limits">coverage denominator</a> stays unchanged and must remain at 100%.
+It measures production cores and wire helpers. It does not claim Python generator branch coverage.</p>
+<div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Mapping from milan-fpga</h2><a id="user-content-mapping-from-milan-fpga" class="anchor" aria-label="Permalink: Mapping from milan-fpga" href="#mapping-from-milan-fpga"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
+<p dir="auto">The source is <a href="https://github.com/kebag-logic/milan-fpga/tree/5603c353137e90c1fa95429f6d00ef7a2298d9ee">milan-fpga revision 5603c353</a>.
+Its <a href="https://github.com/kebag-logic/milan-fpga/tree/5603c353137e90c1fa95429f6d00ef7a2298d9ee/configs">end-station examples</a> use schema 1.2.0.
+The <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/firmware/ctrl/adp/adp_entity.py">ADP generator</a>
+uses the <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py">builder</a>.
+The <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/firmware/ctrl/srp/srp_entity.py">SRP generator</a>
+uses that same ADP result for stream counts.</p>
+<p dir="auto">The entity section alone omits MAC and stream shape. Use the documented projection below.
+The <a href="../scripts/milan_entity.py">mapper</a> accepts a full source document and copies only the protocol configuration facts.
+Resolve the complete AEM model ID and entity capability value with the source builder first.
+This avoids inventing a second hash algorithm for a partial descriptor model.
+The manager owns the follow-up that replaces the firmware generators with this interface.</p>
+<markdown-accessiblity-table><table>
+<thead>
+<tr>
+<th>Source 1.2.0 fact</th>
+<th>Portable 1.0.0 field or treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>entity.entity_id</code></td>
+<td><code>identity.entity_id</code>. Preserve explicit hexadecimal identity. Omission defaults to <code>mac-derived</code>.</td>
+</tr>
+<tr>
+<td><code>entity.entity_model_id</code>, optional <code>model_id_pin</code>, <code>vendor_oui</code></td>
+<td><code>identity.model_id</code>, resolved by the complete source builder. A pin takes precedence over a valid literal. The selected literal or pin and any declared OUI must agree with the supplied resolved value.</td>
+</tr>
+<tr>
+<td><code>entity.name</code>, <code>vendor_name</code>, <code>serial_number</code>, <code>group_name</code></td>
+<td>Corresponding fields in <code>identity</code>. Omitted <code>vendor_name</code> defaults to <code>Kebag Logic</code>. Omitted <code>group_name</code> defaults to the empty string. Name and serial remain required.</td>
+</tr>
+<tr>
+<td><code>entity.locale</code></td>
+<td>AEM localization only. Retained by the product descriptor generator. No core field.</td>
+</tr>
+<tr>
+<td>Optional <code>entity.firmware_rev</code></td>
+<td>A non-negative integer, never a boolean. Omission means 0. The <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3720-L3730">source loader</a> derives the AEM <code>firmware_version</code> string from it. That string is in the ENTITY descriptor (<a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 7.2.1, Table 7-2</a>). It does not change the model ID (<a href="https://standards.ieee.org/ieee/1722.1/6670/" rel="nofollow">IEEE 1722.1-2021 6.2.2.8</a>). No core field, so <code>identity</code> is unchanged.</td>
+</tr>
+<tr>
+<td><code>entity.firmware_version</code></td>
+<td>Refused, as in the source. The refusal points to <code>entity.firmware_rev</code>.</td>
+</tr>
+<tr>
+<td>Optional <code>entity.entity_capabilities</code></td>
+<td>Must agree with the resolved capability value. Source authority is the <a href="https://github.com/Mister-M-alt/protocol-processor-control-plane-avb-milan/blob/2ad2f845dd583f8310075fa2380cb60a04fd091a/hdl/adp/pp_adp_pkg.sv">protocol package</a>.</td>
+</tr>
+<tr>
+<td><code>platform.mac_address</code></td>
+<td><code>interfaces[0].mac</code>. Normalize source MAC spellings to colon-separated octets. The supported projection has one protocol interface.</td>
+</tr>
+<tr>
+<td><code>streams.listeners</code>, <code>streams.talkers</code></td>
+<td>Audio <code>inputs</code>, <code>outputs</code> in source order, all on interface 0. Preserve stream names.</td>
+</tr>
+<tr>
+<td><code>clocking.crf_sink</code>, <code>clocking.crf_output.enabled</code></td>
+<td>Append one clock input or output when true. Omitted source <code>crf_output</code> means disabled.</td>
+</tr>
+<tr>
+<td>Stream channel counts, formats and map modes</td>
+<td>Kept in the source AEM and media generators. No fields in these cores.</td>
+</tr>
+<tr>
+<td>Source Identify descriptor</td>
+<td>Index zero, as checked by the source ADP generator.</td>
+</tr>
+<tr>
+<td><code>srp.stream_dmac_base</code></td>
+<td>No direct MAAP mapping. Request random dynamic allocation.</td>
+</tr>
+<tr>
+<td>Board, SoC, gPTP dataset, transport, audio and reservation fields</td>
+<td>Remain product responsibilities. They are outside this projection.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="../configs/compat/ax7101.json">AX7101 fact fixture</a> records the source hash and size, selected input facts, and all nine old ADP values.
+The mapping test produces a mapping equal to the tracked AX7101 YAML and checks every ADP value.
+One audio plus one CRF stream gives two inputs and two outputs.
+Both stream capability values are 0x4801. Entity capabilities are 0xC588.
+Its model ID is 0x001BC5C1935893E1 and its entity ID is 0x020000FFFE000001.</p>
+<p dir="auto">Source scalar rules follow the pinned <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L1349">hexadecimal parser</a>.
+Explicit <code>entity_id</code>, literal <code>entity_model_id</code>, <code>model_id_pin</code>, <code>vendor_oui</code> and <code>entity_capabilities</code> must be strings.
+Quote them in YAML. They use base 16, even when they contain only decimal digits.
+An optional <code>0x</code> or <code>0X</code> prefix and single underscores between digits are accepted.
+Signs, whitespace, repeated underscores and non-hexadecimal characters are refused.
+Count leading zeros in the width: identities allow at most 16 hex digits, OUI allows 6, and capabilities allow 8.
+Reserved model identities and the OUI I/G bit are refused.
+The portable schema's identity and capability ranges still apply after projection.
+For example, <code>"1234567890123456"</code> maps to integer <code>0x1234567890123456</code>.
+An unquoted source integer is refused with a field-specific request to quote it.
+These source string rules are separate from the portable schema's integer fields and the resolved CLI arguments.</p>
+<p dir="auto">The source <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3279">MAC parser</a>
+accepts six two-digit octets with a shared <code>:</code> or <code>-</code> separator.
+It also accepts exactly 12 hexadecimal digits using the string grammar above.
+The mapper accepts these forms and requires a nonzero unicast value.
+The <a href="https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/sw/builder/endstation_builder.py#L3727-L3740">builder defaults</a>
+apply only to omitted keys. An explicit null does not request a default.
+This includes <code>firmware_rev</code>: an explicit null is refused.</p>
+<p dir="auto">For the pinned AX7101 source, run:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="python3 scripts/milan_entity.py source/configs/endstation_ax7101_1x1_tdm8.yaml --model-id 0x001BC5C1935893E1 --capabilities 0xC588 --output build-ax7101.yaml
+python3 scripts/entity_yaml.py build-ax7101.yaml --output build-ax7101 --prefix ax7101"><pre>python3 scripts/milan_entity.py source/configs/endstation_ax7101_1x1_tdm8.yaml --model-id 0x001BC5C1935893E1 --capabilities 0xC588 --output build-ax7101.yaml
+python3 scripts/entity_yaml.py build-ax7101.yaml --output build-ax7101 --prefix ax7101</pre></div>
+<p dir="auto">The mapper refuses unsupported source versions, a non-mapping entity section, <code>firmware_version</code>, and invalid <code>firmware_rev</code> values.
+It names each unknown entity key, for example <code>milan.entity.typo: unknown field</code>.
+It also refuses missing projection inputs, conflicting model identity or capabilities, and non-boolean CRF enables.
+Other source sections are intentionally outside its validation scope.
+Validate the complete product configuration with its own builder before projecting it.
+The accepted entity keys are the keys read by the source entity loader.
+All five pinned end-station shapes map.
+No platform source change is part of this repository change.</p>
+<p dir="auto">For a developer, keep the <a href="../scripts/entity_yaml.py">generator</a>, <a href="../configs/">examples</a>,
+<a href="../examples/entities/">goldens</a>, <a href="../scripts/entity_selftest.py">host controls</a>, and <a href="#schema-100">schema table</a> together.
+Regenerate intentional changes with:</p>
+<div class="highlight highlight-source-shell notranslate position-relative overflow-auto" dir="auto" data-snippet-clipboard-copy-content="python3 scripts/entity_yaml.py --examples"><pre>python3 scripts/entity_yaml.py --examples</pre></div>
+<p dir="auto">YAML stays outside the four directories with the <a href="CODING_STANDARD.md">closed suffix contract</a>.
+Generated C comments use only SPDX, requirement IDs and short clause references.
+Any change requiring core behavior belongs in a separate core issue.</p>
+</article></div>

@@ -1,0 +1,38 @@
+20546 <packet>/scratch/old.md
+20547 <packet>/scratch/new.md
+41093 total
+12375 124  12
+12376 150 124
+12377 145 150
+inserted line 169 bytes:
+0000000  \n
+0000001
+new minus line169 == old:
+IDENTICAL
+context 160-175:
+```sh$
+python3 scripts/entity_selftest.py --work build-entity-controls --select mapper_plant$
+```$
+$
+| Plant | Planted defect | Required failing test |$
+|---|---|---|$
+| `base-zero` | Source hexadecimal text uses prefix-based base detection. | `test_mapping_digit_only_entity_id` |$
+| `unbounded-digits` | The digit-count bound is removed. | `test_mapping_refuse_entity_id_extra_zero` |$
+| `unquoted-accepted` | Unquoted source integers are accepted. | `test_mapping_refuse_entity_id_integer` |$
+| `double-underscore` | Repeated underscores are accepted. | `test_mapping_refuse_entity_id_double_underscore` |$
+| `vendor-default` | An omitted vendor name gets another default. | `test_mapping_default_vendor_name` |$
+| `group-default` | An omitted group name gets another default. | `test_mapping_default_group_name` |$
+| `entity-default` | An omitted entity ID gets another default. | `test_mapping_default_entity_id` |$
+| `pin-agreement` | The literal or pin is not compared with the resolved model ID. | `test_mapping_refusals` |$
+| `firmware-rev-unknown` | `firmware_rev` is removed from the accepted keys. | `test_mapping_firmware_rev_zero` |$
+| `firmware-rev-boolean` | A boolean `firmware_rev` is accepted. | `test_mapping_refuse_firmware_rev_boolean` |$
+| `firmware-rev-negative` | A negative `firmware_rev` is accepted. | `test_mapping_refuse_firmware_rev_negative` |$
+| `firmware-version-pointer` | `firmware_version` gets the generic unknown-key refusal. | `test_mapping_refuse_firmware_
+| `unknown-key-generic` | The unknown-key refusal no longer names the key. | `test_mapping_refuse_unknown_entity_key` |$
+$
+The [quality workflow](../.github/workflows/quality.yml) runs regeneration and all host checks.$
+The [RV32 gate](../scripts/baremetal.py) checks each generated object has no imports and only permitted freestanding hea
+The existing [coverage denominator](VERIFICATION.md#measurement-and-limits) stays unchanged and must remain at 100%.$
+It measures production cores and wire helpers. It does not claim Python generator branch coverage.$
+$
+## Mapping from milan-fpga$

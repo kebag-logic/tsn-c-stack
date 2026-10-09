@@ -1,0 +1,21 @@
+source plant rows: 13
+source line after last row: ''
+source line after that: 'The [quality workflow](../.github/workflows/quality.yml) run'
+rendered tables with mapper Plant header: 1
+rendered plant body rows: 13
+  row: base-zero
+  row: unbounded-digits
+  row: unquoted-accepted
+  row: double-underscore
+  row: vendor-default
+  row: group-default
+  row: entity-default
+  row: pin-agreement
+  row: firmware-rev-unknown
+  row: firmware-rev-boolean
+  row: firmware-rev-negative
+  row: firmware-version-pointer
+  row: unknown-key-generic
+following prose rendered as paragraph: True
+RESULT: PASS
+check rc=0

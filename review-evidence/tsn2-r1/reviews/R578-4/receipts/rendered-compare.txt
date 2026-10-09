@@ -1,0 +1,39 @@
+parent table row counts (incl. header): [21, 4, 18, 15]
+head   table row counts (incl. header): [21, 4, 14, 15]
+rendered HTML diff lines: 36
+--- parent
++++ head
+@@ -5,3 +5,3 @@
+ They contain const initializers. They allocate no runtime memory.</p>
+-<section class="js-render-needs-enrichment render-needs-enrichment position-relative" data-identity="5e7bc200-2fb6-40b8-af94-4b9c82a0961b" data-host="https://viewscreen.githubusercontent.com" data-src="https://viewscreen.githubusercontent.com/markdown/mermaid?docs_host=https%3A%2F%2Fdocs.github.com" data-type="mermaid" aria-label="mermaid rendered output container">
++<section class="js-render-needs-enrichment render-needs-enrichment position-relative" data-identity="a18e294c-304b-4898-aafc-13d5ba9a6aed" data-host="https://viewscreen.githubusercontent.com" data-src="https://viewscreen.githubusercontent.com/markdown/mermaid?docs_host=https%3A%2F%2Fdocs.github.com" data-type="mermaid" aria-label="mermaid rendered output container">
+   <div class="js-render-enrichment-target" data-json="{&quot;data&quot;:&quot;flowchart TD\n  yaml[Entity YAML] --&gt; validate[Version and field checks]\n  validate --&gt; identity[Shared identity and stream mapping]\n  identity --&gt; adp[ADP records per interface]\n  identity --&gt; acmp[ACMP configuration]\n  identity --&gt; maap[MAAP arguments per interface]\n  adp --&gt; port[Application port]\n  acmp --&gt; port\n  maap --&gt; port\n&quot;}" data-plain="flowchart TD
+@@ -333,24 +333,8 @@
+ </tr>
+-<tr>
+-<td>The <a href="../.github/workflows/quality.yml">quality workflow</a> runs regeneration and all host checks.</td>
+-<td></td>
+-<td></td>
+-</tr>
+-<tr>
+-<td>The <a href="../scripts/baremetal.py">RV32 gate</a> checks each generated object has no imports and only permitted freestanding headers.</td>
+-<td></td>
+-<td></td>
+-</tr>
+-<tr>
+-<td>The existing <a href="VERIFICATION.md#measurement-and-limits">coverage denominator</a> stays unchanged and must remain at 100%.</td>
+-<td></td>
+-<td></td>
+-</tr>
+-<tr>
+-<td>It measures production cores and wire helpers. It does not claim Python generator branch coverage.</td>
+-<td></td>
+-<td></td>
+-</tr>
+ </tbody>
+ </table></markdown-accessiblity-table>
++<p dir="auto">The <a href="../.github/workflows/quality.yml">quality workflow</a> runs regeneration and all host checks.
++The <a href="../scripts/baremetal.py">RV32 gate</a> checks each generated object has no imports and only permitted freestanding headers.
++The existing <a href="VERIFICATION.md#measurement-and-limits">coverage denominator</a> stays unchanged and must remain at 100%.
++It measures production cores and wire helpers. It does not claim Python generator branch coverage.</p>
+ <div class="markdown-heading" dir="auto"><h2 class="heading-element" dir="auto">Mapping from milan-fpga</h2><a id="user-content-mapping-from-milan-fpga" class="anchor" aria-label="Permalink: Mapping from milan-fpga" href="#mapping-from-milan-fpga"><svg data-component="Octicon" class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg></a></div>
