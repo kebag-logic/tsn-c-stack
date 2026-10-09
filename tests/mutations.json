@@ -5004,5 +5004,44 @@
       "AcmpCore.DepartingRetainsBindingAndReprobes",
       "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
     ]
+  },
+  {
+    "name": "entity-wrong-count",
+    "path": "examples/entities/ax7101/entity_config.c",
+    "old": "        .talker_stream_sources = 2u,",
+    "new": "        .talker_stream_sources = 1u,",
+    "kills": [
+      {
+        "test": "EntityYaml.AdpRoundTrip",
+        "needle": "generated ADP fields match the independent entity oracle",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-swapped-interface",
+    "path": "examples/entities/duplex/entity_config.c",
+    "old": "    .sink_interface = {1u, 0u},",
+    "new": "    .sink_interface = {0u, 1u},",
+    "kills": [
+      {
+        "test": "EntityYaml.AcmpRoundTrip",
+        "needle": "generated ACMP interfaces preserve binding admission routes",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-dropped-field",
+    "path": "examples/entities/talker/entity_config.c",
+    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
+    "new": "",
+    "kills": [
+      {
+        "test": "EntityYaml.MaapRoundTrip",
+        "needle": "generated MAAP arguments preserve range and interface ownership",
+        "arm": "entity"
+      }
+    ]
   }
 ]

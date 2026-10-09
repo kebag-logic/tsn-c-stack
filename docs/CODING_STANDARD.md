@@ -102,3 +102,8 @@ They have no `#else`. These filename-based guard names preserve the imported hea
 | [adp_port.h](../examples/adp_port.h) | `EXAMPLE_ADP_PORT_H` |
 | [assert.h](../examples/rv32/include/assert.h) | `TSN_PORT_ASSERT_H` |
 | [string.h](../examples/rv32/include/string.h) | `TSN_PORT_STRING_H` |
+| [listener/entity_config.h](../examples/entities/listener/entity_config.h) | `LISTENER_ENTITY_CONFIG_V1_0_0_H` |
+| [talker/entity_config.h](../examples/entities/talker/entity_config.h) | `TALKER_ENTITY_CONFIG_V1_0_0_H` |
+| [duplex/entity_config.h](../examples/entities/duplex/entity_config.h) | `DUPLEX_ENTITY_CONFIG_V1_0_0_H` |
+| [ax7101/entity_config.h](../examples/entities/ax7101/entity_config.h) | `AX7101_ENTITY_CONFIG_V1_0_0_H` |
+| [entity_roundtrip.h](../examples/entity_roundtrip.h) | `EXAMPLE_ENTITY_ROUNDTRIP_H` |

@@ -101,6 +101,9 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
+| [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface | ENTITY-01, ACMP-01, ACMP-07 |
+| [EntityYaml.AdpRoundTrip](../tests/test_entity.cpp#L12) | entity-wrong-count | ENTITY-01, ADP-01 |
+| [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L24) | entity-dropped-field | ENTITY-01, MAAP-02 |
 | [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) | departing-keeps-index | PORT-01 |
 | [MaapCell.TableB7](../tests/test_maap.cpp#L139) | maap-table-b7-0; maap-table-b7-1; maap-table-b7-2; maap-table-b7-3; maap-table-b7-4; maap-table-b7-5; maap-table-b7-6; maap-table-b7-7; maap-table-b7-8; maap-table-b7-9; maap-table-b7-10; maap-table-b7-11; maap-table-b7-12; maap-table-b7-13; maap-table-b7-14; maap-table-b7-15; maap-table-b7-16; maap-table-b7-17; maap-generic-initial-handles-conflict; maap-generic-probe-state-defends; maap-generic-probe-defend-uses-priority | MAAP-03, MFMAAP-01 |
 | [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318) | maap-begin-down-forgets-range | MAAP-02 |

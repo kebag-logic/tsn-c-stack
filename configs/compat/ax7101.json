@@ -1,0 +1,67 @@
+{
+  "revision": "5603c353137e90c1fa95429f6d00ef7a2298d9ee",
+  "source": "configs/endstation_ax7101_1x1_tdm8.yaml",
+  "source_sha256": "6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1",
+  "source_bytes": 12389,
+  "input": {
+    "schema": "kebag-logic/milan-endstation-config",
+    "schema_version": "1.2.0",
+    "entity": {
+      "name": "Milan FPGA 1x1 TDM8",
+      "entity_model_id": "hash-derived",
+      "entity_id": "mac-derived",
+      "vendor_name": "Kebag Logic",
+      "serial_number": "AX7101-0001",
+      "group_name": ""
+    },
+    "platform": {
+      "mac_address": "02:00:00:00:00:01",
+      "pp_mem_phys": 2138046464
+    },
+    "streams": {
+      "listeners": [
+        {
+          "name": "Stream In 0",
+          "channels": 8,
+          "map_mode": "dynamic"
+        }
+      ],
+      "talkers": [
+        {
+          "name": "Stream Out 0",
+          "channels": 8,
+          "map_mode": "dynamic"
+        }
+      ]
+    },
+    "clocking": {
+      "sampling_rate_hz": 48000,
+      "audio_unit_rates_hz": [
+        48000
+      ],
+      "media_clock_sources": [
+        "internal",
+        "crf",
+        "input_stream"
+      ],
+      "default_source": "internal",
+      "crf_sink": true,
+      "crf_output": {
+        "enabled": true,
+        "format": "0x041060010000BB80"
+      },
+      "audio_pll_hz": 24576000
+    }
+  },
+  "expected_adp": {
+    "entity_id": 144116287553929217,
+    "entity_model_id": 7817259562603489,
+    "mac": 2199023255553,
+    "entity_capabilities": 50568,
+    "talker_stream_sources": 2,
+    "talker_capabilities": 18433,
+    "listener_stream_sinks": 2,
+    "listener_capabilities": 18433,
+    "identify_control_index": 0
+  }
+}

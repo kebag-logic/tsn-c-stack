@@ -18,9 +18,10 @@ No failing build, skipped test or empty test binary can establish a pass.
 
 | Check | Command | Acceptance |
 |---|---|---|
+| Entity YAML | `python3 scripts/entity_yaml.py --examples --check` and `python3 scripts/entity_selftest.py --work build-entity-controls` | Schema refusals, exact golden bytes, version guard, planted drift and the AX7101 mapping pass. [Round trips](ENTITY_YAML.md#validation-and-tests) execute on Linux and RV32. |
 | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
 | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 324 core plants caught by their named assertions. |
+| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 324 core plants and three generated configuration plants caught by their named assertions. |
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
@@ -43,7 +44,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 Install [GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571),
 [CMake](https://cmake.org/), [GCC](https://gcc.gnu.org/),
 [Clang](https://clang.llvm.org/), [cppcheck](https://cppcheck.sourceforge.io/),
-[clang-tidy](https://clang.llvm.org/extra/clang-tidy/), and Python 3.10 or later.
+[clang-tidy](https://clang.llvm.org/extra/clang-tidy/), Python 3.10 or later, and [PyYAML](https://pyyaml.org/wiki/PyYAMLDocumentation).
 The graph check needs [Mermaid CLI](https://github.com/mermaid-js/mermaid-cli).
 The hosted [workflow](../.github/workflows/quality.yml) installs these dependencies.
 Comment and assertion lexing use Clang 18 (`clang-18`), pinned by the package name.

@@ -17,7 +17,7 @@ jobs:
       - name: Install host dependencies
         run: |
           sudo apt-get -o Acquire::Retries=3 update
-          sudo apt-get -o Acquire::Retries=3 install -y build-essential cmake clang clang-18 clang-tidy cppcheck pkg-config libgtest-dev libgmock-dev gcc-riscv64-unknown-elf
+          sudo apt-get -o Acquire::Retries=3 install -y build-essential cmake clang clang-18 clang-tidy cppcheck pkg-config libgtest-dev libgmock-dev gcc-riscv64-unknown-elf python3-yaml
           npm install --global @mermaid-js/mermaid-cli@11.16.0
       - name: Validate the portable cores
         run: python3 scripts/validate.py --work build-validation --jobs 16 --graphs

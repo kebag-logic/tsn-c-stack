@@ -43,6 +43,7 @@ def build(work, kind, jobs):
     builtin = Path(command([compiler, '-print-file-name=include']).strip()).resolve()
     allowed_roots = [ROOT / 'include', ROOT / 'examples/rv32/include', builtin]
     objects = {}
+    generated_objects = {}
     imports = set()
     for entry in core:
         flags = compile_flags(entry)
@@ -59,6 +60,21 @@ def build(work, kind, jobs):
             raise RuntimeError('forbidden core imports: ' + ', '.join(sorted(symbols - SYMBOLS)))
         imports |= symbols
         objects[source.name] = hashlib.sha256(obj.read_bytes()).hexdigest()
+    generated = [e for e in entries if Path(e['file']).name == 'entity_config.c']
+    if len(generated) != 4:
+        raise RuntimeError('freestanding build must compile all four generated entities')
+    for entry in generated:
+        source = Path(entry['file'])
+        flags = compile_flags(entry)
+        if not all(flag in flags for flag in ('-march=rv32i', '-mabi=ilp32', '-ffreestanding', '-nostdinc')):
+            raise RuntimeError('missing generated configuration freestanding flags')
+        for path in dependencies(flags, source, directory):
+            if path != source and path != source.with_suffix('.h') and not any(path.is_relative_to(root) for root in allowed_roots):
+                raise RuntimeError('forbidden generated configuration dependency: ' + str(path))
+        obj = directory / 'CMakeFiles/entity_examples.dir' / (str(source.relative_to(ROOT)) + '.obj')
+        if command([nm, '-u', str(obj)]).strip():
+            raise RuntimeError('generated configuration must have no imports')
+        generated_objects[source.parent.name] = hashlib.sha256(obj.read_bytes()).hexdigest()
     elf = directory / 'rv32_smoke.elf'
     header = elf.read_bytes()[:52]
     if not (header[:6] == b'\x7fELF\x01\x01'):
@@ -74,7 +90,8 @@ def build(work, kind, jobs):
     (directory / 'smoke.log').write_text(output + 'ADP, ACMP and MAAP smoke checks: rc 0\n')
     return {'configuration': kind, 'rc': 0, 'elf_sha256': hashlib.sha256(elf.read_bytes()).hexdigest(),
             'elf_bytes': elf.stat().st_size, 'core_objects': objects, 'core_imports': sorted(imports),
-            'unresolved_final': [], 'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds'}
+            'generated_objects': generated_objects, 'unresolved_final': [],
+            'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips'}
 
 
 def main():

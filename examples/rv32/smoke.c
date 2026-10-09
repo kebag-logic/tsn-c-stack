@@ -3,6 +3,7 @@
 #include "acmp.h"
 #include "maap.h"
 #include "wire.h"
+#include "entity_roundtrip.h"
 #include <string.h>
 
 #define CHECK(expression, code) do { if (!(expression)) return (code); } while (0)
@@ -188,5 +189,8 @@ int main(void)
     int result = adp_smoke();
     if (!result) result = acmp_smoke();
     if (!result) result = maap_smoke();
+    if (!result) result = entity_check_adp();
+    if (!result) result = entity_check_acmp();
+    if (!result) result = entity_check_maap();
     return result;
 }
