@@ -62,6 +62,11 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
         text = ''.join(lines)
         language = 'c'
     tokens = raw_tokens(text, language)
+    for row in directives(tokens):
+        if len(row) >= 3 and row[1][1] == 'include':
+            target = ''.join(t[1] for t in row[2:]).strip()
+            if target[:1] in ('"', '<') and target[-1:] in ('"', '>') and Path(target[1:-1]).suffix in ('.c', '.cpp'):
+                errors.append(f'line {row[0][4]}: including C or C++ source files is forbidden')
     if path and Path(path).suffix == '.ld' and any(
             kind == 'raw_identifier' and value == 'VERSION' for kind, value, *_ in tokens):
         errors.append('VERSION is forbidden in linker scripts')

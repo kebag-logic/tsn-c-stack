@@ -14,6 +14,7 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
    The gate also checks untracked files in these directories.
 3. Clang 18 raw comment tokens use C11 for `.c` and C++20 for `.cpp`.
    Every `.h` and `.hpp` and every header mutation fragment uses both modes.
+   Do not include `.c` or `.cpp` source files in the gated directories.
    Each comment line allows only SPDX, requirement IDs or short standard references.
    The conditional rules below also apply.
 4. Linker scripts forbid single quotes, backslashes, hashes and `VERSION`.

@@ -104,6 +104,17 @@ def selftest(work):
         if check_file(included, directory) != ['unscanned file suffix is forbidden']:
             raise RuntimeError('included unscanned suffix accepted')
         print('comment control included-suffix: compiled; refused')
+        for suffix in ('.c', '.cpp'):
+            included = directory / ('included' + suffix)
+            included.write_text("#define IGNORE(a) 0\nenum { value = IGNORE(1'2 // prose '\n) };\n")
+            for opening, closing in (('"', '"'), ('<', '>')):
+                source = '#include ' + opening + included.name + closing + '\n'
+                unit.write_text(source)
+                subprocess.run([compiler(), '-x', 'c++', '-std=c++20', '-Wall', '-Wextra', '-Werror',
+                                '-I' + str(directory), '-c', str(unit), '-o', str(directory / 'unit.o')], check=True)
+                if not check(source, language='c++', path='tests/unit.cpp'):
+                    raise RuntimeError('included source accepted: ' + included.name)
+            print('comment control included-source' + suffix + ': quoted and angled C++ includes compiled; refused')
         header = '#define IGNORE(a) 0\nenum { value = IGNORE(1\'2 // prose \'\n) };\n'
         for suffix in ('.h', '.hpp'):
             path = directory / ('control' + suffix)

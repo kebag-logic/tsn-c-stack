@@ -48,7 +48,9 @@ The hosted [workflow](../.github/workflows/quality.yml) installs these dependenc
 Comment and assertion lexing use Clang 18 (`clang-18`), pinned by the package name.
 The lexer runs `-cc1 -dump-raw-tokens`, with C11 for `.c` and C++20 for `.cpp`.
 All `.h` and `.hpp` files and their mutation fragments use both C11 and C++20.
-This includes every header consumed by a C++ test unit. A compiling digit-separator control checks both modes.
+Direct `#include` of a `.c` or `.cpp` file is forbidden in the four gated directories.
+Quoted and angled source-include controls compile as C++20 and fail the gate.
+Every `.h` or `.hpp` consumed there receives both language modes. A compiling digit-separator control checks both modes.
 Set `TSN_CLANG` to a Clang 18 executable when it is outside the command search path.
 The comment controls also need the RV32 cross compiler listed below.
 The gate reads source bytes without newline conversion. Only printable ASCII, tab and LF pass.
@@ -74,7 +76,7 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 |---|---|---|
 | Character set | Printable ASCII, tab and LF in every file under `src/`, `include/`, `tests/` and `examples/`. | CR, form feed, vertical tab, another control byte and non-ASCII are refused. |
 | Suffixes | `.c`, `.h`, `.cpp`, `.hpp`, `.S`, `.ld`; data exceptions are [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet). | An included `.inc` is refused. |
-| Header modes | C11 and C++20 for every `.h`, `.hpp` and header plant fragment. | A digit separator hiding a C++ comment is refused; tracing passes. |
+| Header modes | C11 and C++20 for every `.h`, `.hpp` and header plant fragment; no `.c` or `.cpp` includes. | A digit separator hiding a C++ comment is refused; tracing passes. |
 | Linker scripts | No single quotes, backslashes, hashes or `VERSION`; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
 | Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp`, `.irpc`, `.include`, `.incbin` or `.end`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
 | Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
