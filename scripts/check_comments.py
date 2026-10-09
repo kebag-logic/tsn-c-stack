@@ -12,6 +12,8 @@ from compiler_tokens import compiler, logical, raw_tokens
 from conditional_policy import DIRECTIVES, inspect
 
 ROOT = Path(__file__).resolve().parents[1]
+SUFFIXES = {'.c', '.h', '.cpp', '.hpp', '.S', '.ld'}
+DATA_FILES = {'tests/mutations.json', 'tests/coverage.ratchet'}
 NUMBER = r'(?:B(?:\.\d+)*|\d+(?:[.-]\d+)*)'
 REFERENCE = (r'(?:IEEE 1722\.1-2021|IEEE 1722-2016|Milan v1\.2) '
              r'(?:(?:Table|Figure|Annex) )?' + NUMBER +
@@ -72,6 +74,19 @@ def check(text, assembly=False, language='c++', path=None, fragment=False):
     return errors
 
 
+def check_file(path, root=ROOT):
+    relative = path.relative_to(root).as_posix()
+    if path.suffix not in SUFFIXES and relative not in DATA_FILES:
+        return ['unscanned file suffix is forbidden']
+    data = path.read_bytes()
+    if any(c not in (9, 10) and not 32 <= c <= 126 for c in data):
+        return ['only printable ASCII, tab and LF are permitted']
+    if relative in DATA_FILES:
+        return []
+    return check(data.decode('ascii'), path.suffix == '.S',
+                 'c++' if path.suffix in ('.cpp', '.hpp') else 'c', relative)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--selftest', action='store_true')
@@ -87,16 +102,10 @@ def main():
         for path in sorted((ROOT / directory).rglob('*')):
             if not path.is_file():
                 continue
-            data = path.read_bytes()
-            if any(c not in (9, 10) and not 32 <= c <= 126 for c in data):
-                errors.append(path.relative_to(ROOT).as_posix() + ': only printable ASCII, tab and LF are permitted')
-                continue
-            if path.suffix in ('.c', '.h', '.cpp', '.hpp', '.S', '.ld'):
+            if path.suffix in SUFFIXES:
                 files += 1
-                relative = path.relative_to(ROOT).as_posix()
-                errors += [relative + ': ' + e for e in check(
-                    data.decode('ascii'), path.suffix == '.S',
-                    'c++' if path.suffix in ('.cpp', '.hpp') else 'c', relative)]
+            relative = path.relative_to(ROOT).as_posix()
+            errors += [relative + ': ' + e for e in check_file(path)]
     for plant in json.loads((ROOT / 'tests/mutations.json').read_text()):
         for field in ('old', 'new'):
             errors += [plant['name'] + '/' + field + ': ' + e

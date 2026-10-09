@@ -5,6 +5,9 @@ Put integration contracts in the [porting guide](PORTING.md) and [architecture](
 The [comment gate](../scripts/check_comments.py) checks sources, headers, tests, examples and mutation fragments.
 Files under `src/`, `include/`, `tests/` and `examples/` use only printable ASCII, tab and LF.
 CR, form feed, vertical tab, other controls and non-ASCII bytes are refused before lexing.
+Files in those directories must use `.c`, `.h`, `.cpp`, `.hpp`, `.S` or `.ld`.
+Only [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet)
+are allowed as data. The gate also checks untracked files in these directories.
 
 The library uses ISO C11. Public headers also compile as C++20.
 Use `-Wall -Wextra -Werror` with GCC and Clang.

@@ -8,7 +8,7 @@ from compiler_tokens import compiler
 
 
 def selftest(work):
-    from check_comments import check
+    from check_comments import check, check_file
     cases = {
         'c-identifier-digit': ('c', "#define V x1'a' /* prose */ 'b'\n", True),
         'cpp-identifier-digit': ('c++', "#define V x1'a' /* prose */ 'b'\n", True),
@@ -54,6 +54,16 @@ def selftest(work):
         raise RuntimeError('comment controls require an RV32 compiler')
     with tempfile.TemporaryDirectory(dir=work) as name:
         directory = Path(name)
+        included = directory / 'tests/control.inc'
+        included.parent.mkdir()
+        included.write_text('// prose\n')
+        unit = directory / 'unit.cpp'
+        unit.write_text('#include "tests/control.inc"\nint value;\n')
+        subprocess.run([compiler(), '-x', 'c++', '-std=c++20', '-Wall', '-Wextra', '-Werror',
+                        '-c', str(unit), '-o', str(directory / 'unit.o')], check=True)
+        if check_file(included, directory) != ['unscanned file suffix is forbidden']:
+            raise RuntimeError('included unscanned suffix accepted')
+        print('comment control included-suffix: compiled; refused')
         for label, (language, source, refused) in cases.items():
             path = directory / (label + ('.S' if language == 'asm' else '.c'))
             path.write_text(source)

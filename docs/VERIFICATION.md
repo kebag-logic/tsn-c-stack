@@ -49,6 +49,9 @@ Set `TSN_CLANG` to a Clang 18 executable when it is outside the command search p
 The comment controls also need the RV32 cross compiler listed below.
 The gate reads source bytes without newline conversion. Only printable ASCII, tab and LF pass.
 Compiling controls refuse CR, form feed, vertical tab, other controls and non-ASCII text.
+Only `.c`, `.h`, `.cpp`, `.hpp`, `.S` and `.ld` files and the two
+[listed data files](CODING_STANDARD.md) are accepted in the checked directories.
+A compiling included `.inc` control proves that an unscanned suffix fails.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32
