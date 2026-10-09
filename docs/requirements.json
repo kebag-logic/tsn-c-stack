@@ -1,11 +1,15 @@
 [
   {
     "id": "ADP-01",
-    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble, target and input shorter than 26 bytes. Preserve the [DEV-08 input limits](DEVIATIONS.md).",
+    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls.",
     "clauses": [
       {
-        "text": "IEEE 1722.1-2021 6.2.2",
+        "text": "IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6",
         "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      },
+      {
+        "text": "IEEE 1722-2016 4.4.3.4 and 4.4.5.4",
+        "url": "https://standards.ieee.org/ieee/1722/5979/"
       },
       {
         "text": "Milan v1.2 5.6.3.1",
