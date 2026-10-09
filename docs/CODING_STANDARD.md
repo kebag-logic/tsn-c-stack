@@ -29,5 +29,6 @@ See [verification](VERIFICATION.md) for coverage and mutation obligations.
 Document static-analysis suppressions in the [suppression register](STATIC_ANALYSIS.md).
 
 The [comment gate](../scripts/check_comments.py) checks every logical comment line, including assembly `#` comments.
-Line splicing cannot hide prose behind an SPDX line. Disabled `#if 0` regions are refused.
-The [port contract gate](../scripts/check_port_contracts.py) keeps relocated interface names in the integrator guide.
+Line splicing and digit separators cannot hide prose. Zero or false `#if` and `#elif` conditions are refused.
+Assembly character constants and directive bodies cannot hide `#` prose.
+The [port contract gate](../scripts/check_port_contracts.py) keeps relocated interface names and critical contract phrases in the integrator guide.

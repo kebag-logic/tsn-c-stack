@@ -24,9 +24,9 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
-| Assertion needles | `python3 scripts/needle_audit.py --selftest` | No empty or generic needles, including default GoogleTest value lines. Ten table controls refused. |
-| Code comments | `python3 scripts/check_comments.py --selftest` | Only SPDX, requirement IDs and short standard references. Every comment line is checked after line splicing, including assembly comments. SPDX-block prose and `#if 0` controls are refused. |
-| Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Name-removal controls fail. |
+| Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle occurs in an assertion message literal of the named test or its referenced helper. Fifteen generic table controls are refused. |
+| Code comments | `python3 scripts/check_comments.py --selftest` | Only SPDX, requirement IDs and short standard references. Every comment line is checked after line splicing, including assembly comments. Digit separators cannot hide comments. Zero or false `#if` and `#elif` conditions and prose in assembly directive bodies are refused. |
+| Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
@@ -99,7 +99,10 @@ It removes the previous campaign summary at startup. Unknown named tests record 
 Gate decisions raise explicit errors and remain active under optimized Python.
 It requires complete, unique results for exactly the selected executable registration.
 Missing reports, partial results, skips, errors and inconsistent counts fail grading.
-All killers have specific needles. There are no inherited exceptions.
+All killers have literal message needles. Streamed values remain in diagnostics but are excluded from needles.
+The [assertion inventory](../scripts/assertion_messages.py) follows referenced helpers and callbacks in the same test file.
+It excludes assertion arguments, unrelated streams, comments and other tests. Unsupported forms fail the positive check.
+There are no inherited exceptions.
 Header plants rebuild the affected test translation unit too.
 
 The [traceability matrix](TRACEABILITY.md) is generated from requirement records

@@ -372,7 +372,7 @@ TEST(MaapCore, StalledOutputRetainsOrderAndOriginalExpiry) {
     EXPECT_FALSE(r.valid) << "allocation waits for committed ANNOUNCE";
     EXPECT_EQ(r.core.queued, 2u);
     r.room = true; EXPECT_FALSE(maap_poll(&r.core)); EXPECT_TRUE(r.valid);
-	ASSERT_EQ(r.frames.size(), 5u) << "both owed frames and ANNOUNCE leave once room returns";
+    ASSERT_EQ(r.frames.size(), 5u) << "both owed frames and ANNOUNCE leave once room returns";
     EXPECT_EQ(r.frames[3][15], 1u) << "last PROBE precedes ANNOUNCE"; EXPECT_EQ(r.frames[4][15], 3u) << "last PROBE precedes ANNOUNCE";
 }
 

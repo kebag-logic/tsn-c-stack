@@ -37,10 +37,10 @@ Serialize every input and all instance access. No interrupt or callback may re-e
 Zero-delay timers must enqueue an expiry for a later dispatch.
 
 ADP's port-call guard covers every instance, including `adp_build` and initialization.
-Debug builds assert on re-entry. Release builds ignore it and increment the lifetime `adp_reentry_count` modulo 2^32.
+Builds without `NDEBUG` assert on re-entry. Builds with `NDEBUG` ignore it and increment the lifetime `adp_reentry_count` modulo 2^32.
 A refused `adp_poll` returns false. A refused `adp_build` leaves its output unchanged.
 Initialization does not reset this counter. Read it only from the dispatch context.
-MAAP guards its instance and counts refused re-entry. Debug builds also assert.
+MAAP guards its instance and counts refused re-entry. Builds without `NDEBUG` also assert.
 ACMP guards port callbacks and counts refused re-entry on its instance.
 Defining `CTRL_REENTRY_ASSERT` requires the port to implement `ctrl_reentry_assert`.
 The [architecture](ARCHITECTURE.md) describes these guards; they provide no concurrency protection.

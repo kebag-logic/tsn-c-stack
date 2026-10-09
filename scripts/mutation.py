@@ -13,7 +13,7 @@ import subprocess
 import threading
 import xml.etree.ElementTree as ET
 from test_registry import environment, registered
-from needle_audit import validate_needles
+from needle_audit import assertion_literals, validate_needles
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
@@ -93,9 +93,7 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     (work / 'results.json').unlink(missing_ok=True)
     mutants = json.loads((ROOT / "tests/mutations.json").read_text())
-    errors = validate_needles(mutants)
-    if errors:
-        raise SystemExit('\n'.join(errors))
+    messages = assertion_literals()
     baseline = work / "baseline"
     baseline.mkdir(exist_ok=True)
     cc = os.environ.get("CC", "gcc")
@@ -135,6 +133,9 @@ def main():
         local = []
         result = {"name": m["name"], "status": "ERROR"}
         try:
+            errors = validate_needles([m], messages)
+            if errors:
+                raise RuntimeError('\n'.join(errors))
             for name in ("src", "include"):
                 shutil.copytree(ROOT / name, directory / name, dirs_exist_ok=True)
             target = directory / m["path"]

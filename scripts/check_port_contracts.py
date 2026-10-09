@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-"""Keep the relocated public contract names in the integrator guide."""
+"""Keep public contract names and critical meanings in the integrator guide."""
 import argparse
 from pathlib import Path
 import re
@@ -251,14 +251,35 @@ REQUIRED = {
     ),
 }
 
+CRITICAL = {
+    'ACMP callbacks and public fields': {
+        'env->srp': ('starts SRP reservation and listening', 'NULL stops listening', 'clears the stream parameters'),
+        'ports->admit': ('ENTITY_AVAILABLE and ENTITY_DEPARTING', 'on bind, unbind and rebind', 'for each restored binding'),
+        'bound=false': ("withdraw that sink's admission entry",),
+        'acmp_source_state.dest_mac_valid': ('MAAP holds a destination MAC',),
+        'acmp_source_state.asking_failed': ('Listener Asking Failed attribute is registered',),
+        'acmp_tk_registered': ("sink's settled stream", 'true when the registered Talker attribute is Talker Failed'),
+    },
+    'Ownership and dispatch': {
+        'adp_reentry_count': ('Builds without `NDEBUG` assert on re-entry', 'Builds with `NDEBUG` ignore it', 'modulo 2^32'),
+    },
+}
+
 
 def check(text):
     headings = list(re.finditer(r'^#{2,3} (.+)$', text, re.M))
     sections = {m[1]: text[m.end():headings[i + 1].start() if i + 1 < len(headings) else len(text)]
                 for i, m in enumerate(headings)}
-    return [heading + ': missing contract name ' + name
-            for heading, names in REQUIRED.items() for name in names
-            if '`' + name + '`' not in sections.get(heading, '')]
+    errors = [heading + ': missing contract name ' + name
+              for heading, names in REQUIRED.items() for name in names
+              if '`' + name + '`' not in sections.get(heading, '')]
+    for heading, contracts in CRITICAL.items():
+        paragraphs = sections.get(heading, '').split('\n\n')
+        for name, phrases in contracts.items():
+            for phrase in phrases:
+                if not any('`' + name + '`' in p and phrase in ' '.join(p.split()) for p in paragraphs):
+                    errors.append(heading + ': missing contract meaning for ' + name + ': ' + phrase)
+    return errors
 
 
 def main():
@@ -274,6 +295,15 @@ def main():
             if not check(text.replace('`' + name + '`', '`removed`')):
                 raise RuntimeError('missing contract accepted: ' + name)
         print('port contracts: all name-removal controls refused')
+        count = 0
+        for contracts in CRITICAL.values():
+            for name, phrases in contracts.items():
+                for phrase in phrases:
+                    planted = text.replace(phrase, 'removed meaning')
+                    if not check(planted):
+                        raise RuntimeError('missing meaning accepted: ' + name + ': ' + phrase)
+                    count += 1
+        print(f'port contracts: {count} meaning-removal controls refused')
     print('\n'.join(errors) if errors else 'port contracts: callbacks, fields, preconditions and counters present')
     return bool(errors)
 

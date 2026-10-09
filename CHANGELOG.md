@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Close comment scanner gaps for digit separators, zero conditions and assembly directive bodies.
+- Require mutation needles to come from named assertion messages. Preserve critical port contract phrases.
 - Require fresh complete mutation reports, specific assertion messages, compiler boundary checks and executable test registration.
 - Link each standard separately. Record the inherited ADP input limits and caller validation obligations.
 - Require Linux and freestanding RV32 validation in [CI](.github/workflows/quality.yml).
