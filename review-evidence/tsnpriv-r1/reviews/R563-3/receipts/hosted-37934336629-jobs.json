@@ -1,0 +1,173 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 113832507547,
+      "run_id": 37934336629,
+      "workflow_name": "Portable core quality",
+      "head_branch": "privacy-web-flow-squash",
+      "run_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/runs/37934336629",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVB5edM8AAAAagPI4mw",
+      "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+      "url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/jobs/113832507547",
+      "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/37934336629/job/113832507547",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "created_at": "2026-10-09T13:04:59Z",
+      "started_at": "2026-10-09T13:05:01Z",
+      "completed_at": "2026-10-09T13:25:17Z",
+      "name": "bare-metal",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T13:05:02Z",
+          "completed_at": "2026-10-09T13:05:03Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T13:05:03Z",
+          "completed_at": "2026-10-09T13:05:04Z"
+        },
+        {
+          "name": "Install RV32 dependencies",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "number": 3,
+          "started_at": "2026-10-09T13:05:04Z",
+          "completed_at": "2026-10-09T13:25:14Z"
+        },
+        {
+          "name": "Validate the freestanding cores",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-10-09T13:25:14Z",
+          "completed_at": "2026-10-09T13:25:14Z"
+        },
+        {
+          "name": "Keep RV32 evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T13:25:14Z",
+          "completed_at": "2026-10-09T13:25:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T13:25:14Z",
+          "completed_at": "2026-10-09T13:25:14Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T13:25:14Z",
+          "completed_at": "2026-10-09T13:25:15Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/check-runs/113832507547",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000026242,
+      "runner_name": "GitHub Actions 1000026242",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 113832508812,
+      "run_id": 37934336629,
+      "workflow_name": "Portable core quality",
+      "head_branch": "privacy-web-flow-squash",
+      "run_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/runs/37934336629",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVB5edM8AAAAagPI9jA",
+      "head_sha": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+      "url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/jobs/113832508812",
+      "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/37934336629/job/113832508812",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T13:04:59Z",
+      "started_at": "2026-10-09T13:05:02Z",
+      "completed_at": "2026-10-09T13:09:40Z",
+      "name": "quality",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T13:05:03Z",
+          "completed_at": "2026-10-09T13:05:04Z"
+        },
+        {
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T13:05:04Z",
+          "completed_at": "2026-10-09T13:05:05Z"
+        },
+        {
+          "name": "Install host dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T13:05:05Z",
+          "completed_at": "2026-10-09T13:05:51Z"
+        },
+        {
+          "name": "Validate the portable cores",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T13:05:51Z",
+          "completed_at": "2026-10-09T13:09:35Z"
+        },
+        {
+          "name": "Keep gate evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T13:09:35Z",
+          "completed_at": "2026-10-09T13:09:37Z"
+        },
+        {
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T13:09:37Z",
+          "completed_at": "2026-10-09T13:09:37Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T13:09:37Z",
+          "completed_at": "2026-10-09T13:09:37Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/check-runs/113832508812",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000026243,
+      "runner_name": "GitHub Actions 1000026243",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

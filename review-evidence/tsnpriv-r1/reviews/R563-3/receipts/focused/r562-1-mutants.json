@@ -1,0 +1,62 @@
+[
+  {
+    "case": "none (control)",
+    "rc": 0,
+    "expected_rc": 0,
+    "planted_sha256": "77f87cedb0dfb2d21a28438c4eb3589c7e1ffe6324395d0ee1aefef18102fa50"
+  },
+  {
+    "case": "accept-any-noreply-author-with-github-committer",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "da27ff66bb1db2035a13f431f6f83d6b4b657c1374ff27dad6c82219bc48a0a5"
+  },
+  {
+    "case": "order-insensitive-pair",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "f430a1929c5fd9e999fe5162f4d1f2fdc0158d9373a10a8c8f42127fe4a705e1"
+  },
+  {
+    "case": "case-insensitive-pair",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "b8339b39e8ff09f4d48d43ec876b96927573309e8865a69388b7060f3ff1dfab"
+  },
+  {
+    "case": "webflow-checks-committer-only",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "159ddc569f5b99e9cc802ae69fb3234feea4a490f0e469e9dacf1fd3f450e360"
+  },
+  {
+    "case": "webflow-checks-author-only",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "323eb09dcc4bde46c2fc1ea0207840576016e27f02a6bd83d04e60489188f590"
+  },
+  {
+    "case": "accept-everything",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "8ca2f736504721015e2943ace981e4cfbbbe1a105f826bc6713737cd7a3c1392"
+  },
+  {
+    "case": "main-keeps-old-holder-only-rule",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "1325c1f52f91af70a66c87cab5d31ca53397a2abe9db3249c6603f39abf4e69f"
+  },
+  {
+    "case": "webflow-exempt-from-one-line-rule",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "48a6ca912dc4dbad5b369bb2ad4ea7e4415305134448f09b6eafba7c830626c5"
+  },
+  {
+    "case": "owner-squash-exception-widened-to-webflow",
+    "rc": 1,
+    "expected_rc": 1,
+    "planted_sha256": "72f407494f9946697e07f0b75f01f13754f8983d593ed11e3ededd63b131c2c1"
+  }
+]

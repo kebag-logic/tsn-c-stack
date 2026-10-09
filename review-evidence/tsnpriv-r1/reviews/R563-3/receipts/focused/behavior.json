@@ -1,0 +1,42 @@
+{
+  "pair_message_combinations": 324,
+  "near_owner_refusals": 4,
+  "integration_fixtures": [
+    {
+      "case": "holder",
+      "rc": 0
+    },
+    {
+      "case": "web-flow",
+      "rc": 0
+    },
+    {
+      "case": "foreign",
+      "rc": 1
+    },
+    {
+      "case": "multiline",
+      "rc": 1
+    },
+    {
+      "case": "owner",
+      "rc": 0
+    },
+    {
+      "case": "near-owner",
+      "rc": 1
+    },
+    {
+      "case": "owner-metadata-scan",
+      "rc": 1
+    },
+    {
+      "case": "owner-history-scan",
+      "rc": 1
+    },
+    {
+      "case": "owner-current-scan",
+      "rc": 1
+    }
+  ]
+}

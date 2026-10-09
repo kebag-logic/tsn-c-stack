@@ -1,0 +1,9 @@
+{
+  "number": 17,
+  "title": "Accept the GitHub squash identity in the privacy gate",
+  "body": "`main` fails the privacy gate at `18d73783`, and so does every branch based on it. The gate exempts exactly one squash commit, `ae982af`. Every later pull request is squash-merged on GitHub, so its commit carries the account's noreply author and GitHub as committer, and the gate refused it.\n\n- `scripts/check_privacy.py` accepts exactly two identity pairs: the holder identity as author and committer, and the GitHub squash pair (the account's noreply author with GitHub as committer). Every commit needs a one-line message. The exact `ae982af` exception and the content scan are unchanged.\n- `commit_errors()` holds the whole per-commit check. `check_privacy.py --selftest` runs it on 11 commit controls:\n  - pass: the holder pair, the squash pair, the exact owner squash;\n  - fail: a mixed pair, the holder author with the GitHub committer, another account's noreply address, the reversed pair, a case variant, and a multi-line message on either accepted pair.\n  `validate.py` runs it, and the gate refuses unknown arguments.\n- [IMPORT.md](docs/IMPORT.md), [VERIFICATION.md](docs/VERIFICATION.md) and CHANGELOG describe the rule.\n- The repository now allows squash merges only, with the PR title as subject and a blank body.\n\nValidation:\n- all 24 `validate.py` gates pass with GoogleTest 1.14.0 and Clang 18;\n- R562-1's planted-fault probe: all 9 faults fail `--selftest`, and the control passes;\n- the bare-metal job is unaffected (scripts and docs only).\n\nBlocks tsn-c-stack #14: its branch fails the privacy gate only because of this.\n",
+  "html_url": "https://github.com/kebag-logic/tsn-c-stack/pull/17",
+  "updated_at": "2026-10-09T13:29:27Z",
+  "head": "b7c6b7ba0007aaa5791df68d30296423127b003e",
+  "base": "18d737832c376f32660eb21fe2796e0b611507e3"
+}

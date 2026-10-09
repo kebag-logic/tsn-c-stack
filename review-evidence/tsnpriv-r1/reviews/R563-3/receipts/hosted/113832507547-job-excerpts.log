@@ -1,0 +1,19 @@
+2026-10-09T13:05:03.2695170Z   ref: b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:03.5310583Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:04.0444124Z  * branch            b7c6b7ba0007aaa5791df68d30296423127b003e -> FETCH_HEAD
+2026-10-09T13:05:04.0592020Z [command]/usr/bin/git checkout --progress --force b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:05:04.0694946Z Note: switching to 'b7c6b7ba0007aaa5791df68d30296423127b003e'.
+2026-10-09T13:05:04.0771783Z b7c6b7ba0007aaa5791df68d30296423127b003e
+2026-10-09T13:25:14.5859021Z ##[error]The operation was canceled.
+2026-10-09T13:25:14.8870557Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T13:25:14.8874017Z [command]/usr/bin/git config --global --add safe.directory <checkout>
+2026-10-09T13:25:14.8913465Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T13:25:14.8947489Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T13:25:14.9164120Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T13:25:14.9191910Z http.https://github.com/.extraheader
+2026-10-09T13:25:14.9202773Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-09T13:25:14.9240361Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T13:25:14.9621324Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T13:25:14.9623395Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T13:25:14.9911727Z Cleaning up orphan processes
+2026-10-09T13:25:15.0189187Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

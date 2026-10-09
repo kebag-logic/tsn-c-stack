@@ -1,0 +1,32 @@
+[
+  {
+    "case": "selftest",
+    "rc": 0,
+    "expected_rc": 0
+  },
+  {
+    "case": "misspelled",
+    "rc": 1,
+    "expected_rc": 1
+  },
+  {
+    "case": "unknown",
+    "rc": 1,
+    "expected_rc": 1
+  },
+  {
+    "case": "repeat",
+    "rc": 1,
+    "expected_rc": 1
+  },
+  {
+    "case": "combined",
+    "rc": 1,
+    "expected_rc": 1
+  },
+  {
+    "case": "positional",
+    "rc": 1,
+    "expected_rc": 1
+  }
+]

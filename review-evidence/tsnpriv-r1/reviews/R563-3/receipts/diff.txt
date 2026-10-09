@@ -1,0 +1,125 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 1798aee..8bc1ff1 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -2,6 +2,7 @@
+ 
+ ## Unreleased
+ 
++- Accept GitHub squash merges in the privacy gate: the noreply author with GitHub as committer, still with a one-line message.
+ - Enforce the closed contributor rules for source bytes, suffixes, header modes, linker scripts and assembly. Restrict assertion forms and check generated GoogleTest defaults.
+ - Use compiler comment tokens and compile both sides of permitted conditional regions. Refuse assembly hiding mechanisms. Grade mutations only from delimited assertion messages. Require unique message needles with at least eight characters.
+ - Close comment scanner gaps for digit separators, zero conditions and assembly directive bodies.
+diff --git a/docs/IMPORT.md b/docs/IMPORT.md
+index 77ea55f..ff5fb62 100644
+--- a/docs/IMPORT.md
++++ b/docs/IMPORT.md
+@@ -131,4 +131,8 @@ The owner-created [squash commit](https://github.com/kebag-logic/tsn-c-stack/com
+ uses hosted merge identities and a message body.
+ The [follow-up assignment](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074811248) fixes it as the branch base.
+ The [privacy gate](../scripts/check_privacy.py) exempts only that exact commit from identity and one-line checks.
+-It still scans that commit's content and every reachable blob. Every new commit must use the configured holder identity and one-line subject.
++It still scans that commit's content and every reachable blob.
++Later pull requests are squash-merged on GitHub. Their commits carry the account's noreply author and GitHub as committer.
++Every new commit must use one of these two identity pairs and a one-line subject:
++the configured holder identity as author and committer, or that hosted squash pair.
++`check_privacy.py --selftest` checks the identity rule.
+diff --git a/docs/VERIFICATION.md b/docs/VERIFICATION.md
+index 914ac00..4638073 100644
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@ -37,6 +37,7 @@ No failing build, skipped test or empty test binary can establish a pass.
+ | Test sensitivity | `python3 scripts/test_inventory.py` | Every test declaration has a named plant. No unknown test names. |
+ | Coverage controls | `python3 scripts/coverage_selftest.py` | Drops, missing files, moved uncovered arcs and stale exclusions rejected. |
+ | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
++| Privacy commit rule | `python3 scripts/check_privacy.py --selftest` | The holder pair and the GitHub squash pair pass with a one-line message, and the exact owner squash passes. Mixed, reversed, case-varied and other-account pairs fail, and so does a multi-line message. |
+ | Graphs | `python3 scripts/render_graphs.py --output build-graphs` | Every Mermaid fence renders. |
+ 
+ Install [GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571),
+diff --git a/scripts/check_privacy.py b/scripts/check_privacy.py
+index 4a6c3eb..b2385cf 100644
+--- a/scripts/check_privacy.py
++++ b/scripts/check_privacy.py
+@@ -14,12 +14,49 @@ PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users
+ PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
+ OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
+ IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
++WEB_FLOW = ["hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>", "GitHub <noreply@github.com>"]
+ 
+ 
+ def git(*args):
+     return subprocess.check_output(["git", *args], cwd=ROOT)
+ 
+ 
++def identity_ok(lines):
++    return lines[:2] in ([IDENTITY, IDENTITY], WEB_FLOW)
++
++
++def commit_errors(commit, lines):
++    errors = []
++    if commit != OWNER_SQUASH and not identity_ok(lines):
++        errors.append(commit + ": unexpected identity")
++    if commit != OWNER_SQUASH and len([line for line in lines[2:] if line.strip()]) != 1:
++        errors.append(commit + ": commit message must be one line")
++    return errors
++
++
++def selftest():
++    other = "hackerman-kl <99999999+someone@users.noreply.github.com>"
++    cases = [
++        ("holder", [IDENTITY, IDENTITY, "Subject"], True),
++        ("web-flow", WEB_FLOW + ["Subject (#1)"], True),
++        ("owner-squash", ["x <x@y.z>", "x <x@y.z>", "Subject", "", "Body"], True),
++        ("noreply-author-holder-committer", [WEB_FLOW[0], IDENTITY, "Subject"], False),
++        ("holder-author-github-committer", [IDENTITY, WEB_FLOW[1], "Subject"], False),
++        ("other-noreply-account", [other, WEB_FLOW[1], "Subject"], False),
++        ("reversed-web-flow", [WEB_FLOW[1], WEB_FLOW[0], "Subject"], False),
++        ("case-variant", [WEB_FLOW[0].lower(), WEB_FLOW[1], "Subject"], False),
++        ("web-flow-two-lines", WEB_FLOW + ["Subject", "", "Body"], False),
++        ("holder-two-lines", [IDENTITY, IDENTITY, "Subject", "", "Body"], False),
++        ("foreign", ["someone <a@b.c>", "someone <a@b.c>", "Subject"], False),
++    ]
++    bad = []
++    for name, lines, want in cases:
++        commit = OWNER_SQUASH if name == "owner-squash" else "0" * 40
++        if (not commit_errors(commit, lines)) != want:
++            bad.append(name)
++    print("privacy selftest: " + ("fail " + ", ".join(bad) if bad else f"{len(cases)} commit controls pass"))
++    return bool(bad)
++
+ def scan(label, data):
+     text = data.decode("utf-8", errors="replace")
+     return [label + ": restricted content" for pattern in PATTERNS if pattern.search(text)]
+@@ -31,10 +68,7 @@ def main():
+     for commit in commits:
+         data = git("show", "-s", "--format=%an <%ae>%n%cn <%ce>%n%B", commit)
+         lines = data.decode().splitlines()
+-        if commit != OWNER_SQUASH and lines[:2] != [IDENTITY, IDENTITY]:
+-            errors.append(commit + ": unexpected identity")
+-        if commit != OWNER_SQUASH and len([line for line in lines[2:] if line.strip()]) != 1:
+-            errors.append(commit + ": commit message must be one line")
++        errors += commit_errors(commit, lines)
+         errors += scan(commit, data)
+     if OWNER_SQUASH in commits:
+         print("privacy: exact owner squash metadata exception; content scanning remains enabled")
+@@ -55,4 +89,7 @@ def main():
+     return bool(errors)
+ 
+ if __name__ == "__main__":
+-    raise SystemExit(main())
++    import sys
++    if sys.argv[1:] not in ([], ["--selftest"]):
++        raise SystemExit("usage: check_privacy.py [--selftest]")
++    raise SystemExit(selftest() if sys.argv[1:] == ["--selftest"] else main())
+diff --git a/scripts/validate.py b/scripts/validate.py
+index f40ae86..b15a221 100644
+--- a/scripts/validate.py
++++ b/scripts/validate.py
+@@ -63,6 +63,7 @@ def main():
+         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+         ('test-inventory', 'test_inventory.py', ['--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+         ('coverage-controls', 'coverage_selftest.py', []),
++        ('privacy-selftest', 'check_privacy.py', ['--selftest']),
+         ('privacy', 'check_privacy.py', [])):
+         results.append(command(name, [python, 'scripts/' + script, *switches]))
+     if not any(r['rc'] for r in results):
