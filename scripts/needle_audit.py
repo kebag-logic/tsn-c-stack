@@ -7,16 +7,20 @@ import json
 from pathlib import Path
 import re
 from assertion_messages import inventory
+from assertion_forms import errors as form_errors
 from test_registry import canonical
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TEMPLATES = ('Expected equality of these values:', 'Which is: ', 'Value of: ',
-                     'Actual: false', 'Actual: true', 'Expected: true', 'Expected: false',
-                     'Expected: (', ') <= (', ') != (', 'Failed', 'Google Test trace:')
+DEFAULT_TEMPLATES = tuple(json.loads((ROOT / 'scripts/assertion-defaults.json').read_text())['templates'].values())
 
 
 def assertion_literals(root=ROOT):
     messages = {}
+    for path in sorted((root / 'tests').rglob('*')):
+        if path.suffix in ('.c', '.h', '.cpp', '.hpp'):
+            errors = form_errors(path.read_text())
+            if errors:
+                raise ValueError(path.relative_to(root).as_posix() + ': ' + '; '.join(errors))
     for path in sorted((root / 'tests').glob('test_*.cpp')):
         found = inventory(path.read_text())
         if messages.keys() & found.keys():

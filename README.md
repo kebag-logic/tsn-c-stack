@@ -14,7 +14,7 @@ No SRP checkout is needed to build or test these cores.
 ## Build and test
 
 Install a C11 compiler, a C++20 compiler, [CMake](https://cmake.org/),
-[GoogleTest and GMock](https://github.com/google/googletest), and Python 3.10 or later.
+[GoogleTest and GMock 1.14.0](https://github.com/google/googletest), and Python 3.10 or later.
 On Ubuntu, the test packages are `libgtest-dev` and `libgmock-dev`.
 
 ```sh

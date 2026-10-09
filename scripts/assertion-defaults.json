@@ -1,0 +1,19 @@
+{
+  "googletest_version": "1.14.0",
+  "templates": {
+    "ASSERT_EQ": "assertion-forms.cpp:LINE\nExpected equality of these values:\n  left\n    Which is: 1\n  right\n    Which is: 2\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "ASSERT_FALSE": "assertion-forms.cpp:LINE\nValue of: true\n  Actual: true\nExpected: false\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "ASSERT_GE": "assertion-forms.cpp:LINE\nExpected: (1) >= (2), actual: 1 vs 2\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "ASSERT_LE": "assertion-forms.cpp:LINE\nExpected: (2) <= (1), actual: 2 vs 1\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "ASSERT_NE": "assertion-forms.cpp:LINE\nExpected: (1) != (1), actual: 1 vs 1\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "ASSERT_TRUE": "assertion-forms.cpp:LINE\nValue of: false\n  Actual: false\nExpected: true\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_CALL": "assertion-forms.cpp:LINE\nActual function call count doesn't match EXPECT_CALL(mock, call())...\n         Expected: to be called once\n           Actual: never called - unsatisfied and active\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_EQ": "assertion-forms.cpp:LINE\nExpected equality of these values:\n  left\n    Which is: 1\n  right\n    Which is: 2\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_EXIT": "assertion-forms.cpp:LINE\nDeath test: std::_Exit(1)\n    Result: died but not with expected exit code:\n            Exited with exit status 1\nActual msg:\n[  DEATH   ] \n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_FALSE": "assertion-forms.cpp:LINE\nValue of: true\n  Actual: true\nExpected: false\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_GE": "assertion-forms.cpp:LINE\nExpected: (1) >= (2), actual: 1 vs 2\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_LE": "assertion-forms.cpp:LINE\nExpected: (2) <= (1), actual: 2 vs 1\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_NE": "assertion-forms.cpp:LINE\nExpected: (1) != (1), actual: 1 vs 1\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n",
+    "EXPECT_TRUE": "assertion-forms.cpp:LINE\nValue of: false\n  Actual: false\nExpected: true\n\nGoogle Test trace:\nassertion-forms.cpp:LINE: template trace\n"
+  }
+}

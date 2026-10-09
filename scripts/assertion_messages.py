@@ -3,6 +3,7 @@
 import ast
 import re
 from compiler_tokens import raw_tokens
+from assertion_forms import ALLOWED
 
 
 def tokens(text):
@@ -89,7 +90,7 @@ def inventory(text):
                 messages += collect(helpers[word][0], visited)
             if body[i + 1] != '(':
                 continue
-            if re.fullmatch(r'(?:ASSERT|EXPECT)_\w+|FAIL|ADD_FAILURE', word):
+            if word in ALLOWED:
                 at = closing[i + 1] + 1
                 while at < len(body) and body[at] == '<<':
                     at += 1

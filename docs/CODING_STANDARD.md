@@ -2,12 +2,33 @@
 
 Code comments contain only SPDX lines, requirement IDs, or short references to standard clauses, tables and figures.
 Put integration contracts in the [porting guide](PORTING.md) and [architecture](ARCHITECTURE.md).
-The [comment gate](../scripts/check_comments.py) checks sources, headers, tests, examples and mutation fragments.
-Files under `src/`, `include/`, `tests/` and `examples/` use only printable ASCII, tab and LF.
-CR, form feed, vertical tab, other controls and non-ASCII bytes are refused before lexing.
-Files in those directories must use `.c`, `.h`, `.cpp`, `.hpp`, `.S` or `.ld`.
-Only [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet)
-are allowed as data. The gate also checks untracked files in these directories.
+The [comment gate](../scripts/check_comments.py) enforces the contributor rule through this closed contract.
+It checks every comment under these rules; it makes no broader text-classification claim.
+
+1. Files under `src/`, `include/`, `tests/` and `examples/` contain only printable ASCII, tab and LF.
+   CR, form feed, vertical tab, other controls and non-ASCII bytes are refused before lexing.
+2. Files there use `.c`, `.h`, `.cpp`, `.hpp`, `.S` or `.ld`.
+   Only [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet) are data exceptions.
+   The gate also checks untracked files in these directories.
+3. Clang 18 raw comment tokens use C11 for `.c` and C++20 for `.cpp`.
+   Every `.h` and `.hpp` and every header mutation fragment uses both modes.
+   Each comment line allows only SPDX, requirement IDs or short standard references.
+   The conditional rules below also apply.
+4. Linker scripts forbid single quotes and use C11 raw comment tokens.
+   RV32 linking uses `-Wl,--fatal-warnings`.
+5. Assembly forbids single quotes and all preprocessor directives.
+   Every `#` starts a checked assembler comment. Keep `#` out of assembly strings.
+   Assembler conditionals (`.if*`), macros (`.macro`) and repeats (`.rept`, `.irp`, `.irpc`) are forbidden.
+   Use numeric character values. Macro-produced tracing is refused too.
+6. Tests use only `EXPECT_TRUE`, `ASSERT_TRUE`, `EXPECT_FALSE`, `ASSERT_FALSE`,
+   `EXPECT_EQ`, `ASSERT_EQ`, `EXPECT_NE`, `ASSERT_NE`, `EXPECT_LE`, `ASSERT_LE`,
+   `EXPECT_GE`, `ASSERT_GE`, `EXPECT_EXIT` and `EXPECT_CALL`.
+   The [assertion gate](../scripts/needle_audit.py) refuses other forms, including `EXPECT_NEAR`.
+   Assertion lexing uses C++20. Literal comment text is not an assertion.
+   Needles have at least eight characters and occur in exactly one owned message literal.
+   They must not be substrings of the [generated default diagnostics](../scripts/assertion-defaults.json).
+
+The [verification guide](VERIFICATION.md) lists the compiling controls and regeneration command.
 
 The library uses ISO C11. Public headers also compile as C++20.
 Use `-Wall -Wextra -Werror` with GCC and Clang.
@@ -26,22 +47,13 @@ Keep callbacks bounded. Do not wait for external progress inside a core call.
 Treat synchronous re-entry as a contract violation.
 Static arrays are the storage pools; there is no dynamic pool allocator.
 
-Tests use [GoogleTest and GMock](https://github.com/google/googletest).
+Tests use [GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571).
 Spell protocol oracle values independently when checking constants.
 Add assertions for malformed input, boundary values, ordering and blocked output.
 Use fatal assertions before indexing output that a faulty core may omit.
 See [verification](VERIFICATION.md) for coverage and mutation obligations.
 Document static-analysis suppressions in the [suppression register](STATIC_ANALYSIS.md).
 
-The [comment gate](../scripts/check_comments.py) uses the Clang 18 lexer.
-C uses C11; C++ uses C++20. Every `.h` and `.hpp` is lexed in both modes.
-Header mutation fragments use both modes too. Each comment token under these rules is checked.
-Linker scripts forbid single quotes and use the C11 raw comment tokens.
-RV32 linking treats all linker warnings as errors.
-Assembly forbids single quotes and all preprocessor directives.
-Every assembly `#` starts a checked assembler comment. Macro-produced tracing is refused too.
-Assembler conditionals (`.if*`), macros (`.macro`) and repeats (`.rept`, `.irp`, `.irpc`) are forbidden.
-Use numeric character values. Keep `#` out of assembly strings.
 The [port contract gate](../scripts/check_port_contracts.py) keeps relocated interface names and critical contract phrases in the integrator guide.
 
 ## Conditional compilation

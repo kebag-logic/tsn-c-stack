@@ -24,8 +24,9 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
-| Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle has at least eight characters and identifies exactly one assertion message literal in its named test or helper. Default-message fragments are refused. |
-| Code comments | `python3 scripts/check_comments.py --selftest` | Clang 18 raw tokens supply every C11 and C++20 comment. Only SPDX, requirement IDs and short standard references pass. Compiling controls exercise the [conditional and assembly policy](CODING_STANDARD.md). |
+| Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle has at least eight characters and identifies exactly one assertion message literal in its named test or helper. Substrings of the generated default diagnostics are refused. Other assertion forms are refused. |
+| Assertion templates | `python3 scripts/assertion_templates.py --check --selftest --work build-assertion-templates` | Compile and run one failing instance of each of the 14 allowed forms with GoogleTest 1.14.0. Blank streamed messages and compare the generated default diagnostics. A compiling `EXPECT_NEAR` control is refused. |
+| Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
 | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
@@ -37,7 +38,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Privacy | `python3 scripts/check_privacy.py` | Reachable metadata, historical blobs and current tree pass. |
 | Graphs | `python3 scripts/render_graphs.py --output build-graphs` | Every Mermaid fence renders. |
 
-Install [GoogleTest and GMock](https://github.com/google/googletest),
+Install [GoogleTest and GMock 1.14.0](https://github.com/google/googletest/tree/f8d7d77c06936315286eb55f8de22cd23c188571),
 [CMake](https://cmake.org/), [GCC](https://gcc.gnu.org/),
 [Clang](https://clang.llvm.org/), [cppcheck](https://cppcheck.sourceforge.io/),
 [clang-tidy](https://clang.llvm.org/extra/clang-tidy/), and Python 3.10 or later.
@@ -61,6 +62,16 @@ Every `#` starts a comment checked against the tracing allowlist. Single quotes,
 assembler conditionals, macros and repeats are refused. Direct tracing remains accepted.
 Compiling controls include plain and spliced directives and macro-produced prose and tracing.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
+
+The six [contributor rules](CODING_STANDARD.md) are the gate's complete comment and assertion contract.
+The assertion gate scans the named macros in all C and C++ files below `tests/`.
+The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
+CMake requires the same version; the mutation driver checks it too.
+Templates record one failing instance of each permitted form, including an unmet mock expectation.
+Streamed messages are removed. Only source line numbers are normalized.
+The template list does not claim to enumerate every value-dependent diagnostic variation.
+To regenerate, run `python3 scripts/assertion_templates.py --write --selftest --work build-assertion-templates`.
+Review changes to the [generated list](../scripts/assertion-defaults.json). CI uses `--check`.
 
 ## Bare-metal RV32
 
@@ -126,7 +137,7 @@ The original XML retains the complete diagnostics for independent regrading.
 Marker insertion changes no assertion expression or production source.
 Compiling controls prove that a needle in a default value printout does not count.
 The [assertion inventory](../scripts/assertion_messages.py) follows referenced helpers and callbacks in the same test file.
-It excludes assertion arguments, unrelated streams, comments and other tests. Unsupported forms fail the positive check.
+It excludes assertion arguments, unrelated streams, comments and other tests. Only the listed assertion forms supply message literals. Unsupported forms fail the source gate.
 There are no inherited exceptions.
 Header plants rebuild the affected test translation unit too.
 

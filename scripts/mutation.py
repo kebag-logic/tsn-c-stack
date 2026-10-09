@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 from test_registry import environment, registered
 from needle_audit import assertion_literals, validate_needles
 from assertion_messages import instrument
+from assertion_forms import require_version
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
@@ -106,6 +107,7 @@ def main():
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
     (work / 'results.json').unlink(missing_ok=True)
+    require_version()
     mutants = json.loads((ROOT / "tests/mutations.json").read_text())
     messages = assertion_literals()
     baseline = work / "baseline"
