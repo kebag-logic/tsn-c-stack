@@ -17,7 +17,9 @@ def validate_needles(mutations):
             errors.append(plant['name'] + ': no required assertion')
         for kill in plant.get('kills', []):
             needle = kill.get('needle', '').strip()
-            if not needle or re.fullmatch(r'(Expected|Actual|Value of)(:.*)?|true|false|[01]', needle, re.I):
+            if not needle or re.fullmatch(
+                    r'(Expected|Actual|Value of|Which is|Expected equality of these values)(:.*)?|true|false|[01]',
+                    needle, re.I):
                 errors.append(plant['name'] + ': empty or generic assertion needle')
     return errors
 
@@ -28,11 +30,14 @@ def main():
     args = parser.parse_args()
     mutations = json.loads((ROOT / 'tests/mutations.json').read_text())
     if args.selftest:
-        for value in ('', ' ', 'Expected: true', 'Actual: false', 'Value of: x', 'true'):
+        controls = ('', ' ', 'Expected: true', 'Actual: false', 'Value of: x', 'true',
+                    '    Which is: 5', 'Which is: 1', 'Expected equality of these values:', 'Actual:')
+        for value in controls:
             planted = copy.deepcopy(mutations)
             planted[0]['kills'][0]['needle'] = value
-            assert validate_needles(planted), value
-        print('needles: six empty or generic table controls refused')
+            if not validate_needles(planted):
+                raise RuntimeError('generic needle accepted: ' + repr(value))
+        print(f'needles: {len(controls)} empty or generic table controls refused')
     errors = validate_needles(mutations)
     print('\n'.join(errors) if errors else 'needles: zero unspecific killers; no inherited exceptions')
     return bool(errors)

@@ -122,7 +122,8 @@ def selftest(work, jobs):
         # inspect() builds every control before checking dependencies and symbols.
         for compiler in ('gcc', 'clang'):
             errors = inspect(root, work / ('control-' + compiler), compiler, jobs)
-            assert bool(errors) == forbidden, (name, compiler, errors)
+            if not (bool(errors) == forbidden):
+                raise RuntimeError((name, compiler, errors))
         print(f'boundary control {name}: compiles; ' + ('refused' if forbidden else 'passes'))
 
 

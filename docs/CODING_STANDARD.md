@@ -27,3 +27,7 @@ Add assertions for malformed input, boundary values, ordering and blocked output
 Use fatal assertions before indexing output that a faulty core may omit.
 See [verification](VERIFICATION.md) for coverage and mutation obligations.
 Document static-analysis suppressions in the [suppression register](STATIC_ANALYSIS.md).
+
+The [comment gate](../scripts/check_comments.py) checks every logical comment line, including assembly `#` comments.
+Line splicing cannot hide prose behind an SPDX line. Disabled `#if 0` regions are refused.
+The [port contract gate](../scripts/check_port_contracts.py) keeps relocated interface names in the integrator guide.

@@ -61,14 +61,21 @@ def main():
     args = parser.parse_args()
     if args.selftest:
         reqs = [{"id": "R1"}]
-        assert not validate(reqs, inventory("// REQ: R1\nTEST(S, T) {}"))
-        assert validate(reqs, inventory("// REQ: WRONG\nTEST(S, T) {}"))
-        assert validate(reqs, inventory("TEST(S, T) {}"))
-        assert validate(reqs, [])
+        if validate(reqs, inventory("// REQ: R1\nTEST(S, T) {}")):
+            raise RuntimeError('validation failed: not validate(reqs, inventory("// REQ: R1\\nTEST(S, T) {}"))')
+        if not (validate(reqs, inventory("// REQ: WRONG\nTEST(S, T) {}"))):
+            raise RuntimeError('validation failed: validate(reqs, inventory("// REQ: WRONG\\nTEST(S, T) {}"))')
+        if not (validate(reqs, inventory("TEST(S, T) {}"))):
+            raise RuntimeError('validation failed: validate(reqs, inventory("TEST(S, T) {}"))')
+        if not (validate(reqs, [])):
+            raise RuntimeError('validation failed: validate(reqs, [])')
         for declaration in (' TEST(S, T)', '  TEST(\n S,\n T\n )'):
-            assert validate(reqs, inventory('// REQ: WRONG\n' + declaration + ' {}'))
-            assert not validate(reqs, inventory('// REQ: R1\n' + declaration + ' {}'))
-        assert test_registry.reconcile([], ['S.T'])
+            if not (validate(reqs, inventory('// REQ: WRONG\n' + declaration + ' {}'))):
+                raise RuntimeError("validation failed: validate(reqs, inventory('// REQ: WRONG\\n' + declaration + ' {}'))")
+            if validate(reqs, inventory('// REQ: R1\n' + declaration + ' {}')):
+                raise RuntimeError("validation failed: not validate(reqs, inventory('// REQ: R1\\n' + declaration + ' {}'))")
+        if not (test_registry.reconcile([], ['S.T'])):
+            raise RuntimeError("validation failed: test_registry.reconcile([], ['S.T'])")
         print("traceability: unknown ID, untraced test and untested requirement controls refused")
     reqs = json.loads((ROOT / "docs/requirements.json").read_text())
     rows = []

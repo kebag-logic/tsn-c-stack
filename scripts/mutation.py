@@ -43,6 +43,10 @@ def execute(binary, xml, log, filters=None):
     xml.unlink(missing_ok=True)
     patterns = [k['test'] + ('*' if k['test'].endswith('/') else '') for k in (filters or [])]
     expected = set(registered(binary, patterns))
+    for pattern in patterns:
+        if not any(name.startswith(pattern[:-1]) if pattern.endswith('*') else name == pattern
+                   for name in expected):
+            raise RuntimeError('unknown mutation test: ' + pattern)
     env = environment()
     command = [str(binary), "--gtest_output=xml:" + str(xml)]
     if filters:
@@ -85,19 +89,22 @@ def main():
     parser.add_argument("--select", default="")
     parser.add_argument("--discover", action="store_true", help="Report candidate killers; never grade as a pass")
     args = parser.parse_args()
+    work = args.work.resolve()
+    work.mkdir(parents=True, exist_ok=True)
+    (work / 'results.json').unlink(missing_ok=True)
     mutants = json.loads((ROOT / "tests/mutations.json").read_text())
     errors = validate_needles(mutants)
     if errors:
         raise SystemExit('\n'.join(errors))
-    work = args.work.resolve()
-    work.mkdir(parents=True, exist_ok=True)
     baseline = work / "baseline"
     baseline.mkdir(exist_ok=True)
     cc = os.environ.get("CC", "gcc")
     cxx = os.environ.get("CXX", "g++")
     log = []
-    assert run([cxx, *cppflags(""), "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0
-    assert run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0
+    if not (run([cxx, *cppflags(""), "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0):
+        raise RuntimeError('baseline test entry build failed: ' + ''.join(log))
+    if not (run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0):
+        raise RuntimeError('baseline example port build failed: ' + ''.join(log))
     def extra(arm):
         return [str(baseline / "port_extra.o")] if arm == "port" else []
     def prepare(arm):
@@ -162,7 +169,7 @@ def main():
                 all_caught = all_caught and rc == 1 and count > 0 and all(matches(k, failures) for k in kills)
             result.update(rc=rc, failures=failures_all, tests=count)
             result["status"] = "CAUGHT" if all_caught else "ESCAPED"
-        except (RuntimeError, subprocess.TimeoutExpired) as error:
+        except (RuntimeError, subprocess.SubprocessError, OSError) as error:
             result["error"] = str(error)
         (directory / "run.log").write_text("".join(local))
         print(result["status"], m["name"], flush=True)

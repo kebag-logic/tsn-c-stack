@@ -3,6 +3,8 @@
 """Reject stale and incomplete mutation evidence in reused directories."""
 import argparse
 import json
+from copy import deepcopy
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -35,9 +37,11 @@ raise SystemExit(1)
     (work / 'mode').write_text('write')
     (work / 'report').write_text(valid)
     rc, failures, count = execute(binary, xml, [])
-    assert rc == 1 and count == 2 and failures == {'Control.First': 'specific defect'}
+    if not (rc == 1 and count == 2 and failures == {'Control.First': 'specific defect'}):
+        raise RuntimeError("validation failed: rc == 1 and count == 2 and failures == {'Control.First': 'specific defect'}")
     (work / 'mode').write_text('missing')
-    assert execute(binary, xml, [])[2] == 0 and not xml.exists()
+    if not (execute(binary, xml, [])[2] == 0 and not xml.exists()):
+        raise RuntimeError('validation failed: execute(binary, xml, [])[2] == 0 and not xml.exists()')
     print('report control: old complete XML removed before an early exit')
     variants = {'truncated': valid[:-20], 'wrong-count': valid.replace('tests="2"', 'tests="3"'),
                 'wrong-name': valid.replace('name="Second"', 'name="Third"'),
@@ -53,7 +57,8 @@ raise SystemExit(1)
     (work / 'mode').write_text('write')
     for name, content in variants.items():
         (work / 'report').write_text(content)
-        assert execute(binary, xml, [])[2] == 0, name
+        if not (execute(binary, xml, [])[2] == 0):
+            raise RuntimeError(name)
         print('report control ' + name + ': refused')
 
 
@@ -66,22 +71,42 @@ def campaign(work, jobs):
     table.write_text(json.dumps([plant]))
     command = [sys.executable, str(copy / 'scripts/mutation.py'), '--work', str(work / 'campaign'),
                '--jobs', str(jobs)]
-    def run(label, expected):
+    def run(label, expected, status):
         result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         (work / (label + '.log')).write_text(result.stdout)
-        assert result.returncode == expected, result.stdout
+        if not (result.returncode == expected):
+            raise RuntimeError(result.stdout)
         results = json.loads((work / 'campaign/results.json').read_text())
-        assert results[0]['status'] == ('CAUGHT' if expected == 0 else 'ESCAPED'), results
-    run('genuine-catch', 0)
+        if not (results[0]['status'] == status):
+            raise RuntimeError(results)
+    genuine = deepcopy(plant)
+    run('genuine-catch', 0, 'CAUGHT')
     old_xml = list((work / 'campaign' / plant['name']).glob('*.xml'))
-    assert len(old_xml) == 2
+    if not (len(old_xml) == 2):
+        raise RuntimeError('validation failed: len(old_xml) == 2')
     plant['new'] = plant['old'] + '\texit(1);\n'
     table.write_text(json.dumps([plant]))
     path = copy / 'src/adp.c'
     path.write_text(path.read_text().replace('#include <string.h>', '#include <string.h>\n#include <stdlib.h>'))
-    run('early-exit-reused', 1)
-    assert not any(path.exists() for path in old_xml)
+    run('early-exit-reused', 1, 'ESCAPED')
+    if any(path.exists() for path in old_xml):
+        raise RuntimeError('validation failed: not any(path.exists() for path in old_xml)')
     print('reused campaign: genuine catch followed by early exit(1) ESCAPED; both old reports removed')
+    for mixed in (False, True):
+        plant = deepcopy(genuine)
+        missing = dict(plant['kills'][0], test='Missing.Unknown')
+        plant['kills'] = [plant['kills'][0], missing] if mixed else [missing]
+        table.write_text(json.dumps([plant]))
+        run('unknown-test-' + str(mixed), 1, 'ERROR')
+        print('unknown test control: ERROR, including a mixed known/unknown selection' if mixed
+              else 'unknown test control: ERROR replaces the old campaign summary')
+    table.write_text(json.dumps([genuine]))
+    result = subprocess.run(command, env=dict(os.environ, CXX='false'), text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    (work / 'baseline-failure.log').write_text(result.stdout)
+    if result.returncode == 0 or (work / 'campaign/results.json').exists():
+        raise RuntimeError('failed baseline preserved old campaign results')
+    print('baseline failure control: old campaign summary removed before building')
 
 
 def main():

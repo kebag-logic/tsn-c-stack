@@ -24,8 +24,9 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
-| Assertion needles | `python3 scripts/needle_audit.py --selftest` | No empty or generic needles, including the inherited MAAP cases. Six table controls refused. |
-| Code comments | `python3 scripts/check_comments.py --selftest` | Only SPDX, requirement IDs and short standard references. Prose controls are refused. |
+| Assertion needles | `python3 scripts/needle_audit.py --selftest` | No empty or generic needles, including default GoogleTest value lines. Ten table controls refused. |
+| Code comments | `python3 scripts/check_comments.py --selftest` | Only SPDX, requirement IDs and short standard references. Every comment line is checked after line splicing, including assembly comments. SPDX-block prose and `#if 0` controls are refused. |
+| Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Name-removal controls fail. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
@@ -56,7 +57,7 @@ python3 scripts/baremetal.py --work build-rv32 --jobs 16
 The [gate](../scripts/baremetal.py) builds Debug and Release concurrently with `-march=rv32i -mabi=ilp32 -ffreestanding`.
 It removes default header search paths and checks the compiler dependency output.
 Only core headers, compiler intrinsic headers and the minimal port's C-library subset are permitted.
-The core imports must match the explicit port, memory and integer-helper allowlist.
+The core imports must stay within the explicit port, memory and integer-helper allowlist.
 The final ELF must be 32-bit RISC-V with the soft-float ABI and no unresolved symbols.
 The whole core archive is linked, so unused entry points cannot hide a missing dependency.
 
@@ -94,6 +95,8 @@ same defect. The [test inventory](TESTS.md) records the mapping.
 Compilation failures and crashes fail the campaign; neither counts as a caught mutation.
 Every required killer must fail with its assertion-specific message; an unrelated failed assertion is insufficient.
 The driver removes each previous XML report before running the binary.
+It removes the previous campaign summary at startup. Unknown named tests record ERROR for their plant.
+Gate decisions raise explicit errors and remain active under optimized Python.
 It requires complete, unique results for exactly the selected executable registration.
 Missing reports, partial results, skips, errors and inconsistent counts fail grading.
 All killers have specific needles. There are no inherited exceptions.

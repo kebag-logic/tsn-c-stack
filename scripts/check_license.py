@@ -20,11 +20,16 @@ def main():
     parser.add_argument("--selftest", action="store_true")
     args = parser.parse_args()
     if args.selftest:
-        assert valid("// SPDX-License-Identifier: MIT\n")
-        assert valid("/* SPDX-License-Identifier: MIT */\n")
-        assert not valid("// SPDX-License-Identifier: Apache-2.0\n")
-        assert not valid("int n;\n")
-        assert not valid("// SPDX-License-Identifier: MIT\n// SPDX-License-Identifier: GPL-2.0\n")
+        if not (valid("// SPDX-License-Identifier: MIT\n")):
+            raise RuntimeError('validation failed: valid("// SPDX-License-Identifier: MIT\\n")')
+        if not (valid("/* SPDX-License-Identifier: MIT */\n")):
+            raise RuntimeError('validation failed: valid("/* SPDX-License-Identifier: MIT */\\n")')
+        if valid("// SPDX-License-Identifier: Apache-2.0\n"):
+            raise RuntimeError('validation failed: not valid("// SPDX-License-Identifier: Apache-2.0\\n")')
+        if valid("int n;\n"):
+            raise RuntimeError('validation failed: not valid("int n;\\n")')
+        if valid("// SPDX-License-Identifier: MIT\n// SPDX-License-Identifier: GPL-2.0\n"):
+            raise RuntimeError('validation failed: not valid("// SPDX-License-Identifier: MIT\\n// SPDX-License-Identifier: GPL-2.0\\n")')
         print("license: valid control passes; three bad controls refused")
     names = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"], cwd=ROOT).decode().split("\0")
     bad = []

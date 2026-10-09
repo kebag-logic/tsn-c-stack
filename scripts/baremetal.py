@@ -35,7 +35,8 @@ def build(work, kind, jobs):
     (directory / 'build.log').write_text(output)
     entries = json.loads((directory / 'compile_commands.json').read_text())
     core = [e for e in entries if Path(e['file']).parent == ROOT / 'src']
-    assert {Path(e['file']).name for e in core} == {'adp.c', 'acmp.c', 'maap.c'}
+    if not ({Path(e['file']).name for e in core} == {'adp.c', 'acmp.c', 'maap.c'}):
+        raise RuntimeError('freestanding build must compile all three cores')
     flags = compile_flags(core[0])
     compiler = flags[0]
     nm = command([compiler, '-print-prog-name=nm']).strip()
@@ -45,22 +46,29 @@ def build(work, kind, jobs):
     imports = set()
     for entry in core:
         flags = compile_flags(entry)
-        assert all(flag in flags for flag in ('-march=rv32i', '-mabi=ilp32', '-ffreestanding', '-nostdinc'))
+        if not (all(flag in flags for flag in ('-march=rv32i', '-mabi=ilp32', '-ffreestanding', '-nostdinc'))):
+            raise RuntimeError('missing mandatory RV32 freestanding flags: ' + entry['file'])
         cwd = Path(entry['directory'])
         source = Path(entry['file'])
         for path in dependencies(flags, source, cwd):
-            assert path == source or any(path.is_relative_to(root) for root in allowed_roots), path
+            if not (path == source or any(path.is_relative_to(root) for root in allowed_roots)):
+                raise RuntimeError('forbidden core dependency: ' + str(path))
         obj = directory / ('CMakeFiles/tsn.dir/src/' + source.name + '.obj')
         symbols = {line.split()[0] for line in command([nm, '-u', '-f', 'posix', str(obj)]).splitlines()}
-        assert symbols <= SYMBOLS, sorted(symbols - SYMBOLS)
+        if not (symbols <= SYMBOLS):
+            raise RuntimeError('forbidden core imports: ' + ', '.join(sorted(symbols - SYMBOLS)))
         imports |= symbols
         objects[source.name] = hashlib.sha256(obj.read_bytes()).hexdigest()
     elf = directory / 'rv32_smoke.elf'
     header = elf.read_bytes()[:52]
-    assert header[:6] == b'\x7fELF\x01\x01', 'expected little-endian ELF32'
-    assert struct.unpack_from('<H', header, 18)[0] == 243, 'expected RISC-V'
-    assert struct.unpack_from('<I', header, 36)[0] == 0, 'expected RV32I soft-float ABI'
-    assert not command([nm, '-u', str(elf)]).strip(), 'unresolved final symbols'
+    if not (header[:6] == b'\x7fELF\x01\x01'):
+        raise RuntimeError('expected little-endian ELF32')
+    if not (struct.unpack_from('<H', header, 18)[0] == 243):
+        raise RuntimeError('expected RISC-V')
+    if not (struct.unpack_from('<I', header, 36)[0] == 0):
+        raise RuntimeError('expected RV32I soft-float ABI')
+    if command([nm, '-u', str(elf)]).strip():
+        raise RuntimeError('unresolved final symbols')
     output = command(['qemu-system-riscv32', '-machine', 'virt', '-nographic', '-bios', 'none',
                       '-kernel', str(elf), '-no-reboot'])
     (directory / 'smoke.log').write_text(output + 'ADP, ACMP and MAAP smoke checks: rc 0\n')

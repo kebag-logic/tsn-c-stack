@@ -30,19 +30,26 @@ def main():
                             '-lgtest_main', '-lgtest', '-pthread', '-o', str(binary)], check=True)
             names = registered(binary)
             subprocess.run([str(binary)], check=True)
-            assert names == ['Control.Added'], names
+            if not (names == ['Control.Added']):
+                raise RuntimeError(names)
             rows = inventory(source)
             if label == 'macro-wrapper':
-                assert reconcile(rows, names)
+                if not (reconcile(rows, names)):
+                    raise RuntimeError('validation failed: reconcile(rows, names)')
                 print(label + ': executable declaration missing from source inventory refused')
                 continue
-            assert not reconcile(rows, names)
-            assert any('unknown requirement' in e for e in validate(reqs, rows))
+            if reconcile(rows, names):
+                raise RuntimeError('validation failed: not reconcile(rows, names)')
+            if not (any('unknown requirement' in e for e in validate(reqs, rows))):
+                raise RuntimeError("validation failed: any('unknown requirement' in e for e in validate(reqs, rows))")
             known = inventory(source.replace('UNKNOWN', 'R1'))
-            assert not validate(reqs, known)
-            assert validate_targets({r[0] for r in known}, [])
+            if validate(reqs, known):
+                raise RuntimeError('validation failed: not validate(reqs, known)')
+            if not (validate_targets({r[0] for r in known}, [])):
+                raise RuntimeError('validation failed: validate_targets({r[0] for r in known}, [])')
             mapped = [{'kills': [{'test': 'Control.Added', 'needle': 'specific assertion'}]}]
-            assert not validate_targets({r[0] for r in known}, mapped)
+            if validate_targets({r[0] for r in known}, mapped):
+                raise RuntimeError('validation failed: not validate_targets({r[0] for r in known}, mapped)')
             print(label + ': unknown ID and missing plant refused; mapped known ID passes')
     return 0
 

@@ -1,0 +1,282 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: MIT
+"""Keep the relocated public contract names in the integrator guide."""
+import argparse
+from pathlib import Path
+import re
+
+ROOT = Path(__file__).resolve().parents[1]
+REQUIRED = {
+    'Target builds': (
+        'memcpy',
+        'memset',
+        'python3 scripts/baremetal.py --work build-rv32 --jobs 16',
+        'virt',
+    ),
+    'Ownership and dispatch': (
+        'CTRL_REENTRY_ASSERT',
+        'adp_build',
+        'adp_poll',
+        'adp_reentry_count',
+        'ctrl_reentry_assert',
+    ),
+    'Frames and buffers': (
+        'ACMP_OWED_MAX',
+        'acmp_change_pending',
+        'acmp_poll',
+        'adp_poll',
+        'departing_coalesced',
+        'env->changed',
+        'maap_poll',
+        'probes_lost',
+        'send',
+    ),
+    'ADP input validation': (
+        'adp_rx',
+        'control_data_length',
+        'discarded',
+    ),
+    'Callback checklist': (
+        'maap_begin',
+        'preferred=0',
+    ),
+    'ADP callbacks and public fields': (
+        'ADP_DEPARTING_OWED_MAX',
+        'ADP_DRAW_DELAY',
+        'ADP_DRAW_NONE',
+        'ADP_DRAW_STARTUP',
+        'ADP_FRAME_BYTES',
+        'ADP_TIMER_ADVERTISE',
+        'ADP_TIMER_DELAY',
+        'ADP_TIMER_NONE',
+        'adp_build',
+        'adp_entity',
+        'adp_gm_change',
+        'adp_link_change',
+        'adp_poll',
+        'adp_rx',
+        'adp_set_current_configuration',
+        'adp_set_enable',
+        'adp_timer_expired',
+        'available_index',
+        'available_owed',
+        'ctx',
+        'current_configuration_index',
+        'delay_ms',
+        'departing_index',
+        'departing_owed',
+        'enabled',
+        'gptp',
+        'interface',
+        'link_up',
+        'mac',
+        'rng',
+        'seed',
+        'send',
+        'timer',
+        'timer_start',
+        'timer_stop',
+    ),
+    'ADP counters': (
+        'adp_reentry_count',
+        'deferred_sends',
+        'departing_coalesced',
+        'discarded',
+        'draws',
+        'gm_changed',
+        'last_draw',
+        'last_draw_ms',
+        'stray_expiries',
+    ),
+    'ACMP callbacks and public fields': (
+        'acmp_open',
+        'acmp_poll',
+        'acmp_source_state',
+        'acmp_source_state.asking_failed',
+        'acmp_source_state.dest_mac_valid',
+        'acmp_tk_kind_changed',
+        'acmp_tk_registered',
+        'acmp_tk_unregistered',
+        'armed=false',
+        'bound',
+        'bound=false',
+        'ctx',
+        'deadline_ms',
+        'env->changed',
+        'env->locked',
+        'env->persist',
+        'env->source',
+        'env->srp',
+        'failed',
+        'interface',
+        'ports->admit',
+        'ports->gptp',
+        'ports->now_ms',
+        'ports->seed',
+        'ports->send',
+        'ports->timer',
+        'sink',
+        'stream',
+        'talker_entity_id',
+    ),
+    'ACMP configuration and views': (
+        'ACMP_MAX_INTERFACES',
+        'acmp_binding',
+        'acmp_config.mac',
+        'acmp_config.n_interfaces',
+        'acmp_config.n_sinks',
+        'acmp_config.n_sources',
+        'acmp_sink_view.state',
+        'acmp_status',
+        'acmp_stream',
+        'acmp_view',
+        'binding',
+        'bound',
+        'dest_mac',
+        'env->changed',
+        'probing_status',
+        'registering_failed',
+        'settled',
+        'sink_interface',
+        'source_interface',
+        'started',
+        'stream',
+        'stream_id',
+        'streaming_wait',
+        'talker_discovered',
+        'talker_registered',
+        'vlan_id',
+    ),
+    'ACMP machine storage': (
+        'acmp.sequence_id',
+        'acmp_owed.interface',
+        'acmp_sink.probe_controller',
+        'admitted',
+        'admitted_talker',
+        'adp_armed',
+        'adp_deadline',
+        'change_owed',
+        'disc_available_index',
+        'disc_interface_index',
+        'disc_running',
+        'discovered',
+        'env->changed',
+        'env->persist',
+        'env->srp',
+        'frame',
+        'in_port',
+        'now',
+        'now_read',
+        'owed',
+        'owed_count',
+        'owed_head',
+        'probe_of',
+        'probe_retried',
+        'probe_seq',
+        'probe_talker',
+        'probe_talker_uid',
+        'release',
+        'reported',
+        'rng',
+        'saved',
+        'seeded',
+        'stream',
+        'timer',
+        'timer_armed',
+        'timer_at',
+        'timer_deadline',
+        'timer_held',
+        'tk_failed',
+    ),
+    'ACMP counters': (
+        'CTRL_REENTRY_ASSERT',
+        'adp_ignored',
+        'busy_drops',
+        'ctrl_reentry_assert',
+        'deferred_sends',
+        'draws',
+        'impossible',
+        'last_draw_ms',
+        'probe_mismatch',
+        'probes_lost',
+        'reentries',
+        'refused_locked',
+        'rx_ignored',
+        'rx_malformed',
+        'unknown_sink',
+    ),
+    'MAAP callbacks and public fields': (
+        'clock',
+        'count',
+        'ctx',
+        'maap_begin',
+        'maap_poll',
+        'maap_port_operational',
+        'maap_release',
+        'maap_timer_expired',
+        'preferred',
+        'range',
+        'send',
+        'timer_start',
+        'timer_stop',
+        'valid=true',
+    ),
+    'MAAP counters': (
+        'conflicts',
+        'deferred',
+        'discarded',
+        'overflow',
+        'reentries',
+        'stale_expiries',
+    ),
+    'Wire field preconditions': (
+        'bytes',
+        'wire_be16',
+        'wire_be32',
+        'wire_be64',
+        'wire_put_be',
+    ),
+    'Persistence and startup': (
+        'acmp_adp_rx',
+        'acmp_binding_latch',
+        'acmp_init',
+        'acmp_open',
+        'acmp_restore_binding',
+        'acmp_restore_rollback',
+        'acmp_rx',
+        'acmp_set_started',
+        'acmp_timer_expired',
+        'acmp_tk_kind_changed',
+        'acmp_view',
+    ),
+}
+
+
+def check(text):
+    headings = list(re.finditer(r'^#{2,3} (.+)$', text, re.M))
+    sections = {m[1]: text[m.end():headings[i + 1].start() if i + 1 < len(headings) else len(text)]
+                for i, m in enumerate(headings)}
+    return [heading + ': missing contract name ' + name
+            for heading, names in REQUIRED.items() for name in names
+            if '`' + name + '`' not in sections.get(heading, '')]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--selftest', action='store_true')
+    args = parser.parse_args()
+    text = (ROOT / 'docs/PORTING.md').read_text()
+    errors = check(text)
+    if args.selftest:
+        if errors:
+            raise RuntimeError('unplanted contract guide failed: ' + str(errors))
+        for name in {n for names in REQUIRED.values() for n in names}:
+            if not check(text.replace('`' + name + '`', '`removed`')):
+                raise RuntimeError('missing contract accepted: ' + name)
+        print('port contracts: all name-removal controls refused')
+    print('\n'.join(errors) if errors else 'port contracts: callbacks, fields, preconditions and counters present')
+    return bool(errors)
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
