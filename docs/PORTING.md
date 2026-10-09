@@ -257,7 +257,7 @@ The [ACMP diagnostics](../include/acmp.h) count modulo 2^32.
 | `probe_mismatch` | Probe responses that do not match the sink's saved probe. |
 | `refused_locked` | CONTROLLER_NOT_AUTHORIZED answers. |
 | `adp_ignored` | ADPDUs no sink accepted, or ADPDUs the module cannot read, including a nonzero AVTP version. |
-| `impossible` | Events marked impossible by Milan v1.2 Table 5.30 or Table 5.54. |
+| `impossible` | Events marked impossible by [Milan v1.2 Table 5.30 or Table 5.54](https://avnu.org/resource/milan-specification/). |
 | `busy_drops` | Commands dropped before state changes because the owed queue is full. |
 | `probes_lost` | Probes dropped because the owed queue is full. Their timeout recovers the attempt. |
 | `deferred_sends` | Send attempts refused for lack of room. |
@@ -265,7 +265,6 @@ The [ACMP diagnostics](../include/acmp.h) count modulo 2^32.
 | `draws` | Random TMR_DELAY draws. |
 | `last_draw_ms` | Most recent delay in milliseconds; a diagnostic value rather than a counter. |
 
-The impossible-event tables are in [Milan v1.2](https://avnu.org/resource/milan-specification/).
 `ctrl_reentry_assert` is called once per refused ACMP entry when `CTRL_REENTRY_ASSERT` is defined.
 The integrator supplies this hook and its failure policy.
 
@@ -279,7 +278,7 @@ Deliver MAAP expiries through `maap_timer_expired`.
 The `range` callback updates the ingress filter even for a tentative range.
 Only `valid=true` permits consumers to use its addresses. A zero `count` withdraws the range and invalidates affected stream destinations.
 The `clock` callback returns the least-significant bits of the real-time clock for entropy.
-This entropy source traces to [IEEE 1722-2016 B.3.6.1](https://standards.ieee.org/ieee/1722/5906/).
+This entropy source traces to [IEEE 1722-2016 B.3.6.1](https://standards.ieee.org/ieee/1722/5979/).
 
 The `preferred` field holds the range supplied to `maap_begin`, consumed by the first reservation.
 `maap_begin` is accepted only in INITIAL. It refuses an invalid preferred range.
