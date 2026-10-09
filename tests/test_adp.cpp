@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstring>
 #include <tuple>
+#include <vector>
 
 #include "adp.h"
 #include "wire.h"
@@ -97,6 +98,7 @@ void discover(uint8_t* f, uint8_t msg, uint64_t eid) {
     wire_put_be(f + 12, ADP_ETHERTYPE, 2);
     f[14] = ADP_SUBTYPE;
     f[15] = msg;
+    wire_put_be(f + 16, 56u, 2);
     wire_put_be(f + 18, eid, 8);
 }
 
@@ -698,30 +700,120 @@ TEST(AdpCore, MockedPortOrder) {
 
 class AdpInputControl : public ::testing::TestWithParam<unsigned> {};
 
-// REQ: ADP-01, ADP-02
-TEST_P(AdpInputControl, InheritedDiscoveryAcceptance) {
-    adp a;
-    fresh(&a, true);
-    adp_set_enable(&a, true);
-    adp_timer_expired(&a);
-    ASSERT_EQ(a.state, ADP_STATE_WAITING);
-    uint8_t frame[ADP_FRAME_BYTES];
-    adp_build(&a, ADP_MSG_ENTITY_DISCOVER, 0, frame);
-    size_t length = sizeof frame;
-    const unsigned control = GetParam();
-    if (control == 1) frame[15] |= 0x10;
-    if (control == 2) length = 26;
-    if (control == 3) frame[17] = 0;
-    const unsigned starts = fk.starts;
-    const unsigned stops = fk.stops;
-    adp_rx(&a, frame, length);
-    EXPECT_EQ(a.state, ADP_STATE_DELAY) << "inherited discovery enters DELAY";
-    EXPECT_EQ(a.discarded, 0u) << "inherited discovery input is not discarded";
-    EXPECT_EQ(fk.starts, starts + 1u) << "inherited discovery restarts delay timer";
-    EXPECT_EQ(fk.stops, stops + 1u) << "inherited discovery stops advertisement timer";
-    EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "inherited discovery selects delay timer";
+void discovery_state(adp* a, unsigned state) {
+    fresh(a, state != 1u);
+    if (state != 0u) adp_set_enable(a, true);
+    if (state == 3u) fk.room = false;
+    if (state >= 3u) adp_timer_expired(a);
 }
 
-INSTANTIATE_TEST_SUITE_P(AllInputs, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u));
+void refused_discovery(adp* a, const uint8_t* frame, size_t length) {
+    testing::StrictMock<AdpPortMock> mock;
+    const adp_ports silent = {
+        &mock,
+        [](void* c, unsigned, const uint8_t* f, size_t n) { return static_cast<AdpPortMock*>(c)->Send(f, n); },
+        [](void* c, unsigned, uint32_t ms) { static_cast<AdpPortMock*>(c)->Start(ms); },
+        [](void* c, unsigned) { static_cast<AdpPortMock*>(c)->Stop(); },
+        [](void* c, unsigned, uint64_t* gm, uint8_t* d) { static_cast<AdpPortMock*>(c)->Gptp(gm, d); },
+        [](void* c, unsigned) { return static_cast<AdpPortMock*>(c)->Link(); },
+        [](void* c) { return static_cast<AdpPortMock*>(c)->Seed(); }
+    };
+    const adp_ports* saved_ports = a->ports;
+    a->ports = &silent;
+    adp expected;
+    std::memcpy(&expected, a, sizeof expected);
+    ++expected.discarded;
+    adp_rx(a, frame, length);
+    EXPECT_EQ(a->discarded, expected.discarded) << "malformed discovery increments discarded exactly once";
+    EXPECT_EQ(std::memcmp(a, &expected, sizeof expected), 0)
+        << "malformed discovery preserves all other core storage";
+    a->ports = saved_ports;
+}
+
+// IEEE 1722.1-2021 6.2.2.3
+// IEEE 1722-2016 4.4.3.4
+// REQ: ADP-01
+TEST_P(AdpInputControl, RejectsUnsupportedVersion) {
+    adp a;
+    discovery_state(&a, GetParam());
+    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
+        for (unsigned version = 1; version < 8; ++version) {
+            uint8_t frame[82];
+            discover(frame, 2u, target);
+            frame[15] |= static_cast<uint8_t>(version << 4);
+            refused_discovery(&a, frame, sizeof frame);
+            if (HasFailure()) return;
+        }
+    }
+}
+
+// IEEE 1722.1-2021 Figure 6-1
+// IEEE 1722.1-2021 6.2.2.6
+// REQ: ADP-01
+TEST_P(AdpInputControl, RejectsShortFrame) {
+    adp a;
+    discovery_state(&a, GetParam());
+    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
+        uint8_t frame[82];
+        discover(frame, 2u, target);
+        for (size_t length = 0; length < sizeof frame; ++length) {
+            const std::vector<uint8_t> short_frame(frame, frame + length);
+            refused_discovery(&a, short_frame.data(), short_frame.size());
+            if (HasFailure()) return;
+        }
+    }
+}
+
+// IEEE 1722.1-2021 6.2.2.6
+// IEEE 1722-2016 4.4.5.4
+// REQ: ADP-01
+TEST_P(AdpInputControl, RejectsWrongControlDataLength) {
+    adp a;
+    discovery_state(&a, GetParam());
+    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
+        uint8_t frame[82];
+        discover(frame, 2u, target);
+        for (unsigned length = 0; length < 2048; ++length) {
+            if (length == 56) continue;
+            wire_put_be(frame + 16, length, 2);
+            refused_discovery(&a, frame, sizeof frame);
+            if (HasFailure()) return;
+        }
+    }
+}
+
+// Milan v1.2 5.6.3.1
+// Milan v1.2 Table 5.51
+// REQ: ADP-01, ADP-02, MFDISC-02
+TEST_P(AdpInputControl, ValidDiscovery) {
+    for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
+        for (size_t length : {82u, 83u, 128u}) {
+            adp a;
+            discovery_state(&a, GetParam());
+            uint8_t frame[128] = {};
+            discover(frame, 2u, target);
+            adp before;
+            fake port_before;
+            std::memcpy(&before, &a, sizeof a);
+            std::memcpy(&port_before, &fk, sizeof fk);
+            adp_rx(&a, frame, length);
+            EXPECT_EQ(a.discarded, 0u) << "valid discovery is never discarded";
+            EXPECT_EQ(fk.sends, port_before.sends) << "valid discovery defers transmission until expiry";
+            if (GetParam() == 4u) {
+                EXPECT_EQ(a.state, ADP_STATE_DELAY) << "valid discovery enters DELAY from WAITING";
+                EXPECT_EQ(fk.starts, port_before.starts + 1u) << "valid discovery starts one delay timer";
+                EXPECT_EQ(fk.stops, port_before.stops + 1u) << "valid discovery stops the advertisement timer";
+                EXPECT_EQ(a.timer, ADP_TIMER_DELAY) << "valid discovery selects the delay timer";
+                EXPECT_EQ(a.draws, before.draws + 1u) << "valid discovery draws one delay";
+                EXPECT_EQ(a.last_draw, ADP_DRAW_DELAY) << "valid discovery uses the normal delay range";
+            } else {
+                EXPECT_EQ(std::memcmp(&a, &before, sizeof a), 0) << "valid discovery preserves inactive or delaying state";
+                EXPECT_EQ(std::memcmp(&fk, &port_before, sizeof fk), 0) << "valid discovery preserves inactive or delaying ports";
+            }
+        }
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(AllStates, AdpInputControl, ::testing::Values(0u, 1u, 2u, 3u, 4u));
 
 }

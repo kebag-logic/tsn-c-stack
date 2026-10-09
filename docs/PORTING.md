@@ -71,15 +71,19 @@ Use `acmp_change_pending` to inspect a notification held behind a response.
 
 ## ADP input validation
 
-Validate the full ADPDU before calling `adp_rx`.
-Check AVTP version zero, the complete ADPDU length and `control_data_length` against the received buffer.
-These checks belong to the adapter until [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3) corrects the inherited receiver.
-The core checks only its readable prefix, EtherType, subtype, message nibble and target.
-In WAITING, matching discovery input with version 1, length 26 bytes, or `control_data_length` zero still enters DELAY.
-It restarts the timer without increasing `discarded`. Valid discovery follows the same path.
-See [ADP-01](REQUIREMENTS.md#adp-input-limit), [DEV-08](DEVIATIONS.md), and the [input controls](../tests/test_adp.cpp).
-The affected clauses are [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/)
-and [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/).
+Supply the actual readable buffer length to `adp_rx` on the correct interface.
+Keep the [untagged frame and buffer contract](#frames-and-buffers).
+The core checks the complete 82-byte frame minimum before reading header or target fields.
+It requires AVTP version zero and the 11-bit `control_data_length` value 56.
+It also checks EtherType, subtype, discovery message type and target.
+Each refusal increments `discarded` once, with no other state change or port call.
+This applies in DOWN, DELAY and WAITING, including disabled input and an owed advertisement.
+Valid discovery for zero or the local entity starts a delay only in enabled WAITING.
+Extra trailing bytes are accepted. Destination filtering and interface selection remain adapter duties.
+See [ADP-01](REQUIREMENTS.md#adp-input-validation) and the [input controls](../tests/test_adp.cpp).
+The format authorities are [IEEE 1722.1-2021 Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/)
+and [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/).
+Target and state handling follow [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
 
 ## Callback checklist
 
@@ -150,7 +154,7 @@ These [diagnostics](../include/adp.h) count modulo 2^32. Read them from the seri
 | `draws` | Random delays drawn. |
 | `last_draw_ms`, `last_draw` | Most recent delay and its draw kind; these are diagnostic values, not counters. |
 | `stray_expiries` | Timer expiries received when no timer is running. |
-| `discarded` | ADPDUs discarded by the inherited receiver checks. |
+| `discarded` | Malformed or irrelevant ADPDUs refused by receive validation. |
 | `deferred_sends` | Send attempts refused for lack of room. |
 | `departing_coalesced` | Shutdowns coalesced into an already queued departure. |
 | `adp_reentry_count` | Lifetime count of refused port callbacks across all instances, returned by the function of that name. |

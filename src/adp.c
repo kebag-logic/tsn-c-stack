@@ -304,9 +304,13 @@ void adp_rx(struct adp *a, const uint8_t *frame, size_t len)
 		return;
 	}
 	// Milan v1.2 5.6.3.1
-
-	if (len < ADP_HEADER_BYTES + 12u || wire_be16(frame + 12) != ADP_ETHERTYPE ||
+	// IEEE 1722.1-2021 Figure 6-1
+	// IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
+	// IEEE 1722-2016 4.4.3.4 and 4.4.5.4
+	if (len < ADP_FRAME_BYTES || wire_be16(frame + 12) != ADP_ETHERTYPE ||
 	    frame[ADP_HEADER_BYTES] != ADP_SUBTYPE ||
+	    (frame[ADP_HEADER_BYTES + 1u] & 0x70u) != 0u ||
+	    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||
 	    (frame[ADP_HEADER_BYTES + 1u] & 0x0Fu) != ADP_MSG_ENTITY_DISCOVER) {
 		a->discarded++;
 		return;
