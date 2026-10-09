@@ -16,7 +16,8 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
    Every `.h` and `.hpp` and every header mutation fragment uses both modes.
    Each comment line allows only SPDX, requirement IDs or short standard references.
    The conditional rules below also apply.
-4. Linker scripts forbid single quotes and use C11 raw comment tokens.
+4. Linker scripts forbid single quotes, backslashes, hashes and `VERSION`.
+   They use C11 raw comment tokens.
    RV32 linking uses `-Wl,--fatal-warnings`.
 5. Assembly forbids single quotes and all preprocessor directives.
    Every `#` starts a checked assembler comment. Keep `#` out of assembly strings.

@@ -62,6 +62,9 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
         text = ''.join(lines)
         language = 'c'
     tokens = raw_tokens(text, language)
+    if path and Path(path).suffix == '.ld' and any(
+            kind == 'raw_identifier' and value == 'VERSION' for kind, value, *_ in tokens):
+        errors.append('VERSION is forbidden in linker scripts')
     if assembly and directives(tokens):
         errors.append('assembly preprocessor directives are forbidden')
     for kind, value, _, _, number in tokens:
@@ -78,8 +81,8 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
 
 
 def check(text, assembly=False, language='c++', path=None, fragment=False):
-    if path and Path(path).suffix == '.ld' and "'" in text:
-        return ['single quotes are forbidden in linker scripts']
+    if path and Path(path).suffix == '.ld' and any(char in text for char in "'\\#"):
+        return ['single quotes, backslashes and hashes are forbidden in linker scripts']
     modes = ('c', 'c++') if path and Path(path).suffix in ('.h', '.hpp') else (language,)
     return [mode + ': ' + error for mode in modes
             for error in check_mode(text, assembly, mode, path, fragment)]

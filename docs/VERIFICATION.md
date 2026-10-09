@@ -56,7 +56,8 @@ Compiling controls refuse CR, form feed, vertical tab, other controls and non-AS
 Only `.c`, `.h`, `.cpp`, `.hpp`, `.S` and `.ld` files and the two
 [listed data files](CODING_STANDARD.md) are accepted in the checked directories.
 A compiling included `.inc` control proves that an unscanned suffix fails.
-Linker scripts forbid single quotes. Their comments use C11 raw tokens.
+Linker scripts forbid single quotes, backslashes, hashes and `VERSION`. Their comments use C11 raw tokens.
+Linked escape, hash-comment and version-block controls pass fatal linking and fail the source gate.
 A linked quote control fails the comment rule and `-Wl,--fatal-warnings`; valid tracing links cleanly.
 Assembly forbids all preprocessor directives, including definitions that produce a hash comment.
 Every `#` starts a comment checked against the tracing allowlist. Single quotes,
@@ -74,7 +75,7 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 | Character set | Printable ASCII, tab and LF in every file under `src/`, `include/`, `tests/` and `examples/`. | CR, form feed, vertical tab, another control byte and non-ASCII are refused. |
 | Suffixes | `.c`, `.h`, `.cpp`, `.hpp`, `.S`, `.ld`; data exceptions are [mutations.json](../tests/mutations.json) and [coverage.ratchet](../tests/coverage.ratchet). | An included `.inc` is refused. |
 | Header modes | C11 and C++20 for every `.h`, `.hpp` and header plant fragment. | A digit separator hiding a C++ comment is refused; tracing passes. |
-| Linker scripts | No single quotes; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
+| Linker scripts | No single quotes, backslashes, hashes or `VERSION`; C11 raw comment tokens; fatal RV32 linker warnings. | A quote plant links without fatal warnings, then fails both policy and fatal linking. |
 | Assembly | No preprocessor directives, single quotes, `.if*`, `.macro`, `.rept`, `.irp`, `.irpc`, `.include`, `.incbin` or `.end`; every hash starts a checked comment. | Macro-produced comments and tracing are refused; direct tracing passes. |
 | Assertions | `EXPECT` and `ASSERT` forms `_TRUE`, `_FALSE`, `_EQ`, `_NE`, `_LE`, `_GE`, plus `EXPECT_EXIT` and `EXPECT_CALL`. | Each allowed form produces a default diagnostic; `EXPECT_NEAR` is refused. |
 

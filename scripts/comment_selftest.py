@@ -78,18 +78,22 @@ def selftest(work):
                 raise RuntimeError(label + ': unsupported assembler directive accepted')
             print('comment control ' + label + ': compiled and linked; refused')
         linker = directory / 'link.ld'
-        for label, source, refused in (
-                ('linker-quote', "PROVIDE(probe' = 1); /* prose */ PROVIDE(end' = 2);\n", True),
-                ('linker-tracing', '/* REQ: PORT-01 */\n', False)):
+        for label, source, refused, warning in (
+                ('linker-quote', "PROVIDE(probe' = 1); /* prose */ PROVIDE(end' = 2);\n", True, True),
+                ('linker-backslash', 'SECTIONS { .probe : { *("x\\" /* prose */ "y") } }\n', True, False),
+                ('linker-hash', 'VERSION { PROBE { local: *; # prose\n}; }\n', True, False),
+                ('linker-version', 'VERSION { PROBE { local: *; }; }\n', True, False),
+                ('linker-tracing', '/* REQ: PORT-01 */\n', False, False)):
             linker.write_text(source + 'SECTIONS { . = 0x80000000; .text : { *(.text) } }\n')
             command = [cross, '-march=rv32i', '-mabi=ilp32', '-nostdlib',
                        '-T' + str(linker), str(obj), '-o', str(directory / 'link.elf')]
             subprocess.run(command, check=True, capture_output=True)
             errors = check(linker.read_text(), path='examples/rv32/link.ld')
             fatal = subprocess.run([*command, '-Wl,--fatal-warnings'], capture_output=True)
-            if bool(errors) != refused or bool(fatal.returncode) != refused:
+            if bool(errors) != refused or bool(fatal.returncode) != warning:
                 raise RuntimeError(label + ': linker warning or policy result changed')
-            print('comment control ' + label + ': linked; policy and fatal warnings ' + ('refuse' if refused else 'pass'))
+            print('comment control ' + label + ': linked; policy ' + ('refuses' if refused else 'passes') +
+                  '; fatal link ' + ('refuses' if warning else 'passes'))
         included = directory / 'tests/control.inc'
         included.parent.mkdir()
         included.write_text('// prose\n')
