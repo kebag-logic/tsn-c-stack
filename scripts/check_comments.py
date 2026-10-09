@@ -75,6 +75,8 @@ def check_mode(text, assembly=False, language='c++', path=None, fragment=False):
 
 
 def check(text, assembly=False, language='c++', path=None, fragment=False):
+    if path and Path(path).suffix == '.ld' and "'" in text:
+        return ['single quotes are forbidden in linker scripts']
     modes = ('c', 'c++') if path and Path(path).suffix in ('.h', '.hpp') else (language,)
     return [mode + ': ' + error for mode in modes
             for error in check_mode(text, assembly, mode, path, fragment)]

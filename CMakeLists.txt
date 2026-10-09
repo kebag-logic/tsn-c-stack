@@ -30,7 +30,7 @@ if(TSN_FREESTANDING)
   target_compile_definitions(rv32_smoke PRIVATE CTRL_REENTRY_ASSERT)
   target_link_libraries(rv32_smoke PRIVATE -Wl,--whole-archive tsn -Wl,--no-whole-archive gcc)
   target_link_options(rv32_smoke PRIVATE -nostdlib -nostartfiles
-    "-T${CMAKE_CURRENT_SOURCE_DIR}/examples/rv32/link.ld" -Wl,--no-undefined
+    "-T${CMAKE_CURRENT_SOURCE_DIR}/examples/rv32/link.ld" -Wl,--no-undefined -Wl,--fatal-warnings
     "-Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/rv32_smoke.map")
   set_target_properties(rv32_smoke PROPERTIES SUFFIX ".elf"
     LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/examples/rv32/link.ld")

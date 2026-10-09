@@ -54,6 +54,8 @@ Compiling controls refuse CR, form feed, vertical tab, other controls and non-AS
 Only `.c`, `.h`, `.cpp`, `.hpp`, `.S` and `.ld` files and the two
 [listed data files](CODING_STANDARD.md) are accepted in the checked directories.
 A compiling included `.inc` control proves that an unscanned suffix fails.
+Linker scripts forbid single quotes. Their comments use C11 raw tokens.
+A linked quote control fails the comment rule and `-Wl,--fatal-warnings`; valid tracing links cleanly.
 The Linux job needs no FPGA tools, simulator, platform checkout or submodule.
 
 ## Bare-metal RV32
@@ -72,6 +74,7 @@ Only core headers, compiler intrinsic headers and the minimal port's C-library s
 The core imports must stay within the explicit port, memory and integer-helper allowlist.
 The final ELF must be 32-bit RISC-V with the soft-float ABI and no unresolved symbols.
 The whole core archive is linked, so unused entry points cannot hide a missing dependency.
+Linker warnings are fatal through `-Wl,--fatal-warnings`.
 
 The [smoke checks](../examples/rv32/smoke.c) reuse cases from the hosted tests:
 

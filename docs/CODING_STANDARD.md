@@ -36,6 +36,8 @@ Document static-analysis suppressions in the [suppression register](STATIC_ANALY
 The [comment gate](../scripts/check_comments.py) uses the Clang 18 lexer.
 C uses C11; C++ uses C++20. Every `.h` and `.hpp` is lexed in both modes.
 Header mutation fragments use both modes too. Each comment token under these rules is checked.
+Linker scripts forbid single quotes and use the C11 raw comment tokens.
+RV32 linking treats all linker warnings as errors.
 Assembly forbids single quotes, conditional directives, macros and repeats.
 Every assembly `#` after a preprocessor directive marker starts a checked comment.
 Use numeric character values. Keep `#` out of assembly strings.

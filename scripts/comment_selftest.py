@@ -54,6 +54,23 @@ def selftest(work):
         raise RuntimeError('comment controls require an RV32 compiler')
     with tempfile.TemporaryDirectory(dir=work) as name:
         directory = Path(name)
+        assembly = directory / 'link.S'
+        assembly.write_text('.global _start\n_start:\nnop\n')
+        obj = directory / 'link.o'
+        subprocess.run([cross, '-march=rv32i', '-mabi=ilp32', '-c', str(assembly), '-o', str(obj)], check=True)
+        linker = directory / 'link.ld'
+        for label, source, refused in (
+                ('linker-quote', "PROVIDE(probe' = 1); /* prose */ PROVIDE(end' = 2);\n", True),
+                ('linker-tracing', '/* REQ: PORT-01 */\n', False)):
+            linker.write_text(source + 'SECTIONS { . = 0x80000000; .text : { *(.text) } }\n')
+            command = [cross, '-march=rv32i', '-mabi=ilp32', '-nostdlib',
+                       '-T' + str(linker), str(obj), '-o', str(directory / 'link.elf')]
+            subprocess.run(command, check=True, capture_output=True)
+            errors = check(linker.read_text(), path='examples/rv32/link.ld')
+            fatal = subprocess.run([*command, '-Wl,--fatal-warnings'], capture_output=True)
+            if bool(errors) != refused or bool(fatal.returncode) != refused:
+                raise RuntimeError(label + ': linker warning or policy result changed')
+            print('comment control ' + label + ': linked; policy and fatal warnings ' + ('refuse' if refused else 'pass'))
         included = directory / 'tests/control.inc'
         included.parent.mkdir()
         included.write_text('// prose\n')
