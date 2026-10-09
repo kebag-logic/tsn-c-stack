@@ -1,0 +1,17 @@
+date 2026-10-09T22:15:01+02:00
+Python 3.14.7
+PyYAML 6.0.3
+gcc (GCC) 16.2.1 20260810
+cmake version 4.4.4
+GoogleTest prefix for traceability rerun: <pinned-tools>/gtest-1.14.0 (version file: GTestConfig.cmake GTestConfigVersion.cmake GTestTargets.cmake GTestTargets-release.cmake )
+Verilator: not used (delta has no HDL)
+pinned source milan-fpga 5603c353137e90c1fa95429f6d00ef7a2298d9ee files (sha256):
+4372d698990537b1d7ca8b43c66283be8b70989a1cb18542975dde53cd20838f  endstation_builder.py
+e279883f449e7079487cee1c28b2fe1909411735f94b931bea4cc009d30fbbcc  aem_descriptors.py
+c3106a1410035f33eef9e634750ffc534be4d04293263bdbfd4ea144dfd523d8  milan_csr.sv
+6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1  endstation_ax7101_1x1_tdm8.yaml
+a9557227351bbe91ed52d4e545d3192b5c3eae9ba4287fcc06c3b53daed15c89  cfg_endstation_arty_4x4.yaml
+a86b3e85eb08f931663f0d288694a64d1c38ee5f69d88a41b8f1c33a0afd0a1f  cfg_endstation_arty_8ch.yaml
+87940d8d3ffc947ac8a5faf4b3b9e464a5e28913fc84b4d6a5f02eb18999a744  cfg_endstation_arty_current.yaml
+6e1463f68ec2cf8b97b7c89a8b5930ed62e05e267ddb16bd87bf2b36dd992fa1  cfg_endstation_ax7101_1x1_tdm8.yaml
+ca491ba5c172fce3e4a99ef9ecbe7412804b8234320c8459e6b8e150e5e3635b  cfg_endstation_ax7101_8x8.yaml

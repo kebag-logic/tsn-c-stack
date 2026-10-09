@@ -1,0 +1,31 @@
+rtl firmware_version(0) = 2.96.0
+PASS E1 firmware_rev omitted: source=accept (firmware_version='2.96.0') mapper=accept (identity unchanged)
+PASS E2 firmware_rev: 1: source=accept (firmware_version='2.96.1') mapper=accept (identity unchanged)
+PASS E3 firmware_version present: source=refuse (entity.firmware_version: remove it. The firmware version is derived from the gateware's VERSION parameter (hdl/common/csr/milan_csr.sv), which is where it lives; this build derives '2.96.0'. For a firmware respin with no CSR-ABI change use entity.firmware_rev.) mapper=refuse (milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev)
+PASS E2b firmware_rev: 0: source=accept (firmware_version='2.96.0') mapper=accept (identity unchanged)
+PASS E2b firmware_rev: 7: source=accept (firmware_version='2.96.7') mapper=accept (identity unchanged)
+PASS E2b firmware_rev: 2**64: source=accept (firmware_version='2.96.18446744073709551616') mapper=accept (identity unchanged)
+PASS E2b firmware_rev: 58 digits: source=accept (firmware_version='2.96.1000000000000000000000000000000000000000000000000000000000') mapper=accept (identity unchanged)
+PASS E4 firmware_rev: true: source=refuse (entity.firmware_rev: True is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: false: source=refuse (entity.firmware_rev: False is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: -1: source=refuse (entity.firmware_rev: -1 is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: '1': source=refuse (entity.firmware_rev: '1' is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: 1.0: source=refuse (entity.firmware_rev: 1.0 is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: null: source=refuse (entity.firmware_rev: None is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E4 firmware_rev: []: source=refuse (entity.firmware_rev: [] is not a non-negative integer) mapper=refuse (milan.entity.firmware_rev: expected a non-negative integer)
+PASS E5 firmware_version and typo: source=refuse (entity.firmware_version: remove it. The firmware version is derived from the gateware's VERSION parameter (hdl/common/csr/milan_csr.sv), which is where it lives; this build derives '2.96.0'. For a firmware respin with no CSR-ABI change use entity.firmware_rev.) mapper=refuse (milan.entity.firmware_version: remove it; the source derives this value; use entity.firmware_rev)
+PASS E6 unknown key typo: source=accept (firmware_version='2.96.0') mapper=refuse (milan.entity.typo: unknown field)
+PASS E6b two unknown keys: source=accept (firmware_version='2.96.0') mapper=refuse (milan.entity.aa: unknown field)
+PASS E7 real pinned AX7101 YAML: source=accept (firmware_version='2.96.0') mapper=accept (identity unchanged)
+PASS Y 'firmware_rev: 0x1F': value=31 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: 017': value=15 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: 1_000': value=1000 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: 1:00': value=60 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: +3': value=3 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: 0o7': value='0o7' loaders_agree=True source=refuse mapper=refuse
+PASS Y 'firmware_rev: !!int "3"': value=3 loaders_agree=True source=accept mapper=accept
+PASS Y 'firmware_rev: yes': value=True loaders_agree=True source=refuse mapper=refuse
+PASS Y 'firmware_rev: ~': value=None loaders_agree=True source=refuse mapper=refuse
+PASS Y 'firmware_rev: -0': value=0 loaders_agree=True source=accept mapper=accept
+INFO D1 firmware_rev: 10**60 (61 digits): source=refuse (entity.firmware_version: exceeds 63 bytes (AEM cstr64)) mapper=accept
+28/28 expectations held

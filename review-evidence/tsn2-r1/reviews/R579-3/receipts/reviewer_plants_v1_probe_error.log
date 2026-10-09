@@ -1,0 +1,40 @@
+== I1-fw-rev-key-dropped
+  RESULT CAUGHT
+  CAUGHT test_mapping_firmware_rev_zero: control=ok planted=FAIL rc=1 AssertionError: source-valid firmware_rev refused: milan.entity.firmware_rev: unknown field
+  CAUGHT test_mapping_firmware_rev_one: control=ok planted=FAIL rc=1 AssertionError: source-valid firmware_rev refused: milan.entity.firmware_rev: unknown field
+== I2-fw-rev-bool-accepted
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_firmware_rev_boolean: control=ok planted=FAIL rc=1 AssertionError: Invalid not raised
+  CAUGHT test_mapping_refuse_firmware_rev_false: control=ok planted=FAIL rc=1 AssertionError: Invalid not raised
+== I3-fw-rev-negative-accepted
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_firmware_rev_negative: control=ok planted=FAIL rc=1 AssertionError: Invalid not raised
+== I4-fw-version-pointer-removed
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_firmware_version: control=ok planted=FAIL rc=1 AssertionError: 'mila[22 chars]ion: unknown field' != 'mila[22 chars]ion: remove it; the source derives this value;[20 chars]_rev'
+== I5-unknown-key-unnamed
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_unknown_entity_key: control=ok planted=FAIL rc=1 AssertionError: 'milan.entity: unknown field' != 'milan.entity.typo: unknown field'
+== I6-fw-rev-default-required
+  RESULT CAUGHT
+  CAUGHT test_mapping_firmware_rev_omitted: control=ok planted=FAIL rc=1 AssertionError: source-valid firmware_rev refused: milan: missing or invalid mapping input: 'firmware_rev'
+== I7-fw-rev-string-accepted
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_firmware_rev_string: control=ok planted=FAIL rc=1 AssertionError: Invalid not raised
+== I8-whole-item1-revert
+  RESULT NOT-CAUGHT
+  MISSED test_mapping_firmware_rev_omitted: control=ok planted=ok rc=0 
+  CAUGHT test_mapping_firmware_rev_zero: control=ok planted=FAIL rc=1 AssertionError: source-valid firmware_rev refused: milan.entity: unknown field or invalid mapping
+  CAUGHT test_mapping_firmware_rev_one: control=ok planted=FAIL rc=1 AssertionError: source-valid firmware_rev refused: milan.entity: unknown field or invalid mapping
+  CAUGHT test_mapping_refuse_firmware_version: control=ok planted=FAIL rc=1 AssertionError: 'milan.entity: unknown field or invalid mapping' != 'milan.entity.firmware_version: remove it; the source [39 chars]_rev'
+  CAUGHT test_mapping_refuse_unknown_entity_key: control=ok planted=FAIL rc=1 AssertionError: 'milan.entity: unknown field or invalid mapping' != 'milan.entity.typo: unknown field'
+== O1-digit-only-decimal
+  RESULT CAUGHT
+  CAUGHT test_mapping_digit_only_entity_id: control=ok planted=FAIL rc=1 AssertionError: 1234567890123456 != 1311768467284833366
+== O2-vendor-default-changed
+  RESULT CAUGHT
+  CAUGHT test_mapping_default_vendor_name: control=ok planted=FAIL rc=1 AssertionError: 'Kebag Logic ' != 'Kebag Logic'
+== O3-double-underscore
+  RESULT CAUGHT
+  CAUGHT test_mapping_refuse_entity_id_double_underscore: control=ok planted=FAIL rc=1 AssertionError: Invalid not raised
+10/11 reviewer plants caught by their named tests

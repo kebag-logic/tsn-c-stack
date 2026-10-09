@@ -1,0 +1,11 @@
+builder lines naming firmware_rev:
+  f"respin with no CSR-ABI change use entity.firmware_rev.")
+  rev = ent.get("firmware_rev", 0)
+  f"entity.firmware_rev: {rev!r} is not a non-negative integer")
+  firmware_rev=rev,
+  f"0x{_fwmaj:04X}_{_fwmin:04X} . rev {e['firmware_rev']})")
+without firmware_rev: ACCEPTED entity_id=mac-derived
+firmware_rev: 1: ACCEPTED entity_id=mac-derived
+firmware_rev: 0: ACCEPTED entity_id=mac-derived
+FIRMWARE_REV_SOURCE_VALID_ACCEPTED PASS
+probe_firmware_rev.py sha256 2f4db79e1763fa6beae6c459c9385104b3c68bcd3022eb16577ba6bf94db8801 fetched from review-evidence/tsn2-r1/reviews/R579-2/scripts at 54ece244514144572f49924732db1587623d4a9f, run unchanged

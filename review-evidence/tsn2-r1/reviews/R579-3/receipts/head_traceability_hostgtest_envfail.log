@@ -1,0 +1,73 @@
+-- The C compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:48 (find_package):
+  Could not find a configuration file for package "GTest" that exactly
+  matches requested version "1.14.0".
+
+  The following configuration files were considered but not accepted:
+
+    /usr/lib/cmake/GTest/GTestConfig.cmake, version: 1.18.0
+      The version found is not compatible with the version requested.
+    /lib/cmake/GTest/GTestConfig.cmake, version: 1.18.0
+      The version found is not compatible with the version requested.
+
+
+
+-- Configuring incomplete, errors occurred!
+traceability: unknown ID, untraced test and untested requirement controls refused
+requirement control caught: missing source
+requirement control caught: duplicate source
+requirement control caught: unknown source
+requirement control caught: changed pin
+requirement control caught: moving source link
+requirement control caught: moved source anchor
+requirement control caught: missing origin
+requirement control caught: different origin
+requirement control caught: missing target
+requirement control caught: empty text
+requirement control caught: missing clauses
+requirement control caught: unlinked clause
+requirement control caught: duplicate authority
+requirement control caught: unknown method
+requirement control caught: missing port reason
+requirement control caught: missing inspection reason
+requirement control caught: missing evidence
+requirement control caught: broken evidence
+requirement control caught: broken contract anchor
+requirement control caught: legacy exemption
+requirement control caught: false exclusion
+requirement control caught: orphan import
+requirement control caught: unknown local ID
+requirement control caught: duplicate local ID
+requirement control caught: missing exclusion reason
+requirement control caught: missing issue origin
+requirement control caught: wrong issue origin
+requirement control caught: local exemption
+requirement definitions: 43 missing-row controls caught
+requirement records: 28 metadata defects caught
+Traceback (most recent call last):
+  File "<clone>/scripts/traceability.py", line 128, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "<clone>/scripts/traceability.py", line 108, in main
+    errors += test_registry.reconcile(rows, test_registry.read_build(ROOT, args.build, args.jobs))
+                                            ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<clone>/scripts/test_registry.py", line 47, in read_build
+    subprocess.run(['cmake', '-S', str(root), '-B', str(build), '-DTSN_TESTS=ON'],
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   check=True, env=environment())
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['cmake', '-S', '<clone>', '-B', '<packet>/scratch/w/registration', '-DTSN_TESTS=ON']' returned non-zero exit status 1.
