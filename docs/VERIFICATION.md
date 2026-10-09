@@ -26,6 +26,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
 | Assertion needles | `python3 scripts/needle_audit.py --selftest` | Each needle has at least eight characters and identifies exactly one assertion message literal in its named test or helper. Substrings of the generated default diagnostics are refused. Other assertion forms are refused. |
 | Assertion templates | `python3 scripts/assertion_templates.py --check --selftest --work build-assertion-templates` | Compile and run one failing instance of each of the 14 allowed forms with GoogleTest 1.14.0. Blank streamed messages and compare the generated default diagnostics. Compiling `EXPECT_NEAR`, `GTEST_ASSERT_LT`, `GTEST_FAIL` and token-pasted controls are refused. |
+| Dependency pin | `python3 scripts/dependency_selftest.py --work build-dependency-controls --jobs 16` | Refuse a configure with only another package version. Compile and catch a header plant using the checked package flags, including a required header and link symbol, without ambient include or library paths. |
 | Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
 | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
@@ -78,7 +79,8 @@ A deliberately obfuscated construction outside the listed rules is a review sugg
 
 The assertion gate refuses token pasting (`##`) and scans the named macros in all C and C++ files below `tests/`.
 The template generator uses exactly GoogleTest and GMock 1.14.0, checked with `pkg-config`.
-CMake requires the same version; the mutation driver checks it too.
+CMake requires the exact package-config version and does not fall back to an unversioned library search.
+The mutation driver uses the compile and link flags from the same `pkg-config` packages whose versions it checks.
 The same generator preprocesses `gtest/gtest.h` and `gmock/gmock.h` with `-dM -E`.
 It records public assertion and result macros outside the fourteen allowed forms.
 This includes `EXPECT_*`, `ASSERT_*`, `GTEST_*`, `FAIL*`, `SUCCEED` and `ADD_FAILURE*`.

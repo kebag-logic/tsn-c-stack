@@ -54,6 +54,7 @@ def main():
         ('boundary', 'check_boundary.py', ['--selftest', '--work', str(work / 'boundary'), '--jobs', str(args.jobs)]),
         ('needles', 'needle_audit.py', ['--selftest']),
         ('assertion-templates', 'assertion_templates.py', ['--check', '--selftest', '--work', str(work / 'assertion-templates')]),
+        ('dependencies', 'dependency_selftest.py', ['--work', str(work / 'dependency-controls'), '--jobs', str(args.jobs)]),
         ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
         ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
         ('port-contracts', 'check_port_contracts.py', ['--selftest']),

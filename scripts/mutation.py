@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from test_registry import environment, registered
 from needle_audit import assertion_literals, validate_needles
 from assertion_messages import instrument
-from assertion_forms import require_version
+from assertion_forms import package_flags, require_version
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
@@ -108,6 +108,8 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     (work / 'results.json').unlink(missing_ok=True)
     require_version()
+    test_cflags = package_flags('--cflags')
+    test_ldflags = package_flags('--libs')
     mutants = json.loads((ROOT / "tests/mutations.json").read_text())
     messages = assertion_literals()
     baseline = work / "baseline"
@@ -121,7 +123,7 @@ def main():
     cc = os.environ.get("CC", "gcc")
     cxx = os.environ.get("CXX", "g++")
     log = []
-    if not (run([cxx, *cppflags(""), "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0):
+    if not (run([cxx, *cppflags(""), *test_cflags, "-c", str(ROOT / "tests/main.cpp"), "-o", str(baseline / "main.o")], log) == 0):
         raise RuntimeError('baseline test entry build failed: ' + ''.join(log))
     if not (run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0):
         raise RuntimeError('baseline example port build failed: ' + ''.join(log))
@@ -132,8 +134,8 @@ def main():
         local = []
         commands = [
             [cc, *cflags(arm), "-I" + str(ROOT / "include"), "-c", str(ROOT / f"src/{module}.c"), "-o", str(baseline / (arm + ".c.o"))],
-            [cxx, *cppflags(arm), "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
-            [cxx, str(baseline / (arm + ".c.o")), str(baseline / (arm + ".cpp.o")), str(baseline / "main.o"), *extra(arm), "-lgmock", "-lgtest", "-pthread", "-o", str(baseline / arm)]]
+            [cxx, *cppflags(arm), *test_cflags, "-I" + str(ROOT / "include"), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(baseline / (arm + ".cpp.o"))],
+            [cxx, str(baseline / (arm + ".c.o")), str(baseline / (arm + ".cpp.o")), str(baseline / "main.o"), *extra(arm), *test_ldflags, "-o", str(baseline / arm)]]
         for cmd in commands:
             if run(cmd, local) != 0:
                 raise RuntimeError("baseline build failed: " + "".join(local))
@@ -180,11 +182,11 @@ def main():
                 if target.suffix == ".h":
                     test_obj = directory / (arm + ".test.o")
                     with HEADER_SLOTS:
-                        rc = run([cxx, *cppflags(arm), "-I" + str(directory / "include"), "-I" + str(test_sources), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(test_obj)], local)
+                        rc = run([cxx, *cppflags(arm), *test_cflags, "-I" + str(directory / "include"), "-I" + str(test_sources), "-I" + str(ROOT / "examples"), "-c", str(test_sources / SOURCES[arm]), "-o", str(test_obj)], local)
                     if rc != 0:
                         raise RuntimeError("mutated header test build failed")
                 binary = directory / arm
-                rc = run([cxx, str(obj), str(test_obj), str(baseline / "main.o"), *extra(arm), "-lgmock", "-lgtest", "-pthread", "-o", str(binary)], local)
+                rc = run([cxx, str(obj), str(test_obj), str(baseline / "main.o"), *extra(arm), *test_ldflags, "-o", str(binary)], local)
                 if rc != 0:
                     raise RuntimeError("mutant link failed")
                 rc, failures, count = execute(binary, directory / (arm + ".xml"), local, kills)
