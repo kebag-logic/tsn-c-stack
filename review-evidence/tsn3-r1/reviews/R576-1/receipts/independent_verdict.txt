@@ -1,0 +1,8 @@
+Independent verdict written before reading any earlier review or PR/issue review comment.
+Written: 2026-10-09T17:15:52Z
+Exact head: 66b3a75746fbbca3cffdfc7d89f013ab14aa1cc0
+Verdict: POSITIVE
+Open findings: none at MINOR or above.
+RESIDUE: F1 CHANGELOG.md Unreleased has no entry for the ADP receive-validation change (every earlier PR added one).
+SUGGESTION: S1 over-strict variants on bits outside the acceptance (sv bit; 5 bits above control_data_length) survive the hosted tests and RV32 smoke.
+Lenses: Conformance CLEAN, RTL CLEAN (no HDL in this repository; C core and RV32 build examined), Robustness CLEAN, Tests CLEAN, Docs CLEAN.

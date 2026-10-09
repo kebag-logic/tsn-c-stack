@@ -1,0 +1,103 @@
+{
+ "control-unmutated": {
+  "rc": 0,
+  "status": "SURVIVED",
+  "failed_tests": []
+ },
+ "version-mask-only-bit4": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/4"
+  ]
+ },
+ "version-mask-includes-sv": {
+  "rc": 0,
+  "status": "SURVIVED",
+  "failed_tests": []
+ },
+ "length-bound-81": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsShortFrame/0",
+   "AllStates/AdpInputControl.RejectsShortFrame/1",
+   "AllStates/AdpInputControl.RejectsShortFrame/2",
+   "AllStates/AdpInputControl.RejectsShortFrame/3",
+   "AllStates/AdpInputControl.RejectsShortFrame/4"
+  ]
+ },
+ "length-bound-over-strict": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AdpCore.A3toA5DiscoverAndDiscard",
+   "AllStates/AdpInputControl.ValidDiscovery/0",
+   "AllStates/AdpInputControl.ValidDiscovery/1",
+   "AllStates/AdpInputControl.ValidDiscovery/2",
+   "AllStates/AdpInputControl.ValidDiscovery/3",
+   "AllStates/AdpInputControl.ValidDiscovery/4"
+  ]
+ },
+ "cdl-mask-dropped-full-word": {
+  "rc": 0,
+  "status": "SURVIVED",
+  "failed_tests": []
+ },
+ "cdl-mask-10-bit": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/4"
+  ]
+ },
+ "cdl-checked-only-nonzero": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/4"
+  ]
+ },
+ "malformed-not-counted": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/4",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/4"
+  ]
+ },
+ "checks-only-in-waiting": {
+  "rc": 1,
+  "status": "KILLED",
+  "failed_tests": [
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+   "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+   "AllStates/AdpInputControl.RejectsWrongControlDataLength/3"
+  ]
+ }
+}

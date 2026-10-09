@@ -1,0 +1,16 @@
+cond 0 disabled               enabled=0 state=0 timer=0 available_owed=0 departing_owed=0 sends=0
+cond 1 DOWN(link down)        enabled=1 state=0 timer=0 available_owed=0 departing_owed=0 sends=0
+cond 2 DELAY                  enabled=1 state=2 timer=1 available_owed=0 departing_owed=0 sends=0
+cond 3 blocked-output DELAY   enabled=1 state=2 timer=0 available_owed=1 departing_owed=0 sends=0
+cond 4 WAITING                enabled=1 state=3 timer=2 available_owed=0 departing_owed=0 sends=1
+adp_build discover header bytes 12..17 match independent layout: yes
+valid global      : A
+valid own         : A
+version 1         : R
+len 81            : R
+len 26            : R
+cdl 0             : R
+cdl 56            : A
+valid_time 31 cdl 56 (upper 5 bits) : A
+sv=1 version 0    : A
+foreign target    : R
