@@ -1,0 +1,51 @@
+[
+  {
+    "configuration": "debug-no-dwarf",
+    "flags": [
+      "-DCTRL_REENTRY_ASSERT",
+      "-I.",
+      "-I$LANES/tsn-c-stack-acmp-publish/examples/rv32/include",
+      "-march=rv32i",
+      "-mabi=ilp32",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-nostdinc",
+      "-isystem",
+      "/usr/lib/gcc/riscv64-elf/16.2.0/include",
+      "-g0",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O0"
+    ],
+    "bytes": 36176,
+    "sha256": "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7",
+    "equal": true
+  },
+  {
+    "configuration": "release",
+    "flags": [
+      "-DCTRL_REENTRY_ASSERT",
+      "-I.",
+      "-I$LANES/tsn-c-stack-acmp-publish/examples/rv32/include",
+      "-march=rv32i",
+      "-mabi=ilp32",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-nostdinc",
+      "-isystem",
+      "/usr/lib/gcc/riscv64-elf/16.2.0/include",
+      "-g0",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O3",
+      "-DNDEBUG"
+    ],
+    "bytes": 30684,
+    "sha256": "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+    "equal": true
+  }
+]

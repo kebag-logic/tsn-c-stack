@@ -1,0 +1,5484 @@
+[
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 0,
+    "reference_bytes": [
+      0,
+      1612
+    ],
+    "ported_bytes": [
+      0,
+      124
+    ],
+    "reference_line": 1,
+    "ported_line": 1,
+    "reference": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: CERN-OHL-W-2.0\n//\n// acmp.c - Milan connection management (see acmp.h for the clauses it serves).\n//\n// Every public entry that changes state runs the same way: refuse a call made\n// from inside a port call (#678), act, reading the clock only when a deadline\n// is needed (once, and again after each probe the port accepts, which starts\n// its TMR_NO_RESP), then finish(): tell the publish port every sink whose\n// binding the datapath reads moved, arm each interface's timer at the\n// earliest deadline its sinks hold, tell the admit port every sink whose bound\n// talker moved, announce to the store every sink whose saved record moved,\n// and report every sink whose view moved and that holds no change behind an\n// owed response. The publish port is also told before any frame is sent, so\n// a response never leaves ahead of the state it promises.\n//\n// A sink's connection timer holds the one Table 5.29 timer its state owns\n// (TMR_DELAY in PRB_W_DELAY, TMR_NO_RESP in PRB_W_RESP and PRB_W_RESP2,\n// TMR_RETRY in PRB_W_RETRY, TMR_NO_TK in SETTLED_NO_RSV, none elsewhere), so\n// an expiry is read off the timer's kind. TMR_NO_RESP starts when the port\n// accepts the probe it times, from a clock read after that: at once, or held,\n// with no deadline, while the probe waits for transmit room. Its discovery\n// timer, TMR_NO_ADP, runs beside it and is armed only while the talker is\n// discovered.\n//\n// The random delay costs the same every time: one xorshift step and one\n// multiply, uniform to one part in 65536 over 0 to 1000 ms.\n\n",
+    "ported": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: MIT\n// Milan v1.2 Table 5.29\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "pre_F_INT": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: CERN-OHL-W-2.0\n//\n// acmp.c - Milan connection management (see acmp.h for the clauses it serves).\n//\n// Every public entry that changes state runs the same way: refuse a call made\n// from inside a port call (#678), act, reading the clock only when a deadline\n// is needed (once, and again after each probe the port accepts, which starts\n// its TMR_NO_RESP), then finish(): arm each interface's timer at the\n// earliest deadline its sinks hold, tell the admit port every sink whose bound\n// talker moved, announce to the store every sink whose saved record moved,\n// and report every sink whose view moved and that holds no change behind an\n// owed response.\n//\n// A sink's connection timer holds the one Table 5.29 timer its state owns\n// (TMR_DELAY in PRB_W_DELAY, TMR_NO_RESP in PRB_W_RESP and PRB_W_RESP2,\n// TMR_RETRY in PRB_W_RETRY, TMR_NO_TK in SETTLED_NO_RSV, none elsewhere), so\n// an expiry is read off the timer's kind. TMR_NO_RESP starts when the port\n// accepts the probe it times, from a clock read after that: at once, or held,\n// with no deadline, while the probe waits for transmit room. Its discovery\n// timer, TMR_NO_ADP, runs beside it and is armed only while the talker is\n// discovered.\n//\n// The random delay costs the same every time: one xorshift step and one\n// multiply, uniform to one part in 65536 over 0 to 1000 ms.\n\n",
+    "baseline": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: MIT\n// Milan v1.2 Table 5.29\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 40,
+    "reference_bytes": [
+      1794,
+      1902
+    ],
+    "ported_bytes": [
+      306,
+      340
+    ],
+    "reference_line": 39,
+    "ported_line": 37,
+    "reference": "\n\n// ACMPDU field offsets in the frame (IEEE 1722.1-2021 Figure 8-1, after the\n// 14-byte Ethernet header).\n",
+    "ported": "\n\n// IEEE 1722.1-2021 Figure 8-1\n\n",
+    "pre_F_INT_bytes": [
+      1600,
+      1708
+    ],
+    "baseline_bytes": [
+      306,
+      340
+    ],
+    "pre_F_INT_line": 37,
+    "baseline_line": 37,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 168,
+    "reference_bytes": [
+      2376,
+      2501
+    ],
+    "ported_bytes": [
+      814,
+      900
+    ],
+    "reference_line": 57,
+    "ported_line": 55,
+    "reference": "   // IEEE 1722-2016 Figure 5: bits 6:4 of byte 1\n\n// ADPDU field offsets in the frame (IEEE 1722.1-2021 Figure 6-1, 6.2.2).\n",
+    "ported": "   // IEEE 1722-2016 Figure 5\n\n// IEEE 1722.1-2021 Figure 6-1; IEEE 1722.1-2021 6.2.2\n",
+    "pre_F_INT_bytes": [
+      2182,
+      2307
+    ],
+    "baseline_bytes": [
+      814,
+      900
+    ],
+    "pre_F_INT_line": 55,
+    "baseline_line": 55,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 216,
+    "reference_bytes": [
+      2693,
+      2769
+    ],
+    "ported_bytes": [
+      1092,
+      1095
+    ],
+    "reference_line": 65,
+    "ported_line": 63,
+    "reference": "\n\n// The binding record's flags byte (KL_acmp_nvm_shadow's payload byte 0).\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      2499,
+      2575
+    ],
+    "baseline_bytes": [
+      1092,
+      1095
+    ],
+    "pre_F_INT_line": 63,
+    "baseline_line": 63,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 228,
+    "reference_bytes": [
+      2854,
+      2880
+    ],
+    "ported_bytes": [
+      1180,
+      1183
+    ],
+    "reference_line": 70,
+    "ported_line": 68,
+    "reference": "\n\n// One ACMPDU, decoded.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      2660,
+      2686
+    ],
+    "baseline_bytes": [
+      1180,
+      1183
+    ],
+    "pre_F_INT_line": 68,
+    "baseline_line": 68,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 272,
+    "reference_bytes": [
+      3138,
+      3227
+    ],
+    "ported_bytes": [
+      1441,
+      1445
+    ],
+    "reference_line": 87,
+    "ported_line": 85,
+    "reference": "\n\n// ---- ports, each call inside the re-entry flag (#678) ----------------------------\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      2944,
+      3033
+    ],
+    "baseline_bytes": [
+      1441,
+      1445
+    ],
+    "pre_F_INT_line": 85,
+    "baseline_line": 85,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 368,
+    "reference_bytes": [
+      3587,
+      3742
+    ],
+    "ported_bytes": [
+      1805,
+      1809
+    ],
+    "reference_line": 108,
+    "ported_line": 106,
+    "reference": "\n\n// The clock, read once per entry and only by an entry that sets a deadline;\n// a probe the port accepts makes the next call read it again (send_probe).\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      3393,
+      3548
+    ],
+    "baseline_bytes": [
+      1805,
+      1809
+    ],
+    "pre_F_INT_line": 106,
+    "baseline_line": 106,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 857,
+    "reference_bytes": [
+      5466,
+      5468
+    ],
+    "ported_bytes": [
+      3533,
+      3537
+    ],
+    "reference_line": 186,
+    "ported_line": 184,
+    "reference": "\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT": "\n\n// ---- the wire ----------------------------------------------------------------------\n\n",
+    "baseline": "\n\n\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 923,
+    "reference_bytes": [
+      5731,
+      5879
+    ],
+    "ported_bytes": [
+      3800,
+      3818
+    ],
+    "reference_line": 194,
+    "ported_line": 194,
+    "reference": "\n\n// The datapath's view of each sink (acmp.h): bound, started, and the settled\n// stream's id; the port is told only of a sink whose triple moved.\n",
+    "ported": "\n\n// REQ: ACMP-10\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1071,
+    "reference_bytes": [
+      6462,
+      6553
+    ],
+    "ported_bytes": [
+      4401,
+      4403
+    ],
+    "reference_line": 212,
+    "ported_line": 211,
+    "reference": "\n\n// ---- the wire ----------------------------------------------------------------------\n\n",
+    "ported": "\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1251,
+    "reference_bytes": [
+      7235,
+      7499
+    ],
+    "ported_bytes": [
+      5085,
+      5191
+    ],
+    "reference_line": 231,
+    "ported_line": 228,
+    "reference": "\n\n// The frame of `p` as this entity sends it on `interface`: to the ACMP\n// multicast address (IEEE 1722.1-2021 8.2.1), h and version 0 (8.2.1.2,\n// 8.2.1.3), the Milan control_data_length, connected_listeners_entries 0\n// (Milan v1.2 5.5.2.2: a reserved field).\n",
+    "ported": "\n\n// IEEE 1722.1-2021 8.2.1\n// IEEE 1722.1-2021 8.2.1.2\n// IEEE 1722.1-2021 8.2.1.3\n// Milan v1.2 5.5.2.2\n",
+    "pre_F_INT_bytes": [
+      6045,
+      6309
+    ],
+    "baseline_bytes": [
+      4219,
+      4325
+    ],
+    "pre_F_INT_line": 203,
+    "baseline_line": 203,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1506,
+    "reference_bytes": [
+      8461,
+      8678
+    ],
+    "ported_bytes": [
+      6153,
+      6158
+    ],
+    "reference_line": 257,
+    "ported_line": 254,
+    "reference": "\n\n// A response to `cmd` carrying every field its table gives as \"Same value as\n// in the command message\", and 0 in every other field (the tables' 0 and,\n// where they say \"Undefined\", a value the receiver ignores).\n",
+    "ported": "\n\n\n\n\n",
+    "pre_F_INT_bytes": [
+      7271,
+      7488
+    ],
+    "baseline_bytes": [
+      5287,
+      5292
+    ],
+    "pre_F_INT_line": 229,
+    "baseline_line": 229,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1609,
+    "reference_bytes": [
+      9026,
+      9117
+    ],
+    "ported_bytes": [
+      6506,
+      6510
+    ],
+    "reference_line": 275,
+    "ported_line": 272,
+    "reference": "\n\n// ---- owed frames, in order ---------------------------------------------------------\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      7836,
+      7927
+    ],
+    "baseline_bytes": [
+      5640,
+      5644
+    ],
+    "pre_F_INT_line": 247,
+    "baseline_line": 247,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1619,
+    "reference_bytes": [
+      9148,
+      9405
+    ],
+    "ported_bytes": [
+      6541,
+      6547
+    ],
+    "reference_line": 279,
+    "ported_line": 276,
+    "reference": "\n\n// Send a frame now, or queue it behind those already owed. `release` names the\n// sinks whose change may be reported only once this frame has left; a probe\n// names its sink in `probe_of` (1 + the sink, 0 for a response). LOST when the\n// queue is full.\n",
+    "ported": "\n\n\n\n\n\n",
+    "pre_F_INT_bytes": [
+      7958,
+      8215
+    ],
+    "baseline_bytes": [
+      5675,
+      5681
+    ],
+    "pre_F_INT_line": 251,
+    "baseline_line": 251,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1809,
+    "reference_bytes": [
+      10093,
+      10170
+    ],
+    "ported_bytes": [
+      7235,
+      7238
+    ],
+    "reference_line": 306,
+    "ported_line": 303,
+    "reference": "\n\n// A response; the command that asked for it saw room for it in the queue.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      8890,
+      8967
+    ],
+    "baseline_bytes": [
+      6356,
+      6359
+    ],
+    "pre_F_INT_line": 277,
+    "baseline_line": 277,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1865,
+    "reference_bytes": [
+      10385,
+      10483
+    ],
+    "ported_bytes": [
+      7453,
+      7457
+    ],
+    "reference_line": 314,
+    "ported_line": 311,
+    "reference": "\n\n// Room for one more frame; a command that finds none is dropped before it\n// changes anything.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      9182,
+      9280
+    ],
+    "baseline_bytes": [
+      6574,
+      6578
+    ],
+    "pre_F_INT_line": 285,
+    "baseline_line": 285,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1897,
+    "reference_bytes": [
+      10608,
+      10697
+    ],
+    "ported_bytes": [
+      7582,
+      7586
+    ],
+    "reference_line": 325,
+    "ported_line": 322,
+    "reference": "\n\n// ---- timers ----------------------------------------------------------------------\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      9405,
+      9494
+    ],
+    "baseline_bytes": [
+      6703,
+      6707
+    ],
+    "pre_F_INT_line": 296,
+    "baseline_line": 296,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 1990,
+    "reference_bytes": [
+      11072,
+      11143
+    ],
+    "ported_bytes": [
+      7961,
+      7964
+    ],
+    "reference_line": 345,
+    "ported_line": 342,
+    "reference": "\n\n// The connection timer runs: armed, and not held for an owed probe.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      9869,
+      9940
+    ],
+    "baseline_bytes": [
+      7082,
+      7085
+    ],
+    "pre_F_INT_line": 316,
+    "baseline_line": 316,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2014,
+    "reference_bytes": [
+      11251,
+      11394
+    ],
+    "ported_bytes": [
+      8072,
+      8076
+    ],
+    "reference_line": 351,
+    "ported_line": 348,
+    "reference": "\n\n// The seed is taken at the first draw, inside the event loop: nothing reads the\n// mailbox before the contract is checked (ctrl_loop_open).\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      10048,
+      10191
+    ],
+    "baseline_bytes": [
+      7193,
+      7197
+    ],
+    "pre_F_INT_line": 322,
+    "baseline_line": 322,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2062,
+    "reference_bytes": [
+      11535,
+      11592
+    ],
+    "ported_bytes": [
+      8217,
+      8220
+    ],
+    "reference_line": 361,
+    "ported_line": 358,
+    "reference": "                            // xorshift never leaves 0\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      10332,
+      10389
+    ],
+    "baseline_bytes": [
+      7338,
+      7341
+    ],
+    "pre_F_INT_line": 332,
+    "baseline_line": 332,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2129,
+    "reference_bytes": [
+      11790,
+      11852
+    ],
+    "ported_bytes": [
+      8418,
+      8421
+    ],
+    "reference_line": 373,
+    "ported_line": 370,
+    "reference": "\n\n// The earlier of a deadline and the earliest found so far.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      10587,
+      10649
+    ],
+    "baseline_bytes": [
+      7539,
+      7542
+    ],
+    "pre_F_INT_line": 344,
+    "baseline_line": 344,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2183,
+    "reference_bytes": [
+      12026,
+      12157
+    ],
+    "ported_bytes": [
+      8595,
+      8599
+    ],
+    "reference_line": 382,
+    "ported_line": 379,
+    "reference": "\n\n// Arm each interface's timer at the earliest deadline its sinks hold, or stop\n// it; the port is called only when that changes.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      10823,
+      10954
+    ],
+    "baseline_bytes": [
+      7716,
+      7720
+    ],
+    "pre_F_INT_line": 353,
+    "baseline_line": 353,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2392,
+    "reference_bytes": [
+      12784,
+      12877
+    ],
+    "ported_bytes": [
+      9226,
+      9230
+    ],
+    "reference_line": 407,
+    "ported_line": 404,
+    "reference": "\n\n// ---- the view, the saved record and the reports --------------------------------------\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      11581,
+      11674
+    ],
+    "baseline_bytes": [
+      8347,
+      8351
+    ],
+    "pre_F_INT_line": 378,
+    "baseline_line": 378,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2530,
+    "reference_bytes": [
+      13430,
+      13795
+    ],
+    "ported_bytes": [
+      9783,
+      9814
+    ],
+    "reference_line": 427,
+    "ported_line": 424,
+    "reference": "\n\n// Whether a GET_STREAM_INFO notification is due: Milan v1.2 Table 5.22's\n// STREAM_INPUT items (the bound state, the started/stopped state, the probing\n// and ACMP status, the stream ID, destination MAC and VLAN ID, and the MSRP\n// Talker attribute registration state) are the same in both views. Every item\n// is compared, in one expression with no early exit.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.22\n\n\n\n\n",
+    "pre_F_INT_bytes": [
+      12227,
+      12592
+    ],
+    "baseline_bytes": [
+      8904,
+      8935
+    ],
+    "pre_F_INT_line": 398,
+    "baseline_line": 398,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2685,
+    "reference_bytes": [
+      14390,
+      14548
+    ],
+    "ported_bytes": [
+      10409,
+      10436
+    ],
+    "reference_line": 443,
+    "ported_line": 440,
+    "reference": "\n\n// The saved binding record (acmp.h): an unbound sink's is all zeros, which is\n// how the store saves an unbind (5.5.3.5.8 step 3: the parameters cleared).\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.8\n\n",
+    "pre_F_INT_bytes": [
+      13187,
+      13345
+    ],
+    "baseline_bytes": [
+      9530,
+      9557
+    ],
+    "pre_F_INT_line": 414,
+    "baseline_line": 414,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2799,
+    "reference_bytes": [
+      15024,
+      15133
+    ],
+    "ported_bytes": [
+      10912,
+      10916
+    ],
+    "reference_line": 457,
+    "ported_line": 454,
+    "reference": "\n\n// Two binding records, byte for byte (no memcmp: the freestanding build links\n// memset and memcpy only).\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      13821,
+      13930
+    ],
+    "baseline_bytes": [
+      10033,
+      10037
+    ],
+    "pre_F_INT_line": 428,
+    "baseline_line": 428,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2858,
+    "reference_bytes": [
+      15325,
+      15514
+    ],
+    "ported_bytes": [
+      11108,
+      11134
+    ],
+    "reference_line": 468,
+    "ported_line": 465,
+    "reference": "\n\n// The ingress passes the ENTITY_AVAILABLE and ENTITY_DEPARTING of each bound\n// sink's talker on its interface (5.6.4.1); the port is called only for a sink\n// whose bound talker moved.\n",
+    "ported": "\n\n// Milan v1.2 5.6.4.1\n\n\n",
+    "pre_F_INT_bytes": [
+      14122,
+      14311
+    ],
+    "baseline_bytes": [
+      10229,
+      10255
+    ],
+    "pre_F_INT_line": 439,
+    "baseline_line": 439,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 2966,
+    "reference_bytes": [
+      15882,
+      15990
+    ],
+    "ported_bytes": [
+      11502,
+      11505
+    ],
+    "reference_line": 484,
+    "ported_line": 481,
+    "reference": "\n\n// After every entry: the datapath's view, the timers, the ingress, then the\n// store, then the notifier.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT": "\n\n// After every entry: the timers, the ingress, then the store, then the notifier.\n",
+    "baseline": "\n\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3117,
+    "reference_bytes": [
+      16480,
+      16703
+    ],
+    "ported_bytes": [
+      11995,
+      12023
+    ],
+    "reference_line": 508,
+    "ported_line": 504,
+    "reference": "\n\n// A sink as the configuration starts it, and as a restore or a roll-back\n// leaves it: UNBOUND, probing disabled, nothing running (5.5.3.5.1). What the\n// admit and publish ports hold is not the sink's state, and stays.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.1\n\n\n",
+    "pre_F_INT": "\n\n// A sink as the configuration starts it, and as a restore or a roll-back\n// leaves it: UNBOUND, probing disabled, nothing running (5.5.3.5.1). What the\n// admit port holds is not the sink's state, and stays.\n",
+    "baseline": "\n\n// Milan v1.2 5.5.3.5.1\n\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3245,
+    "reference_bytes": [
+      17332,
+      17464
+    ],
+    "ported_bytes": [
+      12652,
+      12656
+    ],
+    "reference_line": 530,
+    "ported_line": 526,
+    "reference": "\n\n// The store and the notifier are told nothing about a state they did not\n// see change: what a boot set is what they start from.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      15815,
+      15947
+    ],
+    "baseline_bytes": [
+      11495,
+      11499
+    ],
+    "pre_F_INT_line": 493,
+    "baseline_line": 493,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3275,
+    "reference_bytes": [
+      17564,
+      17659
+    ],
+    "ported_bytes": [
+      12756,
+      12779
+    ],
+    "reference_line": 538,
+    "ported_line": 534,
+    "reference": "\n\n// ---- discovery (5.6.4) and the events it raises ----------------------------------------\n\n",
+    "ported": "\n\n// Milan v1.2 5.6.4\n\n",
+    "pre_F_INT_bytes": [
+      16047,
+      16142
+    ],
+    "baseline_bytes": [
+      11599,
+      11622
+    ],
+    "pre_F_INT_line": 501,
+    "baseline_line": 501,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3297,
+    "reference_bytes": [
+      17753,
+      17823
+    ],
+    "ported_bytes": [
+      12873,
+      12875
+    ],
+    "reference_line": 545,
+    "ported_line": 541,
+    "reference": "                  // \"at this point, talker has not been discovered\"\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      16236,
+      16306
+    ],
+    "baseline_bytes": [
+      11716,
+      11718
+    ],
+    "pre_F_INT_line": 508,
+    "baseline_line": 508,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3333,
+    "reference_bytes": [
+      17967,
+      18022
+    ],
+    "ported_bytes": [
+      13019,
+      13022
+    ],
+    "reference_line": 554,
+    "ported_line": 550,
+    "reference": "\n\n// Start the random TMR_DELAY and go to PRB_W_DELAY.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      16450,
+      16505
+    ],
+    "baseline_bytes": [
+      11862,
+      11865
+    ],
+    "pre_F_INT_line": 517,
+    "baseline_line": 517,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3369,
+    "reference_bytes": [
+      18157,
+      18313
+    ],
+    "ported_bytes": [
+      13157,
+      13185
+    ],
+    "reference_line": 561,
+    "ported_line": 557,
+    "reference": "\n\n// \"set the Probing status to PROBING_PASSIVE and ACMP status to 0 and go to\n// the PRB_W_AVAIL state\" (5.5.3.5.15 and the others that end the same way).\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.15\n\n",
+    "pre_F_INT_bytes": [
+      16640,
+      16796
+    ],
+    "baseline_bytes": [
+      12000,
+      12028
+    ],
+    "pre_F_INT_line": 524,
+    "baseline_line": 524,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3398,
+    "reference_bytes": [
+      18462,
+      18530
+    ],
+    "ported_bytes": [
+      13334,
+      13376
+    ],
+    "reference_line": 570,
+    "ported_line": 566,
+    "reference": "\n\n// 5.5.3.5.36 and 5.5.3.5.48 steps 2 and 3, once SRP has stopped.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.36 and 5.5.3.5.48\n",
+    "pre_F_INT_bytes": [
+      16945,
+      17013
+    ],
+    "baseline_bytes": [
+      12177,
+      12219
+    ],
+    "pre_F_INT_line": 533,
+    "baseline_line": 533,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3449,
+    "reference_bytes": [
+      18728,
+      18927
+    ],
+    "ported_bytes": [
+      13574,
+      13626
+    ],
+    "reference_line": 582,
+    "ported_line": 578,
+    "reference": "\n\n// EVT_TK_DISCOVERED: 5.5.3.5.9 in PRB_W_AVAIL; noted in every other bound\n// state (5.5.3.5.14, .21, .28, .34, .40, .46). Discovery runs only while the\n// sink is bound, so UNBOUND never sees it.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.9\n// Milan v1.2 5.5.3.5.14\n\n",
+    "pre_F_INT_bytes": [
+      17211,
+      17410
+    ],
+    "baseline_bytes": [
+      12417,
+      12469
+    ],
+    "pre_F_INT_line": 545,
+    "baseline_line": 545,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3500,
+    "reference_bytes": [
+      19147,
+      19395
+    ],
+    "ported_bytes": [
+      13846,
+      13924
+    ],
+    "reference_line": 595,
+    "ported_line": 591,
+    "reference": "\n\n// EVT_TK_DEPARTED: 5.5.3.5.15, .22, .29 and .35 stop the probing state's timer\n// and go to PRB_W_AVAIL; settled, it is noted only (5.5.3.5.41, .47). The\n// talker is never discovered in PRB_W_AVAIL, so that cell (Table 5.30 \"x\")\n// never runs.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.15\n// Milan v1.2 5.5.3.5.41\n// Milan v1.2 Table 5.30\n\n",
+    "pre_F_INT_bytes": [
+      17630,
+      17878
+    ],
+    "baseline_bytes": [
+      12689,
+      12767
+    ],
+    "pre_F_INT_line": 558,
+    "baseline_line": 558,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3591,
+    "reference_bytes": [
+      19776,
+      19932
+    ],
+    "ported_bytes": [
+      14305,
+      14309
+    ],
+    "reference_line": 615,
+    "ported_line": 611,
+    "reference": "\n\n// One received ADPDU's fields, and this port's gPTP pair, sampled only when a\n// guard reads it: the periodic refresh of a discovered talker reads none.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      18259,
+      18415
+    ],
+    "baseline_bytes": [
+      13148,
+      13152
+    ],
+    "pre_F_INT_line": 578,
+    "baseline_line": 578,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3623,
+    "reference_bytes": [
+      20111,
+      20209
+    ],
+    "ported_bytes": [
+      14488,
+      14538
+    ],
+    "reference_line": 629,
+    "ported_line": 625,
+    "reference": "\n\n// The ADPDU's grandmaster and domain are this port's (5.6.4.5.1 step 1,\n// 5.6.4.5.2 step 2b).\n",
+    "ported": "\n\n// Milan v1.2 5.6.4.5.1\n// Milan v1.2 5.6.4.5.2\n",
+    "pre_F_INT_bytes": [
+      18594,
+      18692
+    ],
+    "baseline_bytes": [
+      13331,
+      13381
+    ],
+    "pre_F_INT_line": 592,
+    "baseline_line": 592,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3690,
+    "reference_bytes": [
+      20433,
+      20517
+    ],
+    "ported_bytes": [
+      14762,
+      14810
+    ],
+    "reference_line": 640,
+    "ported_line": 636,
+    "reference": "\n\n// RCV_ADP_AVAILABLE: 5.6.4.5.1 in TK_NOT_DISCOVERED, 5.6.4.5.2 in TK_DISCOVERED.\n",
+    "ported": "\n\n// Milan v1.2 5.6.4.5.1; Milan v1.2 5.6.4.5.2\n",
+    "pre_F_INT_bytes": [
+      18916,
+      19000
+    ],
+    "baseline_bytes": [
+      13605,
+      13653
+    ],
+    "pre_F_INT_line": 603,
+    "baseline_line": 603,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3752,
+    "reference_bytes": [
+      20746,
+      20801
+    ],
+    "ported_bytes": [
+      15039,
+      15098
+    ],
+    "reference_line": 650,
+    "ported_line": 646,
+    "reference": "                                 // 5.6.4.5.1 step 1\n\t\t",
+    "ported": "                                 // Milan v1.2 5.6.4.5.1\n\t\t",
+    "pre_F_INT_bytes": [
+      19229,
+      19284
+    ],
+    "baseline_bytes": [
+      13882,
+      13941
+    ],
+    "pre_F_INT_line": 613,
+    "baseline_line": 613,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3759,
+    "reference_bytes": [
+      20835,
+      20865
+    ],
+    "ported_bytes": [
+      15132,
+      15135
+    ],
+    "reference_line": 652,
+    "ported_line": 648,
+    "reference": "                  // step 2\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      19318,
+      19348
+    ],
+    "baseline_bytes": [
+      13975,
+      13978
+    ],
+    "pre_F_INT_line": 615,
+    "baseline_line": 615,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3774,
+    "reference_bytes": [
+      20924,
+      20960
+    ],
+    "ported_bytes": [
+      15194,
+      15197
+    ],
+    "reference_line": 654,
+    "ported_line": 650,
+    "reference": "                        // step 3\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      19407,
+      19443
+    ],
+    "baseline_bytes": [
+      14037,
+      14040
+    ],
+    "pre_F_INT_line": 617,
+    "baseline_line": 617,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3781,
+    "reference_bytes": [
+      20980,
+      21020
+    ],
+    "ported_bytes": [
+      15217,
+      15220
+    ],
+    "reference_line": 655,
+    "ported_line": 651,
+    "reference": "                            // step 4\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      19463,
+      19503
+    ],
+    "baseline_bytes": [
+      14060,
+      14063
+    ],
+    "pre_F_INT_line": 618,
+    "baseline_line": 618,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3795,
+    "reference_bytes": [
+      21079,
+      21141
+    ],
+    "ported_bytes": [
+      15279,
+      15345
+    ],
+    "reference_line": 659,
+    "ported_line": 655,
+    "reference": "                                         // 5.6.4.5.2 step 1\n\t",
+    "ported": "                                         // Milan v1.2 5.6.4.5.2\n\t",
+    "pre_F_INT_bytes": [
+      19562,
+      19624
+    ],
+    "baseline_bytes": [
+      14122,
+      14188
+    ],
+    "pre_F_INT_line": 622,
+    "baseline_line": 622,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3805,
+    "reference_bytes": [
+      21183,
+      21238
+    ],
+    "ported_bytes": [
+      15387,
+      15390
+    ],
+    "reference_line": 661,
+    "ported_line": 657,
+    "reference": "                 // step 2: a new availability cycle\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      19666,
+      19721
+    ],
+    "baseline_bytes": [
+      14230,
+      14233
+    ],
+    "pre_F_INT_line": 624,
+    "baseline_line": 624,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3810,
+    "reference_bytes": [
+      21253,
+      21294
+    ],
+    "ported_bytes": [
+      15405,
+      15408
+    ],
+    "reference_line": 662,
+    "ported_line": 658,
+    "reference": "                                 // 2a\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      19736,
+      19777
+    ],
+    "baseline_bytes": [
+      14248,
+      14251
+    ],
+    "pre_F_INT_line": 625,
+    "baseline_line": 625,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3827,
+    "reference_bytes": [
+      21343,
+      21401
+    ],
+    "ported_bytes": [
+      15457,
+      15461
+    ],
+    "reference_line": 664,
+    "ported_line": 660,
+    "reference": "                   // 2b: TK_NOT_DISCOVERED, no step 3\n\t\t\t",
+    "ported": "\n\t\t\t",
+    "pre_F_INT_bytes": [
+      19826,
+      19884
+    ],
+    "baseline_bytes": [
+      14300,
+      14304
+    ],
+    "pre_F_INT_line": 627,
+    "baseline_line": 627,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3837,
+    "reference_bytes": [
+      21435,
+      21470
+    ],
+    "ported_bytes": [
+      15495,
+      15497
+    ],
+    "reference_line": 667,
+    "ported_line": 663,
+    "reference": "                            // 2c\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19918,
+      19953
+    ],
+    "baseline_bytes": [
+      14338,
+      14340
+    ],
+    "pre_F_INT_line": 630,
+    "baseline_line": 630,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3844,
+    "reference_bytes": [
+      21505,
+      21540
+    ],
+    "ported_bytes": [
+      15532,
+      15534
+    ],
+    "reference_line": 669,
+    "ported_line": 665,
+    "reference": "                        // step 3\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19988,
+      20023
+    ],
+    "baseline_bytes": [
+      14375,
+      14377
+    ],
+    "pre_F_INT_line": 632,
+    "baseline_line": 632,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3854,
+    "reference_bytes": [
+      21566,
+      21668
+    ],
+    "ported_bytes": [
+      15560,
+      15611
+    ],
+    "reference_line": 671,
+    "ported_line": 667,
+    "reference": "\n\n// RCV_ADP_DEPARTING: ignored in TK_NOT_DISCOVERED (Table 5.54 \"-\"), 5.6.4.5.3\n// in TK_DISCOVERED.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.54\n// Milan v1.2 5.6.4.5.3\n",
+    "pre_F_INT_bytes": [
+      20049,
+      20151
+    ],
+    "baseline_bytes": [
+      14403,
+      14454
+    ],
+    "pre_F_INT_line": 634,
+    "baseline_line": 634,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3896,
+    "reference_bytes": [
+      21843,
+      22065
+    ],
+    "ported_bytes": [
+      15786,
+      15816
+    ],
+    "reference_line": 682,
+    "ported_line": 678,
+    "reference": "\n\n// ---- the listener's actions ----------------------------------------------------------\n\n// \"Clear the SRP parameters and stop SRP\", from a settled state: the only\n// states that listen (5.5.3.5.18 step 4 started it).\n",
+    "ported": "\n\n\n\n// Milan v1.2 5.5.3.5.18\n\n",
+    "pre_F_INT_bytes": [
+      20326,
+      20548
+    ],
+    "baseline_bytes": [
+      14629,
+      14659
+    ],
+    "pre_F_INT_line": 645,
+    "baseline_line": 645,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3953,
+    "reference_bytes": [
+      22239,
+      22392
+    ],
+    "ported_bytes": [
+      15990,
+      15994
+    ],
+    "reference_line": 694,
+    "ported_line": 690,
+    "reference": "\n\n// TMR_NO_RESP of a sink whose probe the port has just accepted: 200 ms from a\n// clock read after that send, never from one the entry made before it.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      20722,
+      20875
+    ],
+    "baseline_bytes": [
+      14833,
+      14837
+    ],
+    "pre_F_INT_line": 657,
+    "baseline_line": 657,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 3986,
+    "reference_bytes": [
+      22542,
+      22945
+    ],
+    "ported_bytes": [
+      16144,
+      16223
+    ],
+    "reference_line": 702,
+    "ported_line": 698,
+    "reference": "\n\n// The sink's saved PROBE_TX_COMMAND (Table 5.33) on its interface, then\n// TMR_NO_RESP 200 ms from the send the port accepts (5.5.3.5.3 steps 5 to 7,\n// 5.5.3.5.16 steps 1 and 2): taken at once, from the clock after the send; owed\n// behind others, held until acmp_poll sends the probe (probe_left). A probe\n// the queue has no room for is lost and TMR_NO_RESP, run from the attempt,\n// recovers it.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.33\n// Milan v1.2 5.5.3.5.3\n// Milan v1.2 5.5.3.5.16\n\n\n\n",
+    "pre_F_INT_bytes": [
+      21025,
+      21428
+    ],
+    "baseline_bytes": [
+      14987,
+      15066
+    ],
+    "pre_F_INT_line": 665,
+    "baseline_line": 665,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4187,
+    "reference_bytes": [
+      23696,
+      23925
+    ],
+    "ported_bytes": [
+      16974,
+      17026
+    ],
+    "reference_line": 735,
+    "ported_line": 731,
+    "reference": "\n\n// An owed frame has left. When it is the probe a sink's held TMR_NO_RESP waits\n// for (its sequence_id the sink's current probe's: a probe re-bound since is\n// not), the timer starts now (5.5.3.5.3 step 7, 5.5.3.5.16 step 2).\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.3\n// Milan v1.2 5.5.3.5.16\n\n",
+    "pre_F_INT_bytes": [
+      22179,
+      22408
+    ],
+    "baseline_bytes": [
+      15817,
+      15869
+    ],
+    "pre_F_INT_line": 698,
+    "baseline_line": 698,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4261,
+    "reference_bytes": [
+      24184,
+      24326
+    ],
+    "ported_bytes": [
+      17285,
+      17340
+    ],
+    "reference_line": 749,
+    "ported_line": 745,
+    "reference": "\n\n// A new PROBE_TX_COMMAND from the binding, with the next sequence_id\n// (IEEE 1722.1-2021 8.2.1.15), and its copy kept (5.5.3.5.3 step 6).\n",
+    "ported": "\n\n// IEEE 1722.1-2021 8.2.1.15\n// Milan v1.2 5.5.3.5.3\n",
+    "pre_F_INT_bytes": [
+      22667,
+      22809
+    ],
+    "baseline_bytes": [
+      16128,
+      16183
+    ],
+    "pre_F_INT_line": 712,
+    "baseline_line": 712,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4354,
+    "reference_bytes": [
+      24697,
+      24742
+    ],
+    "ported_bytes": [
+      17711,
+      17714
+    ],
+    "reference_line": 763,
+    "ported_line": 759,
+    "reference": "\n\n// The connection timer of sink k expired.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      23180,
+      23225
+    ],
+    "baseline_bytes": [
+      16554,
+      16557
+    ],
+    "pre_F_INT_line": 726,
+    "baseline_line": 726,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4400,
+    "reference_bytes": [
+      24911,
+      24952
+    ],
+    "ported_bytes": [
+      17883,
+      17935
+    ],
+    "reference_line": 771,
+    "ported_line": 767,
+    "reference": "                         // 5.5.3.5.10\n\t\t",
+    "ported": "                         // Milan v1.2 5.5.3.5.10\n\t\t",
+    "pre_F_INT_bytes": [
+      23394,
+      23435
+    ],
+    "baseline_bytes": [
+      16726,
+      16778
+    ],
+    "pre_F_INT_line": 734,
+    "baseline_line": 734,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4428,
+    "reference_bytes": [
+      25067,
+      25086
+    ],
+    "ported_bytes": [
+      18050,
+      18080
+    ],
+    "reference_line": 774,
+    "ported_line": 770,
+    "reference": "   // 5.5.3.5.16\n\t\t",
+    "ported": "   // Milan v1.2 5.5.3.5.16\n\t\t",
+    "pre_F_INT_bytes": [
+      23550,
+      23569
+    ],
+    "baseline_bytes": [
+      16893,
+      16923
+    ],
+    "pre_F_INT_line": 737,
+    "baseline_line": 737,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4441,
+    "reference_bytes": [
+      25130,
+      25187
+    ],
+    "ported_bytes": [
+      18124,
+      18127
+    ],
+    "reference_line": 776,
+    "ported_line": 772,
+    "reference": "                               // the same sequence_id\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      23613,
+      23670
+    ],
+    "baseline_bytes": [
+      16967,
+      16970
+    ],
+    "pre_F_INT_line": 739,
+    "baseline_line": 739,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4456,
+    "reference_bytes": [
+      25257,
+      25305
+    ],
+    "ported_bytes": [
+      18197,
+      18240
+    ],
+    "reference_line": 778,
+    "ported_line": 774,
+    "reference": "                // 5.5.3.5.23, in PRB_W_RESP2\n\t\t",
+    "ported": "                // Milan v1.2 5.5.3.5.23\n\t\t",
+    "pre_F_INT_bytes": [
+      23740,
+      23788
+    ],
+    "baseline_bytes": [
+      17040,
+      17083
+    ],
+    "pre_F_INT_line": 741,
+    "baseline_line": 741,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4493,
+    "reference_bytes": [
+      25502,
+      25528
+    ],
+    "ported_bytes": [
+      18437,
+      18467
+    ],
+    "reference_line": 782,
+    "ported_line": 778,
+    "reference": "   // 5.5.3.5.30 step 1\n\t\t",
+    "ported": "   // Milan v1.2 5.5.3.5.30\n\t\t",
+    "pre_F_INT_bytes": [
+      23985,
+      24011
+    ],
+    "baseline_bytes": [
+      17280,
+      17310
+    ],
+    "pre_F_INT_line": 745,
+    "baseline_line": 745,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4507,
+    "reference_bytes": [
+      25579,
+      25632
+    ],
+    "ported_bytes": [
+      18518,
+      18521
+    ],
+    "reference_line": 784,
+    "ported_line": 780,
+    "reference": "                  // step 2: the ACMP status stays\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      24062,
+      24115
+    ],
+    "baseline_bytes": [
+      17361,
+      17364
+    ],
+    "pre_F_INT_line": 747,
+    "baseline_line": 747,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4517,
+    "reference_bytes": [
+      25654,
+      25729
+    ],
+    "ported_bytes": [
+      18543,
+      18618
+    ],
+    "reference_line": 786,
+    "ported_line": 782,
+    "reference": "                                                // 5.5.3.5.36, TMR_NO_TK\n\t\t",
+    "ported": "                                                // Milan v1.2 5.5.3.5.36\n\t\t",
+    "pre_F_INT_bytes": [
+      24137,
+      24212
+    ],
+    "baseline_bytes": [
+      17386,
+      17461
+    ],
+    "pre_F_INT_line": 749,
+    "baseline_line": 749,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4533,
+    "reference_bytes": [
+      25766,
+      25857
+    ],
+    "ported_bytes": [
+      18655,
+      18680
+    ],
+    "reference_line": 790,
+    "ported_line": 786,
+    "reference": "\n\n// ---- the listener's commands (5.5.3.1) ---------------------------------------------\n\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.1\n\n",
+    "pre_F_INT_bytes": [
+      24249,
+      24340
+    ],
+    "baseline_bytes": [
+      17498,
+      17523
+    ],
+    "pre_F_INT_line": 753,
+    "baseline_line": 753,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4617,
+    "reference_bytes": [
+      26208,
+      26236
+    ],
+    "ported_bytes": [
+      19031,
+      19070
+    ],
+    "reference_line": 806,
+    "ported_line": 802,
+    "reference": "             // Table 5.32\n\t",
+    "ported": "             // Milan v1.2 Table 5.32\n\t",
+    "pre_F_INT_bytes": [
+      24691,
+      24719
+    ],
+    "baseline_bytes": [
+      17874,
+      17913
+    ],
+    "pre_F_INT_line": 769,
+    "baseline_line": 769,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4648,
+    "reference_bytes": [
+      26338,
+      26420
+    ],
+    "ported_bytes": [
+      19172,
+      19198
+    ],
+    "reference_line": 810,
+    "ported_line": 806,
+    "reference": "\n\n// RCV_BIND_RX_CMD in every state: 5.5.3.5.3, .6, .11, .17, .24, .31, .37, .43.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.3\n",
+    "pre_F_INT_bytes": [
+      24821,
+      24903
+    ],
+    "baseline_bytes": [
+      18015,
+      18041
+    ],
+    "pre_F_INT_line": 773,
+    "baseline_line": 773,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4723,
+    "reference_bytes": [
+      26717,
+      26792
+    ],
+    "ported_bytes": [
+      19495,
+      19499
+    ],
+    "reference_line": 817,
+    "ported_line": 813,
+    "reference": "\n\t\t// step 2: the same source; the controller and STREAMING_WAIT updated\n\t\t",
+    "ported": "\n\n\t\t",
+    "pre_F_INT_bytes": [
+      25200,
+      25275
+    ],
+    "baseline_bytes": [
+      18338,
+      18342
+    ],
+    "pre_F_INT_line": 780,
+    "baseline_line": 780,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4784,
+    "reference_bytes": [
+      27041,
+      27104
+    ],
+    "ported_bytes": [
+      19748,
+      19807
+    ],
+    "reference_line": 826,
+    "ported_line": 822,
+    "reference": "                                 // 5.5.3.5.37 and .43 step 3\n\t",
+    "ported": "                                 // Milan v1.2 5.5.3.5.37\n\t",
+    "pre_F_INT_bytes": [
+      25524,
+      25587
+    ],
+    "baseline_bytes": [
+      18591,
+      18650
+    ],
+    "pre_F_INT_line": 789,
+    "baseline_line": 789,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4839,
+    "reference_bytes": [
+      27328,
+      27445
+    ],
+    "ported_bytes": [
+      20031,
+      20057
+    ],
+    "reference_line": 834,
+    "ported_line": 830,
+    "reference": "\n\t// IEEE 1722.1-2021 7.4.35: a stream bound with STREAMING_WAIT waits for\n\t// START_STREAMING (Milan v1.2 5.3.8.7)\n\t",
+    "ported": "\n\t// Milan v1.2 5.3.8.7\n\n\t",
+    "pre_F_INT_bytes": [
+      25811,
+      25928
+    ],
+    "baseline_bytes": [
+      18874,
+      18900
+    ],
+    "pre_F_INT_line": 797,
+    "baseline_line": 797,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 4888,
+    "reference_bytes": [
+      27635,
+      27788
+    ],
+    "ported_bytes": [
+      20247,
+      20274
+    ],
+    "reference_line": 844,
+    "ported_line": 840,
+    "reference": "\n\n// RCV_UNBIND_RX_CMD in every state: 5.5.3.5.5, .8, .13, .20, .27, .33, .39,\n// .45. From UNBOUND every step but the response finds nothing to change.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.5\n\n",
+    "pre_F_INT_bytes": [
+      26118,
+      26271
+    ],
+    "baseline_bytes": [
+      19090,
+      19117
+    ],
+    "pre_F_INT_line": 807,
+    "baseline_line": 807,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5006,
+    "reference_bytes": [
+      28248,
+      28276
+    ],
+    "ported_bytes": [
+      20734,
+      20773
+    ],
+    "reference_line": 861,
+    "ported_line": 857,
+    "reference": "             // Table 5.36\n\t",
+    "ported": "             // Milan v1.2 Table 5.36\n\t",
+    "pre_F_INT_bytes": [
+      26731,
+      26759
+    ],
+    "baseline_bytes": [
+      19577,
+      19616
+    ],
+    "pre_F_INT_line": 824,
+    "baseline_line": 824,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5039,
+    "reference_bytes": [
+      28375,
+      28447
+    ],
+    "ported_bytes": [
+      20872,
+      20954
+    ],
+    "reference_line": 866,
+    "ported_line": 862,
+    "reference": "\n\n// RCV_GET_RX_STATE in every state: Tables 5.34, 5.37, 5.38 and 5.39.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.34; Milan v1.2 Table 5.37; Milan v1.2 Table 5.38 and 5.39\n",
+    "pre_F_INT_bytes": [
+      26858,
+      26930
+    ],
+    "baseline_bytes": [
+      19715,
+      19797
+    ],
+    "pre_F_INT_line": 829,
+    "baseline_line": 829,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5287,
+    "reference_bytes": [
+      29447,
+      29472
+    ],
+    "ported_bytes": [
+      21954,
+      21990
+    ],
+    "reference_line": 898,
+    "ported_line": 894,
+    "reference": "         // Table 5.27\n\t\t",
+    "ported": "         // Milan v1.2 Table 5.27\n\t\t",
+    "pre_F_INT_bytes": [
+      27930,
+      27955
+    ],
+    "baseline_bytes": [
+      20797,
+      20833
+    ],
+    "pre_F_INT_line": 861,
+    "baseline_line": 861,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5345,
+    "reference_bytes": [
+      29706,
+      29732
+    ],
+    "ported_bytes": [
+      22224,
+      22277
+    ],
+    "reference_line": 905,
+    "ported_line": 901,
+    "reference": "   // Tables 5.31, 5.35\n\t\t",
+    "ported": "   // Milan v1.2 Table 5.31; Milan v1.2 Table 5.35\n\t\t",
+    "pre_F_INT_bytes": [
+      28189,
+      28215
+    ],
+    "baseline_bytes": [
+      21067,
+      21120
+    ],
+    "pre_F_INT_line": 868,
+    "baseline_line": 868,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5395,
+    "reference_bytes": [
+      29891,
+      30021
+    ],
+    "ported_bytes": [
+      22436,
+      22511
+    ],
+    "reference_line": 912,
+    "ported_line": 908,
+    "reference": "\n\n// RCV_PROBE_TX_RESP: 5.5.3.5.18 in PRB_W_RESP and 5.5.3.5.25 in PRB_W_RESP2;\n// ignored in every other state (Table 5.30 \"-\").\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.18\n// Milan v1.2 5.5.3.5.25; Milan v1.2 Table 5.30\n",
+    "pre_F_INT_bytes": [
+      28374,
+      28504
+    ],
+    "baseline_bytes": [
+      21279,
+      21354
+    ],
+    "pre_F_INT_line": 875,
+    "baseline_line": 875,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5434,
+    "reference_bytes": [
+      30170,
+      30222
+    ],
+    "ported_bytes": [
+      22660,
+      22714
+    ],
+    "reference_line": 920,
+    "ported_line": 916,
+    "reference": "                              // 5.5.3.1: ignored\n\t\t",
+    "ported": "                              // Milan v1.2 5.5.3.1\n\t\t",
+    "pre_F_INT_bytes": [
+      28653,
+      28705
+    ],
+    "baseline_bytes": [
+      21503,
+      21557
+    ],
+    "pre_F_INT_line": 883,
+    "baseline_line": 883,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5513,
+    "reference_bytes": [
+      30548,
+      30588
+    ],
+    "ported_bytes": [
+      23040,
+      23043
+    ],
+    "reference_line": 930,
+    "ported_line": 926,
+    "reference": "                            // step 1\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      29031,
+      29071
+    ],
+    "baseline_bytes": [
+      21883,
+      21886
+    ],
+    "pre_F_INT_line": 893,
+    "baseline_line": 893,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5521,
+    "reference_bytes": [
+      30611,
+      30667
+    ],
+    "ported_bytes": [
+      23066,
+      23068
+    ],
+    "reference_line": 933,
+    "ported_line": 929,
+    "reference": "                                             // step 2\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      29094,
+      29150
+    ],
+    "baseline_bytes": [
+      21909,
+      21911
+    ],
+    "pre_F_INT_line": 896,
+    "baseline_line": 896,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5530,
+    "reference_bytes": [
+      30708,
+      30735
+    ],
+    "ported_bytes": [
+      23109,
+      23112
+    ],
+    "reference_line": 934,
+    "ported_line": 930,
+    "reference": "               // step 3\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      29191,
+      29218
+    ],
+    "baseline_bytes": [
+      21952,
+      21955
+    ],
+    "pre_F_INT_line": 897,
+    "baseline_line": 897,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5568,
+    "reference_bytes": [
+      30902,
+      30967
+    ],
+    "ported_bytes": [
+      23279,
+      23321
+    ],
+    "reference_line": 940,
+    "ported_line": 936,
+    "reference": "                   // step 4, kept exactly (Milan v1.2 5.3.8.9)\n\t",
+    "ported": "                   // Milan v1.2 5.3.8.9\n\t",
+    "pre_F_INT_bytes": [
+      29385,
+      29450
+    ],
+    "baseline_bytes": [
+      22122,
+      22164
+    ],
+    "pre_F_INT_line": 903,
+    "baseline_line": 903,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5630,
+    "reference_bytes": [
+      31226,
+      31319
+    ],
+    "ported_bytes": [
+      23580,
+      23603
+    ],
+    "reference_line": 948,
+    "ported_line": 944,
+    "reference": "\n\n// ---- the talker (5.5.4) --------------------------------------------------------------\n\n",
+    "ported": "\n\n// Milan v1.2 5.5.4\n\n",
+    "pre_F_INT_bytes": [
+      29709,
+      29802
+    ],
+    "baseline_bytes": [
+      22423,
+      22446
+    ],
+    "pre_F_INT_line": 911,
+    "baseline_line": 911,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5688,
+    "reference_bytes": [
+      31579,
+      31618
+    ],
+    "ported_bytes": [
+      23863,
+      23924
+    ],
+    "reference_line": 959,
+    "ported_line": 955,
+    "reference": "              // 5.5.4.4, Table 5.48\n\t\t",
+    "ported": "              // Milan v1.2 5.5.4.4; Milan v1.2 Table 5.48\n\t\t",
+    "pre_F_INT_bytes": [
+      30062,
+      30101
+    ],
+    "baseline_bytes": [
+      22706,
+      22767
+    ],
+    "pre_F_INT_line": 922,
+    "baseline_line": 922,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5725,
+    "reference_bytes": [
+      31752,
+      31791
+    ],
+    "ported_bytes": [
+      24058,
+      24141
+    ],
+    "reference_line": 964,
+    "ported_line": 960,
+    "reference": "          // Tables 5.40, 5.44, 5.46\n\t\t",
+    "ported": "          // Milan v1.2 Table 5.40; Milan v1.2 Table 5.44; Milan v1.2 Table 5.46\n\t\t",
+    "pre_F_INT_bytes": [
+      30235,
+      30274
+    ],
+    "baseline_bytes": [
+      22901,
+      22984
+    ],
+    "pre_F_INT_line": 927,
+    "baseline_line": 927,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5760,
+    "reference_bytes": [
+      31934,
+      31979
+    ],
+    "ported_bytes": [
+      24284,
+      24351
+    ],
+    "reference_line": 969,
+    "ported_line": 965,
+    "reference": "                    // 5.5.4.2, Table 5.45\n\t\t",
+    "ported": "                    // Milan v1.2 5.5.4.2; Milan v1.2 Table 5.45\n\t\t",
+    "pre_F_INT_bytes": [
+      30417,
+      30462
+    ],
+    "baseline_bytes": [
+      23127,
+      23194
+    ],
+    "pre_F_INT_line": 932,
+    "baseline_line": 932,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5806,
+    "reference_bytes": [
+      32175,
+      32214
+    ],
+    "ported_bytes": [
+      24547,
+      24601
+    ],
+    "reference_line": 974,
+    "ported_line": 970,
+    "reference": "       // 5.5.4.1 step 2, Table 5.41\n\t\t",
+    "ported": "       // Milan v1.2 5.5.4.1; Milan v1.2 Table 5.41\n\t\t",
+    "pre_F_INT_bytes": [
+      30658,
+      30697
+    ],
+    "baseline_bytes": [
+      23390,
+      23444
+    ],
+    "pre_F_INT_line": 937,
+    "baseline_line": 937,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5879,
+    "reference_bytes": [
+      32516,
+      32585
+    ],
+    "ported_bytes": [
+      24903,
+      24995
+    ],
+    "reference_line": 983,
+    "ported_line": 979,
+    "reference": "                                         // Table 5.43, else 5.42\n\t\t\t",
+    "ported": "                                         // Milan v1.2 Table 5.43; Milan v1.2 Table 5.42\n\t\t\t",
+    "pre_F_INT_bytes": [
+      30999,
+      31068
+    ],
+    "baseline_bytes": [
+      23746,
+      23838
+    ],
+    "pre_F_INT_line": 946,
+    "baseline_line": 946,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 5950,
+    "reference_bytes": [
+      32863,
+      32915
+    ],
+    "ported_bytes": [
+      25273,
+      25347
+    ],
+    "reference_line": 992,
+    "ported_line": 988,
+    "reference": "                            // 5.5.4.3, Table 5.47\n\t",
+    "ported": "                            // Milan v1.2 5.5.4.3; Milan v1.2 Table 5.47\n\t",
+    "pre_F_INT_bytes": [
+      31346,
+      31398
+    ],
+    "baseline_bytes": [
+      24116,
+      24190
+    ],
+    "pre_F_INT_line": 955,
+    "baseline_line": 955,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6023,
+    "reference_bytes": [
+      33176,
+      33267
+    ],
+    "ported_bytes": [
+      25608,
+      25612
+    ],
+    "reference_line": 1000,
+    "ported_line": 996,
+    "reference": "\n\n// ---- public entries ----------------------------------------------------------------\n\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      31659,
+      31750
+    ],
+    "baseline_bytes": [
+      24451,
+      24455
+    ],
+    "pre_F_INT_line": 963,
+    "baseline_line": 963,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6477,
+    "reference_bytes": [
+      35200,
+      35266
+    ],
+    "ported_bytes": [
+      27545,
+      27601
+    ],
+    "reference_line": 1075,
+    "ported_line": 1071,
+    "reference": "                                // 5.5.3.1: every other message\n\t\t",
+    "ported": "                                // Milan v1.2 5.5.3.1\n\t\t",
+    "pre_F_INT_bytes": [
+      33683,
+      33749
+    ],
+    "baseline_bytes": [
+      26388,
+      26444
+    ],
+    "pre_F_INT_line": 1038,
+    "baseline_line": 1038,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6572,
+    "reference_bytes": [
+      35690,
+      35770
+    ],
+    "ported_bytes": [
+      28025,
+      28028
+    ],
+    "reference_line": 1089,
+    "ported_line": 1085,
+    "reference": "                               // not an ENTITY_AVAILABLE or ENTITY_DEPARTING\n\t\t",
+    "ported": "\n\t\t",
+    "pre_F_INT_bytes": [
+      34173,
+      34253
+    ],
+    "baseline_bytes": [
+      26868,
+      26871
+    ],
+    "pre_F_INT_line": 1052,
+    "baseline_line": 1052,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6634,
+    "reference_bytes": [
+      36015,
+      36030
+    ],
+    "ported_bytes": [
+      28273,
+      28305
+    ],
+    "reference_line": 1097,
+    "ported_line": 1093,
+    "reference": "   // 6.2.2.5\n\t",
+    "ported": "   // IEEE 1722.1-2021 6.2.2.5\n\t",
+    "pre_F_INT_bytes": [
+      34498,
+      34513
+    ],
+    "baseline_bytes": [
+      27116,
+      27148
+    ],
+    "pre_F_INT_line": 1060,
+    "baseline_line": 1060,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6700,
+    "reference_bytes": [
+      36256,
+      36310
+    ],
+    "ported_bytes": [
+      28531,
+      28563
+    ],
+    "reference_line": 1103,
+    "ported_line": 1099,
+    "reference": "        // 5.6.4.1: every bound sink of this talker\n\t\t",
+    "ported": "        // Milan v1.2 5.6.4.1\n\t\t",
+    "pre_F_INT_bytes": [
+      34739,
+      34793
+    ],
+    "baseline_bytes": [
+      27374,
+      27406
+    ],
+    "pre_F_INT_line": 1066,
+    "baseline_line": 1066,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6791,
+    "reference_bytes": [
+      36648,
+      37069
+    ],
+    "ported_bytes": [
+      28901,
+      28909
+    ],
+    "reference_line": 1119,
+    "ported_line": 1115,
+    "reference": "\n\n// Every timer of the interface's sinks that is due at the latest clock read\n// (a probe sent for an earlier sink reads it again), in sink order; a sink's\n// TMR_NO_ADP before its connection timer. A connection timer is taken again\n// while it is due: a TMR_RETRY or TMR_NO_TK that draws a 0 ms TMR_DELAY sends\n// its probe in the same call, and TMR_NO_RESP then lies 200 ms ahead, so a\n// sink is taken at most twice.\n",
+    "ported": "\n\n\n\n\n\n\n\n",
+    "pre_F_INT_bytes": [
+      35131,
+      35552
+    ],
+    "baseline_bytes": [
+      27744,
+      27752
+    ],
+    "pre_F_INT_line": 1082,
+    "baseline_line": 1082,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6843,
+    "reference_bytes": [
+      37270,
+      37323
+    ],
+    "ported_bytes": [
+      29110,
+      29112
+    ],
+    "reference_line": 1136,
+    "ported_line": 1132,
+    "reference": "                      // the port's timer has fired\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      35753,
+      35806
+    ],
+    "baseline_bytes": [
+      27953,
+      27955
+    ],
+    "pre_F_INT_line": 1099,
+    "baseline_line": 1099,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 6906,
+    "reference_bytes": [
+      37514,
+      37536
+    ],
+    "ported_bytes": [
+      29303,
+      29336
+    ],
+    "reference_line": 1142,
+    "ported_line": 1138,
+    "reference": "      // 5.6.4.5.4\n\t\t\t",
+    "ported": "      // Milan v1.2 5.6.4.5.4\n\t\t\t",
+    "pre_F_INT_bytes": [
+      35997,
+      36019
+    ],
+    "baseline_bytes": [
+      28146,
+      28179
+    ],
+    "pre_F_INT_line": 1105,
+    "baseline_line": 1105,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 7007,
+    "reference_bytes": [
+      37881,
+      37933
+    ],
+    "ported_bytes": [
+      29681,
+      29740
+    ],
+    "reference_line": 1159,
+    "ported_line": 1155,
+    "reference": "                                // Table 5.30 \"x\"\n\t\t",
+    "ported": "                                // Milan v1.2 Table 5.30\n\t\t",
+    "pre_F_INT_bytes": [
+      36364,
+      36416
+    ],
+    "baseline_bytes": [
+      28524,
+      28583
+    ],
+    "pre_F_INT_line": 1122,
+    "baseline_line": 1122,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 7023,
+    "reference_bytes": [
+      37983,
+      38016
+    ],
+    "ported_bytes": [
+      29790,
+      29834
+    ],
+    "reference_line": 1162,
+    "ported_line": 1158,
+    "reference": "                  // 5.5.3.5.42\n\t",
+    "ported": "                  // Milan v1.2 5.5.3.5.42\n\t",
+    "pre_F_INT_bytes": [
+      36466,
+      36499
+    ],
+    "baseline_bytes": [
+      28633,
+      28677
+    ],
+    "pre_F_INT_line": 1125,
+    "baseline_line": 1125,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 7171,
+    "reference_bytes": [
+      38550,
+      38602
+    ],
+    "ported_bytes": [
+      30368,
+      30427
+    ],
+    "reference_line": 1188,
+    "ported_line": 1184,
+    "reference": "                                // Table 5.30 \"x\"\n\t\t",
+    "ported": "                                // Milan v1.2 Table 5.30\n\t\t",
+    "pre_F_INT_bytes": [
+      37033,
+      37085
+    ],
+    "baseline_bytes": [
+      29211,
+      29270
+    ],
+    "pre_F_INT_line": 1151,
+    "baseline_line": 1151,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 7181,
+    "reference_bytes": [
+      38632,
+      38685
+    ],
+    "ported_bytes": [
+      30457,
+      30521
+    ],
+    "reference_line": 1191,
+    "ported_line": 1187,
+    "reference": "                                      // 5.5.3.5.48\n\t",
+    "ported": "                                      // Milan v1.2 5.5.3.5.48\n\t",
+    "pre_F_INT_bytes": [
+      37115,
+      37168
+    ],
+    "baseline_bytes": [
+      29300,
+      29364
+    ],
+    "pre_F_INT_line": 1154,
+    "baseline_line": 1154,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "src/acmp.c",
+    "gap_before_token": 7523,
+    "reference_bytes": [
+      39838,
+      39871
+    ],
+    "ported_bytes": [
+      31674,
+      31718
+    ],
+    "reference_line": 1239,
+    "ported_line": 1235,
+    "reference": "                  // 5.5.3.5.2\n\t\t",
+    "ported": "                  // Milan v1.2 5.5.3.5.2\n\t\t",
+    "pre_F_INT_bytes": [
+      38321,
+      38354
+    ],
+    "baseline_bytes": [
+      30517,
+      30561
+    ],
+    "pre_F_INT_line": 1202,
+    "baseline_line": 1202,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 0,
+    "reference_bytes": [
+      0,
+      9478
+    ],
+    "ported_bytes": [
+      0,
+      1294
+    ],
+    "reference_line": 1,
+    "ported_line": 1,
+    "reference": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: CERN-OHL-W-2.0\n//\n// acmp.h - Milan connection management on the bare-metal core, a portable\n// C11 ports-and-adapters module (#665 lane F3).\n//\n// THE CORE KNOWS NO MAILBOX. One instance per entity implements Milan v1.2\n// 5.5 (connection management, which supersedes IEEE 1722.1-2021 clause 8's\n// connect sequence for these commands, 5.5.2.1) and 5.6.4 (the listener's\n// discovery machine) over IEEE 1722.1-2021 8.2.1's ACMPDU. Everything outside\n// the state machines is a port: the transport (struct acmp_ports: frames,\n// time, one timer per AVB interface, the gPTP pair, a seed), which the\n// mailbox adapter (acmp_mbx.h) or a test provides, and the entity's other\n// owners (struct acmp_env: the lock, the talker's sources, the listener's\n// SRP, the saved-state store, the notifier), which the integrator provides.\n// The core allocates nothing, reaches no global, and every call returns after\n// a bounded number of steps.\n//\n//   ONLY AVTP VERSION 0 IS READ. A received ACMPDU or ADPDU whose AVTP version\n//   (frame byte 15, bits 6:4) is not 0, the only version IEEE 1722.1-2021\n//   8.2.1.3 and 6.2.2.3 define, is discarded before any field is decoded or\n//   anything changes (IEEE 1722-2016 4.4.3.4), and counted as malformed.\n//\n//   THE LISTENER (5.5.3). One sink per STREAM_INPUT, each with the eight\n//   states of Table 5.28 and every transition of Table 5.30 (5.5.3.5.1 to\n//   5.5.3.5.48). BIND_RX, UNBIND_RX and GET_RX_STATE with listener_entity_id\n//   this entity, and PROBE_TX_RESPONSE with listener_entity_id this entity\n//   (5.5.3.1); every other ACMP message is ignored. A command naming a sink\n//   that does not exist is answered LISTENER_UNKNOWN_ID (Table 5.27); a\n//   PROBE_TX_RESPONSE naming one is ignored.\n//\n//   RESPONSES KEY ON THE CONSUMER'S UNIQUE ID. A PROBE_TX_RESPONSE belongs to\n//   the sink its listener_unique_id names (5.5.3.1), never to whichever sink\n//   probes that talker source, and it is that sink's only when its\n//   controller_entity_id, talker_entity_id, talker_unique_id and sequence_id\n//   equal the PROBE_TX_COMMAND the sink sent (5.5.3.5.18 step 1): the fields\n//   are the sent probe's, kept with it, not the binding's, which a re-bind\n//   of the same talker may have updated since (5.5.3.5.17 step 2).\n//\n//   PROBING, TIMEOUTS AND SEQUENCE IDS. A probe is sent at once after a bind\n//   (5.5.3.5.3) or after a random TMR_DELAY of 0 to 1 s (Table 5.29) once the\n//   talker is discovered; TMR_NO_RESP is 200 ms (Table 5.26) from the send the\n//   port accepts, of the probe and of its duplicate alike (5.5.3.5.3 steps 5\n//   to 7, 5.5.3.5.16), timed from a clock read after that send returns, even\n//   when the entry read the clock before it: a probe that waits for transmit\n//   room holds its TMR_NO_RESP until acmp_poll sends it; its first\n//   expiry sends an exact duplicate, same sequence_id (5.5.3.5.16), its\n//   second sets ACMP status LISTENER_TALKER_TIMEOUT and TMR_RETRY 4 s\n//   (5.5.3.5.23); a failed response sets the status it carries and TMR_RETRY\n//   (5.5.3.5.18 step 3); a settled sink waits TMR_NO_TK 10 s for its talker\n//   attribute (5.5.3.5.18 step 4, 5.5.3.5.36). Every new PROBE_TX_COMMAND\n//   takes the next sequence_id of one counter per instance (IEEE 1722.1-2021\n//   8.2.1.15); a duplicate does not.\n//\n//   THE LOCK (5.5.2.4, 5.5.2.5). A BIND_RX or UNBIND_RX from a controller\n//   other than the locking one is refused CONTROLLER_NOT_AUTHORIZED, which\n//   is 16 (IEEE 1722.1-2021 Table 8-3), before anything changes.\n//\n//   THE TALKER (5.5.4). Stateless (5.5.2.7): PROBE_TX (5.5.4.1, Tables 5.40\n//   to 5.43), DISCONNECT_TX (5.5.4.2, Tables 5.44 and 5.45: SUCCESS for a\n//   valid source, nothing changes; 5.5.2.7's \"always returns SUCCESS\" is an\n//   overview that defers to 5.5.4, whose 5.5.4.2 validates the source first),\n//   GET_TX_STATE (5.5.4.3, Tables 5.46 and 5.47) and\n//   GET_TX_CONNECTION (5.5.4.4, Table 5.48: NOT_SUPPORTED), each with\n//   talker_entity_id this entity (IEEE 1722.1-2021 8.2.1.9). The first three\n//   naming a source that does not exist are answered TALKER_UNKNOWN_ID\n//   (Tables 5.40, 5.44 and 5.46). A PROBE_TX that\n//   ingressed on another interface than the source's is answered\n//   INCOMPATIBLE_REQUEST (Table 5.41), one of the two answers 5.5.4.1 step 2\n//   permits. The source's stream, destination MAC, VLAN and SRP state are\n//   read from the env's source port when the answer is built.\n//\n//   DISCOVERY (5.6.4). One machine per sink, running while the sink is bound\n//   (5.5.3.5.2 step 1, 5.5.3.5.3 step 4). An ENTITY_AVAILABLE or\n//   ENTITY_DEPARTING is processed by every bound sink whose talker it names\n//   (5.6.4.1) and whose AVB interface it arrived on (the per-interface key,\n//   which the GM check of 5.6.4.5.1 step 1 reads \"on this port\"). TMR_NO_ADP\n//   is the received valid_time in two-second units (IEEE 1722.1-2021\n//   6.2.2.5); every Table 5.54 transition and guard of 5.6.4.5.1 to 5.6.4.5.4\n//   is implemented, and the EVT_TK_DISCOVERED and EVT_TK_DEPARTED it raises\n//   drive the sink's connection machine in the same call. The transport's\n//   admit port is told which talker each bound sink names, as its binding\n//   changes, so the ingress passes that talker's ENTITY_AVAILABLE and\n//   ENTITY_DEPARTING on the sink's interface (the mailbox's bound-talker\n//   table, #665 comment 6029368753) and the machine still filters exactly.\n//\n//   KEYED PER AVB INTERFACE. Each sink and source carries the AVB interface\n//   its descriptor is on: a sink's probes leave on it (5.5.3.5.3 step 5), a\n//   source answers only probes that arrived on it (5.5.4.1 step 2), and the\n//   timers of the sinks on one interface share that interface's one timer\n//   port, armed at the earliest deadline among them. The redundancy path\n//   (Milan v1.2 8) needs nothing but a second interface index.\n//\n//   SAVED STATE. A sink's binding is a 20-byte record (the processor's\n//   KL_acmp_nvm_shadow BINDING payload, docs/design/SAVED_STATE_FASTCONNECT.md\n//   2: flags {bound, started, STREAMING_WAIT}, a reserved byte, then\n//   talker_unique_id, talker_entity_id and controller_entity_id, big-endian).\n//   acmp_restore_binding() is the F1 store's binding walk (nvm_state.h\n//   apply): a saved binding starts its sink as 5.5.3.5.2 does, in\n//   PRB_W_AVAIL with discovery running; acmp_restore_rollback() drops every\n//   one. A change to a saved field calls env->persist (5.5.2.4: saved to\n//   non-volatile memory), and acmp_binding_latch() gives the record back to\n//   the store's write path. Whether a change is then written is the store's\n//   rule (an unread slot holds its writer, ctrl_nvm/README.md, \"Boot\" 9).\n//\n//   PUBLISHED BEFORE PROMISED (#665, comments 6088423771 and 6092086337). In\n//   the split placement the fabric datapath reads each sink's binding from the\n//   mailbox's publication block: whether it is bound, whether it is started\n//   (5.3.8.7: the datapath discards a bound, stopped sink's AVTPDUs), and the\n//   stream_id of the stream it listens to, which is the one its last\n//   PROBE_TX_RESPONSE settled on while the sink is settled and 0 otherwise\n//   (5.5.3.5.18 step 4 to 5.5.3.5.36 step 1: SRP runs only while settled). The\n//   transport's publish port is told of each sink whose triple moved before\n//   any frame the entry sends (the BIND_RX response promises the bound and\n//   started states, by echoing STREAMING_WAIT, the UNBIND_RX response the\n//   bound state, a GET_RX_STATE response the stream) and, with nothing sent,\n//   first thing at the end of the entry, before the store and the notifier\n//   hear of it; acmp_set_started returns only after it, so the AECP response\n//   to START_STREAMING or STOP_STREAMING follows it too\n//   (docs/ARCHITECTURE_HW_SW_SPLIT.md, section 1: state-apply acknowledgements\n//   precede responses promising that state). The bindings the store restored\n//   are published by acmp_open, as the admit port is told of them.\n//\n//   RESPONSE BEFORE NOTIFICATION (#653). A change of a sink's observable state\n//   (struct acmp_sink_view) is reported through env->changed, and a change a\n//   command caused is reported only once that command's response has been\n//   taken by the send port: an AECP notifier keyed on env->changed can never\n//   put the notice ahead of the response, even when the response waited for\n//   transmit room. acmp_change_pending() says which sinks hold one.\n//\n// A FRAME THE SEND PORT REFUSES IS OWED, never reordered: up to\n// ACMP_OWED_MAX frames wait, in order, for acmp_poll(), and nothing passes\n// them. A command that would add a response to a full queue is dropped\n// before it changes anything (busy_drops). An owed probe's TMR_NO_RESP starts\n// when acmp_poll sends it, provided its sink still waits for that probe (the\n// same sequence_id); a probe that finds the queue full is counted lost\n// (probes_lost) and its TMR_NO_RESP, run from the attempt, recovers it.\n//\n// PORTS NEVER CALL BACK INTO THE CORE SYNCHRONOUSLY (#678). Every expiry,\n// every frame and every SRP event is delivered by the one event loop, never\n// from inside a port call. The core guards it: a flag is set around each\n// port call, and an entry while it is set does nothing but count\n// (`reentries`) and, in a build with CTRL_REENTRY_ASSERT defined (the host\n// tests'), call ctrl_reentry_assert(), which a debug platform defines to stop.\n\n",
+    "ported": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: MIT\n// Milan v1.2 5.5\n// Milan v1.2 5.5.2.1\n// Milan v1.2 5.6.4\n// IEEE 1722.1-2021 8.2.1\n// IEEE 1722.1-2021 8.2.1.3 and 6.2.2.3\n// IEEE 1722-2016 4.4.3.4\n// Milan v1.2 5.5.3\n// Milan v1.2 Table 5.28\n// Milan v1.2 Table 5.30\n// Milan v1.2 5.5.3.5.1 to 5.5.3.5.48\n// Milan v1.2 5.5.3.1\n// Milan v1.2 Table 5.27\n// Milan v1.2 5.5.3.5.18\n// Milan v1.2 5.5.3.5.17\n// Milan v1.2 5.5.3.5.3\n// Milan v1.2 Table 5.29\n// Milan v1.2 Table 5.26\n// Milan v1.2 5.5.3.5.16\n// Milan v1.2 5.5.3.5.23\n// Milan v1.2 5.5.3.5.36\n// IEEE 1722.1-2021 8.2.1.15\n// Milan v1.2 5.5.2.4\n// Milan v1.2 5.5.2.5\n// IEEE 1722.1-2021 Table 8-3\n// Milan v1.2 5.5.4\n// Milan v1.2 5.5.2.7\n// Milan v1.2 5.5.4.1\n// Milan v1.2 Table 5.40 to 5.43\n// Milan v1.2 5.5.4.2\n// Milan v1.2 Table 5.44 and 5.45\n// Milan v1.2 5.5.4.3\n// Milan v1.2 Table 5.46 and 5.47\n// Milan v1.2 5.5.4.4\n// Milan v1.2 Table 5.48\n// IEEE 1722.1-2021 8.2.1.9\n// Milan v1.2 Table 5.40\n// Milan v1.2 Table 5.44 and 5.46\n// Milan v1.2 Table 5.41\n// Milan v1.2 5.5.3.5.2\n// Milan v1.2 5.6.4.1\n// Milan v1.2 5.6.4.5.1\n// IEEE 1722.1-2021 6.2.2.5\n// Milan v1.2 Table 5.54\n// Milan v1.2 5.6.4.5.1 to 5.6.4.5.4\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "pre_F_INT": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: CERN-OHL-W-2.0\n//\n// acmp.h - Milan connection management on the bare-metal core, a portable\n// C11 ports-and-adapters module (#665 lane F3).\n//\n// THE CORE KNOWS NO MAILBOX. One instance per entity implements Milan v1.2\n// 5.5 (connection management, which supersedes IEEE 1722.1-2021 clause 8's\n// connect sequence for these commands, 5.5.2.1) and 5.6.4 (the listener's\n// discovery machine) over IEEE 1722.1-2021 8.2.1's ACMPDU. Everything outside\n// the state machines is a port: the transport (struct acmp_ports: frames,\n// time, one timer per AVB interface, the gPTP pair, a seed), which the\n// mailbox adapter (acmp_mbx.h) or a test provides, and the entity's other\n// owners (struct acmp_env: the lock, the talker's sources, the listener's\n// SRP, the saved-state store, the notifier), which the integrator provides.\n// The core allocates nothing, reaches no global, and every call returns after\n// a bounded number of steps.\n//\n//   ONLY AVTP VERSION 0 IS READ. A received ACMPDU or ADPDU whose AVTP version\n//   (frame byte 15, bits 6:4) is not 0, the only version IEEE 1722.1-2021\n//   8.2.1.3 and 6.2.2.3 define, is discarded before any field is decoded or\n//   anything changes (IEEE 1722-2016 4.4.3.4), and counted as malformed.\n//\n//   THE LISTENER (5.5.3). One sink per STREAM_INPUT, each with the eight\n//   states of Table 5.28 and every transition of Table 5.30 (5.5.3.5.1 to\n//   5.5.3.5.48). BIND_RX, UNBIND_RX and GET_RX_STATE with listener_entity_id\n//   this entity, and PROBE_TX_RESPONSE with listener_entity_id this entity\n//   (5.5.3.1); every other ACMP message is ignored. A command naming a sink\n//   that does not exist is answered LISTENER_UNKNOWN_ID (Table 5.27); a\n//   PROBE_TX_RESPONSE naming one is ignored.\n//\n//   RESPONSES KEY ON THE CONSUMER'S UNIQUE ID. A PROBE_TX_RESPONSE belongs to\n//   the sink its listener_unique_id names (5.5.3.1), never to whichever sink\n//   probes that talker source, and it is that sink's only when its\n//   controller_entity_id, talker_entity_id, talker_unique_id and sequence_id\n//   equal the PROBE_TX_COMMAND the sink sent (5.5.3.5.18 step 1): the fields\n//   are the sent probe's, kept with it, not the binding's, which a re-bind\n//   of the same talker may have updated since (5.5.3.5.17 step 2).\n//\n//   PROBING, TIMEOUTS AND SEQUENCE IDS. A probe is sent at once after a bind\n//   (5.5.3.5.3) or after a random TMR_DELAY of 0 to 1 s (Table 5.29) once the\n//   talker is discovered; TMR_NO_RESP is 200 ms (Table 5.26) from the send the\n//   port accepts, of the probe and of its duplicate alike (5.5.3.5.3 steps 5\n//   to 7, 5.5.3.5.16), timed from a clock read after that send returns, even\n//   when the entry read the clock before it: a probe that waits for transmit\n//   room holds its TMR_NO_RESP until acmp_poll sends it; its first\n//   expiry sends an exact duplicate, same sequence_id (5.5.3.5.16), its\n//   second sets ACMP status LISTENER_TALKER_TIMEOUT and TMR_RETRY 4 s\n//   (5.5.3.5.23); a failed response sets the status it carries and TMR_RETRY\n//   (5.5.3.5.18 step 3); a settled sink waits TMR_NO_TK 10 s for its talker\n//   attribute (5.5.3.5.18 step 4, 5.5.3.5.36). Every new PROBE_TX_COMMAND\n//   takes the next sequence_id of one counter per instance (IEEE 1722.1-2021\n//   8.2.1.15); a duplicate does not.\n//\n//   THE LOCK (5.5.2.4, 5.5.2.5). A BIND_RX or UNBIND_RX from a controller\n//   other than the locking one is refused CONTROLLER_NOT_AUTHORIZED, which\n//   is 16 (IEEE 1722.1-2021 Table 8-3), before anything changes.\n//\n//   THE TALKER (5.5.4). Stateless (5.5.2.7): PROBE_TX (5.5.4.1, Tables 5.40\n//   to 5.43), DISCONNECT_TX (5.5.4.2, Tables 5.44 and 5.45: SUCCESS for a\n//   valid source, nothing changes; 5.5.2.7's \"always returns SUCCESS\" is an\n//   overview that defers to 5.5.4, whose 5.5.4.2 validates the source first),\n//   GET_TX_STATE (5.5.4.3, Tables 5.46 and 5.47) and\n//   GET_TX_CONNECTION (5.5.4.4, Table 5.48: NOT_SUPPORTED), each with\n//   talker_entity_id this entity (IEEE 1722.1-2021 8.2.1.9). The first three\n//   naming a source that does not exist are answered TALKER_UNKNOWN_ID\n//   (Tables 5.40, 5.44 and 5.46). A PROBE_TX that\n//   ingressed on another interface than the source's is answered\n//   INCOMPATIBLE_REQUEST (Table 5.41), one of the two answers 5.5.4.1 step 2\n//   permits. The source's stream, destination MAC, VLAN and SRP state are\n//   read from the env's source port when the answer is built.\n//\n//   DISCOVERY (5.6.4). One machine per sink, running while the sink is bound\n//   (5.5.3.5.2 step 1, 5.5.3.5.3 step 4). An ENTITY_AVAILABLE or\n//   ENTITY_DEPARTING is processed by every bound sink whose talker it names\n//   (5.6.4.1) and whose AVB interface it arrived on (the per-interface key,\n//   which the GM check of 5.6.4.5.1 step 1 reads \"on this port\"). TMR_NO_ADP\n//   is the received valid_time in two-second units (IEEE 1722.1-2021\n//   6.2.2.5); every Table 5.54 transition and guard of 5.6.4.5.1 to 5.6.4.5.4\n//   is implemented, and the EVT_TK_DISCOVERED and EVT_TK_DEPARTED it raises\n//   drive the sink's connection machine in the same call. The transport's\n//   admit port is told which talker each bound sink names, as its binding\n//   changes, so the ingress passes that talker's ENTITY_AVAILABLE and\n//   ENTITY_DEPARTING on the sink's interface (the mailbox's bound-talker\n//   table, #665 comment 6029368753) and the machine still filters exactly.\n//\n//   KEYED PER AVB INTERFACE. Each sink and source carries the AVB interface\n//   its descriptor is on: a sink's probes leave on it (5.5.3.5.3 step 5), a\n//   source answers only probes that arrived on it (5.5.4.1 step 2), and the\n//   timers of the sinks on one interface share that interface's one timer\n//   port, armed at the earliest deadline among them. The redundancy path\n//   (Milan v1.2 8) needs nothing but a second interface index.\n//\n//   SAVED STATE. A sink's binding is a 20-byte record (the processor's\n//   KL_acmp_nvm_shadow BINDING payload, docs/design/SAVED_STATE_FASTCONNECT.md\n//   2: flags {bound, started, STREAMING_WAIT}, a reserved byte, then\n//   talker_unique_id, talker_entity_id and controller_entity_id, big-endian).\n//   acmp_restore_binding() is the F1 store's binding walk (nvm_state.h\n//   apply): a saved binding starts its sink as 5.5.3.5.2 does, in\n//   PRB_W_AVAIL with discovery running; acmp_restore_rollback() drops every\n//   one. A change to a saved field calls env->persist (5.5.2.4: saved to\n//   non-volatile memory), and acmp_binding_latch() gives the record back to\n//   the store's write path. Whether a change is then written is the store's\n//   rule (an unread slot holds its writer, ctrl_nvm/README.md, \"Boot\" 9).\n//\n//   RESPONSE BEFORE NOTIFICATION (#653). A change of a sink's observable state\n//   (struct acmp_sink_view) is reported through env->changed, and a change a\n//   command caused is reported only once that command's response has been\n//   taken by the send port: an AECP notifier keyed on env->changed can never\n//   put the notice ahead of the response, even when the response waited for\n//   transmit room. acmp_change_pending() says which sinks hold one.\n//\n// A FRAME THE SEND PORT REFUSES IS OWED, never reordered: up to\n// ACMP_OWED_MAX frames wait, in order, for acmp_poll(), and nothing passes\n// them. A command that would add a response to a full queue is dropped\n// before it changes anything (busy_drops). An owed probe's TMR_NO_RESP starts\n// when acmp_poll sends it, provided its sink still waits for that probe (the\n// same sequence_id); a probe that finds the queue full is counted lost\n// (probes_lost) and its TMR_NO_RESP, run from the attempt, recovers it.\n//\n// PORTS NEVER CALL BACK INTO THE CORE SYNCHRONOUSLY (#678). Every expiry,\n// every frame and every SRP event is delivered by the one event loop, never\n// from inside a port call. The core guards it: a flag is set around each\n// port call, and an entry while it is set does nothing but count\n// (`reentries`) and, in a build with CTRL_REENTRY_ASSERT defined (the host\n// tests'), call ctrl_reentry_assert(), which a debug platform defines to stop.\n\n",
+    "baseline": "// SPDX-FileCopyrightText: 2026 Kebag Logic\n// SPDX-License-Identifier: MIT\n// Milan v1.2 5.5\n// Milan v1.2 5.5.2.1\n// Milan v1.2 5.6.4\n// IEEE 1722.1-2021 8.2.1\n// IEEE 1722.1-2021 8.2.1.3 and 6.2.2.3\n// IEEE 1722-2016 4.4.3.4\n// Milan v1.2 5.5.3\n// Milan v1.2 Table 5.28\n// Milan v1.2 Table 5.30\n// Milan v1.2 5.5.3.5.1 to 5.5.3.5.48\n// Milan v1.2 5.5.3.1\n// Milan v1.2 Table 5.27\n// Milan v1.2 5.5.3.5.18\n// Milan v1.2 5.5.3.5.17\n// Milan v1.2 5.5.3.5.3\n// Milan v1.2 Table 5.29\n// Milan v1.2 Table 5.26\n// Milan v1.2 5.5.3.5.16\n// Milan v1.2 5.5.3.5.23\n// Milan v1.2 5.5.3.5.36\n// IEEE 1722.1-2021 8.2.1.15\n// Milan v1.2 5.5.2.4\n// Milan v1.2 5.5.2.5\n// IEEE 1722.1-2021 Table 8-3\n// Milan v1.2 5.5.4\n// Milan v1.2 5.5.2.7\n// Milan v1.2 5.5.4.1\n// Milan v1.2 Table 5.40 to 5.43\n// Milan v1.2 5.5.4.2\n// Milan v1.2 Table 5.44 and 5.45\n// Milan v1.2 5.5.4.3\n// Milan v1.2 Table 5.46 and 5.47\n// Milan v1.2 5.5.4.4\n// Milan v1.2 Table 5.48\n// IEEE 1722.1-2021 8.2.1.9\n// Milan v1.2 Table 5.40\n// Milan v1.2 Table 5.44 and 5.46\n// Milan v1.2 Table 5.41\n// Milan v1.2 5.5.3.5.2\n// Milan v1.2 5.6.4.1\n// Milan v1.2 5.6.4.5.1\n// IEEE 1722.1-2021 6.2.2.5\n// Milan v1.2 Table 5.54\n// Milan v1.2 5.6.4.5.1 to 5.6.4.5.4\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 42,
+    "reference_bytes": [
+      9660,
+      9731
+    ],
+    "ported_bytes": [
+      1476,
+      1477
+    ],
+    "reference_line": 158,
+    "ported_line": 140,
+    "reference": "              // STREAM_INPUTs: the saved-state binding block holds 16\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      8374,
+      8445
+    ],
+    "baseline_bytes": [
+      1476,
+      1477
+    ],
+    "pre_F_INT_line": 140,
+    "baseline_line": 140,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 51,
+    "reference_bytes": [
+      9791,
+      9821
+    ],
+    "ported_bytes": [
+      1537,
+      1538
+    ],
+    "reference_line": 161,
+    "ported_line": 143,
+    "reference": "            // STREAM_OUTPUTs\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      8505,
+      8535
+    ],
+    "baseline_bytes": [
+      1537,
+      1538
+    ],
+    "pre_F_INT_line": 143,
+    "baseline_line": 143,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 57,
+    "reference_bytes": [
+      9858,
+      9926
+    ],
+    "ported_bytes": [
+      1575,
+      1576
+    ],
+    "reference_line": 163,
+    "ported_line": 145,
+    "reference": "          // AVB interfaces (the mailbox CAPS.N_IF field is 4 bits)\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      8572,
+      8640
+    ],
+    "baseline_bytes": [
+      1575,
+      1576
+    ],
+    "pre_F_INT_line": 145,
+    "baseline_line": 145,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 61,
+    "reference_bytes": [
+      9950,
+      10011
+    ],
+    "ported_bytes": [
+      1600,
+      1601
+    ],
+    "reference_line": 164,
+    "ported_line": 146,
+    "reference": "                // frames waiting for transmit room, at most\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      8664,
+      8725
+    ],
+    "baseline_bytes": [
+      1600,
+      1601
+    ],
+    "pre_F_INT_line": 146,
+    "baseline_line": 146,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 65,
+    "reference_bytes": [
+      10039,
+      10105
+    ],
+    "ported_bytes": [
+      1629,
+      1696
+    ],
+    "reference_line": 165,
+    "ported_line": 147,
+    "reference": "            // IEEE 1722.1-2021 8.2.1.3 (ACMP) and 6.2.2.3 (ADP)\n\n",
+    "ported": "            // IEEE 1722.1-2021 8.2.1.3; IEEE 1722.1-2021 6.2.2.3\n\n",
+    "pre_F_INT_bytes": [
+      8753,
+      8819
+    ],
+    "baseline_bytes": [
+      1629,
+      1696
+    ],
+    "pre_F_INT_line": 147,
+    "baseline_line": 147,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 69,
+    "reference_bytes": [
+      10135,
+      10178
+    ],
+    "ported_bytes": [
+      1726,
+      1762
+    ],
+    "reference_line": 167,
+    "ported_line": 149,
+    "reference": "          // IEEE 1722-2016 Table 5 (AVTP)\n",
+    "ported": "          // IEEE 1722-2016 Table 5\n",
+    "pre_F_INT_bytes": [
+      8849,
+      8892
+    ],
+    "baseline_bytes": [
+      1726,
+      1762
+    ],
+    "pre_F_INT_line": 149,
+    "baseline_line": 149,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 73,
+    "reference_bytes": [
+      10204,
+      10270
+    ],
+    "ported_bytes": [
+      1788,
+      1854
+    ],
+    "reference_line": 168,
+    "ported_line": 150,
+    "reference": "              // IEEE 1722-2016 Table 6; IEEE 1722.1-2021 8.2.1.1\n",
+    "ported": "              // IEEE 1722.1-2021 8.2.1.1; IEEE 1722-2016 Table 6\n",
+    "pre_F_INT_bytes": [
+      8918,
+      8984
+    ],
+    "baseline_bytes": [
+      1788,
+      1854
+    ],
+    "pre_F_INT_line": 150,
+    "baseline_line": 150,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 77,
+    "reference_bytes": [
+      10314,
+      10377
+    ],
+    "ported_bytes": [
+      1898,
+      1953
+    ],
+    "reference_line": 169,
+    "ported_line": 151,
+    "reference": " // IEEE 1722.1-2021 Table B.1; 8.2.1: every ACMPDU goes to it\n",
+    "ported": " // IEEE 1722.1-2021 Table B.1; IEEE 1722.1-2021 8.2.1\n",
+    "pre_F_INT_bytes": [
+      9028,
+      9091
+    ],
+    "baseline_bytes": [
+      1898,
+      1953
+    ],
+    "pre_F_INT_line": 151,
+    "baseline_line": 151,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 81,
+    "reference_bytes": [
+      10406,
+      10449
+    ],
+    "ported_bytes": [
+      1982,
+      1983
+    ],
+    "reference_line": 170,
+    "ported_line": 152,
+    "reference": "           // the untagged Ethernet header\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      9120,
+      9163
+    ],
+    "baseline_bytes": [
+      1982,
+      1983
+    ],
+    "pre_F_INT_line": 152,
+    "baseline_line": 152,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 85,
+    "reference_bytes": [
+      10475,
+      10533
+    ],
+    "ported_bytes": [
+      2009,
+      2045
+    ],
+    "reference_line": 171,
+    "ported_line": 153,
+    "reference": "              // Milan v1.2 5.5.2.2: the truncated ACMPDU\n",
+    "ported": "              // Milan v1.2 5.5.2.2\n",
+    "pre_F_INT_bytes": [
+      9189,
+      9247
+    ],
+    "baseline_bytes": [
+      2009,
+      2045
+    ],
+    "pre_F_INT_line": 153,
+    "baseline_line": 153,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 89,
+    "reference_bytes": [
+      10561,
+      10592
+    ],
+    "ported_bytes": [
+      2073,
+      2074
+    ],
+    "reference_line": 172,
+    "ported_line": 154,
+    "reference": "            // header + ACMPDU\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      9275,
+      9306
+    ],
+    "baseline_bytes": [
+      2073,
+      2074
+    ],
+    "pre_F_INT_line": 154,
+    "baseline_line": 154,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 93,
+    "reference_bytes": [
+      10628,
+      10682
+    ],
+    "ported_bytes": [
+      2110,
+      2111
+    ],
+    "reference_line": 173,
+    "ported_line": 155,
+    "reference": "    // the 56-byte PDU less its 12-byte common header\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      9342,
+      9396
+    ],
+    "baseline_bytes": [
+      2110,
+      2111
+    ],
+    "pre_F_INT_line": 155,
+    "baseline_line": 155,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 97,
+    "reference_bytes": [
+      10712,
+      10820
+    ],
+    "ported_bytes": [
+      2141,
+      2191
+    ],
+    "reference_line": 174,
+    "ported_line": 156,
+    "reference": "          // the saved binding payload (see the top of this file)\n\n// Milan v1.2 Table 5.26 and Table 5.29.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.26; Milan v1.2 Table 5.29\n",
+    "pre_F_INT_bytes": [
+      9426,
+      9534
+    ],
+    "baseline_bytes": [
+      2141,
+      2191
+    ],
+    "pre_F_INT_line": 156,
+    "baseline_line": 156,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 117,
+    "reference_bytes": [
+      10991,
+      11110
+    ],
+    "ported_bytes": [
+      2362,
+      2444
+    ],
+    "reference_line": 181,
+    "ported_line": 163,
+    "reference": "   // IEEE 1722.1-2021 6.2.2.5: two-second increments\n\n// IEEE 1722.1-2021 Table 8-2, with Milan v1.2 5.5.2.2's names.\n",
+    "ported": "   // IEEE 1722.1-2021 6.2.2.5\n\n// IEEE 1722.1-2021 Table 8-2; Milan v1.2 5.5.2.2\n",
+    "pre_F_INT_bytes": [
+      9705,
+      9824
+    ],
+    "baseline_bytes": [
+      2362,
+      2444
+    ],
+    "pre_F_INT_line": 163,
+    "baseline_line": 163,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 173,
+    "reference_bytes": [
+      11682,
+      11753
+    ],
+    "ported_bytes": [
+      3016,
+      3048
+    ],
+    "reference_line": 197,
+    "ported_line": 179,
+    "reference": "\n\n// IEEE 1722.1-2021 Table 8-3, the codes this module sends or keeps.\n",
+    "ported": "\n\n// IEEE 1722.1-2021 Table 8-3\n",
+    "pre_F_INT_bytes": [
+      10396,
+      10467
+    ],
+    "baseline_bytes": [
+      3016,
+      3048
+    ],
+    "pre_F_INT_line": 179,
+    "baseline_line": 179,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 205,
+    "reference_bytes": [
+      12091,
+      12208
+    ],
+    "ported_bytes": [
+      3386,
+      3443
+    ],
+    "reference_line": 207,
+    "ported_line": 189,
+    "reference": "\n\n// IEEE 1722.1-2021 Table 8-4 (bit 15 is the least significant) and Milan\n// v1.2 Table 5.23 (REGISTERING_FAILED).\n",
+    "ported": "\n\n// IEEE 1722.1-2021 Table 8-4\n// Milan v1.2 Table 5.23\n",
+    "pre_F_INT_bytes": [
+      10805,
+      10922
+    ],
+    "baseline_bytes": [
+      3386,
+      3443
+    ],
+    "pre_F_INT_line": 189,
+    "baseline_line": 189,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 217,
+    "reference_bytes": [
+      12332,
+      12408
+    ],
+    "ported_bytes": [
+      3567,
+      3624
+    ],
+    "reference_line": 213,
+    "ported_line": 195,
+    "reference": "\n\n// The ADPDU fields discovery reads (IEEE 1722.1-2021 Figure 6-1, 6.2.2).\n",
+    "ported": "\n\n// IEEE 1722.1-2021 Figure 6-1; IEEE 1722.1-2021 6.2.2\n",
+    "pre_F_INT_bytes": [
+      11046,
+      11122
+    ],
+    "baseline_bytes": [
+      3567,
+      3624
+    ],
+    "pre_F_INT_line": 195,
+    "baseline_line": 195,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 225,
+    "reference_bytes": [
+      12471,
+      12509
+    ],
+    "ported_bytes": [
+      3687,
+      3688
+    ],
+    "reference_line": 217,
+    "ported_line": 199,
+    "reference": "        // header + the 68-byte ADPDU\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      11185,
+      11223
+    ],
+    "baseline_bytes": [
+      3687,
+      3688
+    ],
+    "pre_F_INT_line": 199,
+    "baseline_line": 199,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 233,
+    "reference_bytes": [
+      12590,
+      12717
+    ],
+    "ported_bytes": [
+      3769,
+      3797
+    ],
+    "reference_line": 219,
+    "ported_line": 201,
+    "reference": "\n\n// Milan v1.2 Table 5.28, coded as the processor's lsm_state_e so the two\n// implementations' walks compare state for state.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.28\n\n",
+    "pre_F_INT_bytes": [
+      11304,
+      11431
+    ],
+    "baseline_bytes": [
+      3769,
+      3797
+    ],
+    "pre_F_INT_line": 201,
+    "baseline_line": 201,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 270,
+    "reference_bytes": [
+      12927,
+      12996
+    ],
+    "ported_bytes": [
+      4007,
+      4031
+    ],
+    "reference_line": 232,
+    "ported_line": 214,
+    "reference": "\n\n// Milan v1.2 5.3.8.6: the probing_status GET_STREAM_INFO reports.\n",
+    "ported": "\n\n// Milan v1.2 5.3.8.6\n",
+    "pre_F_INT_bytes": [
+      11641,
+      11710
+    ],
+    "baseline_bytes": [
+      4007,
+      4031
+    ],
+    "pre_F_INT_line": 214,
+    "baseline_line": 214,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 291,
+    "reference_bytes": [
+      13128,
+      13257
+    ],
+    "ported_bytes": [
+      4163,
+      4191
+    ],
+    "reference_line": 240,
+    "ported_line": 222,
+    "reference": "\n\n// The one timer of a sink's connection machine (Table 5.29), and its\n// discovery machine's TMR_NO_ADP, which runs beside it.\n",
+    "ported": "\n\n// Milan v1.2 Table 5.29\n\n",
+    "pre_F_INT_bytes": [
+      11842,
+      11971
+    ],
+    "baseline_bytes": [
+      4163,
+      4191
+    ],
+    "pre_F_INT_line": 222,
+    "baseline_line": 222,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 308,
+    "reference_bytes": [
+      13377,
+      13421
+    ],
+    "ported_bytes": [
+      4311,
+      4335
+    ],
+    "reference_line": 250,
+    "ported_line": 232,
+    "reference": "\n\n// A sink's binding parameters (5.5.2.4).\n",
+    "ported": "\n\n// Milan v1.2 5.5.2.4\n",
+    "pre_F_INT_bytes": [
+      12091,
+      12135
+    ],
+    "baseline_bytes": [
+      4311,
+      4335
+    ],
+    "pre_F_INT_line": 232,
+    "baseline_line": 232,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 325,
+    "reference_bytes": [
+      13555,
+      13617
+    ],
+    "ported_bytes": [
+      4469,
+      4493
+    ],
+    "reference_line": 258,
+    "ported_line": 240,
+    "reference": "\n\n// SRP stream parameters (5.5.1.3: what settlement learns).\n",
+    "ported": "\n\n// Milan v1.2 5.5.1.3\n",
+    "pre_F_INT_bytes": [
+      12269,
+      12331
+    ],
+    "baseline_bytes": [
+      4469,
+      4493
+    ],
+    "pre_F_INT_line": 240,
+    "baseline_line": 240,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 334,
+    "reference_bytes": [
+      13678,
+      13712
+    ],
+    "ported_bytes": [
+      4554,
+      4556
+    ],
+    "reference_line": 263,
+    "ported_line": 245,
+    "reference": "                      // 48 bits\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      12392,
+      12426
+    ],
+    "baseline_bytes": [
+      4554,
+      4556
+    ],
+    "pre_F_INT_line": 245,
+    "baseline_line": 245,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 339,
+    "reference_bytes": [
+      13732,
+      13804
+    ],
+    "ported_bytes": [
+      4576,
+      4620
+    ],
+    "reference_line": 265,
+    "ported_line": 247,
+    "reference": "\n\n// What a STREAM_OUTPUT's owners say about it now (5.5.4.1, 5.5.4.3).\n",
+    "ported": "\n\n// Milan v1.2 5.5.4.1; Milan v1.2 5.5.4.3\n",
+    "pre_F_INT_bytes": [
+      12446,
+      12518
+    ],
+    "baseline_bytes": [
+      4576,
+      4620
+    ],
+    "pre_F_INT_line": 247,
+    "baseline_line": 247,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 345,
+    "reference_bytes": [
+      13852,
+      13928
+    ],
+    "ported_bytes": [
+      4668,
+      4711
+    ],
+    "reference_line": 269,
+    "ported_line": 251,
+    "reference": "                    // 5.5.4.1 step 3: MAAP holds a destination MAC for it\n\t",
+    "ported": "                    // Milan v1.2 5.5.4.1\n\t",
+    "pre_F_INT_bytes": [
+      12566,
+      12642
+    ],
+    "baseline_bytes": [
+      4668,
+      4711
+    ],
+    "pre_F_INT_line": 251,
+    "baseline_line": 251,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 352,
+    "reference_bytes": [
+      13975,
+      14060
+    ],
+    "ported_bytes": [
+      4758,
+      4804
+    ],
+    "reference_line": 271,
+    "ported_line": 253,
+    "reference": "                     // Table 5.47: a Listener Asking Failed attribute is registered\n",
+    "ported": "                     // Milan v1.2 Table 5.47\n",
+    "pre_F_INT_bytes": [
+      12689,
+      12774
+    ],
+    "baseline_bytes": [
+      4758,
+      4804
+    ],
+    "pre_F_INT_line": 253,
+    "baseline_line": 253,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 354,
+    "reference_bytes": [
+      14062,
+      14315
+    ],
+    "ported_bytes": [
+      4806,
+      4868
+    ],
+    "reference_line": 272,
+    "ported_line": 254,
+    "reference": "\n\n// A sink's dynamic state (Milan v1.2 5.3.8.2 to 5.3.8.9). env->changed fires\n// when one of Table 5.22's STREAM_INPUT items moves: bound, started,\n// probing_status, acmp_status, the stream's three fields, talker_registered\n// or registering_failed.\n",
+    "ported": "\n\n// Milan v1.2 5.3.8.2 to 5.3.8.9\n// Milan v1.2 Table 5.22\n\n\n",
+    "pre_F_INT_bytes": [
+      12776,
+      13029
+    ],
+    "baseline_bytes": [
+      4806,
+      4868
+    ],
+    "pre_F_INT_line": 254,
+    "baseline_line": 254,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 364,
+    "reference_bytes": [
+      14380,
+      14421
+    ],
+    "ported_bytes": [
+      4933,
+      4985
+    ],
+    "reference_line": 280,
+    "ported_line": 262,
+    "reference": "                             // 5.3.8.2\n\t",
+    "ported": "                             // Milan v1.2 5.3.8.2\n\t",
+    "pre_F_INT_bytes": [
+      13094,
+      13135
+    ],
+    "baseline_bytes": [
+      4933,
+      4985
+    ],
+    "pre_F_INT_line": 262,
+    "baseline_line": 262,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 368,
+    "reference_bytes": [
+      14449,
+      14473
+    ],
+    "ported_bytes": [
+      5013,
+      5048
+    ],
+    "reference_line": 281,
+    "ported_line": 263,
+    "reference": "            // 5.3.8.3\n\t",
+    "ported": "            // Milan v1.2 5.3.8.3\n\t",
+    "pre_F_INT_bytes": [
+      13163,
+      13187
+    ],
+    "baseline_bytes": [
+      5013,
+      5048
+    ],
+    "pre_F_INT_line": 263,
+    "baseline_line": 263,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 371,
+    "reference_bytes": [
+      14486,
+      14558
+    ],
+    "ported_bytes": [
+      5061,
+      5111
+    ],
+    "reference_line": 282,
+    "ported_line": 264,
+    "reference": "                           // 5.3.8.7, undefined (false) while unbound\n\t",
+    "ported": "                           // Milan v1.2 5.3.8.7\n\t",
+    "pre_F_INT_bytes": [
+      13200,
+      13272
+    ],
+    "baseline_bytes": [
+      5061,
+      5111
+    ],
+    "pre_F_INT_line": 264,
+    "baseline_line": 264,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 375,
+    "reference_bytes": [
+      14591,
+      14610
+    ],
+    "ported_bytes": [
+      5144,
+      5174
+    ],
+    "reference_line": 283,
+    "ported_line": 265,
+    "reference": "       // 5.3.8.6\n\t",
+    "ported": "       // Milan v1.2 5.3.8.6\n\t",
+    "pre_F_INT_bytes": [
+      13305,
+      13324
+    ],
+    "baseline_bytes": [
+      5144,
+      5174
+    ],
+    "pre_F_INT_line": 265,
+    "baseline_line": 265,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 381,
+    "reference_bytes": [
+      14645,
+      14684
+    ],
+    "ported_bytes": [
+      5209,
+      5259
+    ],
+    "reference_line": 285,
+    "ported_line": 267,
+    "reference": "                           // 5.3.8.5\n\t",
+    "ported": "                           // Milan v1.2 5.3.8.5\n\t",
+    "pre_F_INT_bytes": [
+      13359,
+      13398
+    ],
+    "baseline_bytes": [
+      5209,
+      5259
+    ],
+    "pre_F_INT_line": 267,
+    "baseline_line": 267,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 385,
+    "reference_bytes": [
+      14710,
+      14796
+    ],
+    "ported_bytes": [
+      5285,
+      5322
+    ],
+    "reference_line": 286,
+    "ported_line": 268,
+    "reference": "              // 5.3.8.9: as the last PROBE_TX_RESPONSE gave it, 0 while not settled\n\t",
+    "ported": "              // Milan v1.2 5.3.8.9\n\t",
+    "pre_F_INT_bytes": [
+      13424,
+      13510
+    ],
+    "baseline_bytes": [
+      5285,
+      5322
+    ],
+    "pre_F_INT_line": 268,
+    "baseline_line": 268,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 388,
+    "reference_bytes": [
+      14819,
+      14894
+    ],
+    "ported_bytes": [
+      5345,
+      5385
+    ],
+    "reference_line": 287,
+    "ported_line": 269,
+    "reference": "                 // 5.3.8.8: a matching Talker attribute (SETTLED_RSV_OK)\n\t",
+    "ported": "                 // Milan v1.2 5.3.8.8\n\t",
+    "pre_F_INT_bytes": [
+      13533,
+      13608
+    ],
+    "baseline_bytes": [
+      5345,
+      5385
+    ],
+    "pre_F_INT_line": 269,
+    "baseline_line": 269,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 391,
+    "reference_bytes": [
+      14918,
+      14968
+    ],
+    "ported_bytes": [
+      5409,
+      5411
+    ],
+    "reference_line": 288,
+    "ported_line": 270,
+    "reference": "                // ... and it is a Talker Failed\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      13632,
+      13682
+    ],
+    "baseline_bytes": [
+      5409,
+      5411
+    ],
+    "pre_F_INT_line": 270,
+    "baseline_line": 270,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 394,
+    "reference_bytes": [
+      14991,
+      15019
+    ],
+    "ported_bytes": [
+      5434,
+      5473
+    ],
+    "reference_line": 289,
+    "ported_line": 271,
+    "reference": "                 // 5.3.8.4\n",
+    "ported": "                 // Milan v1.2 5.3.8.4\n",
+    "pre_F_INT_bytes": [
+      13705,
+      13733
+    ],
+    "baseline_bytes": [
+      5434,
+      5473
+    ],
+    "pre_F_INT_line": 271,
+    "baseline_line": 271,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 405,
+    "reference_bytes": [
+      15088,
+      15135
+    ],
+    "ported_bytes": [
+      5542,
+      5544
+    ],
+    "reference_line": 294,
+    "ported_line": 276,
+    "reference": "                  // 1 to ACMP_MAX_INTERFACES\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      13802,
+      13849
+    ],
+    "baseline_bytes": [
+      5542,
+      5544
+    ],
+    "pre_F_INT_line": 276,
+    "baseline_line": 276,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 411,
+    "reference_bytes": [
+      15169,
+      15216
+    ],
+    "ported_bytes": [
+      5578,
+      5580
+    ],
+    "reference_line": 295,
+    "ported_line": 277,
+    "reference": "      // each interface's source MAC, 48 bits\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      13883,
+      13930
+    ],
+    "baseline_bytes": [
+      5578,
+      5580
+    ],
+    "pre_F_INT_line": 277,
+    "baseline_line": 277,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 414,
+    "reference_bytes": [
+      15233,
+      15303
+    ],
+    "ported_bytes": [
+      5597,
+      5599
+    ],
+    "reference_line": 296,
+    "ported_line": 278,
+    "reference": "                       // STREAM_INPUTs of the current configuration\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      13947,
+      14017
+    ],
+    "baseline_bytes": [
+      5597,
+      5599
+    ],
+    "pre_F_INT_line": 278,
+    "baseline_line": 278,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 423,
+    "reference_bytes": [
+      15363,
+      15403
+    ],
+    "ported_bytes": [
+      5659,
+      5661
+    ],
+    "reference_line": 298,
+    "ported_line": 280,
+    "reference": "                     // STREAM_OUTPUTs\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      14077,
+      14117
+    ],
+    "baseline_bytes": [
+      5659,
+      5661
+    ],
+    "pre_F_INT_line": 280,
+    "baseline_line": 280,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 431,
+    "reference_bytes": [
+      15449,
+      15582
+    ],
+    "ported_bytes": [
+      5707,
+      5711
+    ],
+    "reference_line": 300,
+    "ported_line": 282,
+    "reference": "\n\n// The transport. Every pointer is required; `ctx` is passed back. None may\n// call back into the core (see the top of this file).\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      14163,
+      14296
+    ],
+    "baseline_bytes": [
+      5707,
+      5711
+    ],
+    "pre_F_INT_line": 282,
+    "baseline_line": 282,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 438,
+    "reference_bytes": [
+      15613,
+      15764
+    ],
+    "ported_bytes": [
+      5742,
+      5746
+    ],
+    "reference_line": 305,
+    "ported_line": 287,
+    "reference": "\n\t// Queue one frame on `interface`; true when it was taken, false when there\n\t// is no room now (the core keeps it owed and retries from acmp_poll).\n\t",
+    "ported": "\n\n\n\t",
+    "pre_F_INT_bytes": [
+      14327,
+      14478
+    ],
+    "baseline_bytes": [
+      5742,
+      5746
+    ],
+    "pre_F_INT_line": 287,
+    "baseline_line": 287,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 460,
+    "reference_bytes": [
+      15842,
+      15910
+    ],
+    "ported_bytes": [
+      5824,
+      5827
+    ],
+    "reference_line": 308,
+    "ported_line": 290,
+    "reference": "\n\t// Milliseconds, modulo 2^32, of the clock every deadline is on.\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      14556,
+      14624
+    ],
+    "baseline_bytes": [
+      5824,
+      5827
+    ],
+    "pre_F_INT_line": 290,
+    "baseline_line": 290,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 471,
+    "reference_bytes": [
+      15940,
+      16083
+    ],
+    "ported_bytes": [
+      5857,
+      5861
+    ],
+    "reference_line": 310,
+    "ported_line": 292,
+    "reference": "\n\t// The interface's one timer: arm it to call acmp_timer_expired once at\n\t// deadline_ms (replacing any arm), or, with armed false, stop it.\n\t",
+    "ported": "\n\n\n\t",
+    "pre_F_INT_bytes": [
+      14654,
+      14797
+    ],
+    "baseline_bytes": [
+      5857,
+      5861
+    ],
+    "pre_F_INT_line": 292,
+    "baseline_line": 292,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 491,
+    "reference_bytes": [
+      16162,
+      16232
+    ],
+    "ported_bytes": [
+      5940,
+      5943
+    ],
+    "reference_line": 313,
+    "ported_line": 295,
+    "reference": "\n\t// The gPTP grandmaster identity and domain of the interface, now.\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      14876,
+      14946
+    ],
+    "baseline_bytes": [
+      5940,
+      5943
+    ],
+    "pre_F_INT_line": 295,
+    "baseline_line": 295,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 513,
+    "reference_bytes": [
+      16310,
+      16357
+    ],
+    "ported_bytes": [
+      6021,
+      6024
+    ],
+    "reference_line": 315,
+    "ported_line": 297,
+    "reference": "\n\t// Entropy mixed into the random TMR_DELAY.\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      15024,
+      15071
+    ],
+    "baseline_bytes": [
+      6021,
+      6024
+    ],
+    "pre_F_INT_line": 297,
+    "baseline_line": 297,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 524,
+    "reference_bytes": [
+      16385,
+      16698
+    ],
+    "ported_bytes": [
+      6052,
+      6059
+    ],
+    "reference_line": 317,
+    "ported_line": 299,
+    "reference": "\n\t// The ingress of `interface` passes the ENTITY_AVAILABLE and\n\t// ENTITY_DEPARTING of `talker_entity_id` for `sink` (one entry per sink),\n\t// or, with bound false, no longer for it. Called when a sink is bound,\n\t// unbound or bound to another talker, and by acmp_open for every binding\n\t// the store restored.\n\t",
+    "ported": "\n\n\n\n\n\n\t",
+    "pre_F_INT_bytes": [
+      15099,
+      15412
+    ],
+    "baseline_bytes": [
+      6052,
+      6059
+    ],
+    "pre_F_INT_line": 299,
+    "baseline_line": 299,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 547,
+    "reference_bytes": [
+      16797,
+      17183
+    ],
+    "ported_bytes": [
+      6158,
+      6177
+    ],
+    "reference_line": 323,
+    "ported_line": 305,
+    "reference": "\n\t// The sink's binding as the fabric datapath reads it (the publication\n\t// block): bound, started, and the stream_id it listens to, 0 when none;\n\t// stream_moved says the stream_id is not the one last published. Called\n\t// for a sink whose triple moved, before any frame of the entry is sent\n\t// (see the top of this file), and by acmp_open for every binding the\n\t// store restored.\n\t",
+    "ported": "\n\t// REQ: ACMP-10\n\t",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 578,
+    "reference_bytes": [
+      17316,
+      17412
+    ],
+    "ported_bytes": [
+      6310,
+      6314
+    ],
+    "reference_line": 332,
+    "ported_line": 309,
+    "reference": "\n\n// The entity's other owners. Every pointer is required; none may call back\n// into the core.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      15514,
+      15610
+    ],
+    "baseline_bytes": [
+      6161,
+      6165
+    ],
+    "pre_F_INT_line": 306,
+    "baseline_line": 306,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 585,
+    "reference_bytes": [
+      17441,
+      17533
+    ],
+    "ported_bytes": [
+      6343,
+      6369
+    ],
+    "reference_line": 337,
+    "ported_line": 314,
+    "reference": "\n\t// True when the entity is locked (Milan v1.2 5.3.4.1), with the locking\n\t// controller.\n\t",
+    "ported": "\n\t// Milan v1.2 5.3.4.1\n\n\t",
+    "pre_F_INT_bytes": [
+      15639,
+      15731
+    ],
+    "baseline_bytes": [
+      6194,
+      6220
+    ],
+    "pre_F_INT_line": 311,
+    "baseline_line": 311,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 600,
+    "reference_bytes": [
+      17591,
+      17628
+    ],
+    "ported_bytes": [
+      6427,
+      6430
+    ],
+    "reference_line": 340,
+    "ported_line": 317,
+    "reference": "\n\t// The STREAM_OUTPUT's state now.\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      15789,
+      15826
+    ],
+    "baseline_bytes": [
+      6278,
+      6281
+    ],
+    "pre_F_INT_line": 314,
+    "baseline_line": 314,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 619,
+    "reference_bytes": [
+      17701,
+      17884
+    ],
+    "ported_bytes": [
+      6503,
+      6558
+    ],
+    "reference_line": 342,
+    "ported_line": 319,
+    "reference": "\n\t// Start listening with `stream` (5.5.3.5.18 step 4: initiate the SRP\n\t// reservation and listen for the stream's packets), or with NULL stop\n\t// and clear it (5.5.3.5.36 step 1).\n\t",
+    "ported": "\n\t// Milan v1.2 5.5.3.5.18\n\t// Milan v1.2 5.5.3.5.36\n\n\t",
+    "pre_F_INT_bytes": [
+      15899,
+      16082
+    ],
+    "baseline_bytes": [
+      6354,
+      6409
+    ],
+    "pre_F_INT_line": 316,
+    "baseline_line": 316,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 639,
+    "reference_bytes": [
+      17956,
+      18035
+    ],
+    "ported_bytes": [
+      6630,
+      6633
+    ],
+    "reference_line": 346,
+    "ported_line": 323,
+    "reference": "\n\t// A saved field of the sink's binding changed: the store marks its record.\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      16154,
+      16233
+    ],
+    "baseline_bytes": [
+      6481,
+      6484
+    ],
+    "pre_F_INT_line": 320,
+    "baseline_line": 320,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 653,
+    "reference_bytes": [
+      18077,
+      18149
+    ],
+    "ported_bytes": [
+      6675,
+      6678
+    ],
+    "reference_line": 348,
+    "ported_line": 325,
+    "reference": "\n\t// The sink's view changed (released after its response, see above).\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      16275,
+      16347
+    ],
+    "baseline_bytes": [
+      6526,
+      6529
+    ],
+    "pre_F_INT_line": 322,
+    "baseline_line": 322,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 696,
+    "reference_bytes": [
+      18371,
+      18443
+    ],
+    "ported_bytes": [
+      6900,
+      6927
+    ],
+    "reference_line": 360,
+    "ported_line": 337,
+    "reference": "\n\t// the PROBE_TX_COMMAND last sent (5.5.3.5.3 step 6: its saved copy)\n\t",
+    "ported": "\n\t// Milan v1.2 5.5.3.5.3\n\t",
+    "pre_F_INT_bytes": [
+      16569,
+      16641
+    ],
+    "baseline_bytes": [
+      6751,
+      6778
+    ],
+    "pre_F_INT_line": 334,
+    "baseline_line": 334,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 711,
+    "reference_bytes": [
+      18563,
+      18635
+    ],
+    "ported_bytes": [
+      7047,
+      7095
+    ],
+    "reference_line": 366,
+    "ported_line": 343,
+    "reference": "                     // the duplicate went (5.5.3.5.16)\n\t// settlement\n\t",
+    "ported": "                     // Milan v1.2 5.5.3.5.16\n\n\t",
+    "pre_F_INT_bytes": [
+      16761,
+      16833
+    ],
+    "baseline_bytes": [
+      6898,
+      6946
+    ],
+    "pre_F_INT_line": 340,
+    "baseline_line": 340,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 715,
+    "reference_bytes": [
+      18661,
+      18711
+    ],
+    "ported_bytes": [
+      7121,
+      7123
+    ],
+    "reference_line": 368,
+    "ported_line": 345,
+    "reference": "              // env->srp holds it while settled\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      16859,
+      16909
+    ],
+    "baseline_bytes": [
+      6972,
+      6974
+    ],
+    "pre_F_INT_line": 342,
+    "baseline_line": 342,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 718,
+    "reference_bytes": [
+      18726,
+      18828
+    ],
+    "ported_bytes": [
+      7138,
+      7161
+    ],
+    "reference_line": 369,
+    "ported_line": 346,
+    "reference": "                         // the registered Talker attribute is a Talker Failed\n\t// discovery (5.6.4)\n\t",
+    "ported": "\n\t// Milan v1.2 5.6.4\n\t",
+    "pre_F_INT_bytes": [
+      16924,
+      17026
+    ],
+    "baseline_bytes": [
+      6989,
+      7012
+    ],
+    "pre_F_INT_line": 343,
+    "baseline_line": 343,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 730,
+    "reference_bytes": [
+      18928,
+      18964
+    ],
+    "ported_bytes": [
+      7261,
+      7264
+    ],
+    "reference_line": 374,
+    "ported_line": 351,
+    "reference": "\n\t// timers, absolute milliseconds\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      17126,
+      17162
+    ],
+    "baseline_bytes": [
+      7112,
+      7115
+    ],
+    "pre_F_INT_line": 348,
+    "baseline_line": 348,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 740,
+    "reference_bytes": [
+      19030,
+      19104
+    ],
+    "ported_bytes": [
+      7330,
+      7332
+    ],
+    "reference_line": 378,
+    "ported_line": 355,
+    "reference": "                        // TMR_NO_RESP waits for its owed probe to leave\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      17228,
+      17302
+    ],
+    "baseline_bytes": [
+      7181,
+      7183
+    ],
+    "pre_F_INT_line": 352,
+    "baseline_line": 352,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 746,
+    "reference_bytes": [
+      19143,
+      19188
+    ],
+    "ported_bytes": [
+      7371,
+      7374
+    ],
+    "reference_line": 380,
+    "ported_line": 357,
+    "reference": "\n\t// what the admit port holds for the sink\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      17341,
+      17386
+    ],
+    "baseline_bytes": [
+      7222,
+      7225
+    ],
+    "pre_F_INT_line": 354,
+    "baseline_line": 354,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 752,
+    "reference_bytes": [
+      19229,
+      19276
+    ],
+    "ported_bytes": [
+      7415,
+      7434
+    ],
+    "reference_line": 383,
+    "ported_line": 360,
+    "reference": "\n\t// what the publish port holds for the sink\n\t",
+    "ported": "\n\t// REQ: ACMP-10\n\t",
+    "category": "amended-comment-or-adjacent-whitespace"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 761,
+    "reference_bytes": [
+      19350,
+      19390
+    ],
+    "ported_bytes": [
+      7508,
+      7511
+    ],
+    "reference_line": 387,
+    "ported_line": 364,
+    "reference": "\n\t// notification (#653) and the store\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      17427,
+      17467
+    ],
+    "baseline_bytes": [
+      7266,
+      7269
+    ],
+    "pre_F_INT_line": 357,
+    "baseline_line": 357,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 764,
+    "reference_bytes": [
+      19410,
+      19488
+    ],
+    "ported_bytes": [
+      7531,
+      7533
+    ],
+    "reference_line": 389,
+    "ported_line": 366,
+    "reference": "                    // owed frames whose leaving releases this sink's change\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      17487,
+      17565
+    ],
+    "baseline_bytes": [
+      7289,
+      7291
+    ],
+    "pre_F_INT_line": 359,
+    "baseline_line": 359,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 768,
+    "reference_bytes": [
+      19519,
+      19568
+    ],
+    "ported_bytes": [
+      7564,
+      7566
+    ],
+    "reference_line": 390,
+    "ported_line": 367,
+    "reference": "         // the view env->changed last reported\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      17596,
+      17645
+    ],
+    "baseline_bytes": [
+      7322,
+      7324
+    ],
+    "pre_F_INT_line": 360,
+    "baseline_line": 360,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 774,
+    "reference_bytes": [
+      19602,
+      19650
+    ],
+    "ported_bytes": [
+      7600,
+      7601
+    ],
+    "reference_line": 391,
+    "ported_line": 368,
+    "reference": "      // the record env->persist last announced\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      17679,
+      17727
+    ],
+    "baseline_bytes": [
+      7358,
+      7359
+    ],
+    "pre_F_INT_line": 361,
+    "baseline_line": 361,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 776,
+    "reference_bytes": [
+      19652,
+      19732
+    ],
+    "ported_bytes": [
+      7603,
+      7606
+    ],
+    "reference_line": 392,
+    "ported_line": 369,
+    "reference": "\n\n// A frame waiting for transmit room, and the sinks whose change it releases.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      17729,
+      17809
+    ],
+    "baseline_bytes": [
+      7361,
+      7364
+    ],
+    "pre_F_INT_line": 362,
+    "baseline_line": 362,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 785,
+    "reference_bytes": [
+      19789,
+      19876
+    ],
+    "ported_bytes": [
+      7663,
+      7665
+    ],
+    "reference_line": 397,
+    "ported_line": 374,
+    "reference": "                       // 1 + the sink whose PROBE_TX_COMMAND it is; 0 for a response\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      17866,
+      17953
+    ],
+    "baseline_bytes": [
+      7421,
+      7423
+    ],
+    "pre_F_INT_line": 367,
+    "baseline_line": 367,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 788,
+    "reference_bytes": [
+      19893,
+      19970
+    ],
+    "ported_bytes": [
+      7682,
+      7684
+    ],
+    "reference_line": 398,
+    "ported_line": 375,
+    "reference": "                       // bit s: sink s's change is reported once it leaves\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      17970,
+      18047
+    ],
+    "baseline_bytes": [
+      7440,
+      7442
+    ],
+    "pre_F_INT_line": 368,
+    "baseline_line": 368,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 825,
+    "reference_bytes": [
+      20171,
+      20233
+    ],
+    "ported_bytes": [
+      7885,
+      7934
+    ],
+    "reference_line": 407,
+    "ported_line": 384,
+    "reference": "                   // the next PROBE_TX_COMMAND's (8.2.1.15)\n\t",
+    "ported": "                   // IEEE 1722.1-2021 8.2.1.15\n\t",
+    "pre_F_INT_bytes": [
+      18248,
+      18310
+    ],
+    "baseline_bytes": [
+      7643,
+      7692
+    ],
+    "pre_F_INT_line": 377,
+    "baseline_line": 377,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 828,
+    "reference_bytes": [
+      20246,
+      20307
+    ],
+    "ported_bytes": [
+      7947,
+      7949
+    ],
+    "reference_line": 408,
+    "ported_line": 385,
+    "reference": "                           // xorshift32 state of TMR_DELAY\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18323,
+      18384
+    ],
+    "baseline_bytes": [
+      7705,
+      7707
+    ],
+    "pre_F_INT_line": 378,
+    "baseline_line": 378,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 831,
+    "reference_bytes": [
+      20319,
+      20383
+    ],
+    "ported_bytes": [
+      7961,
+      7963
+    ],
+    "reference_line": 409,
+    "ported_line": 386,
+    "reference": "                            // the seed port has been mixed in\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18396,
+      18460
+    ],
+    "baseline_bytes": [
+      7719,
+      7721
+    ],
+    "pre_F_INT_line": 379,
+    "baseline_line": 379,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 834,
+    "reference_bytes": [
+      20396,
+      20457
+    ],
+    "ported_bytes": [
+      7976,
+      7978
+    ],
+    "reference_line": 410,
+    "ported_line": 387,
+    "reference": "                           // a port call is running (#678)\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18473,
+      18534
+    ],
+    "baseline_bytes": [
+      7734,
+      7736
+    ],
+    "pre_F_INT_line": 380,
+    "baseline_line": 380,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 837,
+    "reference_bytes": [
+      20471,
+      20544
+    ],
+    "ported_bytes": [
+      7992,
+      7994
+    ],
+    "reference_line": 411,
+    "ported_line": 388,
+    "reference": "                          // `now` holds this entry's latest clock read\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18548,
+      18621
+    ],
+    "baseline_bytes": [
+      7750,
+      7752
+    ],
+    "pre_F_INT_line": 381,
+    "baseline_line": 381,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 846,
+    "reference_bytes": [
+      20597,
+      20637
+    ],
+    "ported_bytes": [
+      8047,
+      8049
+    ],
+    "reference_line": 413,
+    "ported_line": 390,
+    "reference": "  // what each interface's timer holds\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18674,
+      18714
+    ],
+    "baseline_bytes": [
+      7805,
+      7807
+    ],
+    "pre_F_INT_line": 383,
+    "baseline_line": 383,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 865,
+    "reference_bytes": [
+      20758,
+      20802
+    ],
+    "ported_bytes": [
+      8170,
+      8173
+    ],
+    "reference_line": 417,
+    "ported_line": 394,
+    "reference": "\n\t// diagnostics, each counted modulo 2^32\n\t",
+    "ported": "\n\n\t",
+    "pre_F_INT_bytes": [
+      18835,
+      18879
+    ],
+    "baseline_bytes": [
+      7928,
+      7931
+    ],
+    "pre_F_INT_line": 387,
+    "baseline_line": 387,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 868,
+    "reference_bytes": [
+      20822,
+      20896
+    ],
+    "ported_bytes": [
+      8193,
+      8195
+    ],
+    "reference_line": 419,
+    "ported_line": 396,
+    "reference": "                    // not addressed to this entity's talker or listener\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18899,
+      18973
+    ],
+    "baseline_bytes": [
+      7951,
+      7953
+    ],
+    "pre_F_INT_line": 389,
+    "baseline_line": 389,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 871,
+    "reference_bytes": [
+      20918,
+      21004
+    ],
+    "ported_bytes": [
+      8217,
+      8219
+    ],
+    "reference_line": 420,
+    "ported_line": 397,
+    "reference": "                  // not an ACMPDU this module can read (incl. another AVTP version)\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      18995,
+      19081
+    ],
+    "baseline_bytes": [
+      7975,
+      7977
+    ],
+    "pre_F_INT_line": 390,
+    "baseline_line": 390,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 874,
+    "reference_bytes": [
+      21026,
+      21111
+    ],
+    "ported_bytes": [
+      8241,
+      8243
+    ],
+    "reference_line": 421,
+    "ported_line": 398,
+    "reference": "                  // LISTENER_UNKNOWN_ID answers and probe responses ignored for it\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19103,
+      19188
+    ],
+    "baseline_bytes": [
+      7999,
+      8001
+    ],
+    "pre_F_INT_line": 391,
+    "baseline_line": 391,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 877,
+    "reference_bytes": [
+      21135,
+      21206
+    ],
+    "ported_bytes": [
+      8267,
+      8269
+    ],
+    "reference_line": 422,
+    "ported_line": 399,
+    "reference": "                // PROBE_TX_RESPONSEs that are not the sink's probe's\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19212,
+      19283
+    ],
+    "baseline_bytes": [
+      8025,
+      8027
+    ],
+    "pre_F_INT_line": 392,
+    "baseline_line": 392,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 880,
+    "reference_bytes": [
+      21230,
+      21284
+    ],
+    "ported_bytes": [
+      8293,
+      8295
+    ],
+    "reference_line": 423,
+    "ported_line": 400,
+    "reference": "                // CONTROLLER_NOT_AUTHORIZED answers\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19307,
+      19361
+    ],
+    "baseline_bytes": [
+      8051,
+      8053
+    ],
+    "pre_F_INT_line": 393,
+    "baseline_line": 393,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 883,
+    "reference_bytes": [
+      21305,
+      21378
+    ],
+    "ported_bytes": [
+      8316,
+      8318
+    ],
+    "reference_line": 424,
+    "ported_line": 401,
+    "reference": "                   // ADPDUs no sink took, or none this module can read\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19382,
+      19455
+    ],
+    "baseline_bytes": [
+      8074,
+      8076
+    ],
+    "pre_F_INT_line": 394,
+    "baseline_line": 394,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 886,
+    "reference_bytes": [
+      21398,
+      21458
+    ],
+    "ported_bytes": [
+      8338,
+      8407
+    ],
+    "reference_line": 425,
+    "ported_line": 402,
+    "reference": "                    // events Table 5.30 or 5.54 marks \"x\"\n\t",
+    "ported": "                    // Milan v1.2 Table 5.30; Milan v1.2 Table 5.54\n\t",
+    "pre_F_INT_bytes": [
+      19475,
+      19535
+    ],
+    "baseline_bytes": [
+      8096,
+      8165
+    ],
+    "pre_F_INT_line": 395,
+    "baseline_line": 395,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 889,
+    "reference_bytes": [
+      21478,
+      21544
+    ],
+    "ported_bytes": [
+      8427,
+      8429
+    ],
+    "reference_line": 426,
+    "ported_line": 403,
+    "reference": "                    // commands dropped behind a full owed queue\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19555,
+      19621
+    ],
+    "baseline_bytes": [
+      8185,
+      8187
+    ],
+    "pre_F_INT_line": 396,
+    "baseline_line": 396,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 892,
+    "reference_bytes": [
+      21565,
+      21628
+    ],
+    "ported_bytes": [
+      8450,
+      8452
+    ],
+    "reference_line": 427,
+    "ported_line": 404,
+    "reference": "                   // probes dropped behind a full owed queue\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19642,
+      19705
+    ],
+    "baseline_bytes": [
+      8208,
+      8210
+    ],
+    "pre_F_INT_line": 397,
+    "baseline_line": 397,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 895,
+    "reference_bytes": [
+      21652,
+      21703
+    ],
+    "ported_bytes": [
+      8476,
+      8478
+    ],
+    "reference_line": 428,
+    "ported_line": 405,
+    "reference": "                // sends the port had no room for\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19729,
+      19780
+    ],
+    "baseline_bytes": [
+      8234,
+      8236
+    ],
+    "pre_F_INT_line": 398,
+    "baseline_line": 398,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 898,
+    "reference_bytes": [
+      21722,
+      21789
+    ],
+    "ported_bytes": [
+      8497,
+      8499
+    ],
+    "reference_line": 429,
+    "ported_line": 406,
+    "reference": "                     // calls made from inside a port call (#678)\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19799,
+      19866
+    ],
+    "baseline_bytes": [
+      8255,
+      8257
+    ],
+    "pre_F_INT_line": 399,
+    "baseline_line": 399,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 901,
+    "reference_bytes": [
+      21804,
+      21849
+    ],
+    "ported_bytes": [
+      8514,
+      8516
+    ],
+    "reference_line": 430,
+    "ported_line": 407,
+    "reference": "                         // TMR_DELAY draws\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      19881,
+      19926
+    ],
+    "baseline_bytes": [
+      8272,
+      8274
+    ],
+    "pre_F_INT_line": 400,
+    "baseline_line": 400,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 906,
+    "reference_bytes": [
+      21874,
+      22081
+    ],
+    "ported_bytes": [
+      8541,
+      8569
+    ],
+    "reference_line": 432,
+    "ported_line": 409,
+    "reference": "\n\n// Bind the instance to its configuration and ports; every sink UNBOUND\n// (5.5.3.5.1). False, with nothing set, for a configuration outside the\n// static sizes or an interface index outside n_interfaces.\n",
+    "ported": "\n\n// Milan v1.2 5.5.3.5.1\n\n\n",
+    "pre_F_INT_bytes": [
+      19951,
+      20158
+    ],
+    "baseline_bytes": [
+      8299,
+      8327
+    ],
+    "pre_F_INT_line": 402,
+    "baseline_line": 402,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 933,
+    "reference_bytes": [
+      22211,
+      22292
+    ],
+    "ported_bytes": [
+      8699,
+      8702
+    ],
+    "reference_line": 438,
+    "ported_line": 415,
+    "reference": "\n\n// Inputs: a received ACMP frame, a received ADP frame, the interface's timer.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      20288,
+      20369
+    ],
+    "baseline_bytes": [
+      8457,
+      8460
+    ],
+    "pre_F_INT_line": 408,
+    "baseline_line": 408,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 985,
+    "reference_bytes": [
+      22524,
+      22692
+    ],
+    "ported_bytes": [
+      8934,
+      8963
+    ],
+    "reference_line": 443,
+    "ported_line": 420,
+    "reference": "\n\n// The SRP side: EVT_TK_REGISTERED (with the attribute's kind: a Talker Failed\n// is `failed`) and EVT_TK_UNREGISTERED for the sink's settled stream (Table\n// 5.29).\n",
+    "ported": "\n\n// Milan v1.2 Table 5.29\n\n\n",
+    "pre_F_INT_bytes": [
+      20601,
+      20769
+    ],
+    "baseline_bytes": [
+      8692,
+      8721
+    ],
+    "pre_F_INT_line": 413,
+    "baseline_line": 413,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1012,
+    "reference_bytes": [
+      22818,
+      23122
+    ],
+    "ported_bytes": [
+      9089,
+      9142
+    ],
+    "reference_line": 449,
+    "ported_line": 426,
+    "reference": "\n// A continuous registration's kind is a view attribute (Milan Table 5.23).\n// Only SETTLED_RSV_OK accepts this update: it changes REGISTERING_FAILED,\n// never the state or probe. It is not EVT_TK_REGISTERED, which Table 5.30\n// marks impossible in that state. Call outside all protocol/port callbacks.\n",
+    "ported": "\n// Milan v1.2 Table 5.23\n// Milan v1.2 Table 5.30\n\n\n",
+    "pre_F_INT_bytes": [
+      20895,
+      21199
+    ],
+    "baseline_bytes": [
+      8847,
+      8900
+    ],
+    "pre_F_INT_line": 419,
+    "baseline_line": 419,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1027,
+    "reference_bytes": [
+      23192,
+      23324
+    ],
+    "ported_bytes": [
+      9212,
+      9237
+    ],
+    "reference_line": 454,
+    "ported_line": 431,
+    "reference": "\n\n// The AECP side: START_STREAMING / STOP_STREAMING of a bound sink (Milan v1.2\n// 5.3.8.7). False for an unbound or unknown sink.\n",
+    "ported": "\n\n// Milan v1.2 5.3.8.7\n\n",
+    "pre_F_INT_bytes": [
+      21269,
+      21401
+    ],
+    "baseline_bytes": [
+      8970,
+      8995
+    ],
+    "pre_F_INT_line": 424,
+    "baseline_line": 424,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1042,
+    "reference_bytes": [
+      23391,
+      23495
+    ],
+    "ported_bytes": [
+      9304,
+      9308
+    ],
+    "reference_line": 458,
+    "ported_line": 435,
+    "reference": "\n\n// Attempt to send at most one owed frame, oldest first; return true while any\n// frame remains owed.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      21468,
+      21572
+    ],
+    "baseline_bytes": [
+      9062,
+      9066
+    ],
+    "pre_F_INT_line": 428,
+    "baseline_line": 428,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1051,
+    "reference_bytes": [
+      23526,
+      23680
+    ],
+    "ported_bytes": [
+      9339,
+      9343
+    ],
+    "reference_line": 462,
+    "ported_line": 439,
+    "reference": "\n\n// The saved-state store's binding walk and write path (see the top of this\n// file). acmp_restore_binding is a boot step: it applies one saved record.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      21603,
+      21757
+    ],
+    "baseline_bytes": [
+      9097,
+      9101
+    ],
+    "pre_F_INT_line": 432,
+    "baseline_line": 432,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1058,
+    "reference_bytes": [
+      23726,
+      23769
+    ],
+    "ported_bytes": [
+      9389,
+      9391
+    ],
+    "reference_line": 467,
+    "ported_line": 444,
+    "reference": "               // nvm_state.h NVM_APPLIED\n\t",
+    "ported": "\n\t",
+    "pre_F_INT_bytes": [
+      21803,
+      21846
+    ],
+    "baseline_bytes": [
+      9147,
+      9149
+    ],
+    "pre_F_INT_line": 437,
+    "baseline_line": 437,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1062,
+    "reference_bytes": [
+      23794,
+      23862
+    ],
+    "ported_bytes": [
+      9416,
+      9417
+    ],
+    "reference_line": 468,
+    "ported_line": 445,
+    "reference": "               // NVM_REFUSED: the sink keeps its default (unbound)\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      21871,
+      21939
+    ],
+    "baseline_bytes": [
+      9174,
+      9175
+    ],
+    "pre_F_INT_line": 438,
+    "baseline_line": 438,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1094,
+    "reference_bytes": [
+      24017,
+      24255
+    ],
+    "ported_bytes": [
+      9572,
+      9576
+    ],
+    "reference_line": 471,
+    "ported_line": 448,
+    "reference": "\n// The transport is open (the mailbox's contract checked, ctrl_loop_open): the\n// admit port is told every binding the store restored. A boot step, after the\n// binding walk and before the first input; any later entry would tell it too.\n",
+    "ported": "\n\n\n\n",
+    "pre_F_INT_bytes": [
+      22094,
+      22332
+    ],
+    "baseline_bytes": [
+      9330,
+      9334
+    ],
+    "pre_F_INT_line": 441,
+    "baseline_line": 441,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1103,
+    "reference_bytes": [
+      24286,
+      24369
+    ],
+    "ported_bytes": [
+      9607,
+      9609
+    ],
+    "reference_line": 475,
+    "ported_line": 452,
+    "reference": "\n// The sink's saved record now; false for a sink the configuration does not have.\n",
+    "ported": "\n\n",
+    "pre_F_INT_bytes": [
+      22363,
+      22446
+    ],
+    "baseline_bytes": [
+      9365,
+      9367
+    ],
+    "pre_F_INT_line": 445,
+    "baseline_line": 445,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1122,
+    "reference_bytes": [
+      24467,
+      24537
+    ],
+    "ported_bytes": [
+      9707,
+      9710
+    ],
+    "reference_line": 477,
+    "ported_line": 454,
+    "reference": "\n\n// A sink as GET_STREAM_INFO reports it; false for an unknown sink.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      22544,
+      22614
+    ],
+    "baseline_bytes": [
+      9465,
+      9468
+    ],
+    "pre_F_INT_line": 447,
+    "baseline_line": 447,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1140,
+    "reference_bytes": [
+      24618,
+      24685
+    ],
+    "ported_bytes": [
+      9791,
+      9793
+    ],
+    "reference_line": 480,
+    "ported_line": 457,
+    "reference": "\n// True while the sink's change waits behind its response (#653).\n",
+    "ported": "\n\n",
+    "pre_F_INT_bytes": [
+      22695,
+      22762
+    ],
+    "baseline_bytes": [
+      9549,
+      9551
+    ],
+    "pre_F_INT_line": 450,
+    "baseline_line": 450,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1156,
+    "reference_bytes": [
+      24775,
+      24900
+    ],
+    "ported_bytes": [
+      9883,
+      9886
+    ],
+    "reference_line": 484,
+    "ported_line": 461,
+    "reference": "\n// Called once per refused re-entrant call in a build that asserts the rule;\n// the platform (or the host test) defines it.\n",
+    "ported": "\n\n\n",
+    "pre_F_INT_bytes": [
+      22852,
+      22977
+    ],
+    "baseline_bytes": [
+      9641,
+      9644
+    ],
+    "pre_F_INT_line": 454,
+    "baseline_line": 454,
+    "category": "inherited-exact"
+  },
+  {
+    "file": "include/acmp.h",
+    "gap_before_token": 1175,
+    "reference_bytes": [
+      24989,
+      25000
+    ],
+    "ported_bytes": [
+      9975,
+      9976
+    ],
+    "reference_line": 494,
+    "ported_line": 471,
+    "reference": " // ACMP_H\n",
+    "ported": "\n",
+    "pre_F_INT_bytes": [
+      23066,
+      23077
+    ],
+    "baseline_bytes": [
+      9733,
+      9734
+    ],
+    "pre_F_INT_line": 464,
+    "baseline_line": 464,
+    "category": "inherited-exact"
+  }
+]
