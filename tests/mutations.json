@@ -5004,5 +5004,215 @@
       "AcmpCore.DepartingRetainsBindingAndReprobes",
       "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
     ]
+  },
+  {
+    "name": "acmp-publish-after-response",
+    "path": "src/acmp.c",
+    "old": "\tpublish(a);\n\tif (a->owed_count == 0u",
+    "new": "\tif (a->owed_count == 0u",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 the binding is published before the BIND_RX response"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
+  },
+  {
+    "name": "acmp-publish-missing-finish",
+    "path": "src/acmp.c",
+    "old": "static void finish(struct acmp *a)\n{\n\tpublish(a);",
+    "new": "static void finish(struct acmp *a)\n{",
+    "kills": [
+      {
+        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "needle": "A31 acmp_open publishes each restored binding"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+    ]
+  },
+  {
+    "name": "acmp-publish-unchanged-triple",
+    "path": "src/acmp.c",
+    "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
+    "new": "true",
+    "kills": [
+      {
+        "test": "AcmpCore.A31OnlyAMovedTripleIsPublished",
+        "needle": "A31 a re-bind to the same talker, a registration, a start of a started sink and a discovery move"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31OnlyAMovedTripleIsPublished"
+    ]
+  },
+  {
+    "name": "acmp-publish-ignores-started",
+    "path": "src/acmp.c",
+    "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
+    "new": "s->bound != s->published_bound || moved",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
+        "needle": "A31 a re-bind to the same talker without STREAMING_WAIT publishes once"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+    ]
+  },
+  {
+    "name": "acmp-publish-reset-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n\ts->published_stream = published_stream;",
+    "new": "\t(void)published_bound;\n\t(void)published_started;\n\t(void)published_stream;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "needle": "A31 a sink the store resets is published unbound at the next open"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+    ]
+  },
+  {
+    "name": "acmp-publish-unguarded",
+    "path": "src/acmp.c",
+    "old": "\ta->in_port = true;\n\ta->ports->publish",
+    "new": "\ta->in_port = false;\n\ta->ports->publish",
+    "kills": [
+      {
+        "test": "AcmpCore.A31ACallBackFromThePublishPortIsRefused",
+        "needle": "A31 an UNBIND_RX and a poll from inside the publish port are counted and change nothing"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31ACallBackFromThePublishPortIsRefused"
+    ]
+  },
+  {
+    "name": "acmp-publish-stream-zero",
+    "path": "src/acmp.c",
+    "old": "uint64_t stream = settled ? s->stream.stream_id : 0u;",
+    "new": "uint64_t stream = settled ? 0u : 0u;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 a PROBE_TX_RESPONSE that settles publishes the stream"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
+  },
+  {
+    "name": "acmp-publish-stream-moved-always",
+    "path": "src/acmp.c",
+    "old": "sink, bound, started, stream, moved);",
+    "new": "sink, bound, started, stream, true);\n\t(void)moved;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
+        "needle": "A31 stopped, the settled stream kept and not moved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+    ]
+  },
+  {
+    "name": "acmp-publish-wrong-interface",
+    "path": "src/acmp.c",
+    "old": "p_publish(a, s->interface, k,",
+    "new": "p_publish(a, 0u, k,",
+    "kills": [
+      {
+        "test": "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "needle": "A31 sink 2, on interface 1"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath"
+    ]
+  },
+  {
+    "name": "acmp-publish-wrong-sink",
+    "path": "src/acmp.c",
+    "old": "p_publish(a, s->interface, k,",
+    "new": "p_publish(a, s->interface, 0u,",
+    "kills": [
+      {
+        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "needle": "A31 sink 2, bound on interface 1, with no stream until it settles"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+    ]
+  },
+  {
+    "name": "acmp-publish-wrong-started",
+    "path": "src/acmp.c",
+    "old": "sink, bound, started, stream, moved);",
+    "new": "sink, bound, !started, stream, moved);",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 started: the command had no STREAMING_WAIT"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
+  },
+  {
+    "name": "acmp-publish-bound-cache-stale",
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->published_bound = s->bound;",
+    "new": "\t\t\ts->published_bound = false;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 a BIND_RX publishes the sink's binding once"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
+  },
+  {
+    "name": "acmp-publish-started-cache-stale",
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->published_started = s->started;",
+    "new": "\t\t\ts->published_started = false;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 a BIND_RX publishes the sink's binding once"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
+  },
+  {
+    "name": "acmp-publish-stream-cache-stale",
+    "path": "src/acmp.c",
+    "old": "\t\t\ts->published_stream = stream;",
+    "new": "\t\t\ts->published_stream = 0u;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "needle": "A31 a GET_RX_STATE reports the stream already published, and publishes nothing"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
+    ]
   }
 ]

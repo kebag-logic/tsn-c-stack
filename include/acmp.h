@@ -303,6 +303,9 @@ struct acmp_ports {
 
 
 	void (*admit)(void *ctx, unsigned interface, unsigned sink, bool bound, uint64_t talker_entity_id);
+	// REQ: ACMP-10
+	void (*publish)(void *ctx, unsigned interface, unsigned sink, bool bound, bool started, uint64_t stream_id,
+			bool stream_moved);
 };
 
 
@@ -355,6 +358,10 @@ struct acmp_sink {
 
 	bool admitted;
 	uint64_t admitted_talker;
+	// REQ: ACMP-10
+	bool published_bound;
+	bool published_started;
+	uint64_t published_stream;
 
 	uint8_t change_owed;
 	struct acmp_sink_view reported;

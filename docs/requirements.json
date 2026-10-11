@@ -174,6 +174,24 @@
     ]
   },
   {
+    "id": "ACMP-10",
+    "text": "Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry.",
+    "clauses": [
+      {
+        "text": "Local published-before-promised contract",
+        "url": "PORTING.md#acmp-callbacks-and-public-fields"
+      },
+      {
+        "text": "Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722.1-2021 7.4.35 and 7.4.36",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
+    ]
+  },
+  {
     "id": "MAAP-01",
     "text": "Validate frame fields, destination, source, lengths and supported version behavior.",
     "clauses": [

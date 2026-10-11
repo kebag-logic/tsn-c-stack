@@ -139,11 +139,43 @@ static int adp_smoke(void)
     return 0;
 }
 
-// REQ: ACMP-01, ACMP-07, PORT-01
+struct acmp_port {
+    struct port io;
+    unsigned publications, interface, sink, admissions_before;
+    bool bound, started, moved, ordering_error;
+    uint64_t stream;
+};
+
+static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
+                    uint64_t stream, bool moved)
+{
+    struct acmp_port *p = ctx;
+    ++p->publications;
+    p->interface = interface;
+    p->sink = sink;
+    p->bound = bound;
+    p->started = started;
+    p->stream = stream;
+    p->moved = moved;
+    p->admissions_before = p->io.admissions;
+}
+
+static bool acmp_send(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
+{
+    struct acmp_port *p = ctx;
+    if (frame[15] == 7) {
+        if (!p->bound || p->started != ((wire_be16(frame + 64) & 8u) == 0)) p->ordering_error = true;
+    } else if (frame[15] == 9) {
+        if (p->bound || p->started || p->stream != 0) p->ordering_error = true;
+    }
+    return send_frame(&p->io, interface, frame, length);
+}
+
+// REQ: ACMP-01, ACMP-07, ACMP-10, PORT-01
 static int acmp_smoke(void)
 {
-    struct port p = {.room = true};
-    const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit};
+    struct acmp_port p = {.io = {.room = true}};
+    const struct acmp_ports ports = {&p, acmp_send, clock_ms, timer, gptp, clock_ms, admit, publish};
     const struct acmp_env env = {&p, locked, source, srp, notify, notify};
     const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 1};
     struct acmp core;
@@ -156,11 +188,44 @@ static int acmp_smoke(void)
     CHECK(acmp_restore_binding(&core, 0, record, sizeof record) == ACMP_RESTORE_APPLIED, 11);
     CHECK(acmp_view(&core, 0, &view) && view.state == ACMP_PRB_W_AVAIL && view.bound, 12);
     CHECK(view.binding.talker_unique_id == 0x1234 && view.binding.talker_entity_id == wire_be64(record + 4), 13);
+    CHECK(p.publications == 0, 30);
     acmp_open(&core);
-    CHECK(p.admissions == 1 && acmp_binding_latch(&core, 0, saved), 14);
+    CHECK(p.publications == 1 && p.bound && !p.started && p.stream == 0 && !p.moved, 31);
+    CHECK(p.interface == 0 && p.sink == 0 && p.admissions_before == 0, 32);
+    CHECK(p.io.admissions == 1 && acmp_binding_latch(&core, 0, saved), 14);
     for (unsigned i = 0; i < sizeof record; ++i) CHECK(saved[i] == record[i], 15);
     acmp_restore_rollback(&core);
     CHECK(acmp_view(&core, 0, &view) && !view.bound && view.state == ACMP_UNBOUND, 16);
+    CHECK(p.publications == 1, 33);
+    acmp_open(&core);
+    CHECK(p.publications == 2 && !p.bound && !p.started && p.stream == 0, 34);
+    acmp_open(&core);
+    CHECK(p.publications == 2, 35);
+    uint8_t frame[ACMP_FRAME_BYTES] = {0};
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    frame[15] = 6;
+    wire_put_be(frame + 26, UINT64_C(0x1112131415161718), 8);
+    wire_put_be(frame + 34, UINT64_C(0x0102030405060708), 8);
+    wire_put_be(frame + 42, 1, 8);
+    wire_put_be(frame + 64, 8, 2);
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 3 && p.bound && !p.started && !p.ordering_error, 36);
+    CHECK(p.io.sends == 2 && p.io.frame[15] == 0, 37);
+    memcpy(frame, p.io.frame, sizeof frame);
+    frame[15] = 1;
+    wire_put_be(frame + 18, UINT64_C(0x5544332211002233), 8);
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 4 && p.stream == UINT64_C(0x5544332211002233) && p.moved, 38);
+    CHECK(acmp_set_started(&core, 0, true), 39);
+    CHECK(p.publications == 5 && p.started && !p.moved, 40);
+    CHECK(acmp_set_started(&core, 0, false), 41);
+    CHECK(p.publications == 6 && !p.started && !p.moved, 42);
+    CHECK(acmp_set_started(&core, 0, false) && p.publications == 6, 43);
+    frame[15] = 8;
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 7 && !p.bound && p.stream == 0 && p.moved && !p.ordering_error, 44);
+    CHECK(p.io.frame[15] == 9, 45);
     return 0;
 }
 

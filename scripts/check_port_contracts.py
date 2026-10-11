@@ -112,6 +112,11 @@ REQUIRED = {
         'ports->admit',
         'ports->gptp',
         'ports->now_ms',
+        'ports->publish',
+        'stream_id',
+        'stream_moved',
+        'started',
+        'acmp_set_started',
         'ports->seed',
         'ports->send',
         'ports->timer',
@@ -176,6 +181,9 @@ REQUIRED = {
         'probe_talker',
         'probe_talker_uid',
         'release',
+        'published_bound',
+        'published_started',
+        'published_stream',
         'reported',
         'rng',
         'saved',
@@ -253,6 +261,7 @@ REQUIRED = {
 
 CRITICAL = {
     'ACMP callbacks and public fields': {
+        'ports->publish': ('published before promised', 'before each new frame', 'first in `finish`', 'before timers', 'admission, persistence and change notification', 'synchronously before returning, without re-entry'),
         'env->srp': ('starts SRP reservation and listening', 'NULL stops listening', 'clears the stream parameters'),
         'ports->admit': ('ENTITY_AVAILABLE and ENTITY_DEPARTING', 'on bind, unbind and rebind', 'for each restored binding'),
         'bound=false': ("withdraw that sink's admission entry",),
