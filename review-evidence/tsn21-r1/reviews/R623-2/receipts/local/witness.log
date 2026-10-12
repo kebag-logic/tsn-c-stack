@@ -1,0 +1,6 @@
+$ sh <packet>/receipts/public/reviews/R622-1/scripts/witness.sh <source> <packet>/scratch/witness
+head: rc 0; [  PASSED  ] 10 tests. 
+finish-publishes-after-timers: rc 1; [  FAILED  ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort (0 ms) [  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort (0 ms) [  PASSED  ] 8 tests. [  FAILED  ] 2 tests, listed below: [  FAILED  ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort [  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort 
+    R622 witness publication precedes the timer port in finish
+reset-drops-stream-cache-only: rc 1; [  FAILED  ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream (0 ms) [  FAILED  ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream (0 ms) [  PASSED  ] 8 tests. [  FAILED  ] 2 tests, listed below: [  FAILED  ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream [  FAILED  ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream 
+    R622 witness the withdrawn stream is reported moved

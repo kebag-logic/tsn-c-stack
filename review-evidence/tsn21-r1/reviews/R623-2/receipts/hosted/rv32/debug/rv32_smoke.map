@@ -1,0 +1,242 @@
+Archive member included to satisfy reference by file (symbol)
+
+libtsn.a(adp.c.obj)           (--whole-archive)
+libtsn.a(acmp.c.obj)          (--whole-archive)
+libtsn.a(maap.c.obj)          (--whole-archive)
+/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                              libtsn.a(adp.c.obj) (__mulsi3)
+/usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+                              libtsn.a(maap.c.obj) (__umodsi3)
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x80000000         0x08000000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+LOAD CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+LOAD CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+LOAD libtsn.a
+LOAD /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a
+
+.text           0x80000000     0x8e30
+ *(.text.start)
+ .text.start    0x80000000       0x34 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+                0x80000000                _start
+ *(.text .text.*)
+ .text          0x80000034     0x16dc CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+                0x800016c0                main
+ .text          0x80001710      0x160 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+                0x80001710                memset
+                0x8000177c                memcpy
+                0x800017f8                port_exit
+                0x80001840                port_assert_failed
+                0x80001858                ctrl_reentry_assert
+ .text          0x80001870        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .text          0x80001870     0x12c4 libtsn.a(adp.c.obj)
+                0x80001b0c                adp_reentry_count
+                0x80001dac                adp_build
+                0x8000238c                adp_init
+                0x8000248c                adp_set_current_configuration
+                0x800025a8                adp_set_enable
+                0x80002708                adp_link_change
+                0x800027d8                adp_gm_change
+                0x8000284c                adp_timer_expired
+                0x80002920                adp_rx
+                0x80002a78                adp_poll
+ .text          0x80002b34     0x4a48 libtsn.a(acmp.c.obj)
+                0x800063cc                acmp_init
+                0x800065d0                acmp_rx
+                0x80006894                acmp_adp_rx
+                0x80006b70                acmp_timer_expired
+                0x80006cfc                acmp_tk_registered
+                0x80006de0                acmp_tk_kind_changed
+                0x80006ea4                acmp_tk_unregistered
+                0x80006f74                acmp_set_started
+                0x80007024                acmp_poll
+                0x800071e4                acmp_restore_binding
+                0x80007368                acmp_restore_rollback
+                0x800073f8                acmp_open
+                0x80007444                acmp_binding_latch
+                0x800074b0                acmp_view
+                0x8000751c                acmp_change_pending
+ .text          0x8000757c     0x17dc libtsn.a(maap.c.obj)
+                0x80008154                maap_init
+                0x80008260                maap_begin
+                0x80008424                maap_release
+                0x8000848c                maap_port_operational
+                0x800088ac                maap_rx
+                0x80008c48                maap_timer_expired
+                0x80008cf4                maap_poll
+ .text          0x80008d58       0x24 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+                0x80008d58                __mulsi3
+ .text          0x80008d7c       0xb4 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+                0x80008d7c                __divsi3
+                0x80008d84                __hidden___udivsi3
+                0x80008d84                __udivsi3
+                0x80008dcc                __umodsi3
+                0x80008e00                __modsi3
+
+.rodata         0x80008e30       0x40
+ *(.rodata .rodata.*)
+ .rodata        0x80008e30       0x28 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .rodata        0x80008e58        0x5 libtsn.a(acmp.c.obj)
+ *fill*         0x80008e5d        0x3 
+ .rodata        0x80008e60       0x10 libtsn.a(maap.c.obj)
+
+.rela.dyn       0x80008e70        0x0
+ .rela.text.start
+                0x80008e70        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+
+.data           0x80009000        0x0
+                0x80009800                        __global_pointer$ = (. + 0x800)
+ *(.sdata .sdata.* .data .data.*)
+ .data          0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .data          0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .data          0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .data          0x80009000        0x0 libtsn.a(adp.c.obj)
+ .data          0x80009000        0x0 libtsn.a(acmp.c.obj)
+ .data          0x80009000        0x0 libtsn.a(maap.c.obj)
+ .data          0x80009000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .data          0x80009000        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.bss            0x80009000        0x8
+                0x80009000                        . = ALIGN (0x4)
+                0x80009000                        __bss_start = .
+ *(.sbss .sbss.* .bss .bss.* COMMON)
+ .bss           0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .bss           0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .bss           0x80009000        0x0 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .bss           0x80009000        0x8 libtsn.a(adp.c.obj)
+ .bss           0x80009008        0x0 libtsn.a(acmp.c.obj)
+ .bss           0x80009008        0x0 libtsn.a(maap.c.obj)
+ .bss           0x80009008        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .bss           0x80009008        0x0 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+                0x80009008                        . = ALIGN (0x4)
+                0x80009008                        __bss_end = .
+
+.stack          0x80009008    0x10008
+                0x80009010                        . = ALIGN (0x10)
+ *fill*         0x80009008        0x8 
+                0x80019010                        . = (. + 0x10000)
+ *fill*         0x80009010    0x10000 
+                0x80019010                        __stack_top = .
+OUTPUT(rv32_smoke.elf elf32-littleriscv)
+
+.debug_info     0x00000000     0x52f1
+ .debug_info    0x00000000     0x18f8 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .debug_info    0x000018f8      0x1eb CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_info    0x00001ae3       0x24 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_info    0x00001b07      0x993 libtsn.a(adp.c.obj)
+ .debug_info    0x0000249a     0x236b libtsn.a(acmp.c.obj)
+ .debug_info    0x00004805      0xa5c libtsn.a(maap.c.obj)
+ .debug_info    0x00005261       0x31 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_info    0x00005292       0x5f /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_abbrev   0x00000000      0xd92
+ .debug_abbrev  0x00000000      0x2f4 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .debug_abbrev  0x000002f4      0x110 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_abbrev  0x00000404       0x14 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_abbrev  0x00000418      0x2a6 libtsn.a(adp.c.obj)
+ .debug_abbrev  0x000006be      0x3bd libtsn.a(acmp.c.obj)
+ .debug_abbrev  0x00000a7b      0x2c7 libtsn.a(maap.c.obj)
+ .debug_abbrev  0x00000d42       0x28 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_abbrev  0x00000d6a       0x28 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_aranges  0x00000000      0x100
+ .debug_aranges
+                0x00000000       0x20 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .debug_aranges
+                0x00000020       0x20 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_aranges
+                0x00000040       0x20 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_aranges
+                0x00000060       0x20 libtsn.a(adp.c.obj)
+ .debug_aranges
+                0x00000080       0x20 libtsn.a(acmp.c.obj)
+ .debug_aranges
+                0x000000a0       0x20 libtsn.a(maap.c.obj)
+ .debug_aranges
+                0x000000c0       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_aranges
+                0x000000e0       0x20 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_line     0x00000000     0x61c1
+ .debug_line    0x00000000      0xd51 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .debug_line    0x00000d51      0x1ac CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_line    0x00000efd       0x7e CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_line    0x00000f7b      0xdf2 libtsn.a(adp.c.obj)
+ .debug_line    0x00001d6d     0x3289 libtsn.a(acmp.c.obj)
+ .debug_line    0x00004ff6      0xffe libtsn.a(maap.c.obj)
+ .debug_line    0x00005ff4       0x7a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_line    0x0000606e      0x153 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_str      0x00000000     0x11ae
+ .debug_str     0x00000000     0x11ae CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+                                0xcbe (size before relaxing)
+ .debug_str     0x000011ae      0x174 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_str     0x000011ae       0x87 CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_str     0x000011ae      0x52f libtsn.a(adp.c.obj)
+ .debug_str     0x000011ae      0xb7a libtsn.a(acmp.c.obj)
+ .debug_str     0x000011ae      0x452 libtsn.a(maap.c.obj)
+ .debug_str     0x000011ae       0xba /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_str     0x000011ae       0xe7 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_line_str
+                0x00000000      0x355
+ .debug_line_str
+                0x00000000      0x355 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+                                0x1d6 (size before relaxing)
+ .debug_line_str
+                0x00000355      0x146 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_line_str
+                0x00000355       0x7b CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .debug_line_str
+                0x00000355      0x1b7 libtsn.a(adp.c.obj)
+ .debug_line_str
+                0x00000355      0x1b2 libtsn.a(acmp.c.obj)
+ .debug_line_str
+                0x00000355      0x1bb libtsn.a(maap.c.obj)
+ .debug_line_str
+                0x00000355       0xa5 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .debug_line_str
+                0x00000355       0xa2 /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.comment        0x00000000       0x22
+ .comment       0x00000000       0x22 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+                                 0x23 (size before relaxing)
+ .comment       0x00000022       0x23 CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .comment       0x00000022       0x23 libtsn.a(adp.c.obj)
+ .comment       0x00000022       0x23 libtsn.a(acmp.c.obj)
+ .comment       0x00000022       0x23 libtsn.a(maap.c.obj)
+
+.riscv.attributes
+                0x00000000       0x1c
+ .riscv.attributes
+                0x00000000       0x1c CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .riscv.attributes
+                0x0000001c       0x1c CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .riscv.attributes
+                0x00000038       0x1a CMakeFiles/rv32_smoke.dir/examples/rv32/start.S.obj
+ .riscv.attributes
+                0x00000052       0x1c libtsn.a(adp.c.obj)
+ .riscv.attributes
+                0x0000006e       0x1c libtsn.a(acmp.c.obj)
+ .riscv.attributes
+                0x0000008a       0x1c libtsn.a(maap.c.obj)
+ .riscv.attributes
+                0x000000a6       0x1a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(muldi3.o)
+ .riscv.attributes
+                0x000000c0       0x1a /usr/lib/gcc/riscv64-unknown-elf/13.2.0/rv32i/ilp32/libgcc.a(div.o)
+
+.debug_frame    0x00000000     0x19f4
+ .debug_frame   0x00000000      0x3a8 CMakeFiles/rv32_smoke.dir/examples/rv32/smoke.c.obj
+ .debug_frame   0x000003a8       0xac CMakeFiles/rv32_smoke.dir/examples/rv32/runtime.c.obj
+ .debug_frame   0x00000454      0x418 libtsn.a(adp.c.obj)
+ .debug_frame   0x0000086c      0xd00 libtsn.a(acmp.c.obj)
+ .debug_frame   0x0000156c      0x488 libtsn.a(maap.c.obj)

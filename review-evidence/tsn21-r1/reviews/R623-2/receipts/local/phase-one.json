@@ -1,0 +1,38 @@
+[
+  {
+    "check": "gcc-configure",
+    "rc": 0
+  },
+  {
+    "check": "gcc-build",
+    "rc": 0
+  },
+  {
+    "check": "gcc-test",
+    "rc": 0
+  },
+  {
+    "check": "coverage",
+    "rc": 0
+  },
+  {
+    "check": "rv32",
+    "rc": 0
+  },
+  {
+    "check": "object-compare",
+    "rc": 0
+  },
+  {
+    "check": "port-contracts",
+    "rc": 0
+  },
+  {
+    "check": "needles",
+    "rc": 1
+  },
+  {
+    "check": "comments",
+    "rc": 1
+  }
+]

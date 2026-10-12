@@ -1,0 +1,72 @@
+Note: Google Test filter = MaapCore.InitialAndThreeRetransmissions
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MaapCore
+[ RUN      ] MaapCore.InitialAndThreeRetransmissions
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:101: Failure
+Expected equality of these values:
+  r.frames[0]
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(1, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+B.2 complete PROBE bytes
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:105: Failure
+Expected equality of these values:
+  r.frames[k + 1]
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(1, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:105: Failure
+Expected equality of these values:
+  r.frames[k + 1]
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(1, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:105: Failure
+Expected equality of these values:
+  r.frames[k + 1]
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(1, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x1' (1), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:109: Failure
+Expected equality of these values:
+  r.frames[4]
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x3' (3), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(3, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x3' (3), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+B.2 complete ANNOUNCE bytes
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_maap.cpp:112: Failure
+Expected equality of these values:
+  r.frames.back()
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x3' (3), '\0', '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+  pdu(3, kBase, 8, kMac)
+    Which is: { '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\xFF' (255), '\0', '\x2' (2), '\0', '\0', '\0', '\0', '\x80' (128), '"' (34, 0x22), '\xF0' (240), '\xFE' (254), '\x3' (3), '\b' (8), '\x10' (16), '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\x91' (145), '\xE0' (224), '\xF0' (240), '\0', '\x1' (1), '\0', ... }
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+periodic ANNOUNCE
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] MaapCore.InitialAndThreeRetransmissions (0 ms)
+[----------] 1 test from MaapCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] MaapCore.InitialAndThreeRetransmissions
+
+ 1 FAILED TEST

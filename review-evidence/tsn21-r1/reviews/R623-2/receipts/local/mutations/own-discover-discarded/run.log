@@ -1,0 +1,280 @@
+Note: Google Test filter = AdpCore.A3toA5DiscoverAndDiscard:AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0:AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1:AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2:AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3
+[==========] Running 5 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 1 test from AdpCore
+[ RUN      ] AdpCore.A3toA5DiscoverAndDiscard
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:166: Failure
+Value of: fk.stops == stops + 1u && a.state == ADP_STATE_DELAY && a.last_draw == ADP_DRAW_DELAY
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+A4 a DISCOVER for this entity stops TMR_ADVERTISE and enters DELAY (5.6.3.5.4)
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AdpCore.A3toA5DiscoverAndDiscard (0 ms)
+[----------] 1 test from AdpCore (0 ms total)
+
+[----------] 4 tests from AllInputs/AdpInputControl
+[ RUN      ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:718: Failure
+Expected equality of these values:
+  a.state
+    Which is: 3
+  ADP_STATE_DELAY
+    Which is: 2
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery enters DELAY
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:719: Failure
+Expected equality of these values:
+  a.discarded
+    Which is: 1
+  0u
+    Which is: 0
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery input is not discarded
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:720: Failure
+Expected equality of these values:
+  fk.starts
+    Which is: 2
+  starts + 1u
+    Which is: 3
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery restarts delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:721: Failure
+Expected equality of these values:
+  fk.stops
+    Which is: 0
+  stops + 1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery stops advertisement timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:722: Failure
+Expected equality of these values:
+  a.timer
+    Which is: 2
+  ADP_TIMER_DELAY
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery selects delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0, where GetParam() = 0 (0 ms)
+[ RUN      ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:718: Failure
+Expected equality of these values:
+  a.state
+    Which is: 3
+  ADP_STATE_DELAY
+    Which is: 2
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery enters DELAY
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:719: Failure
+Expected equality of these values:
+  a.discarded
+    Which is: 1
+  0u
+    Which is: 0
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery input is not discarded
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:720: Failure
+Expected equality of these values:
+  fk.starts
+    Which is: 2
+  starts + 1u
+    Which is: 3
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery restarts delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:721: Failure
+Expected equality of these values:
+  fk.stops
+    Which is: 0
+  stops + 1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery stops advertisement timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:722: Failure
+Expected equality of these values:
+  a.timer
+    Which is: 2
+  ADP_TIMER_DELAY
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery selects delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1, where GetParam() = 1 (0 ms)
+[ RUN      ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:718: Failure
+Expected equality of these values:
+  a.state
+    Which is: 3
+  ADP_STATE_DELAY
+    Which is: 2
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery enters DELAY
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:719: Failure
+Expected equality of these values:
+  a.discarded
+    Which is: 1
+  0u
+    Which is: 0
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery input is not discarded
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:720: Failure
+Expected equality of these values:
+  fk.starts
+    Which is: 2
+  starts + 1u
+    Which is: 3
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery restarts delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:721: Failure
+Expected equality of these values:
+  fk.stops
+    Which is: 0
+  stops + 1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery stops advertisement timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:722: Failure
+Expected equality of these values:
+  a.timer
+    Which is: 2
+  ADP_TIMER_DELAY
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery selects delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2, where GetParam() = 2 (0 ms)
+[ RUN      ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:718: Failure
+Expected equality of these values:
+  a.state
+    Which is: 3
+  ADP_STATE_DELAY
+    Which is: 2
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery enters DELAY
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:719: Failure
+Expected equality of these values:
+  a.discarded
+    Which is: 1
+  0u
+    Which is: 0
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery input is not discarded
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:720: Failure
+Expected equality of these values:
+  fk.starts
+    Which is: 2
+  starts + 1u
+    Which is: 3
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery restarts delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:721: Failure
+Expected equality of these values:
+  fk.stops
+    Which is: 0
+  stops + 1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery stops advertisement timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+<packet>/scratch/mutations/baseline/tests/test_adp.cpp:722: Failure
+Expected equality of these values:
+  a.timer
+    Which is: 2
+  ADP_TIMER_DELAY
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+inherited discovery selects delay timer
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3, where GetParam() = 3 (0 ms)
+[----------] 4 tests from AllInputs/AdpInputControl (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 5 tests from 2 test suites ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 5 tests, listed below:
+[  FAILED  ] AdpCore.A3toA5DiscoverAndDiscard
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/0, where GetParam() = 0
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/1, where GetParam() = 1
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/2, where GetParam() = 2
+[  FAILED  ] AllInputs/AdpInputControl.InheritedDiscoveryAcceptance/3, where GetParam() = 3
+
+ 5 FAILED TESTS

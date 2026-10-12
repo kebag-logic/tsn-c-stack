@@ -1,0 +1,88 @@
+[
+  {
+    "file": "receipts/authority-ARCHITECTURE_HW_SW_SPLIT.md",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "docs/ARCHITECTURE_HW_SW_SPLIT.md",
+    "git_blob": "ed8f940fdcb699c8e88d256e0a9ab6433a0cd283",
+    "sha256": "897475557f0d65539db1831883de90e4d87e678e1c61f61043b3e0c548caad2d"
+  },
+  {
+    "file": "receipts/authority-KL_mbx.sv",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "hdl/milan/mailbox/KL_mbx.sv",
+    "git_blob": "4edb4468d86a180d95a1fa9b8595d34e3037e2a2",
+    "sha256": "192b84656f23227199054a07f2dfa10e1a466544cb5f36221b37d0e37f1d8895"
+  },
+  {
+    "file": "receipts/authority-REQUIREMENTS.md",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "REQUIREMENTS.md",
+    "git_blob": "5e358972eb583fdda9c8c11bc3f51f8e99081d94",
+    "sha256": "10bac6a48664f607fb99b3ed89505da4ebc4ee80282582f4200b1b8227e75ab5"
+  },
+  {
+    "file": "receipts/authority-acmp.c",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/firmware/ctrl/acmp/acmp.c",
+    "git_blob": "32951625c45a47704063ff3cf4778eb1e601f551",
+    "sha256": "fe24fac9658322009b8352107e4dc29de8c01ac4416c08a6bb26a59cba9a1978"
+  },
+  {
+    "file": "receipts/authority-acmp.h",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/firmware/ctrl/acmp/acmp.h",
+    "git_blob": "b8a744dad4a6c839faef31823bedb76f055326bd",
+    "sha256": "cd1d09dd905939b2da8daf5b0d29231ca3ed2b31f8b1496df6ff9c66e305d010"
+  },
+  {
+    "file": "receipts/authority-acmp_fake.hpp",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/firmware/ctrl/test/acmp_fake.hpp",
+    "git_blob": "a3454f4c42d4d2ec142e4ff5ed74b971923e2c14",
+    "sha256": "8e25fc4e0dbc163d0aea74d9bbda69776a4b7413d4df312f75a08cf640001d24"
+  },
+  {
+    "file": "receipts/authority-acmp_mbx.c",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/firmware/ctrl/acmp/acmp_mbx.c",
+    "git_blob": "1c5e62b620e0dc32b100257a5bf7b60c684681fc",
+    "sha256": "54ed0d3449b26ac733c561039faa78f385f1d4be523e5f0fe04bfe2dc41eeae6"
+  },
+  {
+    "file": "receipts/authority-mailbox.yaml",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/mailbox/mailbox.yaml",
+    "git_blob": "d17dd7ec82f96cbaf09008c273ba3c74a1c2978a",
+    "sha256": "059fd65ca8aafa0439e9fc0afeb07e3600efccba53642187660b31e557963969"
+  },
+  {
+    "file": "receipts/authority-test_acmp.cpp",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "09c7231eca343607c97c0d66abebb2553688712c",
+    "source_path": "sw/firmware/ctrl/test/test_acmp.cpp",
+    "git_blob": "27e9b1fbedcfb291b12171110c37f2e358386273",
+    "sha256": "8b1b3244b5478265c36f6f81ec2a7adaec3884992e291ee3b2230d1736290971"
+  },
+  {
+    "file": "receipts/baseline-acmp.c",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "6aa25dec977c6ad78bf4ff6275de47fb81d0c246",
+    "source_path": "sw/firmware/ctrl/acmp/acmp.c",
+    "sha256": "361ac852b68d4100f9da68b109e523da628b8a674065143b7b5887cb835cb6ad"
+  },
+  {
+    "file": "receipts/baseline-acmp.h",
+    "repository": "kebag-logic/milan-fpga",
+    "commit": "6aa25dec977c6ad78bf4ff6275de47fb81d0c246",
+    "source_path": "sw/firmware/ctrl/acmp/acmp.h",
+    "sha256": "9444106ae0a1114c88c1cf8d479d8385e7c5ebfbf60c7b147cb3dfed2e9f9270"
+  }
+]

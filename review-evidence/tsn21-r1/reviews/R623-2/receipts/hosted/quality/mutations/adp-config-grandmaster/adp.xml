@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T00:38:02.841" name="AllTests">
+  <testsuite name="AdpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T00:38:02.841">
+    <testcase name="AdvertisementFieldsMatchCaller" file="<hosted-source>/build-validation/mutations/baseline/tests/test_adp.cpp" line="628" status="run" result="completed" time="0." timestamp="2026-10-12T00:38:02.841" classname="AdpCore">
+      <failure message="<hosted-source>/build-validation/mutations/baseline/tests/test_adp.cpp:656&#x0A;Expected equality of these values:&#x0A;  std::memcmp(frame, expected, sizeof expected)&#x0A;    Which is: 1&#x0A;  0&#x0A;&#x0A;TSN_MESSAGE_BEGIN_ed4a2ec53939e4b42110442485b39edf&#x0A;advertisement bytes match the independent entity vector&#x0A;TSN_MESSAGE_END_6bb0c43f1aec64cd9782757a25c5b143&#x0A;&#x0A;" type=""><![CDATA[<hosted-source>/build-validation/mutations/baseline/tests/test_adp.cpp:656
+Expected equality of these values:
+  std::memcmp(frame, expected, sizeof expected)
+    Which is: 1
+  0
+
+TSN_MESSAGE_BEGIN_ed4a2ec53939e4b42110442485b39edf
+advertisement bytes match the independent entity vector
+TSN_MESSAGE_END_6bb0c43f1aec64cd9782757a25c5b143
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

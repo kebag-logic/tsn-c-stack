@@ -1,0 +1,34 @@
+[
+  {
+    "probe": "guard-left-set",
+    "configuration": "debug",
+    "elf_exists": true,
+    "execution_rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "probe": "guard-left-set",
+    "configuration": "release",
+    "elf_exists": true,
+    "execution_rc": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "probe": "reset-drops-bound-cache-only",
+    "configuration": "debug",
+    "elf_exists": true,
+    "execution_rc": 34,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "probe": "reset-drops-bound-cache-only",
+    "configuration": "release",
+    "elf_exists": true,
+    "execution_rc": 34,
+    "stdout": "",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,25 @@
+Note: Google Test filter = AcmpCore.A22DiscoveredStateCells
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A22DiscoveredStateCells
+<packet>/scratch/mutations/baseline/tests/test_acmp.cpp:1238: Failure
+Value of: a.sinks[0].state == ACMP_PRB_W_AVAIL && !a.sinks[0].discovered && !a.sinks[0].adp_armed && a.sinks[0].disc_available_index == 700u
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+A22 index <= last from another grandmaster: EVT_TK_DEPARTED, TMR_NO_ADP stopped, TK_NOT_DISCOVERED (2b)
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AcmpCore.A22DiscoveredStateCells (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A22DiscoveredStateCells
+
+ 1 FAILED TEST

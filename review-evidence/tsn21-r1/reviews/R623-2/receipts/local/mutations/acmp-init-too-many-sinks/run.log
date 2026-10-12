@@ -1,0 +1,25 @@
+Note: Google Test filter = AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold
+<packet>/scratch/mutations/baseline/tests/test_acmp.cpp:226: Failure
+Value of: acmp_init(&b, &bad, &kPorts, &kEnv)
+  Actual: true
+Expected: false
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+A0 more sinks than ACMP_MAX_SINKS are refused
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold
+
+ 1 FAILED TEST

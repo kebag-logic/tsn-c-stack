@@ -1,0 +1,147 @@
+[
+  {
+    "probe": "control-blank-line-only",
+    "status": "ESCAPED",
+    "failed_tests": [],
+    "command_returncodes": [
+      0,
+      0,
+      0
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "loop-skips-last-sink",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "settled-excludes-rsv-ok",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+      "AcmpCore.A31OnlyAMovedTripleIsPublished"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "publish-only-when-send-refused",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "moved-means-nonzero",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+      "AcmpCore.A31OnlyAMovedTripleIsPublished",
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "guard-left-set",
+    "status": "ESCAPED",
+    "failed_tests": [],
+    "command_returncodes": [
+      0,
+      0,
+      0
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "finish-publishes-after-timers-and-admission",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "finish-publishes-after-timers",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "finish-publishes-after-persistence",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "reset-drops-stream-cache-only",
+    "status": "CAUGHT",
+    "failed_tests": [
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+    ],
+    "command_returncodes": [
+      0,
+      0,
+      8
+    ],
+    "build_completed": true
+  },
+  {
+    "probe": "reset-drops-bound-cache-only",
+    "status": "ESCAPED",
+    "failed_tests": [],
+    "command_returncodes": [
+      0,
+      0,
+      0
+    ],
+    "build_completed": true
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "record": {
+    "id": "ACMP-10",
+    "text": "Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry.",
+    "clauses": [
+      {
+        "text": "Local published-before-promised contract",
+        "url": "PORTING.md#acmp-callbacks-and-public-fields"
+      },
+      {
+        "text": "Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "IEEE 1722.1-2021 7.4.35 and 7.4.36",
+        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
+      }
+    ],
+    "origin": {
+      "text": "milan-fpga F-INT at 09c7231e / tsn-c-stack #21",
+      "url": "REQUIREMENTS.md#acmp-publish-port"
+    }
+  },
+  "requirements_row": "| ACMP-10 | Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry. | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) |",
+  "matrix_row": "| [ACMP-10](REQUIREMENTS.md) | [milan-fpga F-INT at 09c7231e / tsn-c-stack #21](REQUIREMENTS.md#acmp-publish-port) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206); [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218) |",
+  "exact_clause_links_match": true,
+  "f_int_commits_linked": true,
+  "published_source_manifest_matches": 76
+}

@@ -1,0 +1,27 @@
+Note: Google Test filter = AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed
+<packet>/scratch/mutations/baseline/tests/test_acmp.cpp:363: Failure
+Expected equality of these values:
+  last().flags
+    Which is: 10
+  spec::FLAG_FAST_CONNECT | spec::FLAG_STREAMING_WAIT | spec::FLAG_REGISTERING_FAILED
+    Which is: 74
+
+TSN_MESSAGE_BEGIN_ee4dfb9a4b6540ad0abdddfb773608c3
+A2 SETTLED_RSV_OK on a Talker Failed: STREAMING_WAIT saved, REGISTERING_FAILED 1 (Table 5.39)
+TSN_MESSAGE_END_b5f0cc87f5c31205b35e473a2a18201c
+
+
+[  FAILED  ] AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed
+
+ 1 FAILED TEST

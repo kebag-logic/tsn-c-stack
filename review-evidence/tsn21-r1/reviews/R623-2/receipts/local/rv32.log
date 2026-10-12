@@ -1,0 +1,43 @@
+$ python3 scripts/baremetal.py --work <packet>/scratch/rv32 --jobs 2
+[
+  {
+    "configuration": "Debug",
+    "rc": 0,
+    "elf_sha256": "68d991cacfe141821a05d09d0e30697dcd4f819240be6bdd3ae24ee182e736fb",
+    "elf_bytes": 108564,
+    "core_objects": {
+      "adp.c": "c7f437eeb17cf9243b9b264787154c18d6c8f88b05b222f557ecf1fe3582dace",
+      "acmp.c": "c810617bc02a6e419da4715e7f079640f66eebc967ea33b40ac7acc7d44bddcd",
+      "maap.c": "1e9ddff6d132b4101eccf93a4d769b9677ac9ed0b95534e143a50d80754a835a"
+    },
+    "core_imports": [
+      "__mulsi3",
+      "__umodsi3",
+      "ctrl_reentry_assert",
+      "memcpy",
+      "memset",
+      "port_assert_failed"
+    ],
+    "unresolved_final": [],
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+  },
+  {
+    "configuration": "Release",
+    "rc": 0,
+    "elf_sha256": "ef25a1ca500e6dca8583bc464e2f5a1fb665ca11fc5c9d69d841e0ad1ab4eccd",
+    "elf_bytes": 37764,
+    "core_objects": {
+      "adp.c": "31e8d3486aa9fc1bb52bd8e54828f039ae96b2fd04f61f7800daa8377d922425",
+      "acmp.c": "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+      "maap.c": "f04b053968b267848c4752d65f1675fca061d9f8aed7e9165885f2b097be0ce8"
+    },
+    "core_imports": [
+      "__umodsi3",
+      "ctrl_reentry_assert",
+      "memcpy",
+      "memset"
+    ],
+    "unresolved_final": [],
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+  }
+]

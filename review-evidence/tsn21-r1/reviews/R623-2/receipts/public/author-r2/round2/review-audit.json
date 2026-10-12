@@ -1,0 +1,130 @@
+{
+  "head": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5",
+  "probes": [
+    {
+      "probe": "control-blank-line-only",
+      "status": "ESCAPED",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 0,
+      "failed_tests": [],
+      "required_needle": null
+    },
+    {
+      "probe": "loop-skips-last-sink",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "settled-excludes-rsv-ok",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "publish-only-when-send-refused",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "moved-means-nonzero",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished",
+        "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "guard-left-set",
+      "status": "ESCAPED",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 0,
+      "failed_tests": [],
+      "required_needle": null
+    },
+    {
+      "probe": "finish-publishes-after-timers-and-admission",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "finish-publishes-after-timers",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+      ],
+      "required_needle": "A31 settlement publication precedes the timer port in finish"
+    },
+    {
+      "probe": "finish-publishes-after-persistence",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+      ],
+      "required_needle": null
+    },
+    {
+      "probe": "reset-drops-stream-cache-only",
+      "status": "CAUGHT",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 8,
+      "failed_tests": [
+        "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+      ],
+      "required_needle": "A31 withdrawal after a store reset reports the settled stream moved"
+    },
+    {
+      "probe": "reset-drops-bound-cache-only",
+      "status": "ESCAPED",
+      "configure_rc": 0,
+      "build_rc": 0,
+      "test_rc": 0,
+      "failed_tests": [],
+      "required_needle": null
+    }
+  ],
+  "witness_head_passed": true,
+  "both_targeted_witness_faults_caught": true
+}

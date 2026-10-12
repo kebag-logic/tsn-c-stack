@@ -1,0 +1,42 @@
+{
+  "core": [
+    {
+      "path": "src/acmp.c",
+      "head_tokens": 7849,
+      "reference_tokens": 7849,
+      "head_token_identity": true,
+      "head_token_line_identity": true,
+      "baseline_tokens": 7586,
+      "baseline_identity": true,
+      "baseline_token_line_identity": true,
+      "round2_token_identity": true,
+      "baseline_bytes_preserved_by_insertions_only": true,
+      "head_lines": 1294,
+      "reference_lines": 1294
+    },
+    {
+      "path": "include/acmp.h",
+      "head_tokens": 1175,
+      "reference_tokens": 1175,
+      "head_token_identity": true,
+      "head_token_line_identity": true,
+      "baseline_tokens": 1137,
+      "baseline_identity": true,
+      "baseline_token_line_identity": true,
+      "round2_token_identity": true,
+      "baseline_bytes_preserved_by_insertions_only": true,
+      "head_lines": 494,
+      "reference_lines": 494
+    }
+  ],
+  "upstream_cases": [
+    "A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+    "A31LeavingSettlementTakesTheStreamOffTheDatapath",
+    "A31OnlyAMovedTripleIsPublished",
+    "A31TheStartedLevelIsPublishedBeforeItIsPromised",
+    "A31RestoredBindingsArePublishedWhenTheTransportOpens",
+    "A31ACallBackFromThePublishPortIsRefused"
+  ],
+  "six_upstream_bodies_token_equal": true,
+  "head_case_count": 8
+}
