@@ -8,6 +8,7 @@ extern "C" {
 
 int entity_check_adp(void);
 int entity_check_acmp(void);
+int entity_check_dafresh(void);
 int entity_check_maap(void);
 
 #ifdef __cplusplus

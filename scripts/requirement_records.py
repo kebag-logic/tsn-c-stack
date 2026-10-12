@@ -14,6 +14,10 @@ BEGIN = '<!-- requirements-port:start -->'
 END = '<!-- requirements-port:end -->'
 LOCAL_ORIGINS = {'ENTITY-01': ('tsn-c-stack issue 2', 'https://github.com/kebag-logic/tsn-c-stack/issues/2')}
 ADDITIONAL_ORIGINS = {
+    'ACMP-11': {
+        'text': 'tsn-c-stack issue 24',
+        'url': 'https://github.com/kebag-logic/tsn-c-stack/issues/24',
+    },
     'ACMP-10': {
         'text': 'milan-fpga F-INT at 09c7231e / tsn-c-stack #21',
         'url': 'REQUIREMENTS.md#acmp-publish-port',

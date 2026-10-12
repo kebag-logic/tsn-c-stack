@@ -306,6 +306,49 @@ The [ACMP diagnostics](../include/acmp.h) count modulo 2^32.
 `ctrl_reentry_assert` is called once per refused ACMP entry when `CTRL_REENTRY_ASSERT` is defined.
 The integrator supplies this hook and its failure policy.
 
+### ACMP DA freshness
+
+`acmp_declaring(a, source)` returns destination validity AND (a fresh answered
+probe OR a registered Listener), per [Milan v1.2 4.3.3.1](https://avnu.org/resource/milan-specification/).
+The destination comes from the existing `env->source` callback. No SRP state is
+read through a callback. Supply Listener changes through the single input
+`acmp_listener_registered(a, interface, source, registered)`. It makes no port
+calls and returns false for an unknown source, a mismatched interface or re-entry.
+`registered` means any matching Listener attribute, including Asking Failed;
+it is not an admission or media-transmission licence. Aggregate multiple Listeners
+outside the core and send false only after the last matching registration leaves.
+Keep the level current for the source's current Stream ID and configured interface.
+
+The [entity generator](ENTITY_YAML.md) supplies `acmp_config.da_fresh_ms = 15000`.
+The core reads that field directly; it has no duplicate freshness constant.
+Hand-written configurations must supply the interval in milliseconds below 2^31.
+Zero disables the probe term, while Listener registration still applies.
+Each source owns an `answered_at` timestamp, an `answered` flag and a
+`listener_registered` level; initialization clears all three.
+
+The window starts after `ports->send` accepts a PROBE_TX_RESPONSE to a valid
+source on its configured interface. Both SUCCESS and TALKER_DEST_MAC_FAIL
+answers record demand; an invalid destination still closes the gate. Unknown-ID,
+incompatible-interface and other command replies do not refresh it. Queued or
+refused sends do not count until accepted by `acmp_poll`. This acceptance point
+is the local transport contract in [issue #24](https://github.com/kebag-logic/tsn-c-stack/issues/24).
+It leaves the existing response bytes and command handling unchanged.
+
+Elapsed time is unsigned subtraction using `ports->now_ms`: ages 0 through
+14999 ms are fresh, 15000 ms and later are stale. This half-open edge also applies
+when the counter wraps. Every query uses current time, including after transport
+has advanced it. Observing expiry clears `answered`, even with a Listener or an
+invalid destination, so an old probe cannot reappear after a later counter wrap.
+
+Query each configured source in the serialized dispatch context when publishing
+its declaration gate, after events and on the regular service tick. Queries call
+the existing time and source ports, refuse callback re-entry and return false for
+unknown sources. The query does not add a timer or a publication callback. Service
+must retain the existing less-than-half-counter-range clock contract; a full
+unobserved counter revolution cannot be inferred from a 32-bit clock.
+Refresh the platform gate on the regular service tick even when `acmp_poll`
+returns false, because that return value describes only owed transport frames.
+
 ## MAAP callbacks and public fields
 
 The [MAAP header](../include/maap.h) defines one fixed machine per interface and range.

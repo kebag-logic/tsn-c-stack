@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: MIT
 schema_version: 1.0.0
+acmp:
+  da_fresh_ms: 15000
 identity:
   entity_id: mac-derived
   model_id: 7816428161859586

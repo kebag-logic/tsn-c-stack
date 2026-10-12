@@ -99,16 +99,6 @@ static bool enter(struct acmp *a)
 	return true;
 }
 
-static bool p_send(struct acmp *a, unsigned interface, const uint8_t *frame)
-{
-	a->in_port = true;
-	bool ok = a->ports->send(a->ports->ctx, interface, frame, ACMP_FRAME_BYTES);
-	a->in_port = false;
-	return ok;
-}
-
-
-
 static uint32_t now(struct acmp *a)
 {
 	if (!a->now_read) {
@@ -118,6 +108,23 @@ static uint32_t now(struct acmp *a)
 		a->now_read = true;
 	}
 	return a->now;
+}
+
+static bool p_send(struct acmp *a, unsigned interface, const uint8_t *frame)
+{
+	a->in_port = true;
+	bool ok = a->ports->send(a->ports->ctx, interface, frame, ACMP_FRAME_BYTES);
+	a->in_port = false;
+	// REQ: ACMP-11
+	if (ok && frame[O_MSG] == ACMP_MSG_PROBE_TX_RESPONSE &&
+	    ((frame[O_STATUS] >> 3) == ACMP_STATUS_SUCCESS ||
+	     (frame[O_STATUS] >> 3) == ACMP_STATUS_TALKER_DEST_MAC_FAIL)) {
+		struct acmp_source *s = &a->sources[wire_be16(frame + O_TALKER_UID)];
+		a->now_read = false;
+		s->answered_at = now(a);
+		s->answered = true;
+	}
+	return ok;
 }
 
 static void p_timer(struct acmp *a, unsigned interface, bool armed, uint32_t deadline_ms)
@@ -1224,6 +1231,38 @@ bool acmp_poll(struct acmp *a)
 		}
 	}
 	return a->owed_count != 0u;
+}
+
+// REQ: ACMP-11
+bool acmp_listener_registered(struct acmp *a, unsigned interface, unsigned source, bool registered)
+{
+	if (!enter(a)) {
+		return false;
+	}
+	if (source >= a->cfg.n_sources || interface != a->cfg.source_interface[source]) {
+		return false;
+	}
+	a->sources[source].listener_registered = registered;
+	return true;
+}
+
+// REQ: ACMP-11
+bool acmp_declaring(struct acmp *a, unsigned source)
+{
+	if (!enter(a)) {
+		return false;
+	}
+	if (source >= a->cfg.n_sources) {
+		return false;
+	}
+	struct acmp_source *s = &a->sources[source];
+	if (s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {
+		s->answered = false;
+	}
+	struct acmp_source_state st;
+	memset(&st, 0, sizeof st);
+	p_source(a, source, &st);
+	return st.dest_mac_valid && (s->answered || s->listener_registered);
 }
 
 enum acmp_restore acmp_restore_binding(struct acmp *a, unsigned sink, const uint8_t *payload, unsigned len)

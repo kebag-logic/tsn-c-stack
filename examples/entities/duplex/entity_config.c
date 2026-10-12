@@ -43,6 +43,7 @@ const struct adp_entity duplex_adp[2] = {
 const struct acmp_config duplex_acmp = {
     .entity_id = UINT64_C(0x020000fffe000001),
     .n_interfaces = 2u,
+    .da_fresh_ms = 15000u,
     .mac = {UINT64_C(0x020000000001), UINT64_C(0x020000000002)},
     .n_sinks = 2u,
     .sink_interface = {1u, 0u},
