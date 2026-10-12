@@ -1,0 +1,25 @@
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: $VALIDATION_STORAGE/tsn21-a602/round4/integration-registration
+[  9%] Building C object CMakeFiles/entity_examples.dir/examples/entities/duplex/entity_config.c.o
+[ 11%] Building C object CMakeFiles/entity_examples.dir/examples/entities/ax7101/entity_config.c.o
+[ 11%] Built target tsn_debug
+[ 13%] Building C object CMakeFiles/entity_examples.dir/examples/entities/listener/entity_config.c.o
+[ 16%] Building C object CMakeFiles/entity_examples.dir/examples/entities/talker/entity_config.c.o
+[ 25%] Built target tsn_test
+[ 27%] Building C object CMakeFiles/entity_examples.dir/examples/entity_roundtrip.c.o
+[ 37%] Built target tsn
+[ 44%] Built target adp_debug
+[ 48%] Built target example_port
+[ 55%] Built target maap_debug
+[ 62%] Built target acmp_tests
+[ 69%] Built target maap_tests
+[ 76%] Built target adp_tests
+[ 83%] Built target adp_release
+[ 86%] Linking C static library libentity_examples.a
+[ 93%] Built target port_tests
+[ 93%] Built target entity_examples
+[ 95%] Linking CXX executable entity_tests
+[100%] Built target entity_tests
+registration: 8 binaries; 401 instances
+traceability: 44 requirements; 127 test declarations

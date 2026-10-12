@@ -1,0 +1,57 @@
+[
+  {
+    "probe": "control-blank-line-only",
+    "status": "ESCAPED",
+    "failed_tests": []
+  },
+  {
+    "probe": "loop-skips-last-sink",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "settled-excludes-rsv-ok",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "publish-only-when-send-refused",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "moved-means-nonzero",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "guard-left-set",
+    "status": "ESCAPED",
+    "failed_tests": []
+  },
+  {
+    "probe": "finish-publishes-after-timers-and-admission",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "finish-publishes-after-timers",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "finish-publishes-after-persistence",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "reset-drops-stream-cache-only",
+    "status": "CAUGHT",
+    "failed_tests": []
+  },
+  {
+    "probe": "reset-drops-bound-cache-only",
+    "status": "ESCAPED",
+    "failed_tests": []
+  }
+]

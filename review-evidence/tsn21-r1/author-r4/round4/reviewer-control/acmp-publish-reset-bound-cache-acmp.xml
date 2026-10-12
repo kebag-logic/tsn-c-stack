@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T03:31:01.136" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T03:31:01.136">
+    <testcase name="A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal" file="$VALIDATION_STORAGE/tsn21-a602/round4/scratch/shared-mutations/baseline/tests/test_acmp.cpp" line="2232" status="run" result="completed" time="0." timestamp="2026-10-12T03:31:01.136" classname="AcmpCore">
+      <failure message="$VALIDATION_STORAGE/tsn21-a602/round4/scratch/shared-mutations/baseline/tests/test_acmp.cpp:2243&#x0A;Value of: fk.pubs.size() == 1u &amp;&amp; a.sinks[0].published_future&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_2ab185a6931ca4db8cc89360de2a0960&#x0A;A31 the bound cache survives reset to publish the stopped binding withdrawalA31 future cache also survives the same reset&#x0A;TSN_MESSAGE_END_9213fa101f8ac75f05c01b19fc1a0c22&#x0A;&#x0A;" type=""><![CDATA[$VALIDATION_STORAGE/tsn21-a602/round4/scratch/shared-mutations/baseline/tests/test_acmp.cpp:2243
+Value of: fk.pubs.size() == 1u && a.sinks[0].published_future
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_2ab185a6931ca4db8cc89360de2a0960
+A31 the bound cache survives reset to publish the stopped binding withdrawalA31 future cache also survives the same reset
+TSN_MESSAGE_END_9213fa101f8ac75f05c01b19fc1a0c22
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

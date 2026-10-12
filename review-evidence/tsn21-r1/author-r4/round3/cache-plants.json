@@ -1,0 +1,29 @@
+[
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream": "$VALIDATION_STORAGE/tsn21-a602/round3/linux/mutations/baseline/tests/test_acmp.cpp:2227\nValue of: !fk.pubs[0].bound && fk.pubs[0].stream == 0u && fk.pubs[0].moved\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_30ed9627ae0c98e2b67e48b0280b59cf\nA31 withdrawal after a store reset reports the settled stream moved\nTSN_MESSAGE_END_a9f5d03ec247cbdc0968fd79df9824b3\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-bound-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal": "$VALIDATION_STORAGE/tsn21-a602/round3/linux/mutations/baseline/tests/test_acmp.cpp:2242\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_30ed9627ae0c98e2b67e48b0280b59cf\nA31 the bound cache survives reset to publish the stopped binding withdrawal\nTSN_MESSAGE_END_a9f5d03ec247cbdc0968fd79df9824b3\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-started-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop": "$VALIDATION_STORAGE/tsn21-a602/round3/linux/mutations/baseline/tests/test_acmp.cpp:2259\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_30ed9627ae0c98e2b67e48b0280b59cf\nA31 the started cache survives reset to publish the restored stop\nTSN_MESSAGE_END_a9f5d03ec247cbdc0968fd79df9824b3\n\n"
+    },
+    "tests": 1
+  }
+]

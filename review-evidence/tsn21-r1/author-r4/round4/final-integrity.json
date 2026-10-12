@@ -1,0 +1,27 @@
+{
+  "acmp-publish-port": {
+    "head": "405dc68310a18f669049ffc10cc23eef7300dcff",
+    "tree": "68f17411e26213c2cef4afb80f2ff2cb9eb4d457",
+    "parents": [
+      "bc68ad8f3577e8f3dc24c4336e9b80a933df6c79"
+    ],
+    "tracked_files": 78,
+    "clean": true,
+    "all_tracked_bytes_and_modes_match": true,
+    "configured_identity_preserved": true,
+    "one_line_subject": "Identify ACMP cache assertions by owner and definition location"
+  },
+  "integrate-21": {
+    "head": "3c9ca52fc44b4a37e11149392363686f0ea426e0",
+    "tree": "a5321e5deae4cc5b52c858a41e4824c9e6f1d6b1",
+    "parents": [
+      "98dc9e3076714bebe113982ee18c3c1c496cf3c9",
+      "405dc68310a18f669049ffc10cc23eef7300dcff"
+    ],
+    "tracked_files": 98,
+    "clean": true,
+    "all_tracked_bytes_and_modes_match": true,
+    "configured_identity_preserved": true,
+    "one_line_subject": "Merge the ACMP publish port with main validation and entity configuration"
+  }
+}

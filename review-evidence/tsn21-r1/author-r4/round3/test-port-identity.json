@@ -1,0 +1,17 @@
+{
+  "upstream_cases": {
+    "A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "token-identical",
+    "A31LeavingSettlementTakesTheStreamOffTheDatapath": "token-identical",
+    "A31OnlyAMovedTripleIsPublished": "token-identical",
+    "A31TheStartedLevelIsPublishedBeforeItIsPromised": "token-identical",
+    "A31RestoredBindingsArePublishedWhenTheTransportOpens": "token-identical",
+    "A31ACallBackFromThePublishPortIsRefused": "token-identical"
+  },
+  "fake": "token-identical",
+  "additional_cases": [
+    "A31SettlementIsPublishedBeforeTheTimerPort",
+    "A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+    "A31StoreResetOfASettledSinkPublishesAMovedStream",
+    "A31StoreRestoreOfAStoppedRecordPublishesTheStop"
+  ]
+}

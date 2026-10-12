@@ -1,0 +1,11 @@
+{
+  "imported_tests": {
+    "A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": true,
+    "A31LeavingSettlementTakesTheStreamOffTheDatapath": true,
+    "A31OnlyAMovedTripleIsPublished": true,
+    "A31TheStartedLevelIsPublishedBeforeItIsPromised": true,
+    "A31RestoredBindingsArePublishedWhenTheTransportOpens": true,
+    "A31ACallBackFromThePublishPortIsRefused": true
+  },
+  "whole_fake_tokens_equal": true
+}

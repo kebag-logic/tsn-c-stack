@@ -1,0 +1,42 @@
+Note: Google Test filter = AcmpCore.R622*:AcmpCore.A31*
+[==========] Running 10 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 10 tests from AcmpCore
+[ RUN      ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt
+[       OK ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt (0 ms)
+[ RUN      ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath
+[       OK ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath (0 ms)
+[ RUN      ] AcmpCore.A31OnlyAMovedTripleIsPublished
+[       OK ] AcmpCore.A31OnlyAMovedTripleIsPublished (0 ms)
+[ RUN      ] AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised
+[       OK ] AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised (0 ms)
+[ RUN      ] AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens
+[       OK ] AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens (0 ms)
+[ RUN      ] AcmpCore.A31ACallBackFromThePublishPortIsRefused
+[       OK ] AcmpCore.A31ACallBackFromThePublishPortIsRefused (0 ms)
+[ RUN      ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort
+$VALIDATION_STORAGE/tsn21-a602/round2/witness/finish-publishes-after-timers/tests/test_acmp.cpp:2213: Failure
+Expected: (fk.pubs[0].before) <= (static_cast<std::size_t>(timer)), actual: 3 vs 2
+A31 settlement publication precedes the timer port in finish
+
+[  FAILED  ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort (0 ms)
+[ RUN      ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream
+[       OK ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream (0 ms)
+[ RUN      ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort
+$VALIDATION_STORAGE/tsn21-a602/round2/witness/finish-publishes-after-timers/tests/test_acmp.cpp:2238: Failure
+Expected: (fk.pubs[0].before) <= (static_cast<std::size_t>(timer)), actual: 3 vs 2
+R622 witness publication precedes the timer port in finish
+
+[  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort (0 ms)
+[ RUN      ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream
+[       OK ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream (0 ms)
+[----------] 10 tests from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 8 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort
+[  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort
+
+ 2 FAILED TESTS

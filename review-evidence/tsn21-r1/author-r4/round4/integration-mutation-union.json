@@ -1,0 +1,37 @@
+{
+  "base": 324,
+  "main": 330,
+  "port": 342,
+  "merged": 348,
+  "all_names_preserved": true,
+  "all_selected_parent_records_unchanged": true,
+  "main_changes": [
+    "own-discover-discarded",
+    "adp-unsupported-version-accepted",
+    "adp-short-frame-accepted",
+    "adp-wrong-control-length-accepted",
+    "entity-wrong-count",
+    "entity-swapped-interface",
+    "entity-dropped-field"
+  ],
+  "port_changes": [
+    "acmp-publish-after-response",
+    "acmp-publish-missing-finish",
+    "acmp-publish-unchanged-triple",
+    "acmp-publish-ignores-started",
+    "acmp-publish-reset-cache",
+    "acmp-publish-unguarded",
+    "acmp-publish-stream-zero",
+    "acmp-publish-stream-moved-always",
+    "acmp-publish-wrong-interface",
+    "acmp-publish-wrong-sink",
+    "acmp-publish-wrong-started",
+    "acmp-publish-bound-cache-stale",
+    "acmp-publish-started-cache-stale",
+    "acmp-publish-stream-cache-stale",
+    "acmp-publish-after-timers",
+    "acmp-publish-reset-stream-cache",
+    "acmp-publish-reset-bound-cache",
+    "acmp-publish-reset-started-cache"
+  ]
+}

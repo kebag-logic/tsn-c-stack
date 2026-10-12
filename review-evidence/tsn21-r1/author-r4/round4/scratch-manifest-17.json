@@ -1,0 +1,3592 @@
+[
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/maap",
+    "bytes": 1749464,
+    "sha256": "17685def6e37599cff7eaf9d3c7cee0fee98b9518290326698291e370fcf1ad4"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/maap.o",
+    "bytes": 16552,
+    "sha256": "c837e82caa41b25dc8429c52fd26f1f39d31026f2e3beb33263389f76656c57e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/maap.xml",
+    "bytes": 2231,
+    "sha256": "3eb88f466925c15341e40249dacd9e5f28fa3fbcc26371d4c0e4eeee8a00b456"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/run.log",
+    "bytes": 1320,
+    "sha256": "4f2163878c1d4d264653ff45cbb7f293b477b47baa64d4d2a73a16b8704c4602"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-defend-uses-priority/src/maap.c",
+    "bytes": 7738,
+    "sha256": "8e71b9a8187376d4d953c6800fae2f7ce3b92d1b6da58f914a75a13b030c711e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/maap",
+    "bytes": 1749456,
+    "sha256": "16b155b029c5f8520135c5b0c6065683b5995b86d829d08107a7bf9be77c93ed"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/maap.o",
+    "bytes": 16568,
+    "sha256": "46fb0f4b40389c29e44fc5fe4702947d49ca20c8afbe29a667dc4336d4aa6d9f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/maap.xml",
+    "bytes": 3287,
+    "sha256": "985433c3046a50a1c389dd1349d11a60ddf906e47d6684e5b65d2c240bbe8c5c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/run.log",
+    "bytes": 1778,
+    "sha256": "17fb959d2f48cd8f93aab678b94fb1fc5d724310904dd650c2318cff9b48ce5b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-generic-probe-state-defends/src/maap.c",
+    "bytes": 7782,
+    "sha256": "a3184c82f4c3abd090a59205fea7dcacef276efcd2bc3092d028b734d75aac5b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/maap",
+    "bytes": 1749432,
+    "sha256": "75e4163b93635568f8e1005262253e68e18bc6293892504b4daa65dc21f61df2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/maap.o",
+    "bytes": 16544,
+    "sha256": "c8ed4d94a4043cb16ffc9a68cca3a335932bfc34a94c93d708db1ca8c42bc652"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/maap.xml",
+    "bytes": 1357,
+    "sha256": "9de6fac35cf7bcc430d5d04dc343acfd04d36576c7d460e1facebf6d0afdeb71"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/run.log",
+    "bytes": 912,
+    "sha256": "791a356d01f2e8af5e6b7e90c3c78de4f4b6c9288854eb4d89614cd95f1dfea0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-initial-send-absent/src/maap.c",
+    "bytes": 7758,
+    "sha256": "43faff8dbbe66d57b6a84f2ff54546c235effa8a2b2affc35331fd2b8e3d6966"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/maap",
+    "bytes": 1749440,
+    "sha256": "8e61fbdfda54c2f046cb14a0bc64455db6e6b0612fbadf298507bd1e1f1f5c13"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/maap.o",
+    "bytes": 16576,
+    "sha256": "f4b38905709abd934046931f845453081f3e22e7a0196ad0a0f507e071e49c28"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/maap.xml",
+    "bytes": 11147,
+    "sha256": "a00938e9c2c309e5adeb564b437e31480321e595a10d0d45474a09c8c2b3336e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/run.log",
+    "bytes": 4351,
+    "sha256": "0365d1554ae2f00107b7a97c30ac7853e101422f255757ff74d1d22d1bd787de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-intersection-too-long/src/maap.c",
+    "bytes": 7788,
+    "sha256": "b9de1c44471c27a2a0d064cb6ef637aae3ec90135740f8e07a1a050ae753844f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/maap",
+    "bytes": 1749400,
+    "sha256": "a9482dc2e81c92c2176b1d789a41b7ad846d7d6473c36de927be7e34dfcfb0e2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/maap.o",
+    "bytes": 16496,
+    "sha256": "ef2e15311b35d1bff53bcb6f078fa769b4773b341ddd0f97635729dab7a130e8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/maap.xml",
+    "bytes": 1867,
+    "sha256": "bb6a79fa53027367644ed039f6985e174480036abc1013ecbcab5418a0a0093c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-current/src/maap.c",
+    "bytes": 7729,
+    "sha256": "aef7153623e920b299ff6640b8f3d88bb43330e5692edce33dd188067932edda"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/maap",
+    "bytes": 1749416,
+    "sha256": "e454d63bff481dab1e9ac58ab1f5bb98bb1293fa709aba4d7cffc2621a629b83"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/maap.o",
+    "bytes": 16520,
+    "sha256": "a0a5d03d4a135895c613d4b5c1363ef189fc0559d271629f09afb51d1c38812b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/maap.xml",
+    "bytes": 1867,
+    "sha256": "52e01a9717c3766c642db9647a89701f4e9e3e9e13319c79a20cc89545cab5e3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-short/src/maap.c",
+    "bytes": 7754,
+    "sha256": "2d182bcc763fcde1c9a581c420e645b6309c7e2905139d4d49cee870de4581e8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/maap",
+    "bytes": 1749416,
+    "sha256": "313ec31e2481e2bf4f68df432c4f10ab968818bbce764009906130cc7ab75974"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/maap.o",
+    "bytes": 16512,
+    "sha256": "e2254a1525112d44c249884dae2c9fc90e00ed90d2d70dd04e6a809c311987f8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/maap.xml",
+    "bytes": 1867,
+    "sha256": "912137147893955b91e3345127342d163c8beefc1073f0ca79a99b8020fedf07"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-cdl-truncated/src/maap.c",
+    "bytes": 7748,
+    "sha256": "f1100300a9835d3d03a8952e2b49b49eb38facba156f466def3fc849343918b8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/maap",
+    "bytes": 1749440,
+    "sha256": "e2ef1281c51ee3e12873d4f023fe88fd74b32628eef1e205878a98b2bd33483b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/maap.o",
+    "bytes": 16560,
+    "sha256": "6a795320d0be3e541b563660e80435722aba864dca7155ec6b1200863f7d007f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/maap.xml",
+    "bytes": 1867,
+    "sha256": "4734d7bb9cbd8e825a3a6aad0319a272b7bdb6dad78b8e260327f59873046d3b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/run.log",
+    "bytes": 1140,
+    "sha256": "bcc0e0980014c97f60459606b11277633bd7252ac53b4fbf9768cf2d4870a937"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-destination/src/maap.c",
+    "bytes": 7771,
+    "sha256": "f20a88613c4cca602697fb346614d825937ec8c154991422416bc28630f2a55d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/maap",
+    "bytes": 1749424,
+    "sha256": "9321b219e1960545b0b07b516ec09efa2a16d0c36074ad4a2cd498720942f48a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/maap.o",
+    "bytes": 16528,
+    "sha256": "d6f878b534b796c72c60d30d10812572ba19ae8a9b5a6003369cd1bf74bf2ceb"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/maap.xml",
+    "bytes": 1867,
+    "sha256": "321cb0bb182a863d9609df6025d2d4215fd838afd8f7af7990ff18541166edb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-ethertype/src/maap.c",
+    "bytes": 7760,
+    "sha256": "6d5eeabd5afe5a349960fb11b4de13ecd48ace711ca0448bfbdaab2f198dbc84"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/maap",
+    "bytes": 1749416,
+    "sha256": "40d0d038f0cdd70969f173d9536028fa7bd23cbb71847781a295d00fa8aca476"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/maap.o",
+    "bytes": 16536,
+    "sha256": "ae650a8061a4457e1a67dc7cad6fcc0db2dd6164f36d1ee42c509997f9dbc120"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/maap.xml",
+    "bytes": 1867,
+    "sha256": "24f11397af5974355c0c4aa05556c6928a32cbf036b491a4eae6143c0f9411c4"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-own-probe/src/maap.c",
+    "bytes": 7753,
+    "sha256": "05f56af53986ca32c76ff8c4c8e909bd204fe0db72632bb1f33f5294589226d3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/maap",
+    "bytes": 1749424,
+    "sha256": "67fbfb658721bbd1b368bb225ece62960058f3630b0b94b4eff2a541ed87249a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/maap.o",
+    "bytes": 16536,
+    "sha256": "27f267f54e8bcb0ab84ab1bb1748041d3fca72adc8d030d7633467827a28727e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/maap.xml",
+    "bytes": 1867,
+    "sha256": "58d2c1d9825294d5c943cbdc5cdd909de1163ebb15a9cd84b36538d6e80a0a01"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-high/src/maap.c",
+    "bytes": 7753,
+    "sha256": "bf4236ac4830152d9e6416b1d47de2de8b74a7b1ad6a2cacd8cd2c0bc84d3e5f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/maap",
+    "bytes": 1749424,
+    "sha256": "9416cd57a23a550b3107a56a60d2c49e444e829ae36436db0b3d76457af98d38"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/maap.o",
+    "bytes": 16536,
+    "sha256": "ba2962fe94db513ca58e821156570841b0479778fd9b61837153643209bace90"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/maap.xml",
+    "bytes": 1867,
+    "sha256": "2a8338a470a0144aa9b4b70d5a2796a635e9a616ff5f843bf9deb1b586baacd3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-reserved-zero/src/maap.c",
+    "bytes": 7756,
+    "sha256": "a10a138736a4d5dffa78572960fb2f5b53e89d7bbe64eee4c12ab7bc79157fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/maap",
+    "bytes": 1749424,
+    "sha256": "a4b1e701b899648d94bb049aba3d10f97353f986e1e6f99387d8ee428f6103f7"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/maap.o",
+    "bytes": 16544,
+    "sha256": "bd0833529c767fccd4f55440121474c64dab8fa8e4cbd3e8fee41a82779631f2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/maap.xml",
+    "bytes": 1867,
+    "sha256": "f5f46739a1045da87a924e2e391d753e02d837bd9334c30814713c6f1b6c359b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-group/src/maap.c",
+    "bytes": 7771,
+    "sha256": "e1b21d3084c5e66941801ed5e97daddb633b5f9da982f832f51b85298e2204d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/maap",
+    "bytes": 1749416,
+    "sha256": "df84fb2aff42dce54a234c47bdb144d41456eabe53ffe05ac36dbb8e71f09f1b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/maap.o",
+    "bytes": 16544,
+    "sha256": "44a0819d4d4e047a006adcdaab5b5e5e93b852f38978373a559eac4fe1e326a2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/maap.xml",
+    "bytes": 1867,
+    "sha256": "c5dc361e179b9172acde1edaa9e7259ca2c03f5967b72f30957aea590aa20547"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-source-zero/src/maap.c",
+    "bytes": 7769,
+    "sha256": "b5afa3b2be819103f2742eb7f28fe9ae99608484923df1070aab493857a5cd80"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/maap",
+    "bytes": 1749416,
+    "sha256": "37c6b2074d15e2a444d82c06b7e37ed44e47b223740dce855bb920615f24124b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/maap.o",
+    "bytes": 16536,
+    "sha256": "db41da5bb6895ffc5c7af2ded4173374dcb7e3d62ef4cf9a64db3d39422a6e53"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/maap.xml",
+    "bytes": 1867,
+    "sha256": "5e466830cd6c689e2d0f079af9e674686447b8ba0c83d92952b6a14f165c8504"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-subtype/src/maap.c",
+    "bytes": 7774,
+    "sha256": "b93a620bd6407f3e781bcdaa34ace88927090067ef7252431d2e19b8ce19cfae"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/maap",
+    "bytes": 1749400,
+    "sha256": "c3c327514dcc22dbdbe24cd0578add2ae3835f8b4a74a7250964641e12917bac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/maap.o",
+    "bytes": 16536,
+    "sha256": "4b0b6648798b9ee7634cc37cf0a82b7c6f2e94e30c00c46b6b1d6d3c49e836ce"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/maap.xml",
+    "bytes": 1867,
+    "sha256": "f6b44402ba5cf8a9c9343abfc635074815625127b19e29c90dceaee0eb83fe9c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/run.log",
+    "bytes": 1140,
+    "sha256": "bea82e0825f4966596b1c2b712758b73c41e2c1af2f1f446edde9c2708bee4de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-malformed-version/src/maap.c",
+    "bytes": 7767,
+    "sha256": "89a10afa7bbcb16c681878ac473a9bd1136df3f29416c2686dd69457eb8180c5"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/maap",
+    "bytes": 1749440,
+    "sha256": "13b408e8b21931511899671898243d03e30ebfc8680e7f333cc98db5057629ed"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/maap.o",
+    "bytes": 16568,
+    "sha256": "ae2d59a3ab8675f9e7608eb706527a6b295836672ac1d4efc4902c4ad997b25c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/maap.xml",
+    "bytes": 1374,
+    "sha256": "91e82776a6635fa075b503bc49ae55044d911df01dc5432103909dff23d43e77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/run.log",
+    "bytes": 885,
+    "sha256": "31765225734ebd3922bd311d16eba8bf54bf84e38eb3f9d2c272cd81764862c7"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-numeric-mac-priority/src/maap.c",
+    "bytes": 7813,
+    "sha256": "07deab9893678aca8e23bba437cc73ece41f415d5a5d13fe42839d8434f58027"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/maap",
+    "bytes": 1749432,
+    "sha256": "faf6e8a0e04ab7a7c8cf243fc8c722d5736189b3b28ebf084c4f4fd0ff4ff616"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/maap.o",
+    "bytes": 16568,
+    "sha256": "78f12e3b5ce2e001ee091ae134b598de5b9a6f4998477c248c01b1a20aa82815"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/maap.xml",
+    "bytes": 1361,
+    "sha256": "6f02deab32e072da5fdd3f6c6cc9932358bc4d747fc96dbd98d2def81d55ffa9"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/run.log",
+    "bytes": 889,
+    "sha256": "967fe6c6882f0434b098cf997cf60b26b6b43520a9acf4f86807bee55b769104"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-overflow-uncounted/src/maap.c",
+    "bytes": 7787,
+    "sha256": "447e33713b2d0678dd256fbb3c22f79aaee645714d643fcc6c58a3ff903536dd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/maap",
+    "bytes": 1749416,
+    "sha256": "6a5591d9daa3c62abfbeb1ecd32e09d97e25a3dd002ac17412f3c98a06c12db8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/maap.o",
+    "bytes": 16560,
+    "sha256": "c1526a816ad4d5e2c85a2484990203ac497ac239605d60af612288d3a4be9c34"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/maap.xml",
+    "bytes": 1754,
+    "sha256": "97c68795ce1508b51450500736bd2dc46fc95e232929a2843820904b14d4aba6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/run.log",
+    "bytes": 1055,
+    "sha256": "8a41abc59621202629c4355c9c6f6444c8f9a1e0bd09835775c7654d948e2285"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-poll-unbounded/src/maap.c",
+    "bytes": 7798,
+    "sha256": "001d3edbeaa5e44ea94c54e08acad1515f9d99f9b3c6d80be1a349a5b777c261"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/maap",
+    "bytes": 1749432,
+    "sha256": "8a8a6677add3a367fa15df16a72005181eb76699c53434cb0814beb5e98d1c13"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/maap.o",
+    "bytes": 16552,
+    "sha256": "87371cd8881cf4d825894f1295ab0978a6192da365d00995379034c9ac48ddd5"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/maap.xml",
+    "bytes": 2983,
+    "sha256": "2213f55047092e2d70583124a80c6d4651d575b11d1ed15e6448725a3b7dbf61"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/run.log",
+    "bytes": 1583,
+    "sha256": "12e976216466474fd1b4e95b278a49ede5a68beadf7ec11047cd6450e03cfd9f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-port-up-keeps-claim/src/maap.c",
+    "bytes": 7774,
+    "sha256": "180dafa0b7c113108f1eb474928c54f497a7c5d21bf43a241097d1a72d95ece2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/maap",
+    "bytes": 1749456,
+    "sha256": "052f495833cbd6ecae2b782b7f21ee1933426e60e15aad53e7bcd3d11f6bc006"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/maap.o",
+    "bytes": 16600,
+    "sha256": "53cecc8ad795ee6b46c5f90c05476b4bd9c356cdaff7fe2990f5cd4691acf092"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/maap.xml",
+    "bytes": 1402,
+    "sha256": "2c0dd0af06b758f9f1b3fa749a12fb829ecde6542e6236f9ddb703de6ad4aa3b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/run.log",
+    "bytes": 971,
+    "sha256": "38fdb0a388729f38f3577fafc63bba7decb9899025c14788c957f1d5ca26c899"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-announce-reordered/src/maap.c",
+    "bytes": 7823,
+    "sha256": "74ee8e275b66a8a8f805e97c7dcc837dc4ad979f598abf01b9d636311d27b87e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/maap",
+    "bytes": 1749456,
+    "sha256": "dae3a9a5b3eb256fbd88a1e0738955d4715a516b051248caa882ade545e29394"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/maap.o",
+    "bytes": 16568,
+    "sha256": "e37c5734df5704e1735061e406c2789fc2c98c43b7409edfe2afbbda5214d6e2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/maap.xml",
+    "bytes": 3771,
+    "sha256": "06fbd48fd34750f3e110e3c8f361bc4f81df3877b57efdbc219370649bf70bb1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/run.log",
+    "bytes": 1966,
+    "sha256": "da35e3613d874e2d70fc7db6a7379795ccddd8a35c02369ea95f704e2f3b311b"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-probe-count-not-decremented/src/maap.c",
+    "bytes": 7787,
+    "sha256": "a589a38e19ad4d4c6c8f8f29bc43a6d60dd9d1288c8ba03ef0ba383c900895a0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/maap",
+    "bytes": 1749440,
+    "sha256": "aef93ab33420dd32b773d4a5ad92357789f209c60c6774542a86ab261e1aeb3a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/maap.o",
+    "bytes": 16560,
+    "sha256": "cdae8146a46ae69c081a9032945bc9ecd833218dc0fab5b13518b65159c07088"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/maap.xml",
+    "bytes": 2181,
+    "sha256": "5816711c952b8dece9a33892ebf426fc686d02b7747d88834d8c6ffda477b160"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/run.log",
+    "bytes": 1270,
+    "sha256": "373aa4c1b007b3f7063743149a262f95900e740504b195d242c301b0290fa5de"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-range-end-off-by-one/src/maap.c",
+    "bytes": 7788,
+    "sha256": "d9dcd7fdeb72655980e691c91169282dddde8bebeae3909ac387daf54a180332"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/maap",
+    "bytes": 1749432,
+    "sha256": "0a27dbc211fd5ec43aec6c9f51d874b9f741599e55e11bb2c038b674b795290d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/maap.o",
+    "bytes": 16568,
+    "sha256": "14f76fd2327da7d73b56c9c1f42e2e4276b12cc5bd36fa5900abc1bb5617800e"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/maap.xml",
+    "bytes": 1356,
+    "sha256": "5a6cf71bd94c66747eb43ffa0d24ebacdb4aaa401e94466703f3e863c863e914"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/run.log",
+    "bytes": 925,
+    "sha256": "0118ba4850f49faaed5a5054f07387a9fd45e775dba006579a904d662f57d379"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-reentry-not-counted/src/maap.c",
+    "bytes": 7787,
+    "sha256": "56c70558a4a88f25a6519f07872ddd3db6797dfe40e23bc544cfd5b1ba96b045"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/include/string.h",
+    "bytes": 238,
+    "sha256": "dbb36b1e207327b1a06d1a8f16a0ca0c5cb9a704602b8de069d338d557d59d00"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/link.ld",
+    "bytes": 675,
+    "sha256": "63b15d176fcee86e30ea1e558bf36857779f863563c22e55f4cd1e71aacc4fa3"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/runtime.c",
+    "bytes": 805,
+    "sha256": "a9149aedcacfb07f5350bfa812aded0fac2bb5aa7854a41b2e434e54a79b1bb2"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/smoke.c",
+    "bytes": 10726,
+    "sha256": "04acc94e5d0c49f602b606333b1dc8de93e684a52f4df343a6f43df8d9f27fc0"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/examples/rv32/start.S",
+    "bytes": 330,
+    "sha256": "88af7a09cde5007a0f1f73873f861c5e6198931932388f4b0fd464db415006c8"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/include/acmp.h",
+    "bytes": 9999,
+    "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/include/adp.h",
+    "bytes": 3950,
+    "sha256": "9f2f74f64855e7416d159ae37bc50e77cbbc04c06e0597fc84049161f8b2f2d6"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/include/maap.h",
+    "bytes": 2359,
+    "sha256": "897479f15ed28d76cb4677fe752ac8c58a11996e425e9ee97705bd58f9f1f76c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/include/wire.h",
+    "bytes": 762,
+    "sha256": "a4d14ef1d312702973e193081ff622026f7e504978787ed75db4a26ebdfcac77"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/maap",
+    "bytes": 1749440,
+    "sha256": "9f090e97918ad0c5033ab2cef0c7029fe7ffe407e6a5029d2b38ab02556cfe9f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/maap.o",
+    "bytes": 16568,
+    "sha256": "3649d5702f5ee9f870a9ac38423e59d8875ac72085335cc4eae65eaeb6dfba27"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/maap.xml",
+    "bytes": 1742,
+    "sha256": "cdebf78a3c146e9032890860c2ae63f79816205da5c5767c54f2dbe7c82b3583"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/run.log",
+    "bytes": 1037,
+    "sha256": "d4a473c2f192dacd8503e4435a3f0d1ee9f9864a8489a6b17956c0c5e9dda14f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/src/acmp.c",
+    "bytes": 32952,
+    "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/src/adp.c",
+    "bytes": 9166,
+    "sha256": "fabf37f2ea29c74aae20ada6188801ea93621c64dfcf00e3eeae37d5adc0e00a"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-keeps-enable/src/maap.c",
+    "bytes": 7782,
+    "sha256": "27b0032be23f1767189896d4f1301831e0d649e32a793b83a88719cd409c65ab"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/adp_port.c",
+    "bytes": 2049,
+    "sha256": "8689aecff428695c01ff101e832e522f49d0069fcf89fb3f449dcb50b23e4338"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/adp_port.h",
+    "bytes": 669,
+    "sha256": "cbc583e3ed50dc7c8700837ed54125bfe77193e9cdc969a8c481cde548860957"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/ax7101/entity_config.c",
+    "bytes": 1640,
+    "sha256": "b5fa8904d918e2173794a7f15aba73e35c9ca64f596fa627ee2b812b728b966f"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/ax7101/entity_config.h",
+    "bytes": 758,
+    "sha256": "0cf731ffafc943856cb06ee5aeae14e9a4ab6f224a94a077ab42379ff8071412"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/duplex/entity_config.c",
+    "bytes": 2167,
+    "sha256": "988c5ac0e03a06b677b0dbb3eef39332e676bc35facd38a1a8c01724e5315158"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/duplex/entity_config.h",
+    "bytes": 758,
+    "sha256": "3e23a8786037c979782cd3add76bd87914843500403ce502e95e2b31aba40591"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/listener/entity_config.c",
+    "bytes": 1646,
+    "sha256": "ca05d2663046b9f3a997a9d06edd390c30084ed815f6d90ed029c380ab14244d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/listener/entity_config.h",
+    "bytes": 780,
+    "sha256": "9b3b2e7b30642326b81357cf39a4f4d7a03f1661956a669381b061a5a759361d"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/talker/entity_config.c",
+    "bytes": 1624,
+    "sha256": "cfe987d336b6d01a177c030eed7ba371efdee3dfed5983cb47fc2a7547764627"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entities/talker/entity_config.h",
+    "bytes": 758,
+    "sha256": "ee20143c44072242465bb3fce40ab20722f1d8c4fbe181002ca4a07c4ae30742"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entity_roundtrip.c",
+    "bytes": 9127,
+    "sha256": "0e64b357d4f3ec22fe6f71e0d26e1944afc88f7df3a3496ca9a58be153b7c7ac"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/entity_roundtrip.h",
+    "bytes": 266,
+    "sha256": "1b484f176183ab0fe356f5623b5186d8ed40d93563970bd70650d58a2586cecd"
+  },
+  {
+    "path": "integration-final/linux/mutations/maap-release-leaves-output/examples/rv32/include/assert.h",
+    "bytes": 271,
+    "sha256": "8302e950cbe80dca86562e6db416099c201c3486c06c8a04233da3193902ccea"
+  }
+]

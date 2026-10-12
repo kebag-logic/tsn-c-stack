@@ -1,0 +1,11 @@
+--- reviewer/probes.sh
++++ probes-scoped.sh
+@@ -26,7 +26,7 @@
+ probe head x x &
+ probe reset-drops-bound-cache-only '\ts->published_bound = published_bound;\n' '\t(void)published_bound;\n' &
+ probe reset-drops-started-cache-only '\ts->published_started = published_started;\n' '\t(void)published_started;\n' &
+-probe settled-ignores-rsv-ok 's->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;' 's->state == ACMP_SETTLED_NO_RSV;' &
++probe settled-ignores-rsv-ok 'bool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;\n\t\tuint64_t stream' 'bool settled = s->state == ACMP_SETTLED_NO_RSV;\n\t\tuint64_t stream' &
+ probe moved-means-nonzero 'bool moved = stream != s->published_stream;' 'bool moved = stream != 0u;' &
+ probe publish-ignores-bound 's->bound != s->published_bound || s->started' 's->started' &
+ probe publish-skips-last-sink 'for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled' 'for (unsigned k = 0; k + 1u < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled' &
