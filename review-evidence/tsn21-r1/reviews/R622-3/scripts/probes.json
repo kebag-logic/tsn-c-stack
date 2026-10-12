@@ -1,0 +1,80 @@
+[
+ {
+  "name": "control",
+  "path": "src/acmp.c",
+  "old": "",
+  "new": ""
+ },
+ {
+  "name": "drop-bound-restore",
+  "path": "src/acmp.c",
+  "old": "\ts->published_bound = published_bound;\n",
+  "new": "\t(void)published_bound;\n"
+ },
+ {
+  "name": "drop-started-restore",
+  "path": "src/acmp.c",
+  "old": "\ts->published_started = published_started;\n",
+  "new": "\t(void)published_started;\n"
+ },
+ {
+  "name": "drop-stream-restore",
+  "path": "src/acmp.c",
+  "old": "\ts->published_stream = published_stream;\n",
+  "new": "\t(void)published_stream;\n"
+ },
+ {
+  "name": "zero-bound-save",
+  "path": "src/acmp.c",
+  "old": "\tbool published_bound = s->published_bound;\n",
+  "new": "\tbool published_bound = false;\n"
+ },
+ {
+  "name": "zero-started-save",
+  "path": "src/acmp.c",
+  "old": "\tbool published_started = s->published_started;\n",
+  "new": "\tbool published_started = false;\n"
+ },
+ {
+  "name": "zero-stream-save",
+  "path": "src/acmp.c",
+  "old": "\tuint64_t published_stream = s->published_stream;\n",
+  "new": "\tuint64_t published_stream = 0u;\n"
+ },
+ {
+  "name": "drop-all-restores",
+  "path": "src/acmp.c",
+  "old": "\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n\ts->published_stream = published_stream;\n",
+  "new": "\t(void)published_bound;\n\t(void)published_started;\n\t(void)published_stream;\n"
+ },
+ {
+  "name": "move-started-restore-before-memset",
+  "path": "src/acmp.c",
+  "old": "\tmemset(s, 0, sizeof *s);\n\ts->admitted = admitted;\n\ts->admitted_talker = admitted_talker;\n\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n",
+  "new": "\ts->published_started = published_started;\n\tmemset(s, 0, sizeof *s);\n\ts->admitted = admitted;\n\ts->admitted_talker = admitted_talker;\n\ts->published_bound = published_bound;\n"
+ },
+ {
+  "name": "started-from-bound",
+  "path": "src/acmp.c",
+  "old": "\ts->published_started = published_started;\n",
+  "new": "\t(void)published_started;\n\ts->published_started = published_bound;\n"
+ },
+ {
+  "name": "bound-from-started",
+  "path": "src/acmp.c",
+  "old": "\ts->published_bound = published_bound;\n",
+  "new": "\t(void)published_bound;\n\ts->published_bound = published_started;\n"
+ },
+ {
+  "name": "stream-from-live-state",
+  "path": "src/acmp.c",
+  "old": "\ts->published_stream = published_stream;\n",
+  "new": "\t(void)published_stream;\n\ts->published_stream = s->stream.stream_id;\n"
+ },
+ {
+  "name": "guard-left-set",
+  "path": "src/acmp.c",
+  "old": "\ta->ports->publish(a->ports->ctx, interface, sink, bound, started, stream, moved);\n\ta->in_port = false;\n",
+  "new": "\ta->ports->publish(a->ports->ctx, interface, sink, bound, started, stream, moved);\n"
+ }
+]

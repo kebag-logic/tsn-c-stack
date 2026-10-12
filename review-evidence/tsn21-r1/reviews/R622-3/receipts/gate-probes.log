@@ -1,0 +1,19 @@
+OK  control-head: expected rc 0, got 0; changed []; acmp cache: every field has its own hosted assertion and restore-only plant: published_bound, published_started, published_stream
+OK  future-field-header-only: expected rc 1, got 1; changed ['include/acmp.h']; published_epoch: expected one restore-only loss plant
+OK  future-field-restored-no-plant: expected rc 1, got 1; changed ['include/acmp.h', 'src/acmp.c']; published_epoch: expected one restore-only loss plant
+OK  future-field-plant-shares-started-assertion: expected rc 1, got 1; changed ['include/acmp.h', 'src/acmp.c', 'tests/mutations.json']; published_started: assertion is shared with another cache field
+OK  future-field-plant-names-missing-test: expected rc 1, got 1; changed ['include/acmp.h', 'src/acmp.c', 'tests/mutations.json']; probe-future: needle must identify exactly one assertion message literal in AcmpCore.FutureCacheProbe
+OK  future-field-fully-covered: expected rc 0, got 0; changed ['include/acmp.h', 'src/acmp.c', 'tests/mutations.json', 'tests/test_acmp.cpp']; acmp cache: every field has its own hosted assertion and restore-only plant: published_bound, published_epoch, published_started, published_stream
+OK  future-field-inside-ifdef: expected rc 1, got 1; changed ['include/acmp.h']; published_hidden: expected one restore-only loss plant
+OK  future-field-multi-declarator: expected rc 1, got 1; changed ['include/acmp.h']; published_extra: expected one restore-only loss plant
+OK  bound-plant-removed: expected rc 1, got 1; changed ['tests/mutations.json']; published_bound: expected one restore-only loss plant
+OK  bound-plant-shares-started-assertion: expected rc 1, got 1; changed ['tests/mutations.json']; published_started: assertion is shared with another cache field
+OK  bound-plant-shares-started-assertion-shorter-needle: expected rc 1, got 1; changed ['tests/mutations.json']; published_started: assertion is shared with another cache field
+OK  bound-plant-adds-rv32-smoke-killer: expected rc 1, got 1; changed ['tests/mutations.json']; published_bound: expected one named hosted ACMP assertion
+OK  bound-plant-drops-two-fields: expected rc 1, got 1; changed ['tests/mutations.json']; published_bound: expected one restore-only loss plant
+OK  started-plant-duplicated: expected rc 1, got 1; changed ['tests/mutations.json']; published_started: expected one restore-only loss plant
+OK  started-assertion-deleted-from-test: expected rc 1, got 1; changed ['tests/test_acmp.cpp']; acmp-publish-reset-started-cache: needle must identify exactly one assertion message literal in AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop
+OK  started-test-deleted: expected rc 1, got 1; changed ['tests/test_acmp.cpp']; acmp-publish-reset-started-cache: needle must identify exactly one assertion message literal in AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop
+OK  started-restore-removed-from-source: expected rc 1, got 1; changed ['src/acmp.c']; published_started: plant does not select one source restore
+OK  stream-plant-retargeted-to-header: expected rc 1, got 1; changed ['tests/mutations.json']; published_stream: expected one restore-only loss plant
+rc=0

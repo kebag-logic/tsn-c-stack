@@ -1,0 +1,5 @@
+{"probe": "stream-from-live-state", "rc": 1, "tests": 79, "failed": ["AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"]}
+{"probe": "bound-from-started", "rc": 1, "tests": 79, "failed": ["AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"]}
+{"probe": "move-started-restore-before-memset", "rc": 1, "tests": 79, "failed": ["AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"]}
+{"probe": "started-from-bound", "rc": 0, "tests": 79, "failed": []}
+rc=0

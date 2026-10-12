@@ -1,0 +1,5 @@
+host clang-tidy 23.1.1 static_analysis.py on git-archive copies
+1a9f651c rc=0 padding-findings=0
+f3dc2ae rc=1 padding-findings=4 (struct acmp_sink, include/acmp.h:353)
+bc68ad8 rc=1 padding-findings=4 (struct acmp_sink, include/acmp.h:353)
+hosted CI clang-tidy 18 at bc68ad8: static-analysis rc 0

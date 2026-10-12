@@ -1,0 +1,46 @@
+[
+ {
+  "name": "acmp-publish-reset-cache",
+  "status": "CAUGHT",
+  "rc": 1,
+  "tests": 1,
+  "failed": [
+   "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+  ],
+  "killer": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+  "needle_in_failure": true
+ },
+ {
+  "name": "acmp-publish-reset-stream-cache",
+  "status": "CAUGHT",
+  "rc": 1,
+  "tests": 1,
+  "failed": [
+   "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+  ],
+  "killer": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+  "needle_in_failure": true
+ },
+ {
+  "name": "acmp-publish-reset-bound-cache",
+  "status": "CAUGHT",
+  "rc": 1,
+  "tests": 1,
+  "failed": [
+   "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+  ],
+  "killer": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+  "needle_in_failure": true
+ },
+ {
+  "name": "acmp-publish-reset-started-cache",
+  "status": "CAUGHT",
+  "rc": 1,
+  "tests": 1,
+  "failed": [
+   "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
+  ],
+  "killer": "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
+  "needle_in_failure": true
+ }
+]
