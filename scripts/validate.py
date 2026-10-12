@@ -58,6 +58,7 @@ def main():
         ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
         ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
         ('port-contracts', 'check_port_contracts.py', ['--selftest']),
+        ('acmp-cache', 'check_acmp_cache.py', ['--selftest']),
         ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
         ('license', 'check_license.py', ['--selftest']),
         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),

@@ -5233,8 +5233,8 @@
   {
     "name": "acmp-publish-reset-stream-cache",
     "path": "src/acmp.c",
-    "old": "\ts->published_stream = published_stream;\n\ts->interface",
-    "new": "\t(void)published_stream;\n\ts->interface",
+    "old": "\ts->published_stream = published_stream;\n",
+    "new": "\t(void)published_stream;\n",
     "kills": [
       {
         "test": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
@@ -5243,6 +5243,36 @@
     ],
     "original_tests": [
       "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+    ]
+  },
+  {
+    "name": "acmp-publish-reset-bound-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_bound = published_bound;\n",
+    "new": "\t(void)published_bound;\n",
+    "kills": [
+      {
+        "test": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+        "needle": "A31 the bound cache survives reset to publish the stopped binding withdrawal"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+    ]
+  },
+  {
+    "name": "acmp-publish-reset-started-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_started = published_started;\n",
+    "new": "\t(void)published_started;\n",
+    "kills": [
+      {
+        "test": "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
+        "needle": "A31 the started cache survives reset to publish the restored stop"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
     ]
   }
 ]

@@ -20,7 +20,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 |---|---|---|
 | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
 | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 340 core plants caught by their named assertions. |
+| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 342 core plants caught by their named assertions. |
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
@@ -30,6 +30,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
 | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
+| ACMP cache preservation | `python3 scripts/check_acmp_cache.py --selftest` | Every `published_*` field declared in `acmp_sink` has its own hosted assertion and a plant dropping only its restore in `sink_reset`. Missing and shared coverage controls fail, including a future field. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
@@ -158,6 +159,14 @@ Where a former killer needed an adapter, a named core assertion now tests the
 same defect. The [test inventory](TESTS.md) records the mapping.
 Compilation failures and crashes fail the campaign; neither counts as a caught mutation.
 Every required killer must fail with its assertion-specific message; an unrelated failed assertion is insufficient.
+The [ACMP cache check](../scripts/check_acmp_cache.py) discovers `published_*` fields from
+the header's compiler tokens, rather than a fixed list. Each field needs exactly one
+restore-only plant and a distinct message owned by a named hosted ACMP test.
+The check rejects a missing test, assertion or plant, a duplicate plant, a shared
+assertion, an unchanged restore, a multi-field substitution or a wrong source path.
+Its future-field control fails without coverage and passes with a separate assertion
+and plant. The hosted mutation campaign establishes that each assertion actually
+fails on its field's plant; RV32 smoke cannot satisfy that requirement.
 The driver removes each previous XML report before running the binary.
 It removes the previous campaign summary at startup. Unknown named tests record ERROR for their plant.
 Gate decisions raise explicit errors and remain active under optimized Python.

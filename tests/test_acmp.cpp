@@ -2228,4 +2228,38 @@ TEST_F(AcmpCore, A31StoreResetOfASettledSinkPublishesAMovedStream) {
         << "A31 withdrawal after a store reset reports the settled stream moved";
 }
 
+// REQ: ACMP-10
+TEST_F(AcmpCore, A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal) {
+    bind(0, kTkA, 1, kCtl1, true);
+    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 the stopped binding publishes once before reset";
+    ASSERT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u)
+        << "A31 only the bound cache is nonzero before reset";
+    const auto none = payload(0u, 0u, 0u, 0u);
+    fk.clear();
+    ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
+    EXPECT_TRUE(fk.pubs.empty()) << "A31 resetting a stopped binding defers publication until open";
+    acmp_open(&a);
+    ASSERT_EQ(fk.pubs.size(), 1u)
+        << "A31 the bound cache survives reset to publish the stopped binding withdrawal";
+    EXPECT_TRUE(!fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u && !fk.pubs[0].moved)
+        << "A31 the stopped binding is withdrawn without moving a stream";
+}
+
+// REQ: ACMP-10
+TEST_F(AcmpCore, A31StoreRestoreOfAStoppedRecordPublishesTheStop) {
+    bind(0);
+    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 the started binding publishes once before restore";
+    ASSERT_TRUE(fk.pubs[0].bound && fk.pubs[0].started && fk.pubs[0].stream == 0u)
+        << "A31 the binding is started without a settled stream before restore";
+    const auto stopped = payload(kRecValid, 1u, kTkA, kCtl1);
+    fk.clear();
+    ASSERT_EQ(acmp_restore_binding(&a, 0, stopped.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
+    EXPECT_TRUE(fk.pubs.empty()) << "A31 restoring a stopped record defers publication until open";
+    acmp_open(&a);
+    ASSERT_EQ(fk.pubs.size(), 1u)
+        << "A31 the started cache survives reset to publish the restored stop";
+    EXPECT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u && !fk.pubs[0].moved)
+        << "A31 the restored binding is published stopped without moving a stream";
+}
+
 }
