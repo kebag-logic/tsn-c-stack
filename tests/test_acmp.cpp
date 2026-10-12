@@ -2298,6 +2298,40 @@ TEST_F(AcmpFresh, StaleProbe) {
 }
 
 // REQ: ACMP-11
+TEST_F(AcmpFresh, StaleProbeAfterListenerWrap) {
+    const std::uint32_t start = 50000u;
+    fk.now = start;
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    for (const std::uint64_t elapsed : {UINT64_C(15000), UINT64_C(1000000000),
+            UINT64_C(2000000000), UINT64_C(3000000000), UINT64_C(4000000000),
+            UINT64_C(0x100000064)}) {
+        fk.now = start + static_cast<std::uint32_t>(elapsed);
+        (void)acmp_declaring(&a, 0);
+    }
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "Listener withdrawal after a serviced full wrap cannot revive an expired probe";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, StaleProbeAfterInvalidAddressWrap) {
+    const std::uint32_t start = 50000u;
+    fk.now = start;
+    answer();
+    fk.source[0].dest_mac_valid = false;
+    for (const std::uint64_t elapsed : {UINT64_C(15000), UINT64_C(1000000000),
+            UINT64_C(2000000000), UINT64_C(3000000000), UINT64_C(4000000000),
+            UINT64_C(0x100000064)}) {
+        fk.now = start + static_cast<std::uint32_t>(elapsed);
+        (void)acmp_declaring(&a, 0);
+    }
+    fk.source[0].dest_mac_valid = true;
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "destination recovery after a serviced full wrap cannot revive an expired probe";
+}
+
+// REQ: ACMP-11
 TEST_F(AcmpFresh, WindowEdge) {
     for (auto start : {50000u, UINT32_MAX - 999u}) {
         fk.now = start;

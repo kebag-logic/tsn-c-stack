@@ -5553,6 +5553,30 @@
     ]
   },
   {
+    "name": "g-expiry-skipped-with-listener",
+    "path": "src/acmp.c",
+    "old": "if (s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {",
+    "new": "if (s->answered && !s->listener_registered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {",
+    "kills": [
+      {
+        "test": "AcmpFresh.StaleProbeAfterListenerWrap",
+        "needle": "Listener withdrawal after a serviced full wrap cannot revive an expired probe"
+      }
+    ]
+  },
+  {
+    "name": "g-expiry-skipped-invalid-da",
+    "path": "src/acmp.c",
+    "old": "if (s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n\tstruct acmp_source_state st;\n\tmemset(&st, 0, sizeof st);\n\tp_source(a, source, &st);\n",
+    "new": "struct acmp_source_state st;\n\tmemset(&st, 0, sizeof st);\n\tp_source(a, source, &st);\n\tif (st.dest_mac_valid && s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n",
+    "kills": [
+      {
+        "test": "AcmpFresh.StaleProbeAfterInvalidAddressWrap",
+        "needle": "destination recovery after a serviced full wrap cannot revive an expired probe"
+      }
+    ]
+  },
+  {
     "name": "entity-wrong-count",
     "path": "examples/entities/ax7101/entity_config.c",
     "old": "        .talker_stream_sources = 2u,",

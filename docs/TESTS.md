@@ -88,22 +88,24 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
 | [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L786) | acmp-kind-lost; acmp-kind-any-state | ACMP-04, MFSRP-01 |
 | [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
-| [AcmpFresh.ClockWrap](../tests/test_acmp.cpp#L2347) | dafresh-absolute-clock | ACMP-11 |
-| [AcmpFresh.ConfiguredWindow](../tests/test_acmp.cpp#L2356) | dafresh-fixed-window | ACMP-11 |
-| [AcmpFresh.DeferredAnswer](../tests/test_acmp.cpp#L2396) | dafresh-refused-answer | ACMP-11, ACMP-09 |
-| [AcmpFresh.FailedAllocationAnswer](../tests/test_acmp.cpp#L2411) | dafresh-only-success | ACMP-11, ACMP-08 |
-| [AcmpFresh.InputGuardsAndReentry](../tests/test_acmp.cpp#L2441) | dafresh-wrong-interface | ACMP-11, PORT-01 |
-| [AcmpFresh.InvalidAddress](../tests/test_acmp.cpp#L2337) | dafresh-ignore-address | ACMP-11 |
-| [AcmpFresh.ListenerWithdrawalAndReset](../tests/test_acmp.cpp#L2460) | dafresh-reset-retains-demand | ACMP-11 |
-| [AcmpFresh.ListenerWithoutProbe](../tests/test_acmp.cpp#L2329) | dafresh-listener-needs-probe | ACMP-11 |
+| [AcmpFresh.ClockWrap](../tests/test_acmp.cpp#L2381) | dafresh-absolute-clock | ACMP-11 |
+| [AcmpFresh.ConfiguredWindow](../tests/test_acmp.cpp#L2390) | dafresh-fixed-window | ACMP-11 |
+| [AcmpFresh.DeferredAnswer](../tests/test_acmp.cpp#L2430) | dafresh-refused-answer | ACMP-11, ACMP-09 |
+| [AcmpFresh.FailedAllocationAnswer](../tests/test_acmp.cpp#L2445) | dafresh-only-success | ACMP-11, ACMP-08 |
+| [AcmpFresh.InputGuardsAndReentry](../tests/test_acmp.cpp#L2475) | dafresh-wrong-interface | ACMP-11, PORT-01 |
+| [AcmpFresh.InvalidAddress](../tests/test_acmp.cpp#L2371) | dafresh-ignore-address | ACMP-11 |
+| [AcmpFresh.ListenerWithdrawalAndReset](../tests/test_acmp.cpp#L2494) | dafresh-reset-retains-demand | ACMP-11 |
+| [AcmpFresh.ListenerWithoutProbe](../tests/test_acmp.cpp#L2363) | dafresh-listener-needs-probe | ACMP-11 |
 | [AcmpFresh.NoProbe](../tests/test_acmp.cpp#L2283) | dafresh-unanswered-clock | ACMP-11 |
-| [AcmpFresh.OtherRepliesDoNotRefresh](../tests/test_acmp.cpp#L2419) | dafresh-state-reply-demand | ACMP-11, ACMP-08 |
-| [AcmpFresh.SourceAndInterfaceIsolation](../tests/test_acmp.cpp#L2432) | dafresh-wrong-source | ACMP-11 |
+| [AcmpFresh.OtherRepliesDoNotRefresh](../tests/test_acmp.cpp#L2453) | dafresh-state-reply-demand | ACMP-11, ACMP-08 |
+| [AcmpFresh.SourceAndInterfaceIsolation](../tests/test_acmp.cpp#L2466) | dafresh-wrong-source | ACMP-11 |
 | [AcmpFresh.StaleProbe](../tests/test_acmp.cpp#L2289) | dafresh-expiry-equality | ACMP-11 |
-| [AcmpFresh.WindowEdge](../tests/test_acmp.cpp#L2301) | dafresh-inclusive-edge | ACMP-11 |
-| [AcmpFresh.WindowRange](../tests/test_acmp.cpp#L2380) | dafresh-half-range | ACMP-11, PORT-01 |
-| [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2317) | dafresh-no-renewal | ACMP-11 |
-| [AcmpFresh.ZeroWindow](../tests/test_acmp.cpp#L2365) | x-zero-never-expires | ACMP-11 |
+| [AcmpFresh.StaleProbeAfterInvalidAddressWrap](../tests/test_acmp.cpp#L2318) | g-expiry-skipped-invalid-da | ACMP-11 |
+| [AcmpFresh.StaleProbeAfterListenerWrap](../tests/test_acmp.cpp#L2301) | g-expiry-skipped-with-listener | ACMP-11 |
+| [AcmpFresh.WindowEdge](../tests/test_acmp.cpp#L2335) | dafresh-inclusive-edge | ACMP-11 |
+| [AcmpFresh.WindowRange](../tests/test_acmp.cpp#L2414) | dafresh-half-range | ACMP-11, PORT-01 |
+| [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2351) | dafresh-no-renewal | ACMP-11 |
+| [AcmpFresh.ZeroWindow](../tests/test_acmp.cpp#L2399) | x-zero-never-expires | ACMP-11 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
 | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
 | [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
