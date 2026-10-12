@@ -1,0 +1,9 @@
+ref/fint/acmp.c vs tsn/head/acmp.c: clang-tokens 7849/7849 EQUAL [134f07e8513f5141 134f07e8513f5141]; gcc-stripped EQUAL
+ref/fint/acmp.h vs tsn/head/acmp.h: clang-tokens 1175/1175 EQUAL [1a37187e7da0e762 1a37187e7da0e762]; gcc-stripped EQUAL
+ref/base/acmp.c vs tsn/base/acmp.c: clang-tokens 7586/7586 EQUAL [146d44326c58e1ab 146d44326c58e1ab]; gcc-stripped EQUAL
+ref/base/acmp.h vs tsn/base/acmp.h: clang-tokens 1137/1137 EQUAL [061630b18b650e70 061630b18b650e70]; gcc-stripped EQUAL
+ref/base/acmp.c vs ref/fint/acmp.c: clang-tokens 7586/7849 DIFFER [146d44326c58e1ab 134f07e8513f5141]; gcc-stripped DIFFER
+  first token difference at 859: ('raw_identifier', 'decode') != ('raw_identifier', 'p_publish')
+tsn/base/acmp.c vs tsn/head/acmp.c: clang-tokens 7586/7849 DIFFER [146d44326c58e1ab 134f07e8513f5141]; gcc-stripped DIFFER
+  first token difference at 859: ('raw_identifier', 'decode') != ('raw_identifier', 'p_publish')
+rc=1

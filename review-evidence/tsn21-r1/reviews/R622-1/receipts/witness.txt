@@ -1,0 +1,5 @@
+head: rc 0; [  PASSED  ] 8 tests. 
+finish-publishes-after-timers: rc 1; [  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort (0 ms) [  PASSED  ] 7 tests. [  FAILED  ] 1 test, listed below: [  FAILED  ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort 
+    R622 witness publication precedes the timer port in finish
+reset-drops-stream-cache-only: rc 1; [  FAILED  ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream (0 ms) [  PASSED  ] 7 tests. [  FAILED  ] 1 test, listed below: [  FAILED  ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream 
+    R622 witness the withdrawn stream is reported moved
