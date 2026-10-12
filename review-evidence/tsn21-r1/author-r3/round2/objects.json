@@ -1,0 +1,49 @@
+{
+  "compiler": "riscv64-elf-gcc (Arch Linux Repositories) 16.2.0",
+  "common_flags": "-Isrc -I\"$PORT_INCLUDE\" -march=rv32i -mabi=ilp32 -ffreestanding -fno-builtin -nostdinc -isystem \"$(riscv64-elf-gcc -print-file-name=include)\" -std=c11 -Wall -Wextra -Werror",
+  "invocation_suffix": "-c src/acmp.c -o \"$OUTPUT\"",
+  "objects": [
+    {
+      "name": "debug-g0",
+      "flags": "-DCTRL_REENTRY_ASSERT -g0",
+      "raw_equal": true,
+      "sha256": "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7",
+      "size": 36176
+    },
+    {
+      "name": "debug",
+      "flags": "-DCTRL_REENTRY_ASSERT -g",
+      "raw_equal": true,
+      "sha256": "826ed3d1abca57312710b053006964f79d2916e03ba7713d61a52bad9cf143cd",
+      "size": 156816
+    },
+    {
+      "name": "release",
+      "flags": "-DCTRL_REENTRY_ASSERT -O3 -DNDEBUG",
+      "raw_equal": true,
+      "sha256": "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+      "size": 30684
+    },
+    {
+      "name": "os",
+      "flags": "-DCTRL_REENTRY_ASSERT -Os",
+      "raw_equal": true,
+      "sha256": "825f6f3ed56f7ed92a96cd085f42763b0cc58a044e73cd79e9933c84b48de725",
+      "size": 21092
+    },
+    {
+      "name": "o2-noassert",
+      "flags": "-O2",
+      "raw_equal": true,
+      "sha256": "23c0d5e86b5622c309398205bfa229e0b3a6159337a33e98439764a8a73c2277",
+      "size": 25776
+    },
+    {
+      "name": "os-g3",
+      "flags": "-Os -g3",
+      "raw_equal": true,
+      "sha256": "accb8cb188490fc7c1c2d2c6483f60f584930c8461223c4c2706253f7252fbe4",
+      "size": 336736
+    }
+  ]
+}

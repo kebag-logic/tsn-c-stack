@@ -1,0 +1,317 @@
+{
+  "head": "bc68ad8f3577e8f3dc24c4336e9b80a933df6c79",
+  "original_probe_limit": "The RSV_OK search string occurs twice; the original script refused its replacement. The scoped rerun uses the exact witness2.sh context and all seven faults execute.",
+  "runs": [
+    {
+      "group": "probes",
+      "variant": "head",
+      "instances": 79,
+      "rc": 0,
+      "failed": []
+    },
+    {
+      "group": "probes",
+      "variant": "reset-drops-bound-cache-only",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+      ]
+    },
+    {
+      "group": "probes",
+      "variant": "reset-drops-started-cache-only",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
+      ]
+    },
+    {
+      "group": "probes",
+      "variant": "moved-means-nonzero",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "5",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished",
+        "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ]
+    },
+    {
+      "group": "probes",
+      "variant": "publish-ignores-bound",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "3",
+        "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ]
+    },
+    {
+      "group": "probes",
+      "variant": "publish-skips-last-sink",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+      ]
+    },
+    {
+      "group": "probes",
+      "variant": "finish-publishes-after-admission",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "head",
+      "instances": 79,
+      "rc": 0,
+      "failed": []
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "reset-drops-bound-cache-only",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "reset-drops-started-cache-only",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "settled-ignores-rsv-ok",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "moved-means-nonzero",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "5",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished",
+        "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "publish-ignores-bound",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "3",
+        "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+        "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "publish-skips-last-sink",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+      ]
+    },
+    {
+      "group": "probes-scoped",
+      "variant": "finish-publishes-after-admission",
+      "instances": 79,
+      "rc": 1,
+      "failed": [
+        "1",
+        "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+      ]
+    },
+    {
+      "group": "witness",
+      "variant": "head",
+      "instances": 81,
+      "rc": 0,
+      "failed": []
+    },
+    {
+      "group": "witness",
+      "variant": "reset-drops-bound-cache-only",
+      "instances": 81,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+        "AcmpCore.R622W2StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+      ]
+    },
+    {
+      "group": "witness",
+      "variant": "reset-drops-started-cache-only",
+      "instances": 81,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
+        "AcmpCore.R622W3StoreRestoreOfAStoppedRecordPublishesTheStop"
+      ]
+    },
+    {
+      "group": "witness",
+      "variant": "settled-ignores-rsv-ok",
+      "instances": 81,
+      "rc": 1,
+      "failed": [
+        "2",
+        "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
+        "AcmpCore.A31OnlyAMovedTripleIsPublished"
+      ]
+    }
+  ],
+  "rv32": [
+    {
+      "variant": "head",
+      "rc": 0,
+      "configurations": [
+        {
+          "configuration": "Debug",
+          "rc": 0,
+          "elf_sha256": "f48d1ac52147fb6433a9b430c42f5e77c9c34a4abe305b1dd5c6277f4c8d3e14",
+          "elf_bytes": 108716,
+          "core_objects": {
+            "adp.c": "6dfc8a4a70b1cb407447a4ee3a667a2d8166f77dcd621a1e12f6da65b9efc9b3",
+            "acmp.c": "7cf6f066dbb103fccd54c22fcdd98be4474282e73d3c209b3ab1508067a07b27",
+            "maap.c": "5c4b8bcb3e1b4e864d93eeb4067a4eff182a386a59b1268465bf9a3d3397e0c0"
+          },
+          "core_imports": [
+            "__mulsi3",
+            "__umodsi3",
+            "ctrl_reentry_assert",
+            "memcpy",
+            "memset",
+            "port_assert_failed"
+          ],
+          "unresolved_final": [],
+          "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+        },
+        {
+          "configuration": "Release",
+          "rc": 0,
+          "elf_sha256": "ef25a1ca500e6dca8583bc464e2f5a1fb665ca11fc5c9d69d841e0ad1ab4eccd",
+          "elf_bytes": 37764,
+          "core_objects": {
+            "adp.c": "31e8d3486aa9fc1bb52bd8e54828f039ae96b2fd04f61f7800daa8377d922425",
+            "acmp.c": "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+            "maap.c": "f04b053968b267848c4752d65f1675fca061d9f8aed7e9165885f2b097be0ce8"
+          },
+          "core_imports": [
+            "__umodsi3",
+            "ctrl_reentry_assert",
+            "memcpy",
+            "memset"
+          ],
+          "unresolved_final": [],
+          "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+        }
+      ]
+    },
+    {
+      "variant": "reset-drops-bound-cache-only",
+      "rc": 1,
+      "configurations": [
+        {
+          "configuration": "Debug",
+          "build_rc": 0,
+          "smoke_rc": 34,
+          "expected_failure": true
+        },
+        {
+          "configuration": "Release",
+          "build_rc": 0,
+          "smoke_rc": 34,
+          "expected_failure": true
+        }
+      ]
+    },
+    {
+      "variant": "reset-drops-started-cache-only",
+      "rc": 0,
+      "configurations": [
+        {
+          "configuration": "Debug",
+          "rc": 0,
+          "elf_sha256": "433146b21932d746840ffe2004666ea396d58fdba06caa27f8748a5b75ee844a",
+          "elf_bytes": 109004,
+          "core_objects": {
+            "adp.c": "cd5cc26bf02b0f25981343ef8e1542b830d75fdd7f5462e867333a33ad188f94",
+            "acmp.c": "dd1e97851837ecfe8d7f598b56d081bdc079e2c3b5354b6a7d9879455f764962",
+            "maap.c": "2b427887530dfabf35fba797bd7376133623e1c74c466513618ef312978a87b1"
+          },
+          "core_imports": [
+            "__mulsi3",
+            "__umodsi3",
+            "ctrl_reentry_assert",
+            "memcpy",
+            "memset",
+            "port_assert_failed"
+          ],
+          "unresolved_final": [],
+          "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+        },
+        {
+          "configuration": "Release",
+          "rc": 0,
+          "elf_sha256": "8d5ae2fbc0c28dfca16c0a4950669d97c60ecb1f010e3ea94b844530a6cf0e85",
+          "elf_bytes": 37748,
+          "core_objects": {
+            "adp.c": "31e8d3486aa9fc1bb52bd8e54828f039ae96b2fd04f61f7800daa8377d922425",
+            "acmp.c": "e01cd5fcfd5d34ade5636744c71b93a1ce9dc53b21d48e55045a971d09698f40",
+            "maap.c": "f04b053968b267848c4752d65f1675fca061d9f8aed7e9165885f2b097be0ce8"
+          },
+          "core_imports": [
+            "__umodsi3",
+            "ctrl_reentry_assert",
+            "memcpy",
+            "memset"
+          ],
+          "unresolved_final": [],
+          "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+        }
+      ]
+    }
+  ]
+}

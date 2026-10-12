@@ -1,0 +1,8 @@
+publish-skips-last-sink: rc 1; [  PASSED  ] 77 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens 
+finish-publishes-after-admission: rc 1; [  PASSED  ] 78 tests.; failed: AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort 
+reset-drops-bound-cache-only: rc 1; [  PASSED  ] 78 tests.; failed: AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal 
+publish-ignores-bound: rc 1; [  PASSED  ] 76 tests.; failed: AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised 
+reset-drops-started-cache-only: rc 1; [  PASSED  ] 78 tests.; failed: AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop 
+head: rc 0; [  PASSED  ] 79 tests.; failed: none
+moved-means-nonzero: rc 1; [  PASSED  ] 74 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31OnlyAMovedTripleIsPublished AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised 
+settled-ignores-rsv-ok: rc 1; [  PASSED  ] 77 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31OnlyAMovedTripleIsPublished 

@@ -1,0 +1,4 @@
+settled-ignores-rsv-ok: rc 1; [  PASSED  ] 79 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31OnlyAMovedTripleIsPublished 
+reset-drops-started-cache-only: rc 1; [  PASSED  ] 79 tests.; failed: AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop AcmpCore.R622W3StoreRestoreOfAStoppedRecordPublishesTheStop 
+reset-drops-bound-cache-only: rc 1; [  PASSED  ] 79 tests.; failed: AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal AcmpCore.R622W2StoreResetOfABoundStoppedSinkPublishesItsWithdrawal 
+head: rc 0; [  PASSED  ] 81 tests.; failed: none
