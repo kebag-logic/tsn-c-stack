@@ -104,6 +104,17 @@ struct Fake {
     acmp_source_state source[ACMP_MAX_SOURCES] = {};
     std::vector<Sent> sent;
     std::vector<Call> calls;
+    struct Pub {
+        unsigned interface;
+        unsigned sink;
+        bool bound;
+        bool started;
+        std::uint64_t stream;
+        bool moved;
+        std::size_t before;
+    };
+    std::vector<Pub> pubs;
+    std::function<void()> pub_hook;
     bool armed[ACMP_MAX_INTERFACES] = {};
     std::uint32_t at[ACMP_MAX_INTERFACES] = {};
 
@@ -136,6 +147,7 @@ struct Fake {
     void clear() {
         sent.clear();
         calls.clear();
+        pubs.clear();
     }
 };
 
@@ -213,7 +225,17 @@ inline void f_admit(void*, unsigned interface, unsigned sink, bool bound, std::u
     fk.reenter(Call::ADMIT);
 }
 
-inline const acmp_ports kPorts = {nullptr, f_send, f_now, f_timer, f_gptp, f_seed, f_admit};
+inline void f_publish(void*, unsigned interface, unsigned sink, bool bound, bool started, std::uint64_t stream,
+                      bool moved) {
+    fk.pubs.push_back({interface, sink, bound, started, stream, moved, fk.calls.size()});
+    if (fk.pub_hook) {
+        auto h = fk.pub_hook;
+        fk.pub_hook = nullptr;
+        h();
+    }
+}
+
+inline const acmp_ports kPorts = {nullptr, f_send, f_now, f_timer, f_gptp, f_seed, f_admit, f_publish};
 inline const acmp_env kEnv = {nullptr, f_locked, f_source, f_srp, f_persist, f_changed};
 
 struct Pdu {

@@ -35,6 +35,18 @@ Build, memory and testing policies are local decisions. They have source links r
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
 
+## ACMP publish port
+
+ACMP-10 originates from [issue #21](https://github.com/kebag-logic/tsn-c-stack/issues/21)
+and milan-fpga F-INT at [09c7231e](https://github.com/kebag-logic/milan-fpga/tree/09c7231eca343607c97c0d66abebb2553688712c/sw/firmware/ctrl/acmp),
+commits [5a50b2045](https://github.com/kebag-logic/milan-fpga/commit/5a50b2045427313527197eb22cd0f8276ef4b015)
+and [7c583daac](https://github.com/kebag-logic/milan-fpga/commit/7c583daace3a459bcf462deaf58acefee21cd41b).
+This addition postdates the 5603c353 import baseline.
+
+| ID | Required behavior | Clause |
+|---|---|---|
+| ACMP-10 | Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry. | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) |
+
 ## ADP input validation
 
 ADP-01 applies before target parsing in every receive state, including disabled input.

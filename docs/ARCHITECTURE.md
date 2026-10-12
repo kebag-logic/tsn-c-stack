@@ -52,6 +52,11 @@ sequenceDiagram
 ADP guards port calls across instances. ACMP and MAAP guard each active instance.
 These guards detect integration errors. They are not locks.
 There is one dispatch context. Interrupts queue events for that context.
+ACMP publishes each changed sink binding through its required `publish` port before
+new frame transmission and first at completion, before timers, admission, persistence
+and notification. Publication includes bound, started and settled stream ID; its
+cache survives sink reset. This [published before promised contract](PORTING.md#acmp-callbacks-and-public-fields)
+lets the datapath apply the state before a response promises it.
 ACMP deadlines use unsigned millisecond clocks and signed wrap comparisons.
 ADP and MAAP request relative delays. The adapter owns expiry cancellation.
 
