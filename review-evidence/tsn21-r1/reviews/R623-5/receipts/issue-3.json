@@ -1,0 +1,9 @@
+{
+  "html_url": "https://github.com/kebag-logic/tsn-c-stack/issues/3",
+  "number": 3,
+  "title": "ADP: discard discovery frames with a wrong AVTP version, a short length or a zero control_data_length",
+  "body": "Found by review R557-1 on PR #1, finding F4. This behaviour is inherited unchanged from milan-fpga dev `6aa25dec`.\n\nIn WAITING, `src/adp.c` (around line 308) acts on discovery frames it should discard. Each of these enters DELAY, restarts the timer and leaves `discarded` at zero:\n- a frame with AVTP version 1;\n- a frame truncated to 26 bytes;\n- a full frame with `control_data_length` 0.\n\nThe receiver checks only the minimum bytes it reads, the EtherType, the subtype, the message nibble and the target.\n\n**Acceptance:**\n1. The ADP receive path refuses each malformed or unsupported input by clause: the AVTP version, the minimum frame length and the `control_data_length` required for ADPDUs (IEEE 1722.1-2021 clause 6.2; IEEE 1722-2016 header rules). It counts the refusal in `discarded`, with no state change.\n2. A test and a planted defect for each of the three inputs, plus the valid control.\n3. `docs/REQUIREMENTS.md` (ADP-01), `docs/PORTING.md` and `docs/DEVIATIONS.md` are updated. The deviation that PR #1 records is removed.\n4. milan-fpga picks up the fix through its consumer of this repository (kebag-logic/milan-fpga#697).\n",
+  "state": "closed",
+  "created_at": "2026-10-09T05:10:39Z",
+  "updated_at": "2026-10-09T17:39:33Z"
+}

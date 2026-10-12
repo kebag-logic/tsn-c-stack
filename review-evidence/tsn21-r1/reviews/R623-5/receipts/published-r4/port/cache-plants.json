@@ -1,0 +1,38 @@
+[
+  {
+    "name": "acmp-publish-after-timers",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort": "$VALIDATION_STORAGE/tsn21-a602/round4/port/linux/mutations/baseline/tests/test_acmp.cpp:2213\nExpected: (fk.pubs[0].before) <= (static_cast<std::size_t>(timer)), actual: 3 vs 2\n\nTSN_MESSAGE_BEGIN_5ad8ba8e39a738fc16a1c8fdea5430df\nA31 settlement publication precedes the timer port in finish\nTSN_MESSAGE_END_0aedbbc0cb789ac6e65941f9285268df\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream": "$VALIDATION_STORAGE/tsn21-a602/round4/port/linux/mutations/baseline/tests/test_acmp.cpp:2227\nValue of: !fk.pubs[0].bound && fk.pubs[0].stream == 0u && fk.pubs[0].moved\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_5ad8ba8e39a738fc16a1c8fdea5430df\nA31 withdrawal after a store reset reports the settled stream moved\nTSN_MESSAGE_END_0aedbbc0cb789ac6e65941f9285268df\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-bound-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal": "$VALIDATION_STORAGE/tsn21-a602/round4/port/linux/mutations/baseline/tests/test_acmp.cpp:2242\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_5ad8ba8e39a738fc16a1c8fdea5430df\nA31 the bound cache survives reset to publish the stopped binding withdrawal\nTSN_MESSAGE_END_0aedbbc0cb789ac6e65941f9285268df\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-started-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop": "$VALIDATION_STORAGE/tsn21-a602/round4/port/linux/mutations/baseline/tests/test_acmp.cpp:2259\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_5ad8ba8e39a738fc16a1c8fdea5430df\nA31 the started cache survives reset to publish the restored stop\nTSN_MESSAGE_END_0aedbbc0cb789ac6e65941f9285268df\n\n"
+    },
+    "tests": 1
+  }
+]

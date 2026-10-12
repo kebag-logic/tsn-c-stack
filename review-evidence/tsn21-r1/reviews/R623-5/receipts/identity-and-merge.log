@@ -1,0 +1,122 @@
+{
+  "token_identity": [
+    {
+      "file": "src/acmp.c",
+      "tokens": 7849,
+      "tokens_and_locations_equal": true,
+      "unchanged_from_previous": true
+    },
+    {
+      "file": "include/acmp.h",
+      "tokens": 1175,
+      "tokens_and_locations_equal": true,
+      "unchanged_from_previous": true
+    }
+  ],
+  "raw_pairs_equal": 6,
+  "merge": {
+    "head": "3c9ca52fc44b4a37e11149392363686f0ea426e0",
+    "parents": [
+      "98dc9e3076714bebe113982ee18c3c1c496cf3c9",
+      "405dc68310a18f669049ffc10cc23eef7300dcff"
+    ],
+    "different_from_both_parents": [
+      {
+        "path": "docs/PORTING.md",
+        "automatic": "both changed",
+        "textual_conflict": false,
+        "equals_automatic_union": true
+      },
+      {
+        "path": "docs/REQUIREMENTS.md",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "docs/TESTS.md",
+        "automatic": "both changed",
+        "textual_conflict": false,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "docs/TRACEABILITY.md",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "docs/VERIFICATION.md",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "docs/requirements.json",
+        "automatic": "both changed",
+        "textual_conflict": false,
+        "equals_automatic_union": true
+      },
+      {
+        "path": "examples/entity_roundtrip.c",
+        "automatic": "main"
+      },
+      {
+        "path": "examples/rv32/smoke.c",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "scripts/requirement_records.py",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "scripts/validate.py",
+        "automatic": "both changed",
+        "textual_conflict": false,
+        "equals_automatic_union": true
+      },
+      {
+        "path": "tests/coverage.ratchet",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "tests/mutations.json",
+        "automatic": "both changed",
+        "textual_conflict": true,
+        "equals_automatic_union": false
+      },
+      {
+        "path": "tests/test_entity.cpp",
+        "automatic": "main"
+      }
+    ],
+    "mutation_union_preserved": true,
+    "mutation_counts": {
+      "base": 324,
+      "main": 330,
+      "port": 342,
+      "integration": 348
+    },
+    "production_parent": {
+      "include/acmp.h": "port",
+      "include/adp.h": "main",
+      "include/maap.h": "main",
+      "include/wire.h": "main",
+      "src/acmp.c": "port",
+      "src/adp.c": "main",
+      "src/maap.c": "main"
+    },
+    "gitlinks": {
+      "1a9f651": [],
+      "98dc9e3": [],
+      "405dc683": [],
+      "3c9ca52f": []
+    }
+  }
+}

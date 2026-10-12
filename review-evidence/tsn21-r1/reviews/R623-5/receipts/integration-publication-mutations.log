@@ -1,0 +1,20 @@
+COMMAND ['/usr/bin/python3', 'scripts/mutation.py', '--work', '$PACKET/scratch/mutations-integration', '--jobs', '4', '--select', 'acmp-publish-']
+CAUGHT acmp-publish-after-response
+CAUGHT acmp-publish-unchanged-triple
+CAUGHT acmp-publish-missing-finish
+CAUGHT acmp-publish-ignores-started
+CAUGHT acmp-publish-unguarded
+CAUGHT acmp-publish-stream-zero
+CAUGHT acmp-publish-stream-moved-always
+CAUGHT acmp-publish-reset-cache
+CAUGHT acmp-publish-wrong-interface
+CAUGHT acmp-publish-bound-cache-stale
+CAUGHT acmp-publish-wrong-started
+CAUGHT acmp-publish-wrong-sink
+CAUGHT acmp-publish-started-cache-stale
+CAUGHT acmp-publish-stream-cache-stale
+CAUGHT acmp-publish-reset-stream-cache
+CAUGHT acmp-publish-after-timers
+CAUGHT acmp-publish-reset-bound-cache
+CAUGHT acmp-publish-reset-started-cache
+{"CAUGHT": 18, "ESCAPED": 0, "ERROR": 0}

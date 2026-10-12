@@ -1,0 +1,1007 @@
+commit 3c9ca52fc44b4a37e11149392363686f0ea426e0
+Merge: 98dc9e3 405dc68
+
+    Merge the ACMP publish port with main validation and entity configuration
+
+diff --cc docs/REQUIREMENTS.md
+index 3bc6188,4703972..e1f12b3
+--- a/docs/REQUIREMENTS.md
++++ b/docs/REQUIREMENTS.md
+@@@ -35,23 -35,27 +35,35 @@@ Build, memory and testing policies are 
+  | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
+  | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
+  
++ ## ACMP publish port
++ 
++ ACMP-10 originates from [issue #21](https://github.com/kebag-logic/tsn-c-stack/issues/21)
++ and milan-fpga F-INT at [09c7231e](https://github.com/kebag-logic/milan-fpga/tree/09c7231eca343607c97c0d66abebb2553688712c/sw/firmware/ctrl/acmp),
++ commits [5a50b2045](https://github.com/kebag-logic/milan-fpga/commit/5a50b2045427313527197eb22cd0f8276ef4b015)
++ and [7c583daac](https://github.com/kebag-logic/milan-fpga/commit/7c583daace3a459bcf462deaf58acefee21cd41b).
++ This addition postdates the 5603c353 import baseline.
++ 
++ | ID | Required behavior | Clause |
++ |---|---|---|
++ | ACMP-10 | Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry. | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) |
++ 
+ -## ADP input limit
+ +## ADP input validation
+  
+ -ADP-01 records the inherited receiver checks. It does not promise complete ADPDU validation.
+ -In WAITING, a matching discovery with AVTP version 1, length 26 bytes, or `control_data_length` zero enters DELAY.
+ -Each restarts its timer and leaves `discarded` zero. A valid discovery has the same effect.
+ -The [input controls](../tests/test_adp.cpp) pin all four cases.
+ -The [porting obligations](PORTING.md#adp-input-validation) and [DEV-08](DEVIATIONS.md) explain the integration boundary.
+ -The [round 2 decision](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074721212) preserves this behavior.
+ -The protocol correction is tracked in [issue 3](https://github.com/kebag-logic/tsn-c-stack/issues/3).
+ +ADP-01 applies before target parsing in every receive state, including disabled input.
+ +Each refused frame increments `discarded` once. Other core storage and all port callbacks remain unchanged.
+ +
+ +| Refused input | Authority |
+ +|---|---|
+ +| AVTP version 1 through 7 | [IEEE 1722.1-2021 6.2.2.3](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4](https://standards.ieee.org/ieee/1722/5979/) |
+ +| Fewer than 82 bytes, including the 14-byte untagged Ethernet header and 68-byte ADPDU | [IEEE 1722.1-2021 Figure 6-1 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/) |
+ +| Any 11-bit `control_data_length` other than 56, including zero | [IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) |
+ +
+ +A complete valid discovery for zero or the local entity enters DELAY from WAITING.
+ +Other states preserve their timers and pending output under [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
+ +Trailing buffer bytes are permitted. The adapter supplies the actual readable length and untagged layout.
+ +The [hosted input controls](../tests/test_adp.cpp) and [RV32 smoke checks](../examples/rv32/smoke.c) cover these rules.
+ +The [porting contract](PORTING.md#adp-input-validation) retains framing and interface duties.
+ +This resolves the inherited input deviation under the [issue 3 assignment](https://github.com/kebag-logic/tsn-c-stack/issues/3#issuecomment-6085285119).
+  
+  ## Clause checks
+  
+diff --cc docs/TESTS.md
+index b283a04,e472c86..361957a
+--- a/docs/TESTS.md
++++ b/docs/TESTS.md
+@@@ -104,9 -111,6 +114,9 @@@ The [traceability matrix](TRACEABILITY.
+  | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
+  | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
+  | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
+- | [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface | ENTITY-01, ACMP-01, ACMP-07 |
+++| [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface | ENTITY-01, ACMP-01, ACMP-07, ACMP-10 |
+ +| [EntityYaml.AdpRoundTrip](../tests/test_entity.cpp#L12) | entity-wrong-count | ENTITY-01, ADP-01 |
+ +| [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L24) | entity-dropped-field | ENTITY-01, MAAP-02 |
+  | [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) | departing-keeps-index | PORT-01 |
+  | [MaapCell.TableB7](../tests/test_maap.cpp#L139) | maap-table-b7-0; maap-table-b7-1; maap-table-b7-2; maap-table-b7-3; maap-table-b7-4; maap-table-b7-5; maap-table-b7-6; maap-table-b7-7; maap-table-b7-8; maap-table-b7-9; maap-table-b7-10; maap-table-b7-11; maap-table-b7-12; maap-table-b7-13; maap-table-b7-14; maap-table-b7-15; maap-table-b7-16; maap-table-b7-17; maap-generic-initial-handles-conflict; maap-generic-probe-state-defends; maap-generic-probe-defend-uses-priority | MAAP-03, MFMAAP-01 |
+  | [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318) | maap-begin-down-forgets-range | MAAP-02 |
+diff --cc docs/TRACEABILITY.md
+index 89527d6,2d25006..8d97a3c
+--- a/docs/TRACEABILITY.md
++++ b/docs/TRACEABILITY.md
+@@@ -8,27 -8,28 +8,28 @@@ Port obligations are not claims of comp
+  
+  | Requirement | Origin | Clause | Verification and tests |
+  |---|---|---|---|
+ -| [ADP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+ -| [ADP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+ -| [ADP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579) |
+ -| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
+ -| [ACMP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local capacity contract supporting Milan v1.2 5.5.3.5.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L209); [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L248) |
+ +| [ADP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L589); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L630); [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L736); [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L753); [AdpInputControl.RejectsWrongControlDataLength](../tests/test_adp.cpp#L770); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788); [EntityYaml.AdpRoundTrip](../tests/test_entity.cpp#L12) |
+ +| [ADP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L545); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L561); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L565); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L573); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L581); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L589); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) |
+ +| [ADP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L545); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L561); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L565); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L573); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L581) |
+- | [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
+++| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L585); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L673); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
+ +| [ACMP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local capacity contract supporting Milan v1.2 5.5.3.5.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L209); [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L248); [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) |
+  | [ACMP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.5.2.2 and 5.5.3.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530); [AcmpCore.A21MessagesNotForThisEntityAreIgnored](../tests/test_acmp.cpp#L1018); [AcmpCore.A21MalformedFramesAreCounted](../tests/test_acmp.cpp#L1039); [AcmpCore.A25OnlyTable522ItemsAreReported](../tests/test_acmp.cpp#L1510); [AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead](../tests/test_acmp.cpp#L1537) |
+  | [ACMP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.2.4, 5.5.2.5 and 5.5.3.5, Tables 5.30 and 5.32](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530) |
+  | [ACMP-04](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5, Tables 5.29 and 5.30](https://avnu.org/resource/milan-specification/) | [AcmpCore.A7ResponsesKeyOnTheListenerUniqueId](../tests/test_acmp.cpp#L542); [AcmpCore.A7EachGuardTermIsChecked](../tests/test_acmp.cpp#L554); [AcmpCore.A7TheGuardReadsTheSentProbeNotTheBinding](../tests/test_acmp.cpp#L576); [AcmpCore.A7ResponsesOutsideProbingAreIgnored](../tests/test_acmp.cpp#L587); [AcmpCore.A8SuccessSettles](../tests/test_acmp.cpp#L612); [AcmpCore.A9FailureWaitsForTheRetry](../tests/test_acmp.cpp#L635); [AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp](../tests/test_acmp.cpp#L650); [AcmpCore.A11RetryWaitsForTheTalkerOrDelays](../tests/test_acmp.cpp#L671); [AcmpCore.A12DelaySendsANewProbe](../tests/test_acmp.cpp#L691); [AcmpCore.A13NoTalkerAttributeReprobes](../tests/test_acmp.cpp#L706); [AcmpCore.A14RegisteredSettlesTheReservation](../tests/test_acmp.cpp#L728); [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L753); [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L786); [AcmpCore.A16OneCounterForEveryNewProbe](../tests/test_acmp.cpp#L817) |
+  | [ACMP-05](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.2.3, 5.5.3.5.3 and 5.5.3.5.16, Table 5.26](https://avnu.org/resource/milan-specification/); [Local timer and accepted-send contract](PORTING.md) | [AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline](../tests/test_acmp.cpp#L831); [AcmpCore.A18AZeroDelayProbesInTheSameExpiry](../tests/test_acmp.cpp#L859); [AcmpCore.A18TheSeedIsTakenAtTheFirstDraw](../tests/test_acmp.cpp#L883); [AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves](../tests/test_acmp.cpp#L1588); [AcmpCore.A27AStalledDuplicateGetsItsWholeInterval](../tests/test_acmp.cpp#L1625); [AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing](../tests/test_acmp.cpp#L1669); [AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap](../tests/test_acmp.cpp#L1723); [AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap](../tests/test_acmp.cpp#L1788); [AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1882); [AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1918); [AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry](../tests/test_acmp.cpp#L1951) |
+  | [ACMP-06](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.4.1 and 5.6.4.5, Table 5.54](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.5](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches](../tests/test_acmp.cpp#L1152); [AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail](../tests/test_acmp.cpp#L1183); [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1198); [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1255); [AcmpCore.DepartingRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1282); [AcmpCore.AdpTimeoutRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1287); [AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface](../tests/test_acmp.cpp#L1292); [AcmpCore.A22OtherAdpFramesAreIgnored](../tests/test_acmp.cpp#L1315); [AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker](../tests/test_acmp.cpp#L1814); [AcmpCore.DepartingStopsEveryProbingTimer](../tests/test_acmp.cpp#L1973) |
+- | [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848); [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) |
+ -| [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157) |
+++| [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) |
+  | [ACMP-08](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.4](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A20ProbeTxIsAnsweredFromTheSource](../tests/test_acmp.cpp#L901); [AcmpCore.A20DisconnectGetTxStateAndGetTxConnection](../tests/test_acmp.cpp#L954) |
+  | [ACMP-09](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/); [Local transport and port work budgets](PORTING.md) | [AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits](../tests/test_acmp.cpp#L1059); [AcmpCore.A19NothingPassesAnOwedFrame](../tests/test_acmp.cpp#L1083); [AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs](../tests/test_acmp.cpp#L1097); [AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered](../tests/test_acmp.cpp#L1114); [AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether](../tests/test_acmp.cpp#L1134) |
+ -| [ACMP-10](REQUIREMENTS.md) | [milan-fpga F-INT at 09c7231e / tsn-c-stack #21](REQUIREMENTS.md#acmp-publish-port) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206); [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218); [AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal](../tests/test_acmp.cpp#L2232); [AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop](../tests/test_acmp.cpp#L2249) |
+++| [ACMP-10](REQUIREMENTS.md) | [milan-fpga F-INT at 09c7231e / tsn-c-stack #21](REQUIREMENTS.md#acmp-publish-port) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206); [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218); [AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal](../tests/test_acmp.cpp#L2232); [AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop](../tests/test_acmp.cpp#L2249); [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) |
+  | [MAAP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.2, especially B.2.3](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.MalformedAndVersionCompatibility](../tests/test_maap.cpp#L244) |
+ -| [MAAP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94); [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117); [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196); [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209); [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271); [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+ +| [MAAP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) | [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L24); [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94); [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117); [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196); [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209); [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271); [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+  | [MAAP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) | [MaapCell.TableB7](../tests/test_maap.cpp#L139); [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L170); [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L179); [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L219); [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L232) |
+  | [MAAP-04](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) | [MaapCore.ReleaseLossAndRetry](../tests/test_maap.cpp#L294); [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361); [MaapCore.QueueBoundAndWithdrawal](../tests/test_maap.cpp#L380) |
+ -| [MFDISC-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L187) | [IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2 and 5.6.3.5](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551) |
+ -| [MFDISC-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L188) | [IEEE 1722.1-2021 6.2.2.4 and 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5 and Table 5.51](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539) |
+ -| [MFDISC-03](REQUIREMENTS.md) | [milan-fpga FR-DISC-03](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L189) | [Milan v1.2 5.6.3.5.6, 5.6.3.5.8, 5.6.3.5.10 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/) | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590) |
+ -| [MFDISC-04](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628) |
+ +| [MFDISC-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L187) | [IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2 and 5.6.3.5](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L549); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) |
+ +| [MFDISC-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-02](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L188) | [IEEE 1722.1-2021 6.2.2.4 and 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5 and Table 5.51](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L541); [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L788) |
+ +| [MFDISC-03](REQUIREMENTS.md) | [milan-fpga FR-DISC-03](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L189) | [Milan v1.2 5.6.3.5.6, 5.6.3.5.8, 5.6.3.5.10 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/) | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L569); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L577); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L592) |
+ +| [MFDISC-04](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L614); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L630) |
+  | [MFENTITY-01](REQUIREMENTS.md) | [milan-fpga FR-DISC-04](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190) | [IEEE 1722.1-2021 6.2.2.7 through 6.2.2.20](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.2](https://avnu.org/resource/milan-specification/) | port obligation: The library encodes caller data. It has no descriptor store or gPTP implementation. [Entity configuration contract](PORTING.md#entity-configuration) |
+  | [MFENTITY-02](REQUIREMENTS.md) | [milan-fpga FR-DISC-05](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L191) | [IEEE 1722.1-2021 6.2.2.7](https://standards.ieee.org/ieee/1722.1/6670/) | port obligation: MAC derivation and restart stability are source product policy. IEEE permits MAC derivation; the core accepts a caller-supplied identifier. [Entity identity contract](PORTING.md#entity-configuration) |
+  | [MFENTITY-03](REQUIREMENTS.md) | [milan-fpga NFR-SEC-01](https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L470) | [IEEE 1722.1-2021 6.2.2.9 and Table 6-2](https://standards.ieee.org/ieee/1722.1/6670/) | port obligation: The no-required-authentication policy comes from the source product. ADP encodes caller capabilities. The library implements neither AECP authentication nor application authorization. [Entity configuration contract](PORTING.md#entity-configuration) |
+diff --cc docs/VERIFICATION.md
+index e89a8bc,06b28cd..7792f97
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@@ -18,10 -18,9 +18,10 @@@ No failing build, skipped test or empt
+  
+  | Check | Command | Acceptance |
+  |---|---|---|
+ +| Entity YAML | `python3 scripts/entity_yaml.py --examples --check` and `python3 scripts/entity_selftest.py --work build-entity-controls` | Schema refusals, exact golden bytes, version guard, planted drift, the AX7101 mapping and 13 registered mapper plants pass. [Round trips](ENTITY_YAML.md#validation-and-tests) execute on Linux and RV32. |
+  | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
+  | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
+- | Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 327 core plants and three generated configuration plants caught by their named assertions. |
+ -| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 342 core plants caught by their named assertions. |
+++| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 345 core plants and three generated configuration plants caught by their named assertions. |
+  | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
+  | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
+  | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
+@@@ -131,9 -131,9 +132,9 @@@ The [smoke checks](../examples/rv32/smo
+  | Check | Defect caught |
+  |---|---|
+  | ADP schedule and wire fields | Wrong advertisement period, frame size or entity byte order. |
+ -| ADP valid and inherited malformed discovery | Changed acceptance of version 1, 26-byte input or zero control length. |
+ +| ADP valid and malformed discovery in every receive state | Acceptance of version 1, 26-byte input or zero control length; missing discard accounting; state, timer or callback side effects. |
+  | ADP blocked departure | Dropped queued frame or failure to reset the next advertisement index. |
+- | ACMP restore, admission, latch and rollback | Wrong binding byte order, startup state, admission or rollback. |
++ | ACMP restore, admission, latch, rollback and publication | Wrong binding byte order, startup state, admission, rollback cache, bound/started/stream publication or response ordering. |
+  | MAAP pool bounds and probe schedule | Off-by-one range end, wrong retransmit count, premature validity or missing withdrawal. |
+  
+  Any failed check exits the simulator with a nonzero status. A hang times out and fails the gate.
+diff --cc examples/entity_roundtrip.c
+index 175e12a,0000000..9a27d88
+mode 100644,000000..100644
+--- a/examples/entity_roundtrip.c
++++ b/examples/entity_roundtrip.c
+@@@ -1,232 -1,0 +1,256 @@@
+ +// SPDX-License-Identifier: MIT
+ +#include "entity_roundtrip.h"
+ +#include "adp.h"
+ +#include "acmp.h"
+ +#include "maap.h"
+ +#include "wire.h"
+ +#include "entities/listener/entity_config.h"
+ +#include "entities/talker/entity_config.h"
+ +#include "entities/duplex/entity_config.h"
+ +#include "entities/ax7101/entity_config.h"
+ +#include <string.h>
+ +
+ +#define CHECK(expression, code) do { if (!(expression)) return (code); } while (0)
+ +
+ +struct port {
+ +    uint8_t frame[ADP_FRAME_BYTES];
+ +    size_t length;
+ +    unsigned sends, starts, stops, admissions;
+ +    unsigned last_interface;
+ +    unsigned admitted[4];
+ +    uint32_t delay;
+ +    bool room, valid;
+++    struct {
+++        unsigned calls, interface;
+++        bool bound, started, moved;
+++        uint64_t stream;
+++    } published[ACMP_MAX_SINKS];
+ +};
+ +
+ +static bool send_frame(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
+ +{
+ +    struct port *p = ctx;
+ +    p->last_interface = interface;
+ +    if (!p->room || length > sizeof p->frame) return false;
+ +    memcpy(p->frame, frame, length);
+ +    p->length = length;
+ +    ++p->sends;
+ +    return true;
+ +}
+ +
+ +static void start(void *ctx, unsigned interface, uint32_t delay)
+ +{
+ +    struct port *p = ctx;
+ +    (void)interface;
+ +    p->delay = delay;
+ +    ++p->starts;
+ +}
+ +
+ +static void stop(void *ctx, unsigned interface)
+ +{
+ +    (void)interface;
+ +    ++((struct port *)ctx)->stops;
+ +}
+ +
+ +static void gptp(void *ctx, unsigned interface, uint64_t *gm, uint8_t *domain)
+ +{
+ +    (void)ctx;
+ +    (void)interface;
+ +    *gm = UINT64_C(0x0102030405060708);
+ +    *domain = 0;
+ +}
+ +
+ +static bool link_up(void *ctx, unsigned interface)
+ +{
+ +    (void)ctx;
+ +    (void)interface;
+ +    return true;
+ +}
+ +
+ +static uint32_t clock_ms(void *ctx)
+ +{
+ +    (void)ctx;
+ +    return 123;
+ +}
+ +
+ +static void timer(void *ctx, unsigned interface, bool armed, uint32_t deadline)
+ +{
+ +    if (armed) start(ctx, interface, deadline);
+ +    else stop(ctx, interface);
+ +}
+ +
+ +static void admit(void *ctx, unsigned interface, unsigned sink, bool bound, uint64_t talker)
+ +{
+ +    (void)interface;
+ +    (void)sink;
+ +    (void)talker;
+ +    if (bound) {
+ +        struct port *p = ctx;
+ +        ++p->admissions;
+ +        if (interface < 4) ++p->admitted[interface];
+ +    }
+ +}
+ +
+++static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
+++                    uint64_t stream, bool moved)
+++{
+++    struct port *p = ctx;
+++    if (sink >= ACMP_MAX_SINKS) return;
+++    ++p->published[sink].calls;
+++    p->published[sink].interface = interface;
+++    p->published[sink].bound = bound;
+++    p->published[sink].started = started;
+++    p->published[sink].stream = stream;
+++    p->published[sink].moved = moved;
+++}
+++
+ +static bool locked(void *ctx, uint64_t *controller)
+ +{
+ +    (void)ctx;
+ +    *controller = 0;
+ +    return false;
+ +}
+ +
+ +static void source(void *ctx, unsigned index, struct acmp_source_state *out)
+ +{
+ +    (void)ctx;
+ +    (void)index;
+ +    memset(out, 0, sizeof *out);
+ +}
+ +
+ +static void srp(void *ctx, unsigned sink, const struct acmp_stream *stream)
+ +{
+ +    (void)ctx;
+ +    (void)sink;
+ +    (void)stream;
+ +}
+ +
+ +static void notify(void *ctx, unsigned sink)
+ +{
+ +    (void)ctx;
+ +    (void)sink;
+ +}
+ +
+ +static void range(void *ctx, unsigned interface, uint64_t base, uint16_t count, bool valid)
+ +{
+ +    (void)interface;
+ +    (void)base;
+ +    ((struct port *)ctx)->valid = valid && count != 0;
+ +}
+ +
+ +struct entity_case {
+ +    const struct adp_entity *adp;
+ +    const struct acmp_config *acmp;
+ +    unsigned interfaces, sinks, sources;
+ +    uint16_t listener_caps, talker_caps;
+ +    uint64_t model;
+ +    uint8_t sink_interface[2], source_interface[2];
+ +};
+ +
+ +static const struct entity_case cases[] = {
+ +    {listener_adp, &listener_acmp, 1, 1, 0, 0x4001, 0, UINT64_C(0x001bc50000000001), {0, 0}, {0, 0}},
+ +    {talker_adp, &talker_acmp, 1, 0, 1, 0, 0x4001, UINT64_C(0x001bc50000000002), {0, 0}, {0, 0}},
+ +    {duplex_adp, &duplex_acmp, 2, 2, 2, 0x4801, 0x4801, UINT64_C(0x001bc50000000003), {1, 0}, {0, 1}},
+ +    {ax7101_adp, &ax7101_acmp, 1, 2, 2, 0x4801, 0x4801, UINT64_C(0x001bc5c1935893e1), {0, 0}, {0, 0}},
+ +};
+ +
+ +// REQ: ENTITY-01, ADP-01
+ +int entity_check_adp(void)
+ +{
+ +    for (unsigned k = 0; k < sizeof cases / sizeof cases[0]; ++k) {
+ +        const struct entity_case *e = &cases[k];
+ +        for (unsigned i = 0; i < e->interfaces; ++i) {
+ +            struct port p = {.room = true};
+ +            const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
+ +            struct adp core;
+ +            adp_init(&core, &e->adp[i], &ports, i, 0);
+ +            adp_set_enable(&core, true);
+ +            adp_timer_expired(&core);
+ +            CHECK(p.sends == 1 && p.length == 82 && p.last_interface == i, 31);
+ +            CHECK(wire_be64(p.frame + 18) == UINT64_C(0x020000fffe000001), 32);
+ +            CHECK(wire_be64(p.frame + 26) == e->model, 33);
+ +            CHECK(wire_be16(p.frame + 6) == 0x0200 && wire_be32(p.frame + 8) == i + 1, 34);
+ +            CHECK(wire_be32(p.frame + 34) == 0xc588, 35);
+ +            CHECK(wire_be16(p.frame + 38) == e->sources && wire_be16(p.frame + 40) == e->talker_caps, 36);
+ +            CHECK(wire_be16(p.frame + 42) == e->sinks && wire_be16(p.frame + 44) == e->listener_caps, 37);
+ +            CHECK(wire_be16(p.frame + 66) == 0 && wire_be16(p.frame + 68) == i, 38);
+ +        }
+ +    }
+ +    CHECK(ax7101_identity.name[0] == 'M' && ax7101_identity.serial_number[10] == '1', 39);
+ +    return 0;
+ +}
+ +
+- // REQ: ENTITY-01, ACMP-01, ACMP-07
+++// REQ: ENTITY-01, ACMP-01, ACMP-07, ACMP-10
+ +int entity_check_acmp(void)
+ +{
+ +    for (unsigned k = 0; k < sizeof cases / sizeof cases[0]; ++k) {
+ +        const struct entity_case *e = &cases[k];
+ +        struct port p = {.room = true};
+-         const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit};
+++        const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit, publish};
+ +        const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+ +        struct acmp core;
+ +        CHECK(acmp_init(&core, e->acmp, &ports, &env), 40);
+ +        CHECK(core.cfg.entity_id == UINT64_C(0x020000fffe000001), 41);
+ +        CHECK(core.cfg.n_interfaces == e->interfaces && core.cfg.n_sinks == e->sinks && core.cfg.n_sources == e->sources, 42);
+ +        for (unsigned i = 0; i < e->interfaces; ++i) CHECK(core.cfg.mac[i] == UINT64_C(0x020000000001) + i, 43);
+ +        for (unsigned s = 0; s < e->sinks; ++s) {
+ +            uint8_t record[20] = {1, 0, 0, 7};
+ +            record[11] = 42;
+ +            CHECK(core.sinks[s].interface == e->sink_interface[s], 44);
+ +            CHECK(acmp_restore_binding(&core, s, record, sizeof record) == ACMP_RESTORE_APPLIED, 45);
+++            CHECK(p.published[s].calls == 0, 70);
+ +        }
+ +        for (unsigned s = 0; s < e->sources; ++s) CHECK(core.cfg.source_interface[s] == e->source_interface[s], 46);
+ +        acmp_open(&core);
+ +        CHECK(p.admissions == e->sinks, 47);
+++        for (unsigned s = 0; s < e->sinks; ++s) {
+++            CHECK(p.published[s].calls == 1 && p.published[s].interface == e->sink_interface[s], 71);
+++            CHECK(p.published[s].bound && !p.published[s].started &&
+++                  p.published[s].stream == 0 && !p.published[s].moved, 72);
+++        }
+ +        for (unsigned i = 0; i < e->interfaces; ++i) {
+ +            unsigned expected = 0;
+ +            for (unsigned s = 0; s < e->sinks; ++s) if (e->sink_interface[s] == i) ++expected;
+ +            CHECK(p.admitted[i] == expected, 48);
+ +        }
+ +    }
+ +    return 0;
+ +}
+ +
+ +static int check_range(unsigned interface, uint64_t mac, uint16_t count, uint64_t preferred,
+ +                       unsigned expected_interface, unsigned expected_count, uint64_t expected_base)
+ +{
+ +    struct port p = {.room = true};
+ +    const struct maap_ports ports = {&p, send_frame, start, stop, range, clock_ms};
+ +    struct maap core;
+ +    CHECK(interface == expected_interface && count == expected_count, 50);
+ +    CHECK(mac == UINT64_C(0x020000000001) + expected_interface, 51);
+ +    CHECK(maap_init(&core, &ports, interface, mac, count), 52);
+ +    maap_port_operational(&core, true);
+ +    CHECK(maap_begin(&core, preferred), 53);
+ +    CHECK(p.sends == 1 && p.last_interface == expected_interface && p.length == 60, 54);
+ +    CHECK(wire_be16(p.frame + 32) == expected_count, 55);
+ +    if (expected_base) CHECK(core.base == expected_base, 56);
+ +    else CHECK(core.base >= UINT64_C(0x91e0f0000000) && core.base + count <= UINT64_C(0x91e0f000fe00), 57);
+ +    for (unsigned i = 0; i < 3; ++i) maap_timer_expired(&core);
+ +    CHECK(p.sends == 5 && p.valid && core.state == MAAP_DEFEND, 58);
+ +    maap_release(&core);
+ +    CHECK(!p.valid, 59);
+ +    return 0;
+ +}
+ +
+ +// REQ: ENTITY-01, MAAP-02
+ +int entity_check_maap(void)
+ +{
+ +    CHECK(listener_maap[0].count == 0, 60);
+ +    int result = check_range(talker_maap[0].interface, talker_maap[0].mac, talker_maap[0].count,
+ +                             talker_maap[0].preferred, 0, 1, UINT64_C(0x91e0f0000010));
+ +    if (result) return result;
+ +    for (unsigned i = 0; i < 2; ++i) {
+ +        result = check_range(duplex_maap[i].interface, duplex_maap[i].mac, duplex_maap[i].count,
+ +                             duplex_maap[i].preferred, i, 1, UINT64_C(0x91e0f0000010) + i * UINT64_C(16));
+ +        if (result) return result;
+ +    }
+ +    return check_range(ax7101_maap[0].interface, ax7101_maap[0].mac, ax7101_maap[0].count,
+ +                       ax7101_maap[0].preferred, 0, 2, 0);
+ +}
+diff --cc examples/rv32/smoke.c
+index 30730bb,83c5976..7e5f412
+--- a/examples/rv32/smoke.c
++++ b/examples/rv32/smoke.c
+@@@ -139,53 -139,43 +139,85 @@@ static int adp_smoke(void
+      return 0;
+  }
+  
+ +// IEEE 1722.1-2021 Figure 6-1
+ +// IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
+ +// IEEE 1722-2016 4.4.3.4 and 4.4.5.4
+ +// Milan v1.2 Table 5.51
+ +// REQ: ADP-01, ADP-02
+ +static int adp_discovery_smoke(void)
+ +{
+ +    for (unsigned state = 0; state < 5; ++state) {
+ +        for (unsigned control = 0; control < 4; ++control) {
+ +            struct port p = {.room = true};
+ +            const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
+ +            const struct adp_entity entity = {.entity_id = 1};
+ +            struct adp core, expected;
+ +            uint8_t frame[82] = {0};
+ +            adp_init(&core, &entity, &ports, 0, 0);
+ +            if (state != 0) adp_set_enable(&core, true);
+ +            if (state == 1) adp_link_change(&core, false);
+ +            if (state == 3) p.room = false;
+ +            if (state >= 3) adp_timer_expired(&core);
+ +            wire_put_be(frame + 12, 0x22f0, 2);
+ +            frame[14] = 0xfa;
+ +            frame[15] = control == 1 ? 0x12 : 0x02;
+ +            frame[17] = control == 3 ? 0 : 56;
+ +            wire_put_be(frame + 18, 1, 8);
+ +            memcpy(&expected, &core, sizeof expected);
+ +            const unsigned calls = p.calls, sends = p.sends, starts = p.starts, stops = p.stops;
+ +            adp_rx(&core, frame, control == 2 ? 26 : sizeof frame);
+ +            if (control != 0) ++expected.discarded;
+ +            if (control != 0 || state != 4) {
+ +                const uint8_t *actual = (const uint8_t *)&core;
+ +                const uint8_t *saved = (const uint8_t *)&expected;
+ +                for (size_t i = 0; i < sizeof core; ++i) CHECK(actual[i] == saved[i], 40 + control);
+ +                CHECK(p.calls == calls, 44 + control);
+ +            } else {
+ +                CHECK(core.state == ADP_STATE_DELAY && core.timer == ADP_TIMER_DELAY && core.discarded == 0, 48);
+ +                CHECK(p.starts == starts + 1 && p.stops == stops + 1 && p.sends == sends, 49);
+ +            }
+ +        }
+ +    }
+ +    return 0;
+ +}
+ +
+- // REQ: ACMP-01, ACMP-07, PORT-01
++ struct acmp_port {
++     struct port io;
++     unsigned publications, interface, sink, admissions_before;
++     bool bound, started, moved, ordering_error;
++     uint64_t stream;
++ };
++ 
++ static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
++                     uint64_t stream, bool moved)
++ {
++     struct acmp_port *p = ctx;
++     ++p->publications;
++     p->interface = interface;
++     p->sink = sink;
++     p->bound = bound;
++     p->started = started;
++     p->stream = stream;
++     p->moved = moved;
++     p->admissions_before = p->io.admissions;
++ }
++ 
++ static bool acmp_send(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
++ {
++     struct acmp_port *p = ctx;
++     if (frame[15] == 7) {
++         if (!p->bound || p->started != ((wire_be16(frame + 64) & 8u) == 0)) p->ordering_error = true;
++     } else if (frame[15] == 9) {
++         if (p->bound || p->started || p->stream != 0) p->ordering_error = true;
++     }
++     return send_frame(&p->io, interface, frame, length);
++ }
++ 
++ // REQ: ACMP-01, ACMP-07, ACMP-10, PORT-01
+  static int acmp_smoke(void)
+  {
+-     struct port p = {.room = true};
+-     const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit};
++     struct acmp_port p = {.io = {.room = true}};
++     const struct acmp_ports ports = {&p, acmp_send, clock_ms, timer, gptp, clock_ms, admit, publish};
+      const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+      const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 1};
+      struct acmp core;
+diff --cc scripts/requirement_records.py
+index 239b170,af023cc..d7a6706
+--- a/scripts/requirement_records.py
++++ b/scripts/requirement_records.py
+@@@ -12,7 -12,12 +12,13 @@@ TARGETS = ['Linux', 'bare-metal RV32'
+  METHODS = {'test', 'verified by inspection', 'port obligation'}
+  BEGIN = '<!-- requirements-port:start -->'
+  END = '<!-- requirements-port:end -->'
+ +LOCAL_ORIGINS = {'ENTITY-01': ('tsn-c-stack issue 2', 'https://github.com/kebag-logic/tsn-c-stack/issues/2')}
++ ADDITIONAL_ORIGINS = {
++     'ACMP-10': {
++         'text': 'milan-fpga F-INT at 09c7231e / tsn-c-stack #21',
++         'url': 'REQUIREMENTS.md#acmp-publish-port',
++     },
++ }
+  
+  
+  def source_ids():
+@@@ -185,9 -190,11 +191,12 @@@ def validate(requirements, catalog)
+      by_id = {r['id']: r for r in requirements}
+      for r in requirements:
+          imported = r['id'].startswith('MF')
+ -        if not imported:
+ +        local = r['id'] in LOCAL_ORIGINS
+ +        if not imported and not local:
+-             if 'origin' in r or 'verification' in r:
++             expected = ADDITIONAL_ORIGINS.get(r['id'])
++             if r.get('origin') != expected or (expected and not valid_link(r['origin'])):
++                 errors.append('additional requirement origin differs from its source: ' + r['id'])
++             if 'verification' in r:
+                  errors.append('legacy requirement cannot acquire an unchecked exemption: ' + r['id'])
+              continue
+          origin = r.get('origin')
+@@@ -281,21 -275,6 +290,23 @@@ def render(requirements, catalog)
+      return text + '\n' + END
+  
+  
+ +def origin_link(record, catalog):
+++    if record['id'] in ADDITIONAL_ORIGINS:
+++        return link(record['origin'])
+ +    if record['id'] in LOCAL_ORIGINS:
+ +        text, url = LOCAL_ORIGINS[record['id']]
+ +        return link(dict(text=text, url=url))
+ +    if 'origin' in record:
+ +        source = next(row for row in catalog['rows'] if row['origin'] == record['origin'])
+ +        return link(dict(text=record['origin'], url=source['url']))
+ +    return '[Import baseline](REQUIREMENTS.md)'
+ +
+ +
+ +def documented(requirements, text):
+ +    ids = set(re.findall(r'^\|\s*(?:<a id="[^"]+"></a>)?([A-Z][A-Z0-9-]+)\s*\|', text, re.M))
+ +    return ['requirement missing from REQUIREMENTS.md: ' + r['id'] for r in requirements if r['id'] not in ids]
+ +
+ +
+  def check_document(requirements, catalog, write=False):
+      path = ROOT / 'docs/REQUIREMENTS.md'
+      text = path.read_text()
+diff --cc tests/coverage.ratchet
+index 873cdae,0b8351a..3d886e7
+--- a/tests/coverage.ratchet
++++ b/tests/coverage.ratchet
+@@@ -2,6 -2,6 +2,6 @@@
+  # Exclusions and reasons: docs/COVERAGE.md
+  # Generated by scripts/coverage.py --write.
+  include/wire.h  lines 10/10  branches 2/2
+- src/acmp.c  lines 742/742  branches 348/348
++ src/acmp.c  lines 767/767  branches 362/362
+ -src/adp.c  lines 203/203  branches 93/93
+ +src/adp.c  lines 205/205  branches 97/97
+  src/maap.c  lines 209/209  branches 140/140
+diff --cc tests/mutations.json
+index fe0c253,f46dafd..d48f7f5
+--- a/tests/mutations.json
++++ b/tests/mutations.json
+@@@ -4993,127 -5005,274 +4993,397 @@@
+        "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+      ]
+    },
++   {
++     "name": "acmp-publish-after-response",
++     "path": "src/acmp.c",
++     "old": "\tpublish(a);\n\tif (a->owed_count == 0u",
++     "new": "\tif (a->owed_count == 0u",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 the binding is published before the BIND_RX response"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-missing-finish",
++     "path": "src/acmp.c",
++     "old": "static void finish(struct acmp *a)\n{\n\tpublish(a);",
++     "new": "static void finish(struct acmp *a)\n{",
++     "kills": [
++       {
++         "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++         "needle": "A31 acmp_open publishes each restored binding"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++     ]
++   },
++   {
++     "name": "acmp-publish-unchanged-triple",
++     "path": "src/acmp.c",
++     "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
++     "new": "true",
++     "kills": [
++       {
++         "test": "AcmpCore.A31OnlyAMovedTripleIsPublished",
++         "needle": "A31 a re-bind to the same talker, a registration, a start of a started sink and a discovery move"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31OnlyAMovedTripleIsPublished"
++     ]
++   },
++   {
++     "name": "acmp-publish-ignores-started",
++     "path": "src/acmp.c",
++     "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
++     "new": "s->bound != s->published_bound || moved",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
++         "needle": "A31 a re-bind to the same talker without STREAMING_WAIT publishes once"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
++     ]
++   },
++   {
++     "name": "acmp-publish-reset-cache",
++     "path": "src/acmp.c",
++     "old": "\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n\ts->published_stream = published_stream;",
++     "new": "\t(void)published_bound;\n\t(void)published_started;\n\t(void)published_stream;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++         "needle": "A31 a sink the store resets is published unbound at the next open"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++     ]
++   },
++   {
++     "name": "acmp-publish-unguarded",
++     "path": "src/acmp.c",
++     "old": "\ta->in_port = true;\n\ta->ports->publish",
++     "new": "\ta->in_port = false;\n\ta->ports->publish",
++     "kills": [
++       {
++         "test": "AcmpCore.A31ACallBackFromThePublishPortIsRefused",
++         "needle": "A31 an UNBIND_RX and a poll from inside the publish port are counted and change nothing"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31ACallBackFromThePublishPortIsRefused"
++     ]
++   },
++   {
++     "name": "acmp-publish-stream-zero",
++     "path": "src/acmp.c",
++     "old": "uint64_t stream = settled ? s->stream.stream_id : 0u;",
++     "new": "uint64_t stream = settled ? 0u : 0u;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 a PROBE_TX_RESPONSE that settles publishes the stream"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-stream-moved-always",
++     "path": "src/acmp.c",
++     "old": "sink, bound, started, stream, moved);",
++     "new": "sink, bound, started, stream, true);\n\t(void)moved;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
++         "needle": "A31 stopped, the settled stream kept and not moved"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
++     ]
++   },
++   {
++     "name": "acmp-publish-wrong-interface",
++     "path": "src/acmp.c",
++     "old": "p_publish(a, s->interface, k,",
++     "new": "p_publish(a, 0u, k,",
++     "kills": [
++       {
++         "test": "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
++         "needle": "A31 sink 2, on interface 1"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath"
++     ]
++   },
++   {
++     "name": "acmp-publish-wrong-sink",
++     "path": "src/acmp.c",
++     "old": "p_publish(a, s->interface, k,",
++     "new": "p_publish(a, s->interface, 0u,",
++     "kills": [
++       {
++         "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++         "needle": "A31 sink 2, bound on interface 1, with no stream until it settles"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++     ]
++   },
++   {
++     "name": "acmp-publish-wrong-started",
++     "path": "src/acmp.c",
++     "old": "sink, bound, started, stream, moved);",
++     "new": "sink, bound, !started, stream, moved);",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 started: the command had no STREAMING_WAIT"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-bound-cache-stale",
++     "path": "src/acmp.c",
++     "old": "\t\t\ts->published_bound = s->bound;",
++     "new": "\t\t\ts->published_bound = false;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 a BIND_RX publishes the sink's binding once"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-started-cache-stale",
++     "path": "src/acmp.c",
++     "old": "\t\t\ts->published_started = s->started;",
++     "new": "\t\t\ts->published_started = false;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 a BIND_RX publishes the sink's binding once"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-stream-cache-stale",
++     "path": "src/acmp.c",
++     "old": "\t\t\ts->published_stream = stream;",
++     "new": "\t\t\ts->published_stream = 0u;",
++     "kills": [
++       {
++         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++         "needle": "A31 a GET_RX_STATE reports the stream already published, and publishes nothing"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++     ]
++   },
++   {
++     "name": "acmp-publish-after-timers",
++     "path": "src/acmp.c",
++     "old": "\tpublish(a);\n\trearm(a);\n\tadmit(a);\n",
++     "new": "\trearm(a);\n\tpublish(a);\n\tadmit(a);\n",
++     "kills": [
++       {
++         "test": "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort",
++         "needle": "A31 settlement publication precedes the timer port in finish"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
++     ]
++   },
++   {
++     "name": "acmp-publish-reset-stream-cache",
++     "path": "src/acmp.c",
++     "old": "\ts->published_stream = published_stream;\n",
++     "new": "\t(void)published_stream;\n",
++     "kills": [
++       {
++         "test": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
++         "needle": "A31 withdrawal after a store reset reports the settled stream moved"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
++     ]
++   },
++   {
++     "name": "acmp-publish-reset-bound-cache",
++     "path": "src/acmp.c",
++     "old": "\ts->published_bound = published_bound;\n",
++     "new": "\t(void)published_bound;\n",
++     "kills": [
++       {
++         "test": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
++         "needle": "A31 the bound cache survives reset to publish the stopped binding withdrawal"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
++     ]
++   },
++   {
++     "name": "acmp-publish-reset-started-cache",
++     "path": "src/acmp.c",
++     "old": "\ts->published_started = published_started;\n",
++     "new": "\t(void)published_started;\n",
++     "kills": [
++       {
++         "test": "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
++         "needle": "A31 the started cache survives reset to publish the restored stop"
++       }
++     ],
++     "original_tests": [
++       "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
++     ]
+++  },
+ +  {
+ +    "name": "adp-unsupported-version-accepted",
+ +    "path": "src/adp.c",
+ +    "old": "\t    (frame[ADP_HEADER_BYTES + 1u] & 0x70u) != 0u ||\n",
+ +    "new": "",
+ +    "kills": [
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/0",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/1",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/2",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/3",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsUnsupportedVersion/4",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      }
+ +    ]
+ +  },
+ +  {
+ +    "name": "adp-short-frame-accepted",
+ +    "path": "src/adp.c",
+ +    "old": "len < ADP_FRAME_BYTES ||",
+ +    "new": "len < ADP_HEADER_BYTES + 12u ||",
+ +    "kills": [
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsShortFrame/0",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsShortFrame/1",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsShortFrame/2",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsShortFrame/3",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsShortFrame/4",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      }
+ +    ]
+ +  },
+ +  {
+ +    "name": "adp-wrong-control-length-accepted",
+ +    "path": "src/adp.c",
+ +    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||\n",
+ +    "new": "",
+ +    "kills": [
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      },
+ +      {
+ +        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/4",
+ +        "needle": "malformed discovery increments discarded exactly once"
+ +      }
+ +    ]
+ +  },
+ +  {
+ +    "name": "entity-wrong-count",
+ +    "path": "examples/entities/ax7101/entity_config.c",
+ +    "old": "        .talker_stream_sources = 2u,",
+ +    "new": "        .talker_stream_sources = 1u,",
+ +    "kills": [
+ +      {
+ +        "test": "EntityYaml.AdpRoundTrip",
+ +        "needle": "generated ADP fields match the independent entity oracle",
+ +        "arm": "entity"
+ +      }
+ +    ]
+ +  },
+ +  {
+ +    "name": "entity-swapped-interface",
+ +    "path": "examples/entities/duplex/entity_config.c",
+ +    "old": "    .sink_interface = {1u, 0u},",
+ +    "new": "    .sink_interface = {0u, 1u},",
+ +    "kills": [
+ +      {
+ +        "test": "EntityYaml.AcmpRoundTrip",
+ +        "needle": "generated ACMP interfaces preserve binding admission routes",
+ +        "arm": "entity"
+ +      }
+ +    ]
+ +  },
+ +  {
+ +    "name": "entity-dropped-field",
+ +    "path": "examples/entities/talker/entity_config.c",
+ +    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
+ +    "new": "",
+ +    "kills": [
+ +      {
+ +        "test": "EntityYaml.MaapRoundTrip",
+ +        "needle": "generated MAAP arguments preserve range and interface ownership",
+ +        "arm": "entity"
+ +      }
+ +    ]
+    }
+  ]
+diff --cc tests/test_entity.cpp
+index 9482c5e,0000000..8e13ece
+mode 100644,000000..100644
+--- a/tests/test_entity.cpp
++++ b/tests/test_entity.cpp
+@@@ -1,27 -1,0 +1,27 @@@
+ +// SPDX-License-Identifier: MIT
+ +#include <gtest/gtest.h>
+ +#include "entity_roundtrip.h"
+ +
+ +extern "C" void ctrl_reentry_assert(const char *module)
+ +{
+ +    (void)module;
+ +    EXPECT_TRUE(false) << "entity round trip never reenters a port";
+ +}
+ +
+ +// REQ: ENTITY-01, ADP-01
+ +TEST(EntityYaml, AdpRoundTrip)
+ +{
+ +    EXPECT_EQ(entity_check_adp(), 0) << "generated ADP fields match the independent entity oracle";
+ +}
+ +
+- // REQ: ENTITY-01, ACMP-01, ACMP-07
+++// REQ: ENTITY-01, ACMP-01, ACMP-07, ACMP-10
+ +TEST(EntityYaml, AcmpRoundTrip)
+ +{
+ +    EXPECT_EQ(entity_check_acmp(), 0) << "generated ACMP interfaces preserve binding admission routes";
+ +}
+ +
+ +// REQ: ENTITY-01, MAAP-02
+ +TEST(EntityYaml, MaapRoundTrip)
+ +{
+ +    EXPECT_EQ(entity_check_maap(), 0) << "generated MAAP arguments preserve range and interface ownership";
+ +}

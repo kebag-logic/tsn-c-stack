@@ -1,0 +1,66 @@
+--- head/include/acmp.h
++++ probe/include/acmp.h
+@@ -351,6 +351,7 @@
+ };
+ 
+ struct acmp_sink {
++	bool published_future;
+ 	enum acmp_sink_state state;
+ 	uint8_t interface;
+ 	bool bound;
+--- head/src/acmp.c
++++ probe/src/acmp.c
+@@ -518,9 +518,11 @@
+ 	bool published_bound = s->published_bound;
+ 	bool published_started = s->published_started;
+ 	uint64_t published_stream = s->published_stream;
++	bool published_future = s->published_future;
+ 	memset(s, 0, sizeof *s);
+ 	s->admitted = admitted;
+ 	s->admitted_talker = admitted_talker;
++	s->published_future = published_future;
+ 	s->published_bound = published_bound;
+ 	s->published_started = published_started;
+ 	s->published_stream = published_stream;
+--- head/tests/test_acmp.cpp
++++ probe/tests/test_acmp.cpp
+@@ -2235,12 +2235,14 @@
+     ASSERT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u)
+         << "A31 only the bound cache is nonzero before reset";
+     const auto none = payload(0u, 0u, 0u, 0u);
++    a.sinks[0].published_future = true;
+     fk.clear();
+     ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
+     EXPECT_TRUE(fk.pubs.empty()) << "A31 resetting a stopped binding defers publication until open";
+     acmp_open(&a);
+-    ASSERT_EQ(fk.pubs.size(), 1u)
+-        << "A31 the bound cache survives reset to publish the stopped binding withdrawal";
++    ASSERT_TRUE(fk.pubs.size() == 1u && a.sinks[0].published_future)
++        << "A31 the bound cache survives reset to publish the stopped binding withdrawal"
++        << "A31 future cache also survives the same reset";
+     EXPECT_TRUE(!fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u && !fk.pubs[0].moved)
+         << "A31 the stopped binding is withdrawn without moving a stream";
+ }
+--- head/tests/mutations.json
++++ probe/tests/mutations.json
+@@ -5274,5 +5274,20 @@
+     "original_tests": [
+       "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
+     ]
++  },
++  {
++    "name": "acmp-publish-reset-future-cache",
++    "path": "src/acmp.c",
++    "old": "\ts->published_future = published_future;\n",
++    "new": "\t(void)published_future;\n",
++    "kills": [
++      {
++        "test": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
++        "needle": "A31 future cache also survives the same reset"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
++    ]
+   }
+ ]

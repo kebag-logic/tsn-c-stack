@@ -1,0 +1,41 @@
+[
+  {
+    "field": "published_bound",
+    "plant": "acmp-publish-reset-bound-cache",
+    "needle": "A31 the bound cache survives reset to publish the stopped binding withdrawal",
+    "identities": [
+      [
+        "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+        "tests/test_acmp.cpp",
+        2242,
+        5
+      ]
+    ]
+  },
+  {
+    "field": "published_started",
+    "plant": "acmp-publish-reset-started-cache",
+    "needle": "A31 the started cache survives reset to publish the restored stop",
+    "identities": [
+      [
+        "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
+        "tests/test_acmp.cpp",
+        2259,
+        5
+      ]
+    ]
+  },
+  {
+    "field": "published_stream",
+    "plant": "acmp-publish-reset-stream-cache",
+    "needle": "A31 withdrawal after a store reset reports the settled stream moved",
+    "identities": [
+      [
+        "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "tests/test_acmp.cpp",
+        2227,
+        5
+      ]
+    ]
+  }
+]

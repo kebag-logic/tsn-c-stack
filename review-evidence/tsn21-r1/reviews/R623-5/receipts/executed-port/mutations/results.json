@@ -1,0 +1,164 @@
+[
+  {
+    "name": "acmp-publish-after-response",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2059\nValue of: published_before_send(0, 0)\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 the binding is published before the BIND_RX response\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2077\nValue of: published_before_send(0, static_cast<unsigned>(fk.sent.size() - 1u))\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 the sink is published unbound before the UNBIND_RX response\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-missing-finish",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2163\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 acmp_open publishes each restored binding\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-unchanged-triple",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31OnlyAMovedTripleIsPublished": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2114\nValue of: fk.pubs.empty() && a.sinks[0].state == ACMP_SETTLED_RSV_OK\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a re-bind to the same talker, a registration, a start of a started sink and a discovery move neither bound, started nor stream\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2118\nValue of: fk.pubs.empty()\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 nor does a change of the registered kind\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-ignores-started",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2130\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a re-bind to the same talker without STREAMING_WAIT publishes once\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2188\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a sink the store resets is published unbound at the next open\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-unguarded",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31ACallBackFromThePublishPortIsRefused": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2200\nValue of: a.reentries == 2u && reentry_traps == 2u && a.sinks[0].bound && a.sinks[0].state == ACMP_PRB_W_RESP\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 an UNBIND_RX and a poll from inside the publish port are counted and change nothing (#678)\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-stream-zero",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2062\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a PROBE_TX_RESPONSE that settles publishes the stream\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-stream-moved-always",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2131\nValue of: fk.pubs[0].bound && fk.pubs[0].started && !fk.pubs[0].moved && fk.pubs[0].stream == 0u\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 started now, the stream not moved\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2140\nValue of: fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == kSid && !fk.pubs[0].moved\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 stopped, the settled stream kept and not moved\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2150\nValue of: fk.pubs[0].started && fk.pubs[0].stream == kSid && !fk.pubs[0].moved\n  Actual: false\nExpected: true\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-wrong-interface",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2102\nValue of: fk.pubs[0].sink == 2u && fk.pubs[0].interface == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 sink 2, on interface 1\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-wrong-sink",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2164\nValue of: fk.pubs[0].sink == 2u && fk.pubs[0].interface == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 sink 2, bound on interface 1, with no stream until it settles\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2175\nValue of: fk.pubs[0].sink == 1u && fk.pubs[0].bound && fk.pubs[0].started\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a binding saved started is published started\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-wrong-started",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2057\nValue of: fk.pubs[0].started\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 started: the command had no STREAMING_WAIT (5.3.8.7)\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2074\nValue of: !fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 unbound, not started, with no stream\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-bound-cache-stale",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2054\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 3\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a BIND_RX publishes the sink's binding once\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-started-cache-stale",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2054\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 3\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a BIND_RX publishes the sink's binding once\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-stream-cache-stale",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2070\nValue of: fk.pubs.empty() && last().stream_id == kSid\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 a GET_RX_STATE reports the stream already published, and publishes nothing\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n\n$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2073\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 3\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 an UNBIND_RX publishes the sink unbound\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-after-timers",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2213\nExpected: (fk.pubs[0].before) <= (static_cast<std::size_t>(timer)), actual: 3 vs 2\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 settlement publication precedes the timer port in finish\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2227\nValue of: !fk.pubs[0].bound && fk.pubs[0].stream == 0u && fk.pubs[0].moved\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 withdrawal after a store reset reports the settled stream moved\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-bound-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2242\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 the bound cache survives reset to publish the stopped binding withdrawal\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-started-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop": "$PACKET/scratch/mutations-port/baseline/tests/test_acmp.cpp:2259\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_a3b34188fac76484a1ba4b0d0090b468\nA31 the started cache survives reset to publish the restored stop\nTSN_MESSAGE_END_a3285d0ac348e716be3e793c6eacd95b\n\n"
+    },
+    "tests": 1
+  }
+]

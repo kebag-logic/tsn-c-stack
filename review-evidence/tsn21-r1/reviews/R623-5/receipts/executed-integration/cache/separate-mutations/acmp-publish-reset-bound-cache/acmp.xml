@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T03:55:13.391" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T03:55:13.391">
+    <testcase name="A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal" file="$PACKET/scratch/cache-integration/separate-mutations/baseline/tests/test_acmp.cpp" line="2232" status="run" result="completed" time="0." timestamp="2026-10-12T03:55:13.391" classname="AcmpCore">
+      <failure message="$PACKET/scratch/cache-integration/separate-mutations/baseline/tests/test_acmp.cpp:2243&#x0A;Expected equality of these values:&#x0A;  fk.pubs.size()&#x0A;    Which is: 0&#x0A;  1u&#x0A;    Which is: 1&#x0A;&#x0A;TSN_MESSAGE_BEGIN_da6ccc3a6f27cb17db5b0448249c0499&#x0A;A31 the bound cache survives reset to publish the stopped binding withdrawal&#x0A;TSN_MESSAGE_END_2cc491f0cc34a49387c017bd7589a5a7&#x0A;&#x0A;" type=""><![CDATA[$PACKET/scratch/cache-integration/separate-mutations/baseline/tests/test_acmp.cpp:2243
+Expected equality of these values:
+  fk.pubs.size()
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_da6ccc3a6f27cb17db5b0448249c0499
+A31 the bound cache survives reset to publish the stopped binding withdrawal
+TSN_MESSAGE_END_2cc491f0cc34a49387c017bd7589a5a7
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

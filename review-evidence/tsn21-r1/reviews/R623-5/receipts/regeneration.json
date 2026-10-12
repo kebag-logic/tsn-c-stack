@@ -1,0 +1,38 @@
+{
+  "gates": [
+    {
+      "gate": "regenerate-traceability",
+      "rc": 0
+    },
+    {
+      "gate": "entity-controls",
+      "rc": 0
+    },
+    {
+      "gate": "regenerate-inventory",
+      "rc": 0
+    },
+    {
+      "gate": "regenerate-coverage",
+      "rc": 0
+    },
+    {
+      "gate": "regenerate-entities",
+      "rc": 0
+    }
+  ],
+  "byte_identical": {
+    "docs/REQUIREMENTS.md": true,
+    "docs/TRACEABILITY.md": true,
+    "docs/TESTS.md": true,
+    "tests/coverage.ratchet": true,
+    "examples/entities/listener/entity_config.h": true,
+    "examples/entities/listener/entity_config.c": true,
+    "examples/entities/ax7101/entity_config.h": true,
+    "examples/entities/ax7101/entity_config.c": true,
+    "examples/entities/talker/entity_config.h": true,
+    "examples/entities/talker/entity_config.c": true,
+    "examples/entities/duplex/entity_config.h": true,
+    "examples/entities/duplex/entity_config.c": true
+  }
+}

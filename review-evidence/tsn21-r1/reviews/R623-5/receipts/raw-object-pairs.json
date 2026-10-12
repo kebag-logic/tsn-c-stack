@@ -1,0 +1,97 @@
+{
+  "common_flags": [
+    "-Isrc",
+    "-I$SOURCE/examples/rv32/include",
+    "-march=rv32i",
+    "-mabi=ilp32",
+    "-ffreestanding",
+    "-fno-builtin",
+    "-nostdinc",
+    "-isystem",
+    "/usr/lib/gcc/riscv64-elf/16.2.0/include",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "objects": [
+    {
+      "configuration": "debug-g0",
+      "flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-g0"
+      ],
+      "raw_equal": true,
+      "bytes": 36176,
+      "sha256": [
+        "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7",
+        "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7"
+      ]
+    },
+    {
+      "configuration": "debug",
+      "flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-g"
+      ],
+      "raw_equal": true,
+      "bytes": 156836,
+      "sha256": [
+        "f8bb20deed6b0e214bcc826c1d4d11dc19c68ea58f5bfdee0558376de71d34f0",
+        "f8bb20deed6b0e214bcc826c1d4d11dc19c68ea58f5bfdee0558376de71d34f0"
+      ]
+    },
+    {
+      "configuration": "release",
+      "flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-O3",
+        "-DNDEBUG"
+      ],
+      "raw_equal": true,
+      "bytes": 30684,
+      "sha256": [
+        "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+        "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423"
+      ]
+    },
+    {
+      "configuration": "os",
+      "flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-Os"
+      ],
+      "raw_equal": true,
+      "bytes": 21092,
+      "sha256": [
+        "825f6f3ed56f7ed92a96cd085f42763b0cc58a044e73cd79e9933c84b48de725",
+        "825f6f3ed56f7ed92a96cd085f42763b0cc58a044e73cd79e9933c84b48de725"
+      ]
+    },
+    {
+      "configuration": "o2-noassert",
+      "flags": [
+        "-O2"
+      ],
+      "raw_equal": true,
+      "bytes": 25776,
+      "sha256": [
+        "23c0d5e86b5622c309398205bfa229e0b3a6159337a33e98439764a8a73c2277",
+        "23c0d5e86b5622c309398205bfa229e0b3a6159337a33e98439764a8a73c2277"
+      ]
+    },
+    {
+      "configuration": "os-g3",
+      "flags": [
+        "-Os",
+        "-g3"
+      ],
+      "raw_equal": true,
+      "bytes": 336740,
+      "sha256": [
+        "9ec108cc1509db4eded9e4e00d5262ae16339827eb74d20e0117415c98a9b717",
+        "9ec108cc1509db4eded9e4e00d5262ae16339827eb74d20e0117415c98a9b717"
+      ]
+    }
+  ]
+}

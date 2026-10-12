@@ -1,0 +1,19 @@
+COMMAND ['/usr/bin/python3', 'scripts/test_inventory.py', '--build', '$PACKET/scratch/build-integration', '--jobs', '4']
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: $PACKET/scratch/build-integration
+[ 23%] Built target tsn
+[ 23%] Built target entity_examples
+[ 30%] Built target tsn_debug
+[ 39%] Built target tsn_test
+[ 46%] Built target maap_debug
+[ 53%] Built target adp_tests
+[ 60%] Built target acmp_tests
+[ 67%] Built target adp_debug
+[ 72%] Built target example_port
+[ 79%] Built target maap_tests
+[ 86%] Built target adp_release
+[ 93%] Built target entity_tests
+[100%] Built target port_tests
+registration: 8 binaries; 401 instances
+test sensitivity: 127 declarations, 348 plants

@@ -1,0 +1,25 @@
+Note: Google Test filter = AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal
+$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2243: Failure
+Value of: fk.pubs.size() == 1u && a.sinks[0].published_future
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21
+A31 the bound cache survives reset to publish the stopped binding withdrawalA31 future cache also survives the same reset
+TSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37
+
+
+[  FAILED  ] AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal
+
+ 1 FAILED TEST

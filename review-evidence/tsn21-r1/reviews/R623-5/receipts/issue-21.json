@@ -1,0 +1,9 @@
+{
+  "html_url": "https://github.com/kebag-logic/tsn-c-stack/issues/21",
+  "number": 21,
+  "title": "ACMP core: the publish port milan-fpga's F-INT added (milan-fpga #665)",
+  "body": "## Why\n\nmilan-fpga moves its control-plane cores into this repository as a submodule (milan-fpga #697, PR #705), pinned at `1a9f651c`. Meanwhile milan-fpga's F-INT change (milan-fpga #665, PR #704, dev `09c7231e`) added a publish port to its own copy of the ACMP core. milan-fpga cannot take both until the port exists here.\n\nWhat F-INT added to the ACMP core (milan-fpga commits `5a50b2045` and `7c583daac`):\n- `acmp.c`: a `publish` port, called before every frame an entry sends and first in `finish`;\n- `acmp.h`: `struct acmp_ports.publish`, the `published_*` fields and the \"published before promised\" contract;\n- tests: `test_acmp.cpp` and `acmp_fake.hpp` cases for it.\n\n## Acceptance\n\n1. Branch from `1a9f651c`, the commit milan-fpga pins, not from main. Main has since changed the cores (#19, #20), and milan-fpga needs only this change.\n2. `src/acmp.c` and `include/acmp.h` carry the port. They are byte-identical to milan-fpga dev `09c7231e`'s `sw/firmware/ctrl/acmp/acmp.c` and `acmp.h`, except where this repository's layout already differed from milan-fpga's copies at `1a9f651c`, and those differences stay exactly as they were. A diff proves it.\n3. The ACMP tests carry F-INT's cases, adapted to this repository's test layout.\n4. Every gate on both targets passes: Linux (hosted) and bare-metal (freestanding RV32).\n5. The API docs describe the port and its ordering contract.\n6. A PR into main with a merge commit and two reviews. milan-fpga #697 then pins to the PR head.\n",
+  "state": "open",
+  "created_at": "2026-10-11T23:28:33Z",
+  "updated_at": "2026-10-12T01:47:38Z"
+}

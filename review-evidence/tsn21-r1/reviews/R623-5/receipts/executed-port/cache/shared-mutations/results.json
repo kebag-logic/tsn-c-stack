@@ -1,0 +1,47 @@
+[
+  {
+    "name": "acmp-publish-reset-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens": "$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2188\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21\nA31 a sink the store resets is published unbound at the next open\nTSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream": "$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2227\nValue of: !fk.pubs[0].bound && fk.pubs[0].stream == 0u && fk.pubs[0].moved\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21\nA31 withdrawal after a store reset reports the settled stream moved\nTSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-bound-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal": "$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2243\nValue of: fk.pubs.size() == 1u && a.sinks[0].published_future\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21\nA31 the bound cache survives reset to publish the stopped binding withdrawalA31 future cache also survives the same reset\nTSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-started-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop": "$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2261\nExpected equality of these values:\n  fk.pubs.size()\n    Which is: 0\n  1u\n    Which is: 1\n\nTSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21\nA31 the started cache survives reset to publish the restored stop\nTSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37\n\n"
+    },
+    "tests": 1
+  },
+  {
+    "name": "acmp-publish-reset-future-cache",
+    "status": "CAUGHT",
+    "rc": 1,
+    "failures": {
+      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal": "$PACKET/scratch/cache-port/shared-mutations/baseline/tests/test_acmp.cpp:2243\nValue of: fk.pubs.size() == 1u && a.sinks[0].published_future\n  Actual: false\nExpected: true\n\nTSN_MESSAGE_BEGIN_49f2079152ffa8e0c9625a323a051c21\nA31 the bound cache survives reset to publish the stopped binding withdrawalA31 future cache also survives the same reset\nTSN_MESSAGE_END_b945c740e21c85b1844cb2adf674bf37\n\n"
+    },
+    "tests": 1
+  }
+]
