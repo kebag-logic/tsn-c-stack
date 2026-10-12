@@ -1,0 +1,117 @@
+{
+  "head": "bc68ad8f3577e8f3dc24c4336e9b80a933df6c79",
+  "files": [
+    {
+      "path": "src/acmp.c",
+      "bytes": 32952,
+      "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c",
+      "round2_bytes_equal": true,
+      "reference_tokens": 7849,
+      "head_tokens": 7849,
+      "tokens_lines_columns_equal": true
+    },
+    {
+      "path": "include/acmp.h",
+      "bytes": 9999,
+      "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1",
+      "round2_bytes_equal": true,
+      "reference_tokens": 1175,
+      "head_tokens": 1175,
+      "tokens_lines_columns_equal": true
+    }
+  ],
+  "compiler": "riscv64-elf-gcc (Arch Linux Repositories) 16.2.0",
+  "common_flags": [
+    "-march=rv32i",
+    "-mabi=ilp32",
+    "-ffreestanding",
+    "-fno-builtin",
+    "-nostdinc",
+    "-isystem",
+    "/usr/lib/gcc/riscv64-elf/16.2.0/include",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "objects": [
+    {
+      "configuration": "debug-g0",
+      "extra_flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-g0"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7",
+        "43c1af51bdbf0cad4cab65a557d4eb75619eeebbbe6dc5754f5f87002ee673e7"
+      ],
+      "bytes": 36176
+    },
+    {
+      "configuration": "debug",
+      "extra_flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-g"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "41b1028d2a71b8eafba0bba9411662ca5bbda264f48a6960dd6c422302bbcecd",
+        "41b1028d2a71b8eafba0bba9411662ca5bbda264f48a6960dd6c422302bbcecd"
+      ],
+      "bytes": 156840
+    },
+    {
+      "configuration": "release",
+      "extra_flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-O3",
+        "-DNDEBUG"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423",
+        "5e2bacf24eeb2268e4d11f5ac6221d35cb2d2d61c60a4f0fa19a50d7d19cd423"
+      ],
+      "bytes": 30684
+    },
+    {
+      "configuration": "os",
+      "extra_flags": [
+        "-DCTRL_REENTRY_ASSERT",
+        "-Os"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "825f6f3ed56f7ed92a96cd085f42763b0cc58a044e73cd79e9933c84b48de725",
+        "825f6f3ed56f7ed92a96cd085f42763b0cc58a044e73cd79e9933c84b48de725"
+      ],
+      "bytes": 21092
+    },
+    {
+      "configuration": "o2-noassert",
+      "extra_flags": [
+        "-O2"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "23c0d5e86b5622c309398205bfa229e0b3a6159337a33e98439764a8a73c2277",
+        "23c0d5e86b5622c309398205bfa229e0b3a6159337a33e98439764a8a73c2277"
+      ],
+      "bytes": 25776
+    },
+    {
+      "configuration": "os-g3",
+      "extra_flags": [
+        "-Os",
+        "-g3"
+      ],
+      "raw_equal": true,
+      "sha256": [
+        "8199cae247e7db53a38c9dbee7c9adb326cdbb2b450eec80309a6271a96dc221",
+        "8199cae247e7db53a38c9dbee7c9adb326cdbb2b450eec80309a6271a96dc221"
+      ],
+      "bytes": 336744
+    }
+  ]
+}

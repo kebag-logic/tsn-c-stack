@@ -1,0 +1,314 @@
+diff --git a/docs/TESTS.md b/docs/TESTS.md
+index 9cb0569..e472c86 100644
+--- a/docs/TESTS.md
++++ b/docs/TESTS.md
+@@ -64,7 +64,9 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
+ | [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107) | acmp-publish-unchanged-triple | ACMP-10 |
+ | [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157) | acmp-publish-missing-finish; acmp-publish-reset-cache; acmp-publish-wrong-sink | ACMP-10, ACMP-07 |
+ | [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206) | acmp-publish-after-timers | ACMP-10 |
++| [AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal](../tests/test_acmp.cpp#L2232) | acmp-publish-reset-bound-cache | ACMP-10 |
+ | [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218) | acmp-publish-reset-stream-cache | ACMP-10 |
++| [AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop](../tests/test_acmp.cpp#L2249) | acmp-publish-reset-started-cache | ACMP-10 |
+ | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052) | acmp-publish-after-response; acmp-publish-stream-zero; acmp-publish-wrong-started; acmp-publish-bound-cache-stale; acmp-publish-started-cache-stale; acmp-publish-stream-cache-stale | ACMP-10 |
+ | [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122) | acmp-publish-ignores-started; acmp-publish-stream-moved-always | ACMP-10 |
+ | [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392) | acmp-unbind-not-persisted; acmp-unbind-echoes-the-talker; acmp-unbind-keeps-srp; acmp-unbind-srp-after-response; acmp-unbind-keeps-discovery; acmp-unbind-change-before-response | ACMP-03, ACMP-02, MFCONN-01, MFSRP-01 |
+diff --git a/docs/TRACEABILITY.md b/docs/TRACEABILITY.md
+index a145f3e..2d25006 100644
+--- a/docs/TRACEABILITY.md
++++ b/docs/TRACEABILITY.md
+@@ -21,7 +21,7 @@ Port obligations are not claims of completed integration or measured target timi
+ | [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157) |
+ | [ACMP-08](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.4](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A20ProbeTxIsAnsweredFromTheSource](../tests/test_acmp.cpp#L901); [AcmpCore.A20DisconnectGetTxStateAndGetTxConnection](../tests/test_acmp.cpp#L954) |
+ | [ACMP-09](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/); [Local transport and port work budgets](PORTING.md) | [AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits](../tests/test_acmp.cpp#L1059); [AcmpCore.A19NothingPassesAnOwedFrame](../tests/test_acmp.cpp#L1083); [AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs](../tests/test_acmp.cpp#L1097); [AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered](../tests/test_acmp.cpp#L1114); [AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether](../tests/test_acmp.cpp#L1134) |
+-| [ACMP-10](REQUIREMENTS.md) | [milan-fpga F-INT at 09c7231e / tsn-c-stack #21](REQUIREMENTS.md#acmp-publish-port) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206); [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218) |
++| [ACMP-10](REQUIREMENTS.md) | [milan-fpga F-INT at 09c7231e / tsn-c-stack #21](REQUIREMENTS.md#acmp-publish-port) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort](../tests/test_acmp.cpp#L2206); [AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream](../tests/test_acmp.cpp#L2218); [AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal](../tests/test_acmp.cpp#L2232); [AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop](../tests/test_acmp.cpp#L2249) |
+ | [MAAP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.2, especially B.2.3](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.MalformedAndVersionCompatibility](../tests/test_maap.cpp#L244) |
+ | [MAAP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94); [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117); [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196); [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209); [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271); [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+ | [MAAP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) | [MaapCell.TableB7](../tests/test_maap.cpp#L139); [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L170); [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L179); [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L219); [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L232) |
+diff --git a/docs/VERIFICATION.md b/docs/VERIFICATION.md
+index 2b9f1da..263b117 100644
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@ -20,7 +20,7 @@ No failing build, skipped test or empty test binary can establish a pass.
+ |---|---|---|
+ | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
+ | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
+-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 340 core plants caught by their named assertions. |
++| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 342 core plants caught by their named assertions. |
+ | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
+ | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
+ | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
+@@ -30,6 +30,7 @@ No failing build, skipped test or empty test binary can establish a pass.
+ | Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
+ | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
+ | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
++| ACMP cache preservation | `python3 scripts/check_acmp_cache.py --selftest` | Every `published_*` field declared in `acmp_sink` has its own hosted assertion and a plant dropping only its restore in `sink_reset`. Missing and shared coverage controls fail, including a future field. |
+ | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
+ | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
+ | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
+@@ -158,6 +159,14 @@ Where a former killer needed an adapter, a named core assertion now tests the
+ same defect. The [test inventory](TESTS.md) records the mapping.
+ Compilation failures and crashes fail the campaign; neither counts as a caught mutation.
+ Every required killer must fail with its assertion-specific message; an unrelated failed assertion is insufficient.
++The [ACMP cache check](../scripts/check_acmp_cache.py) discovers `published_*` fields from
++the header's compiler tokens, rather than a fixed list. Each field needs exactly one
++restore-only plant and a distinct message owned by a named hosted ACMP test.
++The check rejects a missing test, assertion or plant, a duplicate plant, a shared
++assertion, an unchanged restore, a multi-field substitution or a wrong source path.
++Its future-field control fails without coverage and passes with a separate assertion
++and plant. The hosted mutation campaign establishes that each assertion actually
++fails on its field's plant; RV32 smoke cannot satisfy that requirement.
+ The driver removes each previous XML report before running the binary.
+ It removes the previous campaign summary at startup. Unknown named tests record ERROR for their plant.
+ Gate decisions raise explicit errors and remain active under optimized Python.
+diff --git a/scripts/check_acmp_cache.py b/scripts/check_acmp_cache.py
+new file mode 100644
+index 0000000..a29cb27
+--- /dev/null
++++ b/scripts/check_acmp_cache.py
+@@ -0,0 +1,139 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: MIT
++"""Require an independent hosted restore-loss plant for every ACMP cache field."""
++import argparse
++import copy
++import json
++from pathlib import Path
++from assertion_messages import inventory, pairs, tokens
++from needle_audit import validate_needles
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def body(text, prefix):
++    words = tokens(text)
++    closing = pairs(words)
++    starts = [i for i in range(len(words)) if words[i:i + len(prefix)] == prefix]
++    if len(starts) != 1:
++        raise ValueError('expected one definition: ' + ' '.join(prefix))
++    opening = starts[0] + len(prefix) - 1
++    return words[opening + 1:closing[opening]]
++
++
++def cache_fields(header):
++    fields = sorted({word for word in body(header, ['struct', 'acmp_sink', '{'])
++                     if word.startswith('published_')})
++    if not fields:
++        raise ValueError('acmp_sink has no publication cache fields')
++    return fields
++
++
++def check(header, source, mutations, messages):
++    fields = cache_fields(header)
++    reset = body(source, ['static', 'void', 'sink_reset', '(', 'struct', 'acmp', '*',
++                          'a', ',', 'unsigned', 'k', ')', '{'])
++    errors, owners = [], set()
++    for field in fields:
++        restore = ['s', '->', field, '=', field, ';']
++        dropped = ['(', 'void', ')', field, ';']
++        if sum(reset[i:i + len(restore)] == restore for i in range(len(reset))) != 1:
++            errors.append(field + ': expected one restore in sink_reset')
++        plants = [m for m in mutations if m.get('path') == 'src/acmp.c'
++                  and tokens(m.get('old', '')) == restore
++                  and tokens(m.get('new', '')) == dropped]
++        if len(plants) != 1:
++            errors.append(field + ': expected one restore-only loss plant')
++            continue
++        plant = plants[0]
++        if source.count(plant['old']) != 1:
++            errors.append(field + ': plant does not select one source restore')
++        kills = plant.get('kills', [])
++        if len(kills) != 1 or not kills[0].get('test', '').startswith('AcmpCore.'):
++            errors.append(field + ': expected one named hosted ACMP assertion')
++            continue
++        errors += validate_needles([plant], messages)
++        needle = kills[0].get('needle', '')
++        literals = [value for value in messages.get(kills[0]['test'], ()) if needle in value]
++        if len(literals) == 1:
++            if literals[0] in owners:
++                errors.append(field + ': assertion is shared with another cache field')
++            owners.add(literals[0])
++    return errors
++
++
++def selftest(header, source, mutations, messages):
++    controls = 0
++
++    def refuse(label, h=header, s=source, m=mutations, a=messages):
++        nonlocal controls
++        if not check(h, s, m, a):
++            raise RuntimeError('cache control accepted: ' + label)
++        controls += 1
++
++    for field in cache_fields(header):
++        old = ['s', '->', field, '=', field, ';']
++        plant = next(m for m in mutations if tokens(m['old']) == old)
++        refuse(field + ' missing plant', m=[m for m in mutations if m is not plant])
++        killed = plant['kills'][0]
++        absent = copy.deepcopy(messages)
++        del absent[killed['test']]
++        refuse(field + ' missing test', a=absent)
++        absent = copy.deepcopy(messages)
++        absent[killed['test']] = [value for value in absent[killed['test']]
++                                 if killed['needle'] not in value]
++        refuse(field + ' missing assertion', a=absent)
++        for label, update in (
++                ('empty killers', {'kills': []}),
++                ('unchanged restore', {'new': plant['old']}),
++                ('multiple fields', {'old': plant['old'] + 's->published_extra = published_extra;',
++                                     'new': plant['new'] + '(void)published_extra;'}),
++                ('wrong source', {'path': 'include/acmp.h'})):
++            changed = [dict(m, **update) if m is plant else m for m in mutations]
++            refuse(field + ' ' + label, m=changed)
++        refuse(field + ' duplicate plant', m=mutations + [plant])
++        refuse(field + ' missing restore', s=source.replace(plant['old'], plant['new']))
++
++    extra = 'published_future'
++    h = header.replace('struct acmp_sink {', 'struct acmp_sink {\n\tbool ' + extra + ';')
++    old = '\ts->' + extra + ' = ' + extra + ';\n'
++    s = source.replace('\ts->state = ACMP_UNBOUND;', old + '\ts->state = ACMP_UNBOUND;', 1)
++    refuse('future field without coverage', h=h, s=s)
++    plant = dict(name='future-cache-control', path='src/acmp.c', old=old,
++                 new='\t(void)' + extra + ';\n',
++                 kills=[dict(test='AcmpCore.FutureCacheControl', needle='future cache assertion')])
++    a = dict(messages, **inventory('TEST_F(AcmpCore, FutureCacheControl) { '
++                                 'EXPECT_TRUE(false) << "future cache assertion"; }'))
++    if check(h, s, mutations + [plant], a):
++        raise RuntimeError('covered future field refused')
++    reused = copy.deepcopy(plant)
++    first = cache_fields(header)[0]
++    reused['kills'] = copy.deepcopy(next(m['kills'] for m in mutations
++                                        if tokens(m['old']) == ['s', '->', first, '=', first, ';']))
++    refuse('future field reuses assertion', h=h, s=s, m=mutations + [reused], a=a)
++    reused['kills'][0]['needle'] = reused['kills'][0]['needle'][4:]
++    refuse('future field reuses assertion with another needle', h=h, s=s, m=mutations + [reused], a=a)
++    print(f'acmp cache: {controls} missing or invalid coverage controls refused; covered future field accepted')
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--selftest', action='store_true')
++    args = parser.parse_args()
++    header = (ROOT / 'include/acmp.h').read_text()
++    source = (ROOT / 'src/acmp.c').read_text()
++    mutations = json.loads((ROOT / 'tests/mutations.json').read_text())
++    messages = inventory((ROOT / 'tests/test_acmp.cpp').read_text())
++    errors = check(header, source, mutations, messages)
++    if errors:
++        print('\n'.join(errors))
++        return 1
++    if args.selftest:
++        selftest(header, source, mutations, messages)
++    print('acmp cache: every field has its own hosted assertion and restore-only plant: '
++          + ', '.join(cache_fields(header)))
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/scripts/validate.py b/scripts/validate.py
+index b15a221..7214587 100644
+--- a/scripts/validate.py
++++ b/scripts/validate.py
+@@ -58,6 +58,7 @@ def main():
+         ('comments', 'check_comments.py', ['--selftest', '--work', str(work / 'comment-controls')]),
+         ('conditionals', 'check_conditionals.py', ['--selftest', '--work', str(work / 'conditionals'), '--jobs', str(args.jobs)]),
+         ('port-contracts', 'check_port_contracts.py', ['--selftest']),
++        ('acmp-cache', 'check_acmp_cache.py', ['--selftest']),
+         ('registration-controls', 'registration_selftest.py', ['--work', str(work / 'registration-controls')]),
+         ('license', 'check_license.py', ['--selftest']),
+         ('traceability', 'traceability.py', ['--selftest', '--build', str(work / 'registration'), '--jobs', str(args.jobs)]),
+diff --git a/tests/mutations.json b/tests/mutations.json
+index 504f1c8..f46dafd 100644
+--- a/tests/mutations.json
++++ b/tests/mutations.json
+@@ -5233,8 +5233,8 @@
+   {
+     "name": "acmp-publish-reset-stream-cache",
+     "path": "src/acmp.c",
+-    "old": "\ts->published_stream = published_stream;\n\ts->interface",
+-    "new": "\t(void)published_stream;\n\ts->interface",
++    "old": "\ts->published_stream = published_stream;\n",
++    "new": "\t(void)published_stream;\n",
+     "kills": [
+       {
+         "test": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+@@ -5244,5 +5244,35 @@
+     "original_tests": [
+       "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+     ]
++  },
++  {
++    "name": "acmp-publish-reset-bound-cache",
++    "path": "src/acmp.c",
++    "old": "\ts->published_bound = published_bound;\n",
++    "new": "\t(void)published_bound;\n",
++    "kills": [
++      {
++        "test": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
++        "needle": "A31 the bound cache survives reset to publish the stopped binding withdrawal"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
++    ]
++  },
++  {
++    "name": "acmp-publish-reset-started-cache",
++    "path": "src/acmp.c",
++    "old": "\ts->published_started = published_started;\n",
++    "new": "\t(void)published_started;\n",
++    "kills": [
++      {
++        "test": "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop",
++        "needle": "A31 the started cache survives reset to publish the restored stop"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31StoreRestoreOfAStoppedRecordPublishesTheStop"
++    ]
+   }
+ ]
+diff --git a/tests/test_acmp.cpp b/tests/test_acmp.cpp
+index 72a1b64..5a98157 100644
+--- a/tests/test_acmp.cpp
++++ b/tests/test_acmp.cpp
+@@ -2228,4 +2228,38 @@ TEST_F(AcmpCore, A31StoreResetOfASettledSinkPublishesAMovedStream) {
+         << "A31 withdrawal after a store reset reports the settled stream moved";
+ }
+ 
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal) {
++    bind(0, kTkA, 1, kCtl1, true);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 the stopped binding publishes once before reset";
++    ASSERT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u)
++        << "A31 only the bound cache is nonzero before reset";
++    const auto none = payload(0u, 0u, 0u, 0u);
++    fk.clear();
++    ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 resetting a stopped binding defers publication until open";
++    acmp_open(&a);
++    ASSERT_EQ(fk.pubs.size(), 1u)
++        << "A31 the bound cache survives reset to publish the stopped binding withdrawal";
++    EXPECT_TRUE(!fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u && !fk.pubs[0].moved)
++        << "A31 the stopped binding is withdrawn without moving a stream";
++}
++
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31StoreRestoreOfAStoppedRecordPublishesTheStop) {
++    bind(0);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 the started binding publishes once before restore";
++    ASSERT_TRUE(fk.pubs[0].bound && fk.pubs[0].started && fk.pubs[0].stream == 0u)
++        << "A31 the binding is started without a settled stream before restore";
++    const auto stopped = payload(kRecValid, 1u, kTkA, kCtl1);
++    fk.clear();
++    ASSERT_EQ(acmp_restore_binding(&a, 0, stopped.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 restoring a stopped record defers publication until open";
++    acmp_open(&a);
++    ASSERT_EQ(fk.pubs.size(), 1u)
++        << "A31 the started cache survives reset to publish the restored stop";
++    EXPECT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u && !fk.pubs[0].moved)
++        << "A31 the restored binding is published stopped without moving a stream";
++}
++
+ }

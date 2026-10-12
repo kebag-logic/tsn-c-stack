@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T03:13:55.334" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T03:13:55.334">
+    <testcase name="A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt" file="$REVIEWS/tsn21-r623-4-packet/scratch/mutations/baseline/tests/test_acmp.cpp" line="2052" status="run" result="completed" time="0." timestamp="2026-10-12T03:13:55.334" classname="AcmpCore">
+      <failure message="$REVIEWS/tsn21-r623-4-packet/scratch/mutations/baseline/tests/test_acmp.cpp:2057&#x0A;Value of: fk.pubs[0].started&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_7c970158f71b2a81dbd2c13778f33d21&#x0A;A31 started: the command had no STREAMING_WAIT (5.3.8.7)&#x0A;TSN_MESSAGE_END_f94c36589ce31c98f385fc88187c7b14&#x0A;&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-4-packet/scratch/mutations/baseline/tests/test_acmp.cpp:2057
+Value of: fk.pubs[0].started
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_7c970158f71b2a81dbd2c13778f33d21
+A31 started: the command had no STREAMING_WAIT (5.3.8.7)
+TSN_MESSAGE_END_f94c36589ce31c98f385fc88187c7b14
+
+]]></failure>
+      <failure message="$REVIEWS/tsn21-r623-4-packet/scratch/mutations/baseline/tests/test_acmp.cpp:2074&#x0A;Value of: !fk.pubs[0].bound &amp;&amp; !fk.pubs[0].started &amp;&amp; fk.pubs[0].stream == 0u&#x0A;  Actual: false&#x0A;Expected: true&#x0A;&#x0A;TSN_MESSAGE_BEGIN_7c970158f71b2a81dbd2c13778f33d21&#x0A;A31 unbound, not started, with no stream&#x0A;TSN_MESSAGE_END_f94c36589ce31c98f385fc88187c7b14&#x0A;&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-4-packet/scratch/mutations/baseline/tests/test_acmp.cpp:2074
+Value of: !fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_7c970158f71b2a81dbd2c13778f33d21
+A31 unbound, not started, with no stream
+TSN_MESSAGE_END_f94c36589ce31c98f385fc88187c7b14
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

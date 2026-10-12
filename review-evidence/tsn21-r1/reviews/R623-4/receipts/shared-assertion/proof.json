@@ -1,0 +1,11 @@
+{
+  "gate_accepts_shared_assertion": true,
+  "needle_audit_accepts": true,
+  "both_restore_only_plants_caught": true,
+  "same_assertion_location": "tests/test_acmp.cpp:2243",
+  "same_test": "AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal",
+  "plants": [
+    "acmp-publish-reset-bound-cache",
+    "acmp-publish-reset-future-cache"
+  ]
+}

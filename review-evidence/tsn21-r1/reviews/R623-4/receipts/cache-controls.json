@@ -1,0 +1,98 @@
+[
+  {
+    "control": "head",
+    "rc": 0,
+    "expected": "accept",
+    "pass": true
+  },
+  {
+    "control": "bound-missing-plant",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "bound-missing-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "bound-shared-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "started-missing-plant",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "started-missing-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "started-shared-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "stream-missing-plant",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "stream-missing-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "stream-shared-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "future-no-coverage",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "future-no-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "future-no-plant",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "future-shared-assertion",
+    "rc": 1,
+    "expected": "reject",
+    "pass": true
+  },
+  {
+    "control": "future-own-coverage",
+    "rc": 0,
+    "expected": "accept",
+    "pass": true
+  },
+  {
+    "control": "restored-control",
+    "rc": 0,
+    "expected": "accept",
+    "pass": true
+  }
+]
