@@ -1,0 +1,47 @@
+[
+  {
+    "name": "acmp-publish-reset-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n\ts->published_stream = published_stream;",
+    "new": "\t(void)published_bound;\n\t(void)published_started;\n\t(void)published_stream;",
+    "kills": [
+      {
+        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
+        "needle": "A31 a sink the store resets is published unbound at the next open"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
+    ]
+  },
+  {
+    "name": "acmp-publish-after-timers",
+    "path": "src/acmp.c",
+    "old": "\tpublish(a);\n\trearm(a);\n\tadmit(a);\n",
+    "new": "\trearm(a);\n\tpublish(a);\n\tadmit(a);\n",
+    "kills": [
+      {
+        "test": "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort",
+        "needle": "A31 settlement publication precedes the timer port in finish"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+    ]
+  },
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_stream = published_stream;\n\ts->interface",
+    "new": "\t(void)published_stream;\n\ts->interface",
+    "kills": [
+      {
+        "test": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "needle": "A31 withdrawal after a store reset reports the settled stream moved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+    ]
+  }
+]

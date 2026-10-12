@@ -1,0 +1,25 @@
+Note: Google Test filter = AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp:2102: Failure
+Value of: fk.pubs[0].sink == 2u && fk.pubs[0].interface == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+A31 sink 2, on interface 1
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath
+
+ 1 FAILED TEST

@@ -1,0 +1,27 @@
+Note: Google Test filter = MaapCore.ReentrantPortsAreCountedAndIgnored
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MaapCore
+[ RUN      ] MaapCore.ReentrantPortsAreCountedAndIgnored
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_maap.cpp:396: Failure
+Expected equality of these values:
+  r.core.reentries
+    Which is: 0
+  6u
+    Which is: 6
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+all input guards fire
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] MaapCore.ReentrantPortsAreCountedAndIgnored (0 ms)
+[----------] 1 test from MaapCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] MaapCore.ReentrantPortsAreCountedAndIgnored
+
+ 1 FAILED TEST

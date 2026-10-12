@@ -1,0 +1,32 @@
+[
+  {
+    "test": "A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
+    "body_byte_equal": true,
+    "body_sha256": "f9220167128bac87f1979898d054a24e6f5dac68de27de264c51f01cbf274956"
+  },
+  {
+    "test": "A31LeavingSettlementTakesTheStreamOffTheDatapath",
+    "body_byte_equal": true,
+    "body_sha256": "9dad4307a35aa52cfdb7344fca40eff52445f3e250828502b0e25c5eba406f74"
+  },
+  {
+    "test": "A31OnlyAMovedTripleIsPublished",
+    "body_byte_equal": true,
+    "body_sha256": "cef43b9e2b453ac0c0f4f8374ba6975dc142107278c3cb30ae68b320f82440bc"
+  },
+  {
+    "test": "A31TheStartedLevelIsPublishedBeforeItIsPromised",
+    "body_byte_equal": true,
+    "body_sha256": "d39296508f908c3d8f20c66f63206c5efae333558eb8ff976041dd6c25f5d744"
+  },
+  {
+    "test": "A31RestoredBindingsArePublishedWhenTheTransportOpens",
+    "body_byte_equal": true,
+    "body_sha256": "48fbcc7db49aa45d737ae0a90d31a5437e726880c6c17616a3b6ed329ac941e7"
+  },
+  {
+    "test": "A31ACallBackFromThePublishPortIsRefused",
+    "body_byte_equal": true,
+    "body_sha256": "b83b52b365dc8838f2e4a3fc788dd749471345389d58f4ba8650c99a6ad4661f"
+  }
+]

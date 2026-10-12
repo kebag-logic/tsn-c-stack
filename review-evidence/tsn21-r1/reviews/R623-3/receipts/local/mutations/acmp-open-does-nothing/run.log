@@ -1,0 +1,27 @@
+Note: Google Test filter = AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp:1856: Failure
+Expected equality of these values:
+  v.size()
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+A29 acmp_open admits each restored binding's talker, the unbound sinks nothing
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens
+
+ 1 FAILED TEST

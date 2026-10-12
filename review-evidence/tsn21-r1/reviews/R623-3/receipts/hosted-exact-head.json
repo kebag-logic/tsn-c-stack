@@ -1,0 +1,189 @@
+[
+  {
+    "id": 38188571695,
+    "head_sha": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5",
+    "name": "Portable core quality",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/38188571695",
+    "created_at": "2026-10-12T00:35:13Z",
+    "updated_at": "2026-10-12T00:38:36Z",
+    "jobs": [
+      {
+        "id": 114616159424,
+        "name": "quality",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5",
+        "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/38188571695/job/114616159424",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-12T00:35:16Z",
+            "completed_at": "2026-10-12T00:35:16Z"
+          },
+          {
+            "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-12T00:35:16Z",
+            "completed_at": "2026-10-12T00:35:17Z"
+          },
+          {
+            "name": "Install host dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-12T00:35:17Z",
+            "completed_at": "2026-10-12T00:36:02Z"
+          },
+          {
+            "name": "Validate the portable cores",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-12T00:36:02Z",
+            "completed_at": "2026-10-12T00:38:32Z"
+          },
+          {
+            "name": "Keep gate evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-12T00:38:32Z",
+            "completed_at": "2026-10-12T00:38:33Z"
+          },
+          {
+            "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-12T00:38:33Z",
+            "completed_at": "2026-10-12T00:38:33Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-12T00:38:33Z",
+            "completed_at": "2026-10-12T00:38:33Z"
+          }
+        ]
+      },
+      {
+        "id": 114616159803,
+        "name": "bare-metal",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5",
+        "html_url": "https://github.com/kebag-logic/tsn-c-stack/actions/runs/38188571695/job/114616159803",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-12T00:35:16Z",
+            "completed_at": "2026-10-12T00:35:17Z"
+          },
+          {
+            "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-12T00:35:17Z",
+            "completed_at": "2026-10-12T00:35:17Z"
+          },
+          {
+            "name": "Install RV32 dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-12T00:35:17Z",
+            "completed_at": "2026-10-12T00:35:57Z"
+          },
+          {
+            "name": "Validate the freestanding cores",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-12T00:35:57Z",
+            "completed_at": "2026-10-12T00:36:00Z"
+          },
+          {
+            "name": "Keep RV32 evidence",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-12T00:36:00Z",
+            "completed_at": "2026-10-12T00:36:01Z"
+          },
+          {
+            "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-12T00:36:01Z",
+            "completed_at": "2026-10-12T00:36:01Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11,
+            "started_at": "2026-10-12T00:36:01Z",
+            "completed_at": "2026-10-12T00:36:01Z"
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 11720870716,
+        "node_id": "MDg6QXJ0aWZhY3QxMTcyMDg3MDcxNg==",
+        "name": "quality-evidence",
+        "size_in_bytes": 391856,
+        "url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11720870716",
+        "archive_download_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11720870716/zip",
+        "expired": false,
+        "digest": "sha256:55eb914502da2fc30f688781d2a55131b99a0b1dc694c1b581ba464f5d5bb60a",
+        "created_at": "2026-10-12T00:38:33Z",
+        "updated_at": "2026-10-12T00:38:33Z",
+        "expires_at": "2027-01-10T00:35:13Z",
+        "workflow_run": {
+          "id": 38188571695,
+          "repository_id": 1411276404,
+          "head_repository_id": 1411276404,
+          "head_branch": "acmp-publish-port",
+          "head_sha": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5"
+        }
+      },
+      {
+        "id": 11720508429,
+        "node_id": "MDg6QXJ0aWZhY3QxMTcyMDUwODQyOQ==",
+        "name": "rv32-evidence",
+        "size_in_bytes": 5672,
+        "url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11720508429",
+        "archive_download_url": "https://api.github.com/repos/kebag-logic/tsn-c-stack/actions/artifacts/11720508429/zip",
+        "expired": false,
+        "digest": "sha256:b810fd065c23024d09227dc106d9b08154377d94a5d12e7805dc987e22c8462f",
+        "created_at": "2026-10-12T00:36:01Z",
+        "updated_at": "2026-10-12T00:36:01Z",
+        "expires_at": "2027-01-10T00:35:13Z",
+        "workflow_run": {
+          "id": 38188571695,
+          "repository_id": 1411276404,
+          "head_repository_id": 1411276404,
+          "head_branch": "acmp-publish-port",
+          "head_sha": "f3dc2ae5bad02aa05a504b43c207e8b304d2bed5"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+Note: Google Test filter = MaapCore.ReverseOctetPriority
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from MaapCore
+[ RUN      ] MaapCore.ReverseOctetPriority
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_maap.cpp:173: Failure
+Expected equality of these values:
+  r.core.conflicts
+    Which is: 0
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+least significant octet decides first
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] MaapCore.ReverseOctetPriority (0 ms)
+[----------] 1 test from MaapCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] MaapCore.ReverseOctetPriority
+
+ 1 FAILED TEST

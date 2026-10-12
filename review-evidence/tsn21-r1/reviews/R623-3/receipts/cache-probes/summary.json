@@ -1,0 +1,67 @@
+[
+  {
+    "plant": "head",
+    "suite": "stock",
+    "rc": 0,
+    "tests": 77,
+    "failures": []
+  },
+  {
+    "plant": "head",
+    "suite": "witness",
+    "rc": 0,
+    "tests": 80,
+    "failures": []
+  },
+  {
+    "plant": "bound",
+    "suite": "stock",
+    "rc": 0,
+    "tests": 77,
+    "failures": []
+  },
+  {
+    "plant": "bound",
+    "suite": "witness",
+    "rc": 1,
+    "tests": 80,
+    "failures": [
+      "ReviewerCacheBoundStoppedWithdrawal"
+    ]
+  },
+  {
+    "plant": "started",
+    "suite": "stock",
+    "rc": 0,
+    "tests": 77,
+    "failures": []
+  },
+  {
+    "plant": "started",
+    "suite": "witness",
+    "rc": 1,
+    "tests": 80,
+    "failures": [
+      "ReviewerCacheStartedStopOnRestore"
+    ]
+  },
+  {
+    "plant": "stream",
+    "suite": "stock",
+    "rc": 1,
+    "tests": 77,
+    "failures": [
+      "A31StoreResetOfASettledSinkPublishesAMovedStream"
+    ]
+  },
+  {
+    "plant": "stream",
+    "suite": "witness",
+    "rc": 1,
+    "tests": 80,
+    "failures": [
+      "A31StoreResetOfASettledSinkPublishesAMovedStream",
+      "ReviewerCacheStreamWithdrawal"
+    ]
+  }
+]

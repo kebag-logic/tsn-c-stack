@@ -1,0 +1,27 @@
+Note: Google Test filter = AdpCore.A6toA8DeferredSends
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AdpCore
+[ RUN      ] AdpCore.A6toA8DeferredSends
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_adp.cpp:216: Failure
+Expected equality of these values:
+  fk.sends
+    Which is: 4
+  sends
+    Which is: 3
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+A8 SHUTDOWN in DOWN sends nothing (Table 5.51)
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] AdpCore.A6toA8DeferredSends (0 ms)
+[----------] 1 test from AdpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AdpCore.A6toA8DeferredSends
+
+ 1 FAILED TEST

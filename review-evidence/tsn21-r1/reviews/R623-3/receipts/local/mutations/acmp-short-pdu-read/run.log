@@ -1,0 +1,25 @@
+Note: Google Test filter = AcmpCore.A21MalformedFramesAreCounted
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A21MalformedFramesAreCounted
+$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp:1049: Failure
+Value of: a.rx_malformed == 4u && fk.calls.empty() && a.sinks[0].state == ACMP_UNBOUND
+  Actual: false
+Expected: true
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+A21 a frame shorter than the Milan ACMPDU, another EtherType or subtype, or an unknown interface is counted and not read (5.5.2.2)
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+
+[  FAILED  ] AcmpCore.A21MalformedFramesAreCounted (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A21MalformedFramesAreCounted
+
+ 1 FAILED TEST

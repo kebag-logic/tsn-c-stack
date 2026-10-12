@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T02:55:49.245" name="AllTests">
+  <testsuite name="AcmpCore" tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T02:55:49.246">
+    <testcase name="A24ARestoredBindingFastConnects" file="$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp" line="1396" status="run" result="completed" time="0." timestamp="2026-10-12T02:55:49.246" classname="AcmpCore">
+      <failure message="$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp:1412&#x0A;Expected equality of these values:&#x0A;  std::memcmp(back, record, sizeof back)&#x0A;    Which is: 34&#x0A;  0&#x0A;&#x0A;TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79&#x0A;A24 the latch gives the same record back&#x0A;TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e&#x0A;&#x0A;" type=""><![CDATA[$REVIEW_PACKET/scratch/mutations/baseline/tests/test_acmp.cpp:1412
+Expected equality of these values:
+  std::memcmp(back, record, sizeof back)
+    Which is: 34
+  0
+
+TSN_MESSAGE_BEGIN_3dc8c8edbd3e6f96edecc6fb45ff6e79
+A24 the latch gives the same record back
+TSN_MESSAGE_END_434a8ed5480f599745088da8cd7a311e
+
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
