@@ -35,6 +35,20 @@ Build, memory and testing policies are local decisions. They have source links r
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
 
+## ACMP DA freshness
+
+ACMP-11 originates from [issue #24](https://github.com/kebag-logic/tsn-c-stack/issues/24).
+Each source declares only with a valid destination and either an answered probe
+younger than its configured 15000 ms interval or a registered Listener.
+The [port contract](PORTING.md#acmp-da-freshness) defines response acceptance,
+source and interface isolation, the half-open window and clock wrap.
+Authority: [Milan v1.2 4.3.3.1](https://avnu.org/resource/milan-specification/).
+Both Linux and bare-metal RV32 are required.
+
+| ID | Required behavior | Clause |
+|---|---|---|
+| ACMP-11 | Declare per source only with a valid destination and either a fresh answered probe or a registered Listener. Use the configured interval and wrapping clock; preserve interface and source isolation. | [Milan v1.2 4.3.3.1](https://avnu.org/resource/milan-specification/); [Local answer acceptance and Listener input contract](PORTING.md#acmp-da-freshness) |
+
 ## ACMP publish port
 
 ACMP-10 originates from [issue #21](https://github.com/kebag-logic/tsn-c-stack/issues/21)

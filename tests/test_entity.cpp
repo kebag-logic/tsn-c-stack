@@ -20,6 +20,12 @@ TEST(EntityYaml, AcmpRoundTrip)
     EXPECT_EQ(entity_check_acmp(), 0) << "generated ACMP interfaces preserve binding admission routes";
 }
 
+// REQ: ENTITY-01, ACMP-11
+TEST(EntityYaml, DaFreshRoundTrip)
+{
+    EXPECT_EQ(entity_check_dafresh(), 0) << "generated freshness configuration survives both target round trips";
+}
+
 // REQ: ENTITY-01, MAAP-02
 TEST(EntityYaml, MaapRoundTrip)
 {

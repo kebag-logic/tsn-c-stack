@@ -32,6 +32,7 @@ const struct adp_entity listener_adp[1] = {
 const struct acmp_config listener_acmp = {
     .entity_id = UINT64_C(0x020000fffe000001),
     .n_interfaces = 1u,
+    .da_fresh_ms = 15000u,
     .mac = {UINT64_C(0x020000000001)},
     .n_sinks = 1u,
     .sink_interface = {0u},

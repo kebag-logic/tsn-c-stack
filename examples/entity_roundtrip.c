@@ -18,7 +18,7 @@ struct port {
     unsigned sends, starts, stops, admissions;
     unsigned last_interface;
     unsigned admitted[4];
-    uint32_t delay;
+    uint32_t delay, now;
     bool room, valid;
     struct {
         unsigned calls, interface;
@@ -113,9 +113,9 @@ static bool locked(void *ctx, uint64_t *controller)
 
 static void source(void *ctx, unsigned index, struct acmp_source_state *out)
 {
-    (void)ctx;
     (void)index;
     memset(out, 0, sizeof *out);
+    out->dest_mac_valid = ((struct port *)ctx)->valid;
 }
 
 static void srp(void *ctx, unsigned sink, const struct acmp_stream *stream)
@@ -214,6 +214,34 @@ int entity_check_acmp(void)
             CHECK(p.admitted[i] == expected, 48);
         }
     }
+    return 0;
+}
+
+static uint32_t fresh_clock(void *ctx)
+{
+    return ((struct port *)ctx)->now;
+}
+
+// REQ: ENTITY-01, ACMP-11
+int entity_check_dafresh(void)
+{
+    struct port p = {.room = true, .valid = true};
+    const struct acmp_ports ports = {&p, send_frame, fresh_clock, timer, gptp, clock_ms, admit, publish};
+    const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+    struct acmp core;
+    for (unsigned k = 0; k < sizeof cases / sizeof cases[0]; ++k) {
+        CHECK(cases[k].acmp->da_fresh_ms == 15000u, 80);
+    }
+    CHECK(acmp_init(&core, &talker_acmp, &ports, &env), 81);
+    uint8_t frame[70] = {0};
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    wire_put_be(frame + 16, 44, 2);
+    wire_put_be(frame + 34, talker_acmp.entity_id, 8);
+    p.now = 50000u;
+    acmp_rx(&core, 0, frame, sizeof frame);
+    p.now += 1u;
+    CHECK(acmp_declaring(&core, 0), 85);
     return 0;
 }
 

@@ -290,6 +290,8 @@ struct acmp_sink_view {
 };
 
 struct acmp_config {
+	// Milan v1.2 4.3.3.1
+	uint32_t da_fresh_ms;
 	uint64_t entity_id;
 	unsigned n_interfaces;
 	uint64_t mac[ACMP_MAX_INTERFACES];
@@ -399,11 +401,19 @@ struct acmp_owed {
 	uint8_t frame[ACMP_FRAME_BYTES];
 };
 
+// REQ: ACMP-11
+struct acmp_source {
+	uint32_t answered_at;
+	bool answered;
+	bool listener_registered;
+};
+
 struct acmp {
 	struct acmp_config cfg;
 	const struct acmp_ports *ports;
 	const struct acmp_env *env;
 	struct acmp_sink sinks[ACMP_MAX_SINKS];
+	struct acmp_source sources[ACMP_MAX_SOURCES];
 	uint16_t sequence_id;                   // IEEE 1722.1-2021 8.2.1.15
 	uint32_t rng;
 	bool seeded;
@@ -460,6 +470,10 @@ bool acmp_set_started(struct acmp *a, unsigned sink, bool started);
 
 
 bool acmp_poll(struct acmp *a);
+
+// REQ: ACMP-11
+bool acmp_listener_registered(struct acmp *a, unsigned interface, unsigned source, bool registered);
+bool acmp_declaring(struct acmp *a, unsigned source);
 
 
 

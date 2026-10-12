@@ -32,6 +32,7 @@ const struct adp_entity talker_adp[1] = {
 const struct acmp_config talker_acmp = {
     .entity_id = UINT64_C(0x020000fffe000001),
     .n_interfaces = 1u,
+    .da_fresh_ms = 15000u,
     .mac = {UINT64_C(0x020000000001)},
     .n_sinks = 0u,
     .sink_interface = {0u},

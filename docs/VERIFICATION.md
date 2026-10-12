@@ -21,7 +21,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Entity YAML | `python3 scripts/entity_yaml.py --examples --check` and `python3 scripts/entity_selftest.py --work build-entity-controls` | Schema refusals, exact golden bytes, version guard, planted drift, the AX7101 mapping and 13 registered mapper plants pass. [Round trips](ENTITY_YAML.md#validation-and-tests) execute on Linux and RV32. |
 | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
 | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 345 core plants and three generated configuration plants caught by their named assertions. |
+| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 384 core plants and four generated configuration plants caught by their named assertions. |
 | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
 | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
 | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
@@ -211,3 +211,66 @@ a drop. Exclusion changes need an unreachable-state argument and independent rev
 These tests establish portable-core behavior only.
 They do not measure real transport latency, linked firmware identity, or device
 certification. The [deviation register](DEVIATIONS.md) states the profile limits.
+
+## ACMP-11 contract sentence audit
+
+This table covers every behavior sentence in [PORTING.md:310-353](PORTING.md#acmp-da-freshness)
+and both sentences of [ACMP-11](REQUIREMENTS.md#acmp-da-freshness).
+Compound sentences list each relevant plant. Repeated plants retain the same killer.
+The IDs identify receipt rows; the source anchors identify the sentence start, including
+sentences sharing a line. Caller obligations and authority statements have explicit
+no-test reasons. No row asserts behavior outside the documented clock service contract.
+
+For each distinct registered plant below, build and run all eight hosted binaries,
+then physically remove only its named test declaration and rerun all eight.
+The first run must complete with exactly that killer failing on its registered needle;
+the second must complete with exactly one fewer instance, no failures and no skips.
+Compilation failure, missing XML and unrelated failures cannot establish either result.
+The review packet contains the portable full-suite runner, table-derived plant list,
+per-row grading receipts and raw XML. The ordinary campaign remains required too:
+
+```sh
+python3 scripts/mutation.py --work build-mutations --jobs 16
+python3 scripts/traceability.py --write
+python3 scripts/test_inventory.py --write
+```
+
+`dafresh-wrong-interface` isolates an out-of-range interface; the separate
+`r630-3-listener-range-only` isolates a valid but mismatched interface.
+`dafresh-reset-retains-demand` preserves only the answer fields; Listener retention
+and timestamp-only retention have separate plants. These subdivisions keep the
+single-test-removal check meaningful as the contract acquires more assertions.
+
+| Row | Sentence and scope | Killer | Registered plant |
+|---|---|---|---|
+| P01 | `docs/PORTING.md:312`: Return valid destination AND (fresh answered probe OR registered Listener), including withdrawal while still fresh. | `AcmpFresh.NoProbe`, `AcmpFresh.ListenerWithoutProbe`, `AcmpFresh.InvalidAddress`, `AcmpFresh.FreshProbeAfterListenerWithdrawal` | `dafresh-unanswered-clock`, `dafresh-listener-needs-probe`, `dafresh-ignore-address`, `r630-3-withdrawal-clears-probe` |
+| P02 | `docs/PORTING.md:314`: Read destination validity through the existing source callback. | `AcmpFresh.InvalidAddress`, `AcmpFresh.QueryPorts` | `dafresh-ignore-address`, `dafresh-query-source-twice` |
+| P03 | `docs/PORTING.md:314`: Read no SRP state through callbacks. | `AcmpFresh.QueryPorts` | `dafresh-query-calls-srp` |
+| P04 | `docs/PORTING.md:315`: Supply Listener changes through the single Listener input. | `AcmpFresh.ListenerWithoutProbe`, `AcmpFresh.FreshProbeAfterListenerWithdrawal` | `dafresh-listener-needs-probe`, `r630-3-withdrawal-clears-probe` |
+| P05 | `docs/PORTING.md:316`: Listener input makes no port calls; refuse unknown sources, mismatched interfaces and re-entry. | `AcmpFresh.InputGuardsAndReentry`, `AcmpFresh.ListenerInterfaceMismatch` | `dafresh-listener-calls-clock`, `r630-3-listener-bound-off-by-one`, `dafresh-wrong-interface`, `r630-3-listener-range-only`, `r630-3-listener-no-entry-guard` |
+| P06 | `docs/PORTING.md:318`: Registration includes Asking Failed; it is not admission or a media licence. The boolean input represents any matching attribute; admission and media licensing remain adapter obligations. | `AcmpFresh.ListenerWithoutProbe` | `dafresh-listener-rejects-asking-failed` |
+| P07 | `docs/PORTING.md:319`: Aggregate Listeners outside the core; withdraw only when the last matching registration leaves. No core test: external aggregation is a port obligation; the core receives only one boolean level, with withdrawal behavior covered by P04. | Not applicable; reason in scope | None |
+| P08 | `docs/PORTING.md:321`: Keep the level current for the current Stream ID and configured interface. No core test for platform freshness or Stream ID association: the input has no Stream ID. Valid-interface enforcement and source isolation are tested by P05 and R02. | Not applicable; reason in scope | None |
+| P09 | `docs/PORTING.md:323`: The entity generator supplies 15000 milliseconds. | `EntityYaml.DaFreshRoundTrip` | `dafresh-generated-window` |
+| P10 | `docs/PORTING.md:324`: Read the configured interval directly, with no duplicate constant. | `AcmpFresh.ConfiguredWindow` | `dafresh-fixed-window` |
+| P11 | `docs/PORTING.md:325`: Hand-written configurations supply milliseconds below the clock half range. | `AcmpFresh.WindowRange` | `dafresh-half-range` |
+| P12 | `docs/PORTING.md:326`: Refuse intervals at or above 2^31 without changing the instance or calling ports. | `AcmpFresh.WindowRange` | `dafresh-half-range`, `dafresh-range-wipes-instance`, `dafresh-range-calls-clock` |
+| P13 | `docs/PORTING.md:327`: Zero disables probe demand but preserves Listener demand. | `AcmpFresh.ZeroWindow` | `x-zero-never-expires`, `dafresh-zero-blocks-listener` |
+| P14 | `docs/PORTING.md:328`: Each source owns answer timestamp, answer flag and Listener level; initialization clears all three. | `AcmpFresh.ListenerWithdrawalAndReset`, `AcmpFresh.InitClearsListener`, `AcmpFresh.SourceAndInterfaceIsolation` | `dafresh-reset-retains-demand`, `dafresh-reset-retains-timestamp`, `r630-3-init-keeps-listener`, `dafresh-wrong-source`, `r630-3-listener-writes-source-zero` |
+| P15 | `docs/PORTING.md:331`: Start the window after accepting a probe response for a known source on its configured interface. | `AcmpFresh.WithinWindowAndRefresh`, `AcmpFresh.DeferredAnswer`, `AcmpFresh.OtherRepliesDoNotRefresh` | `dafresh-answer-stamped-before-send`, `dafresh-refused-answer`, `dafresh-incompatible-refresh` |
+| P16 | `docs/PORTING.md:332`: SUCCESS and destination-allocation-failure answers record demand; invalid destination still closes the gate. | `AcmpFresh.FailedAllocationAnswer`, `AcmpFresh.InvalidAddress` | `dafresh-only-success`, `dafresh-ignore-address` |
+| P17 | `docs/PORTING.md:333`: Unknown-ID, incompatible-interface and other command replies do not refresh demand. | `AcmpFresh.OtherRepliesDoNotRefresh` | `dafresh-state-reply-demand`, `dafresh-incompatible-refresh` |
+| P18 | `docs/PORTING.md:334`: Queued and refused sends count only when poll accepts them. | `AcmpFresh.DeferredAnswer` | `dafresh-refused-answer` |
+| P19 | `docs/PORTING.md:336`: The response-acceptance endpoint is the repository reading of answered. No executable test: authority attribution, with the endpoint behavior tested by P15 and P18. Fabric command acceptance can precede this endpoint under backpressure. | Not applicable; reason in scope | None |
+| P20 | `docs/PORTING.md:337`: Preserve existing response bytes and command handling. Existing ACMP-08 response oracles remain unchanged; these are independent response-field witnesses, not an exhaustive wire equivalence proof. | `AcmpCore.A20ProbeTxIsAnsweredFromTheSource`, `AcmpCore.A20DisconnectGetTxStateAndGetTxConnection` | `acmp-probe-tx-reports-asking-failed`, `acmp-get-tx-state-unheld-mac` |
+| P21 | `docs/PORTING.md:339`: Unsigned millisecond ages 0 through 14999 are fresh; 15000 and later are stale. | `AcmpFresh.WithinWindowAndRefresh`, `AcmpFresh.WindowEdge`, `AcmpFresh.StaleProbe` | `dafresh-no-renewal`, `dafresh-inclusive-edge`, `dafresh-expiry-equality` |
+| P22 | `docs/PORTING.md:340`: The half-open edge applies across counter wrap. | `AcmpFresh.ClockWrap`, `AcmpFresh.WindowEdge`, `AcmpFresh.StaleProbe` | `dafresh-absolute-clock`, `dafresh-inclusive-edge`, `dafresh-expiry-equality` |
+| P23 | `docs/PORTING.md:341`: Queries use current time, including after transport advances it. | `AcmpFresh.WithinWindowAndRefresh`, `AcmpFresh.QueryPorts` | `dafresh-answer-stamped-before-send`, `dafresh-query-clock-twice`, `dafresh-no-renewal` |
+| P24 | `docs/PORTING.md:342`: Observed expiry clears the answer even under Listener or invalid-address masking, preventing wrap resurrection. | `AcmpFresh.StaleProbe`, `AcmpFresh.StaleProbeAfterListenerWrap`, `AcmpFresh.StaleProbeAfterInvalidAddressWrap` | `dafresh-expiry-equality`, `g-expiry-skipped-with-listener`, `g-expiry-skipped-invalid-da` |
+| P25 | `docs/PORTING.md:345`: Query every source in serialized dispatch after events and on regular service ticks. No core test: scheduling and serialization are caller preconditions; callback re-entry refusal is tested by P26. The core owns no dispatcher. | Not applicable; reason in scope | None |
+| P26 | `docs/PORTING.md:346`: Query uses the existing time/source ports, refuses callback re-entry and returns false for unknown sources. | `AcmpFresh.QueryPorts`, `AcmpFresh.InputGuardsAndReentry` | `dafresh-query-clock-twice`, `dafresh-query-source-twice`, `r630-3-declaring-no-entry-guard`, `r630-3-declaring-bound-off-by-one` |
+| P27 | `docs/PORTING.md:348`: Query adds neither a timer nor a publication callback. | `AcmpFresh.QueryPorts` | `dafresh-query-calls-timer`, `dafresh-query-calls-publish` |
+| P28 | `docs/PORTING.md:348`: Service stays inside the half-range clock contract; a full unobserved revolution cannot be inferred. No executable guarantee outside this precondition: a modulo-2^32 sample contains no revolution count. P22 and P24 test permitted serviced wraps, including 2^32 + 100 ms. | Not applicable; reason in scope | None |
+| P29 | `docs/PORTING.md:351`: Refresh the platform gate on ticks even when poll reports no owed frames. DeferredAnswer checks poll returns false after acceptance while the query remains true; the regular platform tick itself is a caller obligation. | `AcmpFresh.DeferredAnswer` | `dafresh-refused-answer` |
+| R01 | `docs/REQUIREMENTS.md:50`: ACMP-11 sentence 1: per-source valid destination AND (fresh answered probe OR Listener). | `AcmpFresh.NoProbe`, `AcmpFresh.ListenerWithoutProbe`, `AcmpFresh.InvalidAddress`, `AcmpFresh.FreshProbeAfterListenerWithdrawal` | `dafresh-unanswered-clock`, `dafresh-listener-needs-probe`, `dafresh-ignore-address`, `r630-3-withdrawal-clears-probe` |
+| R02 | `docs/REQUIREMENTS.md:50`: ACMP-11 sentence 2: configured interval, wrapping clock, interface and source isolation. | `AcmpFresh.ConfiguredWindow`, `AcmpFresh.ClockWrap`, `AcmpFresh.SourceAndInterfaceIsolation`, `AcmpFresh.ListenerInterfaceMismatch` | `dafresh-fixed-window`, `dafresh-absolute-clock`, `dafresh-wrong-source`, `r630-3-listener-writes-source-zero`, `r630-3-listener-range-only` |

@@ -2262,4 +2262,298 @@ TEST_F(AcmpCore, A31StoreRestoreOfAStoppedRecordPublishesTheStop) {
         << "A31 the restored binding is published stopped without moving a stream";
 }
 
+class AcmpFresh : public AcmpCore {
+ protected:
+    void SetUp() override {
+        AcmpCore::SetUp();
+        cfg.da_fresh_ms = 15000u;
+        ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    }
+    void answer(unsigned source = 0, unsigned interface = 0,
+                std::uint8_t message = spec::MSG_PROBE_TX_COMMAND) {
+        Pdu p;
+        p.msg = message;
+        p.talker = kOwn;
+        p.talker_uid = static_cast<std::uint16_t>(source);
+        rx(p, interface);
+    }
+};
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, NoProbe) {
+    fk.now = 0u;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "freshness requires an answered probe even at clock zero";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, StaleProbe) {
+    for (auto start : {50000u, UINT32_MAX - 999u}) {
+        fk.now = start;
+        answer();
+        fk.now += 15001u;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "a probe older than the freshness window cannot declare";
+        fk.now = start;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "an observed stale probe cannot resurrect on a later wrap";
+    }
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, StaleProbeAfterListenerWrap) {
+    const std::uint32_t start = 50000u;
+    fk.now = start;
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    for (const std::uint64_t elapsed : {UINT64_C(15000), UINT64_C(1000000000),
+            UINT64_C(2000000000), UINT64_C(3000000000), UINT64_C(4000000000),
+            UINT64_C(0x100000064)}) {
+        fk.now = start + static_cast<std::uint32_t>(elapsed);
+        (void)acmp_declaring(&a, 0);
+    }
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "Listener withdrawal after a serviced full wrap cannot revive an expired probe";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, StaleProbeAfterInvalidAddressWrap) {
+    const std::uint32_t start = 50000u;
+    fk.now = start;
+    answer();
+    fk.source[0].dest_mac_valid = false;
+    for (const std::uint64_t elapsed : {UINT64_C(15000), UINT64_C(1000000000),
+            UINT64_C(2000000000), UINT64_C(3000000000), UINT64_C(4000000000),
+            UINT64_C(0x100000064)}) {
+        fk.now = start + static_cast<std::uint32_t>(elapsed);
+        (void)acmp_declaring(&a, 0);
+    }
+    fk.source[0].dest_mac_valid = true;
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "destination recovery after a serviced full wrap cannot revive an expired probe";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, WindowEdge) {
+    for (auto start : {50000u, UINT32_MAX - 999u}) {
+        fk.now = start;
+        answer();
+        fk.now += 15000u;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "the exact fifteen second boundary closes the declaration";
+        answer();
+        ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+        fk.now += 15000u;
+        EXPECT_TRUE(acmp_declaring(&a, 0)) << "Listener demand keeps the gate open at exact probe expiry";
+        ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener withdrawal exposes exact probe expiry immediately";
+    }
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, WithinWindowAndRefresh) {
+    fk.send_ms = 7u;
+    answer();
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "an accepted response opens the freshness window immediately";
+    fk.now += 14999u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "the final millisecond remains fresh from send acceptance";
+    answer();
+    fk.now += 14999u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "another answer renews the complete freshness window";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ListenerWithoutProbe) {
+    fk.source[0].asking_failed = true;
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a registered Listener declares without any answered probe";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "withdrawing the last Listener closes an unprobed source";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ListenerInterfaceMismatch) {
+    EXPECT_FALSE(acmp_listener_registered(&a, 1, 0, true))
+        << "a valid interface belonging to another source is refused";
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "a Listener on the wrong valid interface cannot open this source";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, FreshProbeAfterListenerWithdrawal) {
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    fk.now += 100u;
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_TRUE(acmp_declaring(&a, 0))
+        << "a fresh answered probe survives Listener registration and withdrawal";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, InitClearsListener) {
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    ASSERT_TRUE(a.sources[0].listener_registered)
+        << "Listener registration is still present immediately before initialization";
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "initialization clears a Listener that was still registered";
+}
+
+// REQ: ACMP-11, PORT-01
+TEST_F(AcmpFresh, QueryPorts) {
+    answer();
+    for (unsigned query = 0; query < 2u; ++query) {
+        fk.now += 100u;
+        fk.clear();
+        (void)acmp_declaring(&a, 0);
+        EXPECT_EQ(fk.count(Call::NOW), 1u)
+            << "each answered declaration query samples the existing clock once";
+        EXPECT_EQ(fk.count(Call::SOURCE), 1u)
+            << "each declaration query samples the live source once";
+        EXPECT_EQ(fk.calls.size(), 2u)
+            << "declaration queries call only the existing clock and source ports";
+        EXPECT_TRUE(fk.pubs.empty())
+            << "declaration queries do not publish sink state";
+    }
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, InvalidAddress) {
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    fk.source[0].dest_mac_valid = false;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "invalid destination blocks both fresh and registered demand";
+    fk.source[0].dest_mac_valid = true;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "live destination validity is sampled on every declaration query";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ClockWrap) {
+    fk.now = UINT32_MAX - 999u;
+    answer();
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a pre-wrap answer is fresh before the clock rolls over";
+    fk.now += 14999u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "unsigned elapsed time keeps a probe fresh across clock wrap";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ConfiguredWindow) {
+    cfg.da_fresh_ms = 30000u;
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    answer();
+    fk.now += 20000u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "the core uses the configured interval without a mirrored constant";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ZeroWindow) {
+    cfg.da_fresh_ms = 0u;
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    fk.now = 50000u;
+    answer();
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval disables probe demand even at answer acceptance";
+    fk.now += 15001u;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval cannot retain probe demand over time";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a zero interval still allows a registered Listener to declare";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval closes again when the Listener withdraws";
+}
+
+// REQ: ACMP-11, PORT-01
+TEST_F(AcmpFresh, WindowRange) {
+    cfg.da_fresh_ms = UINT32_C(0x7fffffff);
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv))
+        << "the largest interval below the clock half range remains valid";
+    const auto before = a;
+    for (auto interval : {UINT32_C(0x80000000), UINT32_MAX}) {
+        cfg.da_fresh_ms = interval;
+        EXPECT_FALSE(acmp_init(&a, &cfg, &kPorts, &kEnv))
+            << "freshness intervals at or above the clock half range are refused";
+        EXPECT_EQ(std::memcmp(&a, &before, sizeof a), 0)
+            << "refusing a freshness interval leaves the instance unchanged";
+    }
+    EXPECT_TRUE(fk.calls.empty()) << "freshness interval validation calls no platform service";
+}
+
+// REQ: ACMP-11, ACMP-09
+TEST_F(AcmpFresh, DeferredAnswer) {
+    fk.room = false;
+    answer();
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a queued response does not yet count as an answer";
+    fk.now += 20000u;
+    EXPECT_TRUE(acmp_poll(&a));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a refused retry does not open the declaration";
+    fk.room = true;
+    EXPECT_FALSE(acmp_poll(&a));
+    fk.now += 14999u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "an owed answer starts freshness only after send acceptance";
+}
+
+// REQ: ACMP-11, ACMP-08
+TEST_F(AcmpFresh, FailedAllocationAnswer) {
+    fk.source[0].dest_mac_valid = false;
+    answer();
+    fk.source[0].dest_mac_valid = true;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "an answered allocation failure retains demand for later validity";
+}
+
+// REQ: ACMP-11, ACMP-08
+TEST_F(AcmpFresh, OtherRepliesDoNotRefresh) {
+    for (auto msg : {spec::MSG_GET_TX_STATE_COMMAND, spec::MSG_DISCONNECT_TX_COMMAND,
+                     spec::MSG_GET_TX_CONNECTION_COMMAND}) {
+        answer(0, 0, msg);
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "other talker commands cannot supply probe freshness";
+    }
+    answer(0, 1);
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "an incompatible interface answer cannot refresh a source";
+    fk.clear();
+    answer(cfg.n_sources, 0);
+    EXPECT_EQ(fk.count(Call::NOW), 0u) << "unknown source replies do not timestamp probe demand";
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "an unknown source answer cannot refresh a valid source";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, SourceAndInterfaceIsolation) {
+    answer(1, 1);
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a probe on the second source leaves the first source closed";
+    EXPECT_TRUE(acmp_declaring(&a, 1)) << "the probed source declares on its configured interface";
+    ASSERT_TRUE(acmp_listener_registered(&a, 1, 1, true));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener demand does not leak into another source";
+}
+
+// REQ: ACMP-11, PORT-01
+TEST_F(AcmpFresh, InputGuardsAndReentry) {
+    EXPECT_FALSE(acmp_listener_registered(&a, 0, cfg.n_sources, true))
+        << "unknown Listener source is refused without a state write";
+    EXPECT_FALSE(acmp_listener_registered(&a, cfg.n_interfaces, 0, true))
+        << "Listener interface must match the configured source interface";
+    EXPECT_FALSE(acmp_declaring(&a, cfg.n_sources)) << "unknown declaration source returns false";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_TRUE(fk.calls.empty()) << "Listener input and invalid queries call no platform service";
+    fk.hook_kind = Call::SOURCE;
+    fk.hook = [&]() {
+        EXPECT_FALSE(acmp_listener_registered(&a, 0, 0, true))
+            << "Listener input refuses synchronous source callback reentry";
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "declaration query refuses synchronous source callback reentry";
+    };
+    EXPECT_FALSE(acmp_declaring(&a, 0));
+    EXPECT_EQ(a.reentries, 2u) << "both new entries account for refused callback recursion";
+    EXPECT_EQ(reentry_traps, 2u) << "both new entries invoke the configured reentry hook";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ListenerWithdrawalAndReset) {
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    fk.now += 15000u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a Listener keeps a stale probe source declaring";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    fk.now += 15000u;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener withdrawal cannot extend an expired freshness window";
+    answer();
+    EXPECT_TRUE(acmp_declaring(&a, 0));
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "initialization clears previous demand and probe timestamps";
+    EXPECT_EQ(a.sources[0].answered_at, 0u) << "initialization clears the saved answer timestamp itself";
+}
+
 }

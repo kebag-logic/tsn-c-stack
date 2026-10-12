@@ -145,6 +145,18 @@ class EntityTests(unittest.TestCase):
                 with self.assertRaisesRegex(entity.Invalid, 'prefix: expected a lower-case C identifier'):
                     entity.render(self.document, prefix)
 
+    def test_dafresh_configuration(self):
+        self.assertEqual(entity.validate(self.document)['da_fresh_ms'], 15000)
+        self.document['acmp'] = {'da_fresh_ms': 15000}
+        self.assertIn('.da_fresh_ms = 15000u,', entity.render(self.document)['entity_config.c'])
+        for value in (0, 14999, 15001, True, 15000.0, '15000', None):
+            self.document['acmp']['da_fresh_ms'] = value
+            self.refuse(self.document, 'acmp.da_fresh_ms: expected integer in 15000..15000')
+        self.document['acmp'] = {}
+        self.refuse(self.document, 'acmp.da_fresh_ms: required field missing')
+        self.document['acmp'] = {'da_fresh_ms': 15000, 'typo': 0}
+        self.refuse(self.document, 'acmp.typo: unknown field')
+
     def test_missing_golden_file(self):
         with self.assertRaisesRegex(entity.Invalid, 'entity/entity_config.h: generated file drift'):
             entity.emit(self.document, self.directory, check=True)

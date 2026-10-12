@@ -48,8 +48,9 @@ This is a single-configuration subset of the maximum-count rules in [Milan v1.2 
 
 ## Schema 1.0.0
 
-All listed fields are required. Unknown keys are refused at every level.
-No field has a silent default. Empty stream and MAAP lists are explicit.
+All listed fields except `acmp` are required. Unknown keys are refused at every level.
+Omitting the optional `acmp` mapping selects Milan's 15000 ms DA freshness interval.
+This additive schema 1.0.0 extension keeps existing documents valid. Empty stream and MAAP lists are explicit.
 Integer fields accept YAML integer scalars, including hexadecimal notation.
 Schema 1.0.0 retains [PyYAML's YAML 1.1 integer forms](https://yaml.org/type/int.html).
 For example, `010` means 8 and `1:00` means 60. Prefer decimal without leading zeros or `0x` hexadecimal.
@@ -65,6 +66,8 @@ Local capacity limits are stricter than their wire fields.
 | Field | Range and meaning | Authority |
 |---|---|---|
 | `schema_version` | String `1.0.0` only. Local format version. | [Issue 2][issue] |
+| `acmp` | Optional mapping. Omission selects `da_fresh_ms: 15000`. | [Issue 24](https://github.com/kebag-logic/tsn-c-stack/issues/24) |
+| `acmp.da_fresh_ms` | Required when `acmp` is present; integer 15000 only. Emitted as `acmp_config.da_fresh_ms`. | [Milan v1.2 4.3.3.1][milan] |
 | `identity` | Mapping containing the six fields below. | [IEEE 1722.1-2021 7.2.1][atdecc] |
 | `identity.entity_id` | Integer 1 through 2^64-2, or `mac-derived`. Derive from interface 0 by inserting FF FE after its first three MAC octets. Preserve the U/L bit. | [IEEE 1722.1-2021 6.2.2.7][atdecc]; [source identity policy](PORTING.md#entity-configuration) |
 | `identity.model_id` | Integer 1 through 2^64-2. Resolve the complete product model outside this generator. | [IEEE 1722.1-2021 6.2.2.8][atdecc]; [Milan v1.2 5.6.2][milan] |
@@ -129,16 +132,20 @@ The [round-trip checks](../examples/entity_roundtrip.c) run through all three co
 The hosted [GoogleTest cases](../tests/test_entity.cpp) and the [RV32 smoke image](../examples/rv32/smoke.c) call the same checks.
 Their oracles spell expected fields independently of the generated structs.
 ADP checks transmitted fields. ACMP restores bindings and checks interface admission.
+The freshness round trip checks the generated 15000 ms value and one accepted
+probe opening the declaration gate on both targets. The hosted ACMP tests cover
+the individual predicate terms, exact window edge and clock wrap.
 MAAP checks probes, counts, preferred ranges, validity and withdrawal.
-The [mutation campaign](../tests/mutations.json) plants three named defects:
+The [mutation campaign](../tests/mutations.json) plants four configuration defects:
 
 | Plant | Changed configuration | Required catch |
 |---|---|---|
 | `entity-wrong-count` | AX7101 ADP source count becomes one. | `EntityYaml.AdpRoundTrip` |
 | `entity-swapped-interface` | Duplex sink interfaces are exchanged. | `EntityYaml.AcmpRoundTrip` |
 | `entity-dropped-field` | Talker MAAP preferred field is removed. C supplies zero. | `EntityYaml.MaapRoundTrip` |
+| `dafresh-generated-window` | Talker freshness interval becomes 15001 ms. | `EntityYaml.DaFreshRoundTrip` |
 
-All three plants still compile. Each must fail its named assertion in a completed run.
+All four plants still compile. Each must fail its named assertion in a completed run.
 The golden test also refuses each planted file as drift.
 
 The schema tests also register 13 mapper plants.

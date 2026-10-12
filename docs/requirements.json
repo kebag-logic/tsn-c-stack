@@ -200,6 +200,24 @@
     }
   },
   {
+    "id": "ACMP-11",
+    "text": "Declare each source only with a valid destination and an answered probe younger than the configured freshness interval or a registered Listener; preserve source and interface isolation and clock wrap.",
+    "clauses": [
+      {
+        "text": "Milan v1.2 4.3.3.1",
+        "url": "https://avnu.org/resource/milan-specification/"
+      },
+      {
+        "text": "Local answer acceptance and Listener input contract",
+        "url": "PORTING.md#acmp-da-freshness"
+      }
+    ],
+    "origin": {
+      "text": "tsn-c-stack issue 24",
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/24"
+    }
+  },
+  {
     "id": "MAAP-01",
     "text": "Validate frame fields, destination, source, lengths and supported version behavior.",
     "clauses": [
@@ -906,8 +924,13 @@
   {
     "id": "ENTITY-01",
     "origin": "tsn-c-stack issue 2",
-    "targets": ["Linux", "bare-metal RV32"],
-    "verification": {"method": "test"},
+    "targets": [
+      "Linux",
+      "bare-metal RV32"
+    ],
+    "verification": {
+      "method": "test"
+    },
     "text": "Generate consistent const configuration from versioned YAML. Validate and regenerate examples. Exercise each core on both targets.",
     "clauses": [
       {

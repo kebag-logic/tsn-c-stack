@@ -298,6 +298,7 @@ int main(void)
     if (!result) result = maap_smoke();
     if (!result) result = entity_check_adp();
     if (!result) result = entity_check_acmp();
+    if (!result) result = entity_check_dafresh();
     if (!result) result = entity_check_maap();
     return result;
 }

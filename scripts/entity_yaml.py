@@ -93,9 +93,14 @@ def mac(value, path):
 
 
 def validate(document):
-    d = mapping(document, ('schema_version', 'identity', 'capabilities', 'interfaces', 'inputs', 'outputs', 'maap'), 'entity')
+    fields = ('schema_version', 'identity', 'capabilities', 'interfaces', 'inputs', 'outputs', 'maap')
+    if isinstance(document, dict) and 'acmp' in document:
+        fields += ('acmp',)
+    d = mapping(document, fields, 'entity')
     if d['schema_version'] != VERSION:
         raise Invalid('entity.schema_version: supported version is 1.0.0')
+    acmp = mapping(d.get('acmp', {'da_fresh_ms': 15000}), ('da_fresh_ms',), 'acmp')
+    da_fresh_ms = integer(acmp['da_fresh_ms'], 15000, 15000, 'acmp.da_fresh_ms')
     identity = mapping(d['identity'], ('entity_id', 'model_id', 'name', 'vendor_name', 'serial_number', 'group_name'), 'identity')
     for field in ('name', 'vendor_name', 'serial_number', 'group_name'):
         name(identity[field], 'identity.' + field)
@@ -154,7 +159,8 @@ def validate(document):
     if seen != {i for i, count in enumerate(counts) if count}:
         raise Invalid('maap: exactly one reservation is required per output interface')
     return dict(identity=identity, entity_id=eid, model_id=model_id, macs=macs, flags=flags,
-                identify=identify, streams=streams, stream_caps=stream_caps, counts=counts, preferred=preferred)
+                identify=identify, streams=streams, stream_caps=stream_caps, counts=counts, preferred=preferred,
+                da_fresh_ms=da_fresh_ms)
 
 
 def cstring(value):
@@ -224,6 +230,7 @@ extern const struct {prefix}_maap_config {prefix}_maap[{n}];
         c += '    },\n'
     c += '};\n\n// Milan v1.2 5.5.3.5.1\n'
     c += f'const struct acmp_config {prefix}_acmp = {{\n    .entity_id = UINT64_C(0x{d["entity_id"]:016x}),\n    .n_interfaces = {n}u,\n'
+    c += f'    .da_fresh_ms = {d["da_fresh_ms"]}u,\n'
     c += '    .mac = {' + ', '.join(f'UINT64_C(0x{x:012x})' for x in d['macs']) + '},\n'
     for direction, role in (('inputs', 'sink'), ('outputs', 'source')):
         ports = d['streams'][direction]
