@@ -5214,5 +5214,35 @@
     "original_tests": [
       "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
     ]
+  },
+  {
+    "name": "acmp-publish-after-timers",
+    "path": "src/acmp.c",
+    "old": "\tpublish(a);\n\trearm(a);\n\tadmit(a);\n",
+    "new": "\trearm(a);\n\tpublish(a);\n\tadmit(a);\n",
+    "kills": [
+      {
+        "test": "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort",
+        "needle": "A31 settlement publication precedes the timer port in finish"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort"
+    ]
+  },
+  {
+    "name": "acmp-publish-reset-stream-cache",
+    "path": "src/acmp.c",
+    "old": "\ts->published_stream = published_stream;\n\ts->interface",
+    "new": "\t(void)published_stream;\n\ts->interface",
+    "kills": [
+      {
+        "test": "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream",
+        "needle": "A31 withdrawal after a store reset reports the settled stream moved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream"
+    ]
   }
 ]

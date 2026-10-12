@@ -24,6 +24,8 @@
 
 
 
+
+
 #include "acmp.h"
 
 #include <string.h>
@@ -183,8 +185,6 @@ static void p_admit(struct acmp *a, unsigned interface, unsigned sink, bool boun
 	a->in_port = false;
 }
 
-
-
 static void p_publish(struct acmp *a, unsigned interface, unsigned sink, bool bound, bool started, uint64_t stream,
 		      bool moved)
 {
@@ -192,6 +192,7 @@ static void p_publish(struct acmp *a, unsigned interface, unsigned sink, bool bo
 	a->ports->publish(a->ports->ctx, interface, sink, bound, started, stream, moved);
 	a->in_port = false;
 }
+
 
 // REQ: ACMP-10
 static void publish(struct acmp *a)
@@ -209,6 +210,8 @@ static void publish(struct acmp *a)
 		}
 	}
 }
+
+
 
 static void decode(const uint8_t *frame, struct pdu *p)
 {
@@ -479,6 +482,7 @@ static void admit(struct acmp *a)
 		}
 	}
 }
+
 
 
 static void finish(struct acmp *a)

@@ -2202,4 +2202,30 @@ TEST_F(AcmpCore, A31ACallBackFromThePublishPortIsRefused) {
 }
 
 
+// REQ: ACMP-10
+TEST_F(AcmpCore, A31SettlementIsPublishedBeforeTheTimerPort) {
+    bind(0);
+    fk.clear();
+    rx(probe_answer(0));
+    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 settlement publishes once before completion callbacks";
+    const int timer = fk.position(Call::TIMER);
+    ASSERT_GE(timer, 0) << "A31 settlement re-arms the interface timer";
+    EXPECT_LE(fk.pubs[0].before, static_cast<std::size_t>(timer))
+        << "A31 settlement publication precedes the timer port in finish";
+}
+
+// REQ: ACMP-10
+TEST_F(AcmpCore, A31StoreResetOfASettledSinkPublishesAMovedStream) {
+    to_state(0, ACMP_SETTLED_NO_RSV);
+    ASSERT_NE(a.sinks[0].published_stream, 0u) << "A31 the settled stream was published before reset";
+    const auto none = payload(0u, 0u, 0u, 0u);
+    fk.clear();
+    ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
+    EXPECT_TRUE(fk.pubs.empty()) << "A31 resetting a settled sink defers publication until open";
+    acmp_open(&a);
+    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 the reset settled sink publishes once at the next open";
+    EXPECT_TRUE(!fk.pubs[0].bound && fk.pubs[0].stream == 0u && fk.pubs[0].moved)
+        << "A31 withdrawal after a store reset reports the settled stream moved";
+}
+
 }

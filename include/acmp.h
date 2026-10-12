@@ -125,6 +125,24 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifndef ACMP_H
 #define ACMP_H
 
@@ -303,6 +321,11 @@ struct acmp_ports {
 
 
 	void (*admit)(void *ctx, unsigned interface, unsigned sink, bool bound, uint64_t talker_entity_id);
+
+
+
+
+
 	// REQ: ACMP-10
 	void (*publish)(void *ctx, unsigned interface, unsigned sink, bool bound, bool started, uint64_t stream_id,
 			bool stream_moved);

@@ -113,7 +113,10 @@ def main():
     origins = {r['origin']: r for r in catalog['rows']}
     for r in reqs:
         tests = [f"[{name}]({locations[name]})" for name, ids, _ in rows if r['id'] in ids]
-        origin = f"[{r['origin']}]({origins[r['origin']]['url']})" if 'origin' in r else '[Import baseline](REQUIREMENTS.md)'
+        if r['id'] in requirement_records.ADDITIONAL_ORIGINS:
+            origin = requirement_records.link(r['origin'])
+        else:
+            origin = f"[{r['origin']}]({origins[r['origin']]['url']})" if 'origin' in r else '[Import baseline](REQUIREMENTS.md)'
         evidence = '; '.join(tests) if requirement_records.method(r) == 'test' else requirement_records.verification(r)
         text += f"| [{r['id']}](REQUIREMENTS.md) | {origin} | {clauses(r)} | {evidence} |\n"
     path = ROOT / "docs/TRACEABILITY.md"

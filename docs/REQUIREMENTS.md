@@ -30,11 +30,22 @@ Build, memory and testing policies are local decisions. They have source links r
 | ACMP-07 | Restore and latch bindings for fast connect without a storage-device dependency. | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) |
 | ACMP-08 | Answer talker commands from live source state with the prescribed flags. | [Milan v1.2 5.5.4](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) |
 | ACMP-09 | Queue bounded responses and delay notifications until their responses are accepted. | [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/); [Local transport and port work budgets](PORTING.md) |
-| ACMP-10 | Publish changed bound, started and settled stream-ID state before promises, preserve the publication cache across reset, and guard the callback. | Local [published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); Milan v1.2 5.3.8.7, 5.5.3.5.18 and 5.5.3.5.36; IEEE 1722.1-2021 7.4.35 and 7.4.36. |
 | MAAP-01 | Validate frame fields, destination, source, lengths and supported version behavior. | [IEEE 1722-2016 B.2, especially B.2.3](https://standards.ieee.org/ieee/1722/5979/) |
 | MAAP-02 | Reserve valid ranges using three probe retransmissions and randomized timer intervals. | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) |
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
+
+## ACMP publish port
+
+ACMP-10 originates from [issue #21](https://github.com/kebag-logic/tsn-c-stack/issues/21)
+and milan-fpga F-INT at [09c7231e](https://github.com/kebag-logic/milan-fpga/tree/09c7231eca343607c97c0d66abebb2553688712c/sw/firmware/ctrl/acmp),
+commits [5a50b2045](https://github.com/kebag-logic/milan-fpga/commit/5a50b2045427313527197eb22cd0f8276ef4b015)
+and [7c583daac](https://github.com/kebag-logic/milan-fpga/commit/7c583daace3a459bcf462deaf58acefee21cd41b).
+This addition postdates the 5603c353 import baseline.
+
+| ID | Required behavior | Clause |
+|---|---|---|
+| ACMP-10 | Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry. | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) |
 
 ## ADP input limit
 
