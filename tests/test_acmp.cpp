@@ -2361,10 +2361,57 @@ TEST_F(AcmpFresh, WithinWindowAndRefresh) {
 
 // REQ: ACMP-11
 TEST_F(AcmpFresh, ListenerWithoutProbe) {
+    fk.source[0].asking_failed = true;
     ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
     EXPECT_TRUE(acmp_declaring(&a, 0)) << "a registered Listener declares without any answered probe";
     ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "withdrawing the last Listener closes an unprobed source";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ListenerInterfaceMismatch) {
+    EXPECT_FALSE(acmp_listener_registered(&a, 1, 0, true))
+        << "a valid interface belonging to another source is refused";
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "a Listener on the wrong valid interface cannot open this source";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, FreshProbeAfterListenerWithdrawal) {
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    fk.now += 100u;
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_TRUE(acmp_declaring(&a, 0))
+        << "a fresh answered probe survives Listener registration and withdrawal";
+}
+
+// REQ: ACMP-11
+TEST_F(AcmpFresh, InitClearsListener) {
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    ASSERT_TRUE(a.sources[0].listener_registered)
+        << "Listener registration is still present immediately before initialization";
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "initialization clears a Listener that was still registered";
+}
+
+// REQ: ACMP-11, PORT-01
+TEST_F(AcmpFresh, QueryPorts) {
+    answer();
+    for (unsigned query = 0; query < 2u; ++query) {
+        fk.now += 100u;
+        fk.clear();
+        (void)acmp_declaring(&a, 0);
+        EXPECT_EQ(fk.count(Call::NOW), 1u)
+            << "each answered declaration query samples the existing clock once";
+        EXPECT_EQ(fk.count(Call::SOURCE), 1u)
+            << "each declaration query samples the live source once";
+        EXPECT_EQ(fk.calls.size(), 2u)
+            << "declaration queries call only the existing clock and source ports";
+        EXPECT_TRUE(fk.pubs.empty())
+            << "declaration queries do not publish sink state";
+    }
 }
 
 // REQ: ACMP-11
@@ -2435,7 +2482,6 @@ TEST_F(AcmpFresh, DeferredAnswer) {
     EXPECT_TRUE(acmp_poll(&a));
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "a refused retry does not open the declaration";
     fk.room = true;
-    fk.send_ms = 9u;
     EXPECT_FALSE(acmp_poll(&a));
     fk.now += 14999u;
     EXPECT_TRUE(acmp_declaring(&a, 0)) << "an owed answer starts freshness only after send acceptance";
@@ -2458,7 +2504,9 @@ TEST_F(AcmpFresh, OtherRepliesDoNotRefresh) {
     }
     answer(0, 1);
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "an incompatible interface answer cannot refresh a source";
+    fk.clear();
     answer(cfg.n_sources, 0);
+    EXPECT_EQ(fk.count(Call::NOW), 0u) << "unknown source replies do not timestamp probe demand";
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "an unknown source answer cannot refresh a valid source";
 }
 
@@ -2478,6 +2526,8 @@ TEST_F(AcmpFresh, InputGuardsAndReentry) {
     EXPECT_FALSE(acmp_listener_registered(&a, cfg.n_interfaces, 0, true))
         << "Listener interface must match the configured source interface";
     EXPECT_FALSE(acmp_declaring(&a, cfg.n_sources)) << "unknown declaration source returns false";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
     EXPECT_TRUE(fk.calls.empty()) << "Listener input and invalid queries call no platform service";
     fk.hook_kind = Call::SOURCE;
     fk.hook = [&]() {
@@ -2503,6 +2553,7 @@ TEST_F(AcmpFresh, ListenerWithdrawalAndReset) {
     EXPECT_TRUE(acmp_declaring(&a, 0));
     ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "initialization clears previous demand and probe timestamps";
+    EXPECT_EQ(a.sources[0].answered_at, 0u) << "initialization clears the saved answer timestamp itself";
 }
 
 }
