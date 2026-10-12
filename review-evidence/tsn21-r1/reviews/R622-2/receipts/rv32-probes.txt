@@ -1,0 +1,12 @@
+== RV32 gate on probe trees
+reset-drops-bound-cache-only: baremetal rc 1 (qemu smoke exits nonzero in Debug: 1 failure line)
+reset-drops-started-cache-only: baremetal rc 0; Debug and Release smoke rc 0
+== full hosted ctest on reset-drops-started-cache-only
+1/7 Test #1: adp_tests ........................   Passed    0.01 sec
+2/7 Test #2: acmp_tests .......................   Passed    0.01 sec
+3/7 Test #4: port_tests .......................   Passed    0.01 sec
+4/7 Test #5: adp_release ......................   Passed    0.01 sec
+5/7 Test #3: maap_tests .......................   Passed    0.02 sec
+6/7 Test #6: adp_debug ........................   Passed    0.10 sec
+7/7 Test #7: maap_debug .......................   Passed    0.17 sec
+100% tests passed out of 7

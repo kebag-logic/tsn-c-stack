@@ -1,0 +1,17 @@
+reset-drops-bound-cache-only: rc 1; [  PASSED  ] 78 tests.; failed: AcmpCore.R622W2StoreResetOfABoundStoppedSinkPublishesItsWithdrawal 
+settled-ignores-rsv-ok: rc 1; [  PASSED  ] 77 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31OnlyAMovedTripleIsPublished 
+reset-drops-started-cache-only: rc 1; [  PASSED  ] 78 tests.; failed: AcmpCore.R622W3StoreRestoreOfAStoppedRecordPublishesTheStop 
+head: rc 0; [  PASSED  ] 79 tests.; failed: none
+== head
+40:[ RUN      ] AcmpCore.A9FailureWaitsForTheRetry
+41:[       OK ] AcmpCore.A9FailureWaitsForTheRetry (0 ms)
+== reset-drops-bound-cache-only
+40:[ RUN      ] AcmpCore.A9FailureWaitsForTheRetry
+41:[       OK ] AcmpCore.A9FailureWaitsForTheRetry (0 ms)
+159:<packet>/scratch/witness2/reset-drops-bound-cache-only/tests/test_acmp.cpp:2240: Failure
+165:R622 witness2 the withdrawal of a bound stopped sink is published at open
+== reset-drops-started-cache-only
+40:[ RUN      ] AcmpCore.A9FailureWaitsForTheRetry
+41:[       OK ] AcmpCore.A9FailureWaitsForTheRetry (0 ms)
+161:<packet>/scratch/witness2/reset-drops-started-cache-only/tests/test_acmp.cpp:2253: Failure
+167:R622 witness3 the restored stop is published at open

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys; p,o,n=sys.argv[1:]; o=o.encode().decode("unicode_escape"); n=n.encode().decode("unicode_escape"); t=open(p).read(); assert t.count(o)==1, o; open(p,"w").write(t.replace(o,n))
+                                                                                                                                           ^^^^^^^^^^^^^
+AssertionError: s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
+settled-ignores-rsv-ok: replacement failed
+head: rc 0; [  PASSED  ] 77 tests.; failed: none
+reset-drops-bound-cache-only: rc 0; [  PASSED  ] 77 tests.; failed: none
+publish-skips-last-sink: rc 1; [  PASSED  ] 75 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens 
+reset-drops-started-cache-only: rc 0; [  PASSED  ] 77 tests.; failed: none
+finish-publishes-after-admission: rc 1; [  PASSED  ] 76 tests.; failed: AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort 
+publish-ignores-bound: rc 1; [  PASSED  ] 75 tests.; failed: AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised 
+moved-means-nonzero: rc 1; [  PASSED  ] 72 tests.; failed: AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath AcmpCore.A31OnlyAMovedTripleIsPublished AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised 

@@ -1,0 +1,48 @@
+﻿2026-10-12T00:35:57.1997528Z ##[group]Run python3 scripts/baremetal.py --work build-rv32 --jobs 16
+2026-10-12T00:35:57.1997819Z ^[[36;1mpython3 scripts/baremetal.py --work build-rv32 --jobs 16^[[0m
+2026-10-12T00:35:57.2050210Z shell: /usr/bin/bash -e {0}
+2026-10-12T00:35:57.2050351Z ##[endgroup]
+2026-10-12T00:36:00.2875496Z [
+2026-10-12T00:36:00.2875761Z   {
+2026-10-12T00:36:00.2876044Z     "configuration": "Debug",
+2026-10-12T00:36:00.2876329Z     "rc": 0,
+2026-10-12T00:36:00.2876638Z     "elf_sha256": "2af566cf9cb65c4698fdf37b4836f05dd848c6b118685b88a970680d96ed8078",
+2026-10-12T00:36:00.2877060Z     "elf_bytes": 108280,
+2026-10-12T00:36:00.2877262Z     "core_objects": {
+2026-10-12T00:36:00.2877591Z       "adp.c": "a87d4bb9deeebf70cbe4086a9000770289b5c33720e600f9d14cb7ced9c3445b",
+2026-10-12T00:36:00.2878080Z       "acmp.c": "3b4076f4bd844aec560e7b9be03aff6bb613fc087fecba2f98084983e72adb5e",
+2026-10-12T00:36:00.2878559Z       "maap.c": "3edfc78bbc57cfb7335394f9bf1ad7af9d37d1f2b090e00605c1cdda828bc160"
+2026-10-12T00:36:00.2878915Z     },
+2026-10-12T00:36:00.2879176Z     "core_imports": [
+2026-10-12T00:36:00.2879350Z       "__mulsi3",
+2026-10-12T00:36:00.2879539Z       "__umodsi3",
+2026-10-12T00:36:00.2879709Z       "ctrl_reentry_assert",
+2026-10-12T00:36:00.2879922Z       "memcpy",
+2026-10-12T00:36:00.2880080Z       "memset",
+2026-10-12T00:36:00.2880280Z       "port_assert_failed"
+2026-10-12T00:36:00.2880456Z     ],
+2026-10-12T00:36:00.2880754Z     "unresolved_final": [],
+2026-10-12T00:36:00.2881134Z     "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+2026-10-12T00:36:00.2881733Z   },
+2026-10-12T00:36:00.2881879Z   {
+2026-10-12T00:36:00.2882038Z     "configuration": "Release",
+2026-10-12T00:36:00.2882258Z     "rc": 0,
+2026-10-12T00:36:00.2882541Z     "elf_sha256": "0dd66ec805bebf756aeba98d16078fbfaae90634a101ec3ef972e40bc2689c21",
+2026-10-12T00:36:00.2882909Z     "elf_bytes": 36980,
+2026-10-12T00:36:00.2883091Z     "core_objects": {
+2026-10-12T00:36:00.2883397Z       "adp.c": "a177d345defef5930a83aa7a340fa0c21550e65284a162541383c69a2e827dfe",
+2026-10-12T00:36:00.2883846Z       "acmp.c": "28d83183ba878da6598dcdace4c24bb4280b74d5ff3a5ccf3c9213117b8bed07",
+2026-10-12T00:36:00.2884298Z       "maap.c": "8cfb6957294fe2220a09eb7a27c6c9140ca28100c8b091247111b609d4b6c092"
+2026-10-12T00:36:00.2884629Z     },
+2026-10-12T00:36:00.2884781Z     "core_imports": [
+2026-10-12T00:36:00.2884983Z       "__umodsi3",
+2026-10-12T00:36:00.2885155Z       "ctrl_reentry_assert",
+2026-10-12T00:36:00.2885460Z       "memcpy",
+2026-10-12T00:36:00.2902186Z       "memset"
+2026-10-12T00:36:00.2902728Z     ],
+2026-10-12T00:36:00.2903066Z     "unresolved_final": [],
+2026-10-12T00:36:00.2903477Z     "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+2026-10-12T00:36:00.2903849Z   }
+2026-10-12T00:36:00.2903990Z ]
+﻿2026-10-12T00:36:00.2999888Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-10-12T00:36:00.3000120Z with:
