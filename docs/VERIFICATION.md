@@ -30,7 +30,7 @@ No failing build, skipped test or empty test binary can establish a pass.
 | Code comments | `python3 scripts/check_comments.py --selftest` | Every comment under the closed [contributor rules](CODING_STANDARD.md) is checked. Only SPDX, requirement IDs and short standard references pass. Each rule has a compiling control. |
 | Conditional regions | `python3 scripts/check_conditionals.py --selftest --work build-conditionals --jobs 16` | Every permitted non-guard region compiles both sides. Every file-specific macro combination is compiled. Nested unreachable regions fail. |
 | Port contracts | `python3 scripts/check_port_contracts.py --selftest` | Each relocated callback, field, precondition and counter name stays in its guide section. Critical phrases stay beside their contract names. Name and meaning removal controls fail. |
-| ACMP cache preservation | `python3 scripts/check_acmp_cache.py --selftest` | Every `published_*` field declared in `acmp_sink` has its own hosted assertion and a plant dropping only its restore in `sink_reset`. Missing and shared coverage controls fail, including a future field. |
+| ACMP cache preservation | `python3 scripts/check_acmp_cache.py --selftest --work build-acmp-cache-controls --jobs 16` | Every `published_*` field declared in `acmp_sink` has its own hosted assertion and a plant dropping only its restore in `sink_reset`. Missing and shared coverage controls fail, including a compiling future field with two streamed messages on one assertion. |
 | Report controls | `python3 scripts/mutation_selftest.py --work build-report-controls --jobs 16` | Reject stale, partial, skipped and mismatched reports. A real catch followed by early exit in the same work directory must escape. |
 | Registration controls | `python3 scripts/registration_selftest.py --work build-registration-controls` | Compile and execute indented, multiline and wrapper declarations. Refuse unknown IDs, missing plants and declarations missing from the source inventory. |
 | Licence | `python3 scripts/check_license.py --selftest` | MIT source identifiers. Missing, wrong and mixed identifiers rejected. |
@@ -161,11 +161,19 @@ Compilation failures and crashes fail the campaign; neither counts as a caught m
 Every required killer must fail with its assertion-specific message; an unrelated failed assertion is insufficient.
 The [ACMP cache check](../scripts/check_acmp_cache.py) discovers `published_*` fields from
 the header's compiler tokens, rather than a fixed list. Each field needs exactly one
-restore-only plant and a distinct message owned by a named hosted ACMP test.
+restore-only plant and its own assertion owned by a named hosted ACMP test.
+Assertion identity consists of the owning test and the definition's file, line and
+column, retained through helper and callback traversal. Different streamed literals
+on one assertion share that identity. Equal message text on separate assertions
+does not make their identities equal; the needle must still be unique within its test.
 The check rejects a missing test, assertion or plant, a duplicate plant, a shared
 assertion, an unchanged restore, a multi-field substitution or a wrong source path.
-Its future-field control fails without coverage and passes with a separate assertion
-and plant. The hosted mutation campaign establishes that each assertion actually
+Its future-field control fails without coverage. A compiling future-field control
+with two literals on one assertion fails specifically for shared ownership, including
+under optimized Python. Giving the field a separate assertion passes. Both variants
+build and run their hosted restore-only campaigns; every selected plant is caught.
+Direct, helper and nested callback controls also distinguish shared definitions from
+separate assertions on the same line. The hosted mutation campaign establishes that each assertion actually
 fails on its field's plant; RV32 smoke cannot satisfy that requirement.
 The driver removes each previous XML report before running the binary.
 It removes the previous campaign summary at startup. Unknown named tests record ERROR for their plant.

@@ -5,7 +5,7 @@ import argparse
 import copy
 import json
 from pathlib import Path
-from assertion_messages import inventory, pairs, tokens
+from assertion_messages import assertion_inventory as inventory, pairs, tokens
 from needle_audit import validate_needles
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,6 +30,8 @@ def cache_fields(header):
 
 
 def check(header, source, mutations, messages):
+    literals = {name: [message.literal for message in owned]
+                for name, owned in messages.items()}
     fields = cache_fields(header)
     reset = body(source, ['static', 'void', 'sink_reset', '(', 'struct', 'acmp', '*',
                           'a', ',', 'unsigned', 'k', ')', '{'])
@@ -52,13 +54,14 @@ def check(header, source, mutations, messages):
         if len(kills) != 1 or not kills[0].get('test', '').startswith('AcmpCore.'):
             errors.append(field + ': expected one named hosted ACMP assertion')
             continue
-        errors += validate_needles([plant], messages)
+        errors += validate_needles([plant], literals)
         needle = kills[0].get('needle', '')
-        literals = [value for value in messages.get(kills[0]['test'], ()) if needle in value]
-        if len(literals) == 1:
-            if literals[0] in owners:
+        matches = [message.identity for message in messages.get(kills[0]['test'], ())
+                   if needle in message.literal]
+        if len(matches) == 1:
+            if matches[0] in owners:
                 errors.append(field + ': assertion is shared with another cache field')
-            owners.add(literals[0])
+            owners.add(matches[0])
     return errors
 
 
@@ -81,7 +84,7 @@ def selftest(header, source, mutations, messages):
         refuse(field + ' missing test', a=absent)
         absent = copy.deepcopy(messages)
         absent[killed['test']] = [value for value in absent[killed['test']]
-                                 if killed['needle'] not in value]
+                                 if killed['needle'] not in value.literal]
         refuse(field + ' missing assertion', a=absent)
         for label, update in (
                 ('empty killers', {'kills': []}),
@@ -113,23 +116,58 @@ def selftest(header, source, mutations, messages):
     refuse('future field reuses assertion', h=h, s=s, m=mutations + [reused], a=a)
     reused['kills'][0]['needle'] = reused['kills'][0]['needle'][4:]
     refuse('future field reuses assertion with another needle', h=h, s=s, m=mutations + [reused], a=a)
+    first_plant = next(m for m in mutations
+                       if tokens(m['old']) == ['s', '->', first, '=', first, ';'])
+    owner = first_plant['kills'][0]['test']
+    suite, test = owner.split('.')
+    needle = first_plant['kills'][0]['needle']
+    future = plant['kills'][0]['needle']
+    shared = f'EXPECT_TRUE(false) << "{needle}" << "{future}";'
+    separate = f'EXPECT_TRUE(false) << "{needle}"; EXPECT_TRUE(false) << "{future}";'
+    reused['kills'] = [dict(test=owner, needle=future)]
+    for label, before, call in (
+            ('direct', '', '{assertions}'),
+            ('helper', 'void helper() {{ {assertions} }}', 'helper();'),
+            ('nested callback', 'void helper() {{ {assertions} }} void callback() { helper(); }',
+             'install(callback);')):
+        for assertions, reject in ((shared, True), (separate, False)):
+            prefix = before.replace('{assertions}', assertions).replace('{{', '{').replace('}}', '}')
+            text = prefix + f'TEST_F({suite}, {test}) {{ ' + call.replace('{assertions}', assertions) + ' }'
+            owned = dict(messages, **inventory(text))
+            errors = check(h, s, mutations + [reused], owned)
+            if reject:
+                if errors != [extra + ': assertion is shared with another cache field']:
+                    raise RuntimeError(label + ' split-message ownership control failed: ' + repr(errors))
+                controls += 1
+            elif errors:
+                raise RuntimeError(label + ' separate assertions refused: ' + repr(errors))
+    same = inventory('void helper() { EXPECT_TRUE(false) << "same message"; }\n'
+                     'TEST_F(AcmpCore, One) { helper(); }\n'
+                     'TEST_F(AcmpCore, Two) { helper(); }', 'control.cpp')
+    for owner in ('AcmpCore.One', 'AcmpCore.Two'):
+        if same[owner][0].identity != (owner, 'control.cpp', 1, 17):
+            raise RuntimeError('helper definition location or test ownership lost')
     print(f'acmp cache: {controls} missing or invalid coverage controls refused; covered future field accepted')
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--selftest', action='store_true')
+    parser.add_argument('--work', type=Path, default=Path('build-acmp-cache-controls'))
+    parser.add_argument('--jobs', type=int, default=16)
     args = parser.parse_args()
     header = (ROOT / 'include/acmp.h').read_text()
     source = (ROOT / 'src/acmp.c').read_text()
     mutations = json.loads((ROOT / 'tests/mutations.json').read_text())
-    messages = inventory((ROOT / 'tests/test_acmp.cpp').read_text())
+    messages = inventory((ROOT / 'tests/test_acmp.cpp').read_text(), 'tests/test_acmp.cpp')
     errors = check(header, source, mutations, messages)
     if errors:
         print('\n'.join(errors))
         return 1
     if args.selftest:
         selftest(header, source, mutations, messages)
+        from acmp_cache_controls import compiling_controls
+        compiling_controls(ROOT, args.work.resolve(), args.jobs)
     print('acmp cache: every field has its own hosted assertion and restore-only plant: '
           + ', '.join(cache_fields(header)))
     return 0
