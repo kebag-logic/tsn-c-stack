@@ -14,7 +14,7 @@ TEST(EntityYaml, AdpRoundTrip)
     EXPECT_EQ(entity_check_adp(), 0) << "generated ADP fields match the independent entity oracle";
 }
 
-// REQ: ENTITY-01, ACMP-01, ACMP-07
+// REQ: ENTITY-01, ACMP-01, ACMP-07, ACMP-10
 TEST(EntityYaml, AcmpRoundTrip)
 {
     EXPECT_EQ(entity_check_acmp(), 0) << "generated ACMP interfaces preserve binding admission routes";

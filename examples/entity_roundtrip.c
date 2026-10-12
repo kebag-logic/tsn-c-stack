@@ -20,6 +20,11 @@ struct port {
     unsigned admitted[4];
     uint32_t delay;
     bool room, valid;
+    struct {
+        unsigned calls, interface;
+        bool bound, started, moved;
+        uint64_t stream;
+    } published[ACMP_MAX_SINKS];
 };
 
 static bool send_frame(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
@@ -84,6 +89,19 @@ static void admit(void *ctx, unsigned interface, unsigned sink, bool bound, uint
         ++p->admissions;
         if (interface < 4) ++p->admitted[interface];
     }
+}
+
+static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
+                    uint64_t stream, bool moved)
+{
+    struct port *p = ctx;
+    if (sink >= ACMP_MAX_SINKS) return;
+    ++p->published[sink].calls;
+    p->published[sink].interface = interface;
+    p->published[sink].bound = bound;
+    p->published[sink].started = started;
+    p->published[sink].stream = stream;
+    p->published[sink].moved = moved;
 }
 
 static bool locked(void *ctx, uint64_t *controller)
@@ -162,13 +180,13 @@ int entity_check_adp(void)
     return 0;
 }
 
-// REQ: ENTITY-01, ACMP-01, ACMP-07
+// REQ: ENTITY-01, ACMP-01, ACMP-07, ACMP-10
 int entity_check_acmp(void)
 {
     for (unsigned k = 0; k < sizeof cases / sizeof cases[0]; ++k) {
         const struct entity_case *e = &cases[k];
         struct port p = {.room = true};
-        const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit};
+        const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit, publish};
         const struct acmp_env env = {&p, locked, source, srp, notify, notify};
         struct acmp core;
         CHECK(acmp_init(&core, e->acmp, &ports, &env), 40);
@@ -180,10 +198,16 @@ int entity_check_acmp(void)
             record[11] = 42;
             CHECK(core.sinks[s].interface == e->sink_interface[s], 44);
             CHECK(acmp_restore_binding(&core, s, record, sizeof record) == ACMP_RESTORE_APPLIED, 45);
+            CHECK(p.published[s].calls == 0, 70);
         }
         for (unsigned s = 0; s < e->sources; ++s) CHECK(core.cfg.source_interface[s] == e->source_interface[s], 46);
         acmp_open(&core);
         CHECK(p.admissions == e->sinks, 47);
+        for (unsigned s = 0; s < e->sinks; ++s) {
+            CHECK(p.published[s].calls == 1 && p.published[s].interface == e->sink_interface[s], 71);
+            CHECK(p.published[s].bound && !p.published[s].started &&
+                  p.published[s].stream == 0 && !p.published[s].moved, 72);
+        }
         for (unsigned i = 0; i < e->interfaces; ++i) {
             unsigned expected = 0;
             for (unsigned s = 0; s < e->sinks; ++s) if (e->sink_interface[s] == i) ++expected;

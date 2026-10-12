@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: MIT
 """Collect assertion message literals by test, including called test helpers."""
 import ast
+from dataclasses import dataclass
 import re
 from compiler_tokens import raw_tokens
 from assertion_forms import ALLOWED
@@ -60,8 +61,17 @@ def literal(word):
     return None
 
 
-def inventory(text):
-    words = tokens(text)
+@dataclass(frozen=True)
+class Message:
+    literal: str
+    identity: tuple[str, str, int, int]
+
+
+def assertion_inventory(text, path='<source>'):
+    """Keep the owning test and physical assertion definition for every literal."""
+    lexed = [t for t in raw_tokens(text, 'c++') if t[0] != 'comment' and not t[1].isspace()]
+    words = [t[1] for t in lexed]
+    data = text.encode()
     ends = pairs(words)
     tests, helpers = {}, {}
     for i, word in enumerate(words[:-1]):
@@ -70,7 +80,7 @@ def inventory(text):
         close = ends[i + 1]
         if close + 1 >= len(words) or words[close + 1] != '{':
             continue
-        body = words[close + 2:ends[close + 1]]
+        body = (close + 2, ends[close + 1])
         if word in ('TEST', 'TEST_F', 'TEST_P'):
             if words[i + 3] != ',':
                 raise ValueError('unsupported test declaration')
@@ -78,31 +88,40 @@ def inventory(text):
         elif word not in ('if', 'for', 'while', 'switch', 'catch'):
             helpers.setdefault(word, []).append(body)
 
-    def collect(body, visited):
+    def collect(owner, body, visited):
         messages = []
-        closing = pairs(body)
-        for i, word in enumerate(body[:-1]):
+        start, stop = body
+        for i in range(start, stop - 1):
+            word = words[i]
             # A helper may be passed as a callback or constructed as a fixture.
             if word in helpers and word not in visited:
                 if len(helpers[word]) != 1:
                     raise ValueError('ambiguous assertion helper: ' + word)
                 visited.add(word)
-                messages += collect(helpers[word][0], visited)
-            if body[i + 1] != '(':
+                messages += collect(owner, helpers[word][0], visited)
+            if words[i + 1] != '(':
                 continue
             if word in ALLOWED:
-                at = closing[i + 1] + 1
-                while at < len(body) and body[at] == '<<':
+                offset, line = lexed[i][2], lexed[i][4]
+                column = offset - data.rfind(b'\n', 0, offset)
+                identity = (owner, path, line, column)
+                at = ends[i + 1] + 1
+                while at < stop and words[at] == '<<':
                     at += 1
                     value = ''
-                    while at < len(body) and literal(body[at]) is not None:
-                        value += literal(body[at])
+                    while at < stop and literal(words[at]) is not None:
+                        value += literal(words[at])
                         at += 1
-                    if value and at < len(body) and body[at] in ('<<', ';'):
-                        messages.append(value)
+                    if value and at < stop and words[at] in ('<<', ';'):
+                        messages.append(Message(value, identity))
                     # Skip one streamed expression, never claim its value as a literal.
-                    while at < len(body) and body[at] not in ('<<', ';'):
-                        at = closing[at] + 1 if at in closing else at + 1
+                    while at < stop and words[at] not in ('<<', ';'):
+                        at = ends[at] + 1 if at in ends else at + 1
         return messages
 
-    return {name: collect(body, set()) for name, body in tests.items()}
+    return {name: collect(name, body, set()) for name, body in tests.items()}
+
+
+def inventory(text):
+    return {name: [message.literal for message in messages]
+            for name, messages in assertion_inventory(text).items()}

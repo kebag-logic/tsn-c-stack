@@ -13,6 +13,12 @@ METHODS = {'test', 'verified by inspection', 'port obligation'}
 BEGIN = '<!-- requirements-port:start -->'
 END = '<!-- requirements-port:end -->'
 LOCAL_ORIGINS = {'ENTITY-01': ('tsn-c-stack issue 2', 'https://github.com/kebag-logic/tsn-c-stack/issues/2')}
+ADDITIONAL_ORIGINS = {
+    'ACMP-10': {
+        'text': 'milan-fpga F-INT at 09c7231e / tsn-c-stack #21',
+        'url': 'REQUIREMENTS.md#acmp-publish-port',
+    },
+}
 
 
 def source_ids():
@@ -187,7 +193,10 @@ def validate(requirements, catalog):
         imported = r['id'].startswith('MF')
         local = r['id'] in LOCAL_ORIGINS
         if not imported and not local:
-            if 'origin' in r or 'verification' in r:
+            expected = ADDITIONAL_ORIGINS.get(r['id'])
+            if r.get('origin') != expected or (expected and not valid_link(r['origin'])):
+                errors.append('additional requirement origin differs from its source: ' + r['id'])
+            if 'verification' in r:
                 errors.append('legacy requirement cannot acquire an unchecked exemption: ' + r['id'])
             continue
         origin = r.get('origin')
@@ -264,7 +273,7 @@ def render(requirements, catalog):
     text += 'The [traceability matrix](TRACEABILITY.md) names every supporting test.\n\n'
     text += '| ID | Origin | Portable requirement | Authority | Verification |\n|---|---|---|---|---|\n'
     for r in requirements:
-        if 'origin' not in r or r['id'] in LOCAL_ORIGINS:
+        if not r['id'].startswith('MF'):
             continue
         source = rows[r['origin']]
         text += f'| <a id="{r["id"].lower()}"></a>{r["id"]} | [{r["origin"]}]({source["url"]}) | {r["text"]} | '
@@ -282,6 +291,8 @@ def render(requirements, catalog):
 
 
 def origin_link(record, catalog):
+    if record['id'] in ADDITIONAL_ORIGINS:
+        return link(record['origin'])
     if record['id'] in LOCAL_ORIGINS:
         text, url = LOCAL_ORIGINS[record['id']]
         return link(dict(text=text, url=url))
@@ -321,6 +332,7 @@ def selftest(requirements, catalog):
     port = next(i for i, r in enumerate(requirements) if method(r) == 'port obligation')
     inspection = next(i for i, r in enumerate(requirements) if method(r) == 'verified by inspection')
     source = next(i for i, r in enumerate(catalog['rows']) if r['requirements'])
+    addition = next(i for i, r in enumerate(requirements) if r['id'] == 'ACMP-10')
     controls = [
         ('missing source', lambda r, c: c['rows'].pop()),
         ('duplicate source', lambda r, c: c['rows'].append(c['rows'][0])),
@@ -329,6 +341,9 @@ def selftest(requirements, catalog):
         ('moving source link', lambda r, c: c['rows'][0].update(url=SOURCE_BASE.replace(SOURCE_COMMIT, 'dev') + 'REQUIREMENTS.md#L1')),
         ('moved source anchor', lambda r, c: c['rows'][0].update(url=c['rows'][1]['url'])),
         ('missing origin', lambda r, c: r[tested].pop('origin')),
+        ('missing addition origin', lambda r, c: r[addition].pop('origin')),
+        ('false addition origin', lambda r, c: r[addition].update(origin='Import baseline')),
+        ('broken addition origin', lambda r, c: r[addition]['origin'].update(url='missing-file.md')),
         ('different origin', lambda r, c: r[tested].update(origin=r[port]['origin'])),
         ('missing target', lambda r, c: r[tested]['targets'].pop()),
         ('empty text', lambda r, c: r[tested].update(text='')),

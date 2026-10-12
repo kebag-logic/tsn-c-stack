@@ -92,7 +92,7 @@ Target and state handling follow [Milan v1.2 5.6.3.1 and Table 5.51](https://avn
 | Core | Integrator supplies |
 |---|---|
 | [ADP](../include/adp.h) | Frame send; relative timer start/stop; link level; grandmaster/domain; entropy seed. Supply link and grandmaster change events. |
-| [ACMP](../include/acmp.h) | Frame send; monotonic milliseconds; per-interface absolute timer; grandmaster/domain; entropy; bound-talker admission. Environment ports supply lock owner and live source state, SRP requests, persist requests and changed notifications. |
+| [ACMP](../include/acmp.h) | Frame send; monotonic milliseconds; per-interface absolute timer; grandmaster/domain; entropy; bound-talker admission; sink-state publication. Environment ports supply lock owner and live source state, SRP requests, persist requests and changed notifications. |
 | [MAAP](../include/maap.h) | Frame send; relative timer start/stop; tentative or valid range publication; clock entropy. Supply operational link edges once per change. |
 
 Cancel or replace the previous timer when asked. Ignore obsolete expiries.
@@ -173,12 +173,43 @@ Every pointer is required. Both tables pass their `ctx` unchanged and obey the [
 | `ports->timer` | Replace the interface timer with one expiry at `deadline_ms`. With `armed=false`, cancel it. |
 | `ports->gptp` | Return the interface's current grandmaster identity and domain. |
 | `ports->seed` | Supply entropy for random TMR_DELAY draws. |
+| `ports->publish` | Publish a changed sink binding before new frames and first at entry completion; see the ordering contract below. |
 | `ports->admit` | Admit the bound talker's ENTITY_AVAILABLE and ENTITY_DEPARTING on the sink's interface, with one admission entry per sink. |
 
 The `ports->admit` callback receives the `interface`, `sink`, `bound` and `talker_entity_id` values.
 With `bound=false`, withdraw that sink's admission entry.
 The core calls it on bind, unbind and rebind. `acmp_open` also calls it for each restored binding.
 The core still filters the admitted frames itself.
+
+The `ports->publish` callback implements the **published before promised** contract.
+It receives `interface`, `sink`, `bound`, `started`, `stream_id` and `stream_moved`.
+The triple is the sink's bound level, started level and settled stream ID.
+Only `ACMP_SETTLED_NO_RSV` and `ACMP_SETTLED_RSV_OK` publish the accepted
+PROBE_TX_RESPONSE's stream ID; outside those states the published ID is zero.
+`stream_moved` is true exactly when that ID differs from its last published value;
+a bound or started change alone leaves it false. The core calls `ports->publish`
+only when the triple changes. The callback must apply the state
+synchronously before returning, without re-entry, so the datapath sees it before a promise leaves.
+
+The core calls `ports->publish` before each new frame is offered to `ports->send`
+or placed in the owed queue. It also publishes first in `finish`, before timers,
+admission, persistence and change notification. A queued frame was already preceded
+by publication when queued; `acmp_poll` retains the existing ordered retry path.
+BIND_RX promises bound and started state through STREAMING_WAIT, UNBIND_RX promises
+withdrawal, and GET_RX_STATE reports the published stream. `acmp_set_started`
+returns only after publication, so its caller must send a START_STREAMING or
+STOP_STREAMING response after that return. This ordering also holds when the
+entry sends no frame. The started/stopped semantics follow
+[Milan v1.2 5.3.8.7](https://avnu.org/resource/milan-specification/) and the commands
+[IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/).
+The local callback ordering makes these states visible before their responses.
+
+Initialization and `acmp_restore_binding` publish nothing. `acmp_open` publishes
+changed restored bindings after transport startup; repeated opens publish nothing
+when the triple is unchanged. Sink reset and rollback preserve the last published
+triple, so the next open or completed event can publish its withdrawal. Initialize
+the receiving publication storage to unbound, stopped and stream ID zero before
+opening: the zero triple is the initial cache value and is not sent redundantly.
 
 | Environment callback | Contract |
 |---|---|
@@ -238,6 +269,7 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
 | `timer`, `timer_deadline`, `timer_held` | Connection timer and absolute deadline. A held TMR_NO_RESP waits for its owed probe to leave. |
 | `adp_armed`, `adp_deadline` | Discovery timer state and its absolute millisecond deadline. It runs beside the connection timer. |
 | `admitted`, `admitted_talker` | Admission state last supplied to the ingress port for that sink. |
+| `published_bound`, `published_started`, `published_stream` | Last triple supplied to `ports->publish`, preserved across sink reset and rollback. |
 | `change_owed` | Owed frames whose acceptance releases this sink's pending change. |
 | `reported` | View last reported through `env->changed`. |
 | `saved` | Binding record last announced through `env->persist`. |
