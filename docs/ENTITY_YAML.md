@@ -132,18 +132,20 @@ The [round-trip checks](../examples/entity_roundtrip.c) run through all three co
 The hosted [GoogleTest cases](../tests/test_entity.cpp) and the [RV32 smoke image](../examples/rv32/smoke.c) call the same checks.
 Their oracles spell expected fields independently of the generated structs.
 ADP checks transmitted fields. ACMP restores bindings and checks interface admission.
-The freshness round trip checks the generated 15000 ms value, Listener input,
-destination validity and the exact freshness edge across clock wrap on both targets.
+The freshness round trip checks the generated 15000 ms value and one accepted
+probe opening the declaration gate on both targets. The hosted ACMP tests cover
+the individual predicate terms, exact window edge and clock wrap.
 MAAP checks probes, counts, preferred ranges, validity and withdrawal.
-The [mutation campaign](../tests/mutations.json) plants three named defects:
+The [mutation campaign](../tests/mutations.json) plants four configuration defects:
 
 | Plant | Changed configuration | Required catch |
 |---|---|---|
 | `entity-wrong-count` | AX7101 ADP source count becomes one. | `EntityYaml.AdpRoundTrip` |
 | `entity-swapped-interface` | Duplex sink interfaces are exchanged. | `EntityYaml.AcmpRoundTrip` |
 | `entity-dropped-field` | Talker MAAP preferred field is removed. C supplies zero. | `EntityYaml.MaapRoundTrip` |
+| `dafresh-generated-window` | Talker freshness interval becomes 15001 ms. | `EntityYaml.DaFreshRoundTrip` |
 
-All three plants still compile. Each must fail its named assertion in a completed run.
+All four plants still compile. Each must fail its named assertion in a completed run.
 The golden test also refuses each planted file as drift.
 
 The schema tests also register 13 mapper plants.

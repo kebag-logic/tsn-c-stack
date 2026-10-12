@@ -1012,7 +1012,7 @@ bool acmp_init(struct acmp *a, const struct acmp_config *cfg, const struct acmp_
 	       const struct acmp_env *env)
 {
 	if (cfg->n_interfaces == 0u || cfg->n_interfaces > ACMP_MAX_INTERFACES || cfg->n_sinks > ACMP_MAX_SINKS ||
-	    cfg->n_sources > ACMP_MAX_SOURCES) {
+	    cfg->n_sources > ACMP_MAX_SOURCES || cfg->da_fresh_ms >= UINT32_C(0x80000000)) {
 		return false;
 	}
 	for (unsigned k = 0; k < cfg->n_sinks; ++k) {

@@ -2361,6 +2361,37 @@ TEST_F(AcmpFresh, ConfiguredWindow) {
     EXPECT_TRUE(acmp_declaring(&a, 0)) << "the core uses the configured interval without a mirrored constant";
 }
 
+// REQ: ACMP-11
+TEST_F(AcmpFresh, ZeroWindow) {
+    cfg.da_fresh_ms = 0u;
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+    fk.now = 50000u;
+    answer();
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval disables probe demand even at answer acceptance";
+    fk.now += 15001u;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval cannot retain probe demand over time";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a zero interval still allows a registered Listener to declare";
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a zero interval closes again when the Listener withdraws";
+}
+
+// REQ: ACMP-11, PORT-01
+TEST_F(AcmpFresh, WindowRange) {
+    cfg.da_fresh_ms = UINT32_C(0x7fffffff);
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv))
+        << "the largest interval below the clock half range remains valid";
+    const auto before = a;
+    for (auto interval : {UINT32_C(0x80000000), UINT32_MAX}) {
+        cfg.da_fresh_ms = interval;
+        EXPECT_FALSE(acmp_init(&a, &cfg, &kPorts, &kEnv))
+            << "freshness intervals at or above the clock half range are refused";
+        EXPECT_EQ(std::memcmp(&a, &before, sizeof a), 0)
+            << "refusing a freshness interval leaves the instance unchanged";
+    }
+    EXPECT_TRUE(fk.calls.empty()) << "freshness interval validation calls no platform service";
+}
+
 // REQ: ACMP-11, ACMP-09
 TEST_F(AcmpFresh, DeferredAnswer) {
     fk.room = false;

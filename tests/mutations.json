@@ -576,8 +576,8 @@
   {
     "name": "acmp-init-too-many-sources",
     "path": "src/acmp.c",
-    "old": "cfg->n_sources > ACMP_MAX_SOURCES) {",
-    "new": "cfg->n_sources > ACMP_MAX_SOURCES + 1u) {",
+    "old": "cfg->n_sources > ACMP_MAX_SOURCES",
+    "new": "cfg->n_sources > ACMP_MAX_SOURCES + 1u",
     "kills": [
       {
         "test": "AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold",
@@ -5348,6 +5348,30 @@
     ]
   },
   {
+    "name": "x-zero-never-expires",
+    "path": "src/acmp.c",
+    "old": "s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms",
+    "new": "s->answered && a->cfg.da_fresh_ms != 0u && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms",
+    "kills": [
+      {
+        "test": "AcmpFresh.ZeroWindow",
+        "needle": "a zero interval disables probe demand even at answer acceptance"
+      }
+    ]
+  },
+  {
+    "name": "dafresh-half-range",
+    "path": "src/acmp.c",
+    "old": "cfg->da_fresh_ms >= UINT32_C(0x80000000)",
+    "new": "cfg->da_fresh_ms > UINT32_C(0x80000000)",
+    "kills": [
+      {
+        "test": "AcmpFresh.WindowRange",
+        "needle": "freshness intervals at or above the clock half range are refused"
+      }
+    ]
+  },
+  {
     "name": "dafresh-unanswered-clock",
     "path": "src/acmp.c",
     "old": "\tmemset(a, 0, sizeof *a);\n\ta->cfg = *cfg;",
@@ -5375,7 +5399,7 @@
     "name": "dafresh-inclusive-edge",
     "path": "src/acmp.c",
     "old": "(uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms",
-    "new": "(uint32_t)(now(a) - s->answered_at) > a->cfg.da_fresh_ms",
+    "new": "((uint32_t)(now(a) - s->answered_at) > a->cfg.da_fresh_ms || a->cfg.da_fresh_ms == 0u)",
     "kills": [
       {
         "test": "AcmpFresh.WindowEdge",
@@ -5435,7 +5459,7 @@
     "name": "dafresh-fixed-window",
     "path": "src/acmp.c",
     "old": "(uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms",
-    "new": "(uint32_t)(now(a) - s->answered_at) >= 15000u",
+    "new": "(uint32_t)(now(a) - s->answered_at) >= (a->cfg.da_fresh_ms == 0u ? 0u : 15000u)",
     "kills": [
       {
         "test": "AcmpFresh.ConfiguredWindow",
