@@ -1,0 +1,36 @@
+{
+ "base": 324,
+ "main": 330,
+ "port": 342,
+ "merge": 348,
+ "main_changed": [
+  "adp-short-frame-accepted",
+  "adp-unsupported-version-accepted",
+  "adp-wrong-control-length-accepted",
+  "entity-dropped-field",
+  "entity-swapped-interface",
+  "entity-wrong-count",
+  "own-discover-discarded"
+ ],
+ "port_changed": [
+  "acmp-publish-after-response",
+  "acmp-publish-after-timers",
+  "acmp-publish-bound-cache-stale",
+  "acmp-publish-ignores-started",
+  "acmp-publish-missing-finish",
+  "acmp-publish-reset-bound-cache",
+  "acmp-publish-reset-cache",
+  "acmp-publish-reset-started-cache",
+  "acmp-publish-reset-stream-cache",
+  "acmp-publish-started-cache-stale",
+  "acmp-publish-stream-cache-stale",
+  "acmp-publish-stream-moved-always",
+  "acmp-publish-stream-zero",
+  "acmp-publish-unchanged-triple",
+  "acmp-publish-unguarded",
+  "acmp-publish-wrong-interface",
+  "acmp-publish-wrong-sink",
+  "acmp-publish-wrong-started"
+ ],
+ "errors": []
+}

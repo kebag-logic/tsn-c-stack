@@ -1,0 +1,8 @@
+debug-g0 [-DCTRL_REENTRY_ASSERT -g0]: raw EQUAL 43c1af51bdbf0cad 43c1af51bdbf0cad 36176B
+debug [-DCTRL_REENTRY_ASSERT -g]: raw EQUAL 85ac74045fe82293 85ac74045fe82293 156812B
+release [-DCTRL_REENTRY_ASSERT -O3 -DNDEBUG]: raw EQUAL 5e2bacf24eeb2268 5e2bacf24eeb2268 30684B
+os [-DCTRL_REENTRY_ASSERT -Os]: raw EQUAL 825f6f3ed56f7ed9 825f6f3ed56f7ed9 21092B
+o2-noassert [-O2]: raw EQUAL 23c0d5e86b5622c3 23c0d5e86b5622c3 25776B
+os-g3 [-Os -g3]: raw EQUAL 4fef200d1f819644 4fef200d1f819644 336732B
+rc=0
+riscv64-elf-gcc (Arch Linux Repositories) 16.2.0

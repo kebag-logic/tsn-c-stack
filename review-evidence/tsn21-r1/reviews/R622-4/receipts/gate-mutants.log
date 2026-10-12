@@ -1,0 +1,10 @@
+REFUSED identity-compares-literal rc=1 :: RuntimeError: direct split-message ownership control failed: []
+REFUSED identity-drops-column rc=1 :: RuntimeError: direct separate assertions refused: ['published_future: assertion is shared with another cache field']
+REFUSED identity-drops-line-and-column rc=1 :: RuntimeError: direct separate assertions refused: ['published_future: assertion is shared with another cache field']
+REFUSED identity-drops-owner rc=1 :: RuntimeError: helper definition location or test ownership lost
+REFUSED identity-per-literal rc=1 :: RuntimeError: direct split-message ownership control failed: []
+REFUSED helper-owner-lost rc=1 :: RuntimeError: helper definition location or test ownership lost
+REFUSED ownership-check-disabled rc=1 :: RuntimeError: cache control accepted: future field reuses assertion
+REFUSED owners-never-recorded rc=1 :: RuntimeError: cache control accepted: future field reuses assertion
+{"mutants": 8, "not_refused": 0}
+rc=0

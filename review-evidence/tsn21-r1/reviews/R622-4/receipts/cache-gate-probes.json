@@ -1,0 +1,84 @@
+[
+ {
+  "probe": "P1 split literals on one direct assertion",
+  "errors": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "expected": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "ok": true
+ },
+ {
+  "probe": "P2 split literals on one assertion inside a lambda",
+  "errors": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "expected": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "ok": true
+ },
+ {
+  "probe": "P3 one literal holding both needles",
+  "errors": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "expected": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "ok": true
+ },
+ {
+  "probe": "P4 split literals in a helper called by the owning test",
+  "errors": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "expected": [
+   "published_future: assertion is shared with another cache field"
+  ],
+  "ok": true
+ },
+ {
+  "probe": "P5 separate assertions on the same line",
+  "errors": [],
+  "expected": "no errors (accepted)",
+  "ok": true
+ },
+ {
+  "probe": "P6 separate assertion in its own helper",
+  "errors": [],
+  "expected": "no errors (accepted)",
+  "ok": true
+ },
+ {
+  "probe": "P7 future needle not unique in test",
+  "errors": [
+   "probe-future: needle must identify exactly one assertion message literal in AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+  ],
+  "expected": "needle-uniqueness refusal",
+  "ok": true
+ },
+ {
+  "probe": "P8 future sorts before existing fields, shared",
+  "errors": [
+   "published_bound: assertion is shared with another cache field"
+  ],
+  "expected": "exactly one shared-assertion error (either field named)",
+  "ok": true
+ },
+ {
+  "probe": "P9 future field with no assertion at all",
+  "errors": [
+   "probe-future: needle must identify exactly one assertion message literal in AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal"
+  ],
+  "expected": "needle-uniqueness refusal",
+  "ok": true
+ },
+ {
+  "probe": "P10 one helper assertion owned by two different tests (ruled identity includes owner)",
+  "errors": [],
+  "expected": "no errors (accepted)",
+  "ok": true
+ }
+]

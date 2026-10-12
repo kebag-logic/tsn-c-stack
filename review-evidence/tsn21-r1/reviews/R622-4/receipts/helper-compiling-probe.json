@@ -1,0 +1,39 @@
+{
+ "gate": {
+  "rc": 1,
+  "tail": [
+   "published_future: assertion is shared with another cache field"
+  ]
+ },
+ "gate-optimized": {
+  "rc": 1,
+  "tail": [
+   "published_future: assertion is shared with another cache field"
+  ]
+ },
+ "needles": {
+  "rc": 0,
+  "tail": [
+   "needles: zero unspecific killers; no inherited exceptions"
+  ]
+ },
+ "mutation": {
+  "rc": 0,
+  "tail": [
+   "CAUGHT acmp-publish-reset-stream-cache",
+   "CAUGHT acmp-publish-reset-cache",
+   "CAUGHT acmp-publish-reset-bound-cache",
+   "CAUGHT acmp-publish-reset-future-cache",
+   "CAUGHT acmp-publish-reset-started-cache",
+   "{\"CAUGHT\": 5, \"ESCAPED\": 0, \"ERROR\": 0}"
+  ]
+ },
+ "plants": {
+  "acmp-publish-reset-cache": "CAUGHT",
+  "acmp-publish-reset-stream-cache": "CAUGHT",
+  "acmp-publish-reset-bound-cache": "CAUGHT",
+  "acmp-publish-reset-started-cache": "CAUGHT",
+  "acmp-publish-reset-future-cache": "CAUGHT"
+ },
+ "expected_outcome": true
+}

@@ -1,0 +1,9 @@
+[ 86%] Built target maap_debug
+[ 93%] Built target entity_tests
+[100%] Built target port_tests
+registration: 8 binaries; 401 instances
+test sensitivity: 127 declarations, 348 plants
+test_inventory --write rc=0
+entity_yaml --examples rc=0
+tracked changes after regeneration: 0
+traceability --write rc=0 (rerun; tracked changes after: 0)

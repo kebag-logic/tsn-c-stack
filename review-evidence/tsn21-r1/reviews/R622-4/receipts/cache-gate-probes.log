@@ -1,0 +1,13 @@
+PASS P0 head accepted -> []
+PASS P1 split literals on one direct assertion -> ['published_future: assertion is shared with another cache field']
+PASS P2 split literals on one assertion inside a lambda -> ['published_future: assertion is shared with another cache field']
+PASS P3 one literal holding both needles -> ['published_future: assertion is shared with another cache field']
+PASS P4 split literals in a helper called by the owning test -> ['published_future: assertion is shared with another cache field']
+PASS P5 separate assertions on the same line -> []
+PASS P6 separate assertion in its own helper -> []
+PASS P7 future needle not unique in test -> ['probe-future: needle must identify exactly one assertion message literal in AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal']
+PASS P8 future sorts before existing fields, shared -> ['published_bound: assertion is shared with another cache field']
+PASS P9 future field with no assertion at all -> ['probe-future: needle must identify exactly one assertion message literal in AcmpCore.A31StoreResetOfABoundStoppedSinkPublishesItsWithdrawal']
+PASS P10 one helper assertion owned by two different tests (ruled identity includes owner) -> []
+probes: 11 unexpected: 0
+rc=0

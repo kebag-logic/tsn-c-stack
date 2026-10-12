@@ -1,0 +1,80 @@
+== hosted quality port
+[command]/usr/bin/git checkout --progress --force 405dc68310a18f669049ffc10cc23eef7300dcff
+Setting up clang-tidy (1:18.0-59~exp2) ...
+boundary: rc 0
+needles: rc 0
+assertion-templates: rc 0
+dependencies: rc 0
+comments: rc 0
+conditionals: rc 0
+port-contracts: rc 0
+acmp-cache: rc 0
+registration-controls: rc 0
+license: rc 0
+traceability: rc 0
+test-inventory: rc 0
+coverage-controls: rc 0
+privacy-selftest: rc 0
+privacy: rc 0
+gcc-configure: rc 0
+clang-sanitizers-configure: rc 0
+gcc-build: rc 0
+gcc-test: rc 0
+coverage: rc 0
+clang-sanitizers-build: rc 0
+clang-sanitizers-test: rc 0
+mutation: rc 0
+static-analysis: rc 0
+mutation-controls: rc 0
+graphs: rc 0
+== hosted quality integ
+[command]/usr/bin/git checkout --progress --force 3c9ca52fc44b4a37e11149392363686f0ea426e0
+Setting up clang-tidy (1:18.0-59~exp2) ...
+entity-golden: rc 0
+entity-controls: rc 0
+boundary: rc 0
+needles: rc 0
+assertion-templates: rc 0
+dependencies: rc 0
+comments: rc 0
+conditionals: rc 0
+port-contracts: rc 0
+acmp-cache: rc 0
+registration-controls: rc 0
+license: rc 0
+traceability: rc 0
+test-inventory: rc 0
+coverage-controls: rc 0
+privacy-selftest: rc 0
+privacy: rc 0
+gcc-configure: rc 0
+clang-sanitizers-configure: rc 0
+gcc-build: rc 0
+gcc-test: rc 0
+coverage: rc 0
+clang-sanitizers-build: rc 0
+clang-sanitizers-test: rc 0
+static-analysis: rc 0
+mutation: rc 0
+mutation-controls: rc 0
+graphs: rc 0
+== hosted port-rv32
+[command]/usr/bin/git checkout --progress --force 405dc68310a18f669049ffc10cc23eef7300dcff
+bare-metal	Validate the freestanding cores	﻿2026-10-12T01:49:29.5160734Z ##[group]Run python3 scripts/baremetal.py --work build-rv32 --jobs 16
+^[[36;1mpython3 scripts/baremetal.py --work build-rv32 --jobs 16^[[0m
+    "configuration": "Debug",
+    "rc": 0,
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+    "configuration": "Release",
+    "rc": 0,
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds"
+== hosted integ-rv32
+[command]/usr/bin/git checkout --progress --force 3c9ca52fc44b4a37e11149392363686f0ea426e0
+bare-metal	Validate the freestanding cores	﻿2026-10-12T01:49:06.3333888Z ##[group]Run python3 scripts/baremetal.py --work build-rv32 --jobs 16
+^[[36;1mpython3 scripts/baremetal.py --work build-rv32 --jobs 16^[[0m
+    "configuration": "Debug",
+    "rc": 0,
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips"
+    "configuration": "Release",
+    "rc": 0,
+    "smoke": "ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips"
