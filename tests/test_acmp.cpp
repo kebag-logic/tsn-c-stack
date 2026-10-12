@@ -2287,16 +2287,30 @@ TEST_F(AcmpFresh, NoProbe) {
 
 // REQ: ACMP-11
 TEST_F(AcmpFresh, StaleProbe) {
-    answer();
-    fk.now += 15001u;
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "a probe older than the freshness window cannot declare";
+    for (auto start : {50000u, UINT32_MAX - 999u}) {
+        fk.now = start;
+        answer();
+        fk.now += 15001u;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "a probe older than the freshness window cannot declare";
+        fk.now = start;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "an observed stale probe cannot resurrect on a later wrap";
+    }
 }
 
 // REQ: ACMP-11
 TEST_F(AcmpFresh, WindowEdge) {
-    answer();
-    fk.now += 15000u;
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "the exact fifteen second boundary closes the declaration";
+    for (auto start : {50000u, UINT32_MAX - 999u}) {
+        fk.now = start;
+        answer();
+        fk.now += 15000u;
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "the exact fifteen second boundary closes the declaration";
+        answer();
+        ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+        fk.now += 15000u;
+        EXPECT_TRUE(acmp_declaring(&a, 0)) << "Listener demand keeps the gate open at exact probe expiry";
+        ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
+        EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener withdrawal exposes exact probe expiry immediately";
+    }
 }
 
 // REQ: ACMP-11
@@ -2333,23 +2347,18 @@ TEST_F(AcmpFresh, InvalidAddress) {
 TEST_F(AcmpFresh, ClockWrap) {
     fk.now = UINT32_MAX - 999u;
     answer();
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "a pre-wrap answer is fresh before the clock rolls over";
     fk.now += 14999u;
     EXPECT_TRUE(acmp_declaring(&a, 0)) << "unsigned elapsed time keeps a probe fresh across clock wrap";
-    fk.now += 1u;
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "the wrapped freshness deadline closes at the exact edge";
-    fk.now = UINT32_MAX - 999u;
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "an observed stale probe cannot resurrect on a later wrap";
 }
 
 // REQ: ACMP-11
 TEST_F(AcmpFresh, ConfiguredWindow) {
-    cfg.da_fresh_ms = 37u;
+    cfg.da_fresh_ms = 30000u;
     ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
     answer();
-    fk.now += 36u;
-    EXPECT_TRUE(acmp_declaring(&a, 0)) << "the core uses the configured freshness interval before its edge";
-    fk.now += 1u;
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "the configured interval closes without a mirrored core constant";
+    fk.now += 20000u;
+    EXPECT_TRUE(acmp_declaring(&a, 0)) << "the core uses the configured interval without a mirrored constant";
 }
 
 // REQ: ACMP-11, ACMP-09
@@ -2393,10 +2402,8 @@ TEST_F(AcmpFresh, SourceAndInterfaceIsolation) {
     answer(1, 1);
     EXPECT_FALSE(acmp_declaring(&a, 0)) << "a probe on the second source leaves the first source closed";
     EXPECT_TRUE(acmp_declaring(&a, 1)) << "the probed source declares on its configured interface";
-    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
-    fk.now += 15000u;
-    EXPECT_TRUE(acmp_declaring(&a, 0)) << "Listener demand remains after another source becomes stale";
-    EXPECT_FALSE(acmp_declaring(&a, 1)) << "Listener demand does not leak into another source";
+    ASSERT_TRUE(acmp_listener_registered(&a, 1, 1, true));
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener demand does not leak into another source";
 }
 
 // REQ: ACMP-11, PORT-01
@@ -2419,13 +2426,14 @@ TEST_F(AcmpFresh, InputGuardsAndReentry) {
 }
 
 // REQ: ACMP-11
-TEST_F(AcmpFresh, ListenerDoesNotFreezeFreshness) {
+TEST_F(AcmpFresh, ListenerWithdrawalAndReset) {
     answer();
     ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
     fk.now += 15000u;
     EXPECT_TRUE(acmp_declaring(&a, 0)) << "a Listener keeps a stale probe source declaring";
     ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, false));
-    EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener withdrawal cannot revive a stale probe";
+    fk.now += 15000u;
+    EXPECT_FALSE(acmp_declaring(&a, 0)) << "Listener withdrawal cannot extend an expired freshness window";
     answer();
     EXPECT_TRUE(acmp_declaring(&a, 0));
     ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));

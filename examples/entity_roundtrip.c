@@ -244,13 +244,13 @@ int entity_check_dafresh(void)
     p.delay = UINT32_MAX - 999u;
     acmp_rx(&core, 0, frame, sizeof frame);
     CHECK(acmp_declaring(&core, 0), 85);
-    p.valid = false;
-    CHECK(!acmp_declaring(&core, 0), 86);
-    p.valid = true;
     p.delay += 14999u;
     CHECK(acmp_declaring(&core, 0), 87);
     p.delay += 1u;
     CHECK(!acmp_declaring(&core, 0), 88);
+    p.valid = false;
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(!acmp_declaring(&core, 0), 86);
     return 0;
 }
 

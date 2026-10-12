@@ -88,6 +88,20 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029) | acmp-available-reads-the-clock-twice; acmp-departing-samples-the-grandmaster; acmp-aging-samples-the-grandmaster | PORT-01 |
 | [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L786) | acmp-kind-lost; acmp-kind-any-state | ACMP-04, MFSRP-01 |
 | [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010) | acmp-expiry-reads-the-clock-twice; acmp-second-no-resp-samples-the-grandmaster; acmp-retry-samples-the-grandmaster; acmp-delay-reads-the-clock-again; acmp-no-tk-samples-the-grandmaster | PORT-01 |
+| [AcmpFresh.ClockWrap](../tests/test_acmp.cpp#L2347) | dafresh-absolute-clock | ACMP-11 |
+| [AcmpFresh.ConfiguredWindow](../tests/test_acmp.cpp#L2356) | dafresh-fixed-window | ACMP-11 |
+| [AcmpFresh.DeferredAnswer](../tests/test_acmp.cpp#L2365) | dafresh-refused-answer | ACMP-11, ACMP-09 |
+| [AcmpFresh.FailedAllocationAnswer](../tests/test_acmp.cpp#L2380) | dafresh-only-success | ACMP-11, ACMP-08 |
+| [AcmpFresh.InputGuardsAndReentry](../tests/test_acmp.cpp#L2410) | dafresh-wrong-interface | ACMP-11, PORT-01 |
+| [AcmpFresh.InvalidAddress](../tests/test_acmp.cpp#L2337) | dafresh-ignore-address | ACMP-11 |
+| [AcmpFresh.ListenerWithdrawalAndReset](../tests/test_acmp.cpp#L2429) | dafresh-reset-retains-demand | ACMP-11 |
+| [AcmpFresh.ListenerWithoutProbe](../tests/test_acmp.cpp#L2329) | dafresh-listener-needs-probe | ACMP-11 |
+| [AcmpFresh.NoProbe](../tests/test_acmp.cpp#L2283) | dafresh-unanswered-clock | ACMP-11 |
+| [AcmpFresh.OtherRepliesDoNotRefresh](../tests/test_acmp.cpp#L2388) | dafresh-state-reply-demand | ACMP-11, ACMP-08 |
+| [AcmpFresh.SourceAndInterfaceIsolation](../tests/test_acmp.cpp#L2401) | dafresh-wrong-source | ACMP-11 |
+| [AcmpFresh.StaleProbe](../tests/test_acmp.cpp#L2289) | dafresh-expiry-equality | ACMP-11 |
+| [AcmpFresh.WindowEdge](../tests/test_acmp.cpp#L2301) | dafresh-inclusive-edge | ACMP-11 |
+| [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2317) | dafresh-no-renewal | ACMP-11 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
 | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
 | [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
@@ -116,7 +130,8 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
 | [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface | ENTITY-01, ACMP-01, ACMP-07, ACMP-10 |
 | [EntityYaml.AdpRoundTrip](../tests/test_entity.cpp#L12) | entity-wrong-count | ENTITY-01, ADP-01 |
-| [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L24) | entity-dropped-field | ENTITY-01, MAAP-02 |
+| [EntityYaml.DaFreshRoundTrip](../tests/test_entity.cpp#L24) | dafresh-generated-window | ENTITY-01, ACMP-11 |
+| [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L30) | entity-dropped-field | ENTITY-01, MAAP-02 |
 | [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) | departing-keeps-index | PORT-01 |
 | [MaapCell.TableB7](../tests/test_maap.cpp#L139) | maap-table-b7-0; maap-table-b7-1; maap-table-b7-2; maap-table-b7-3; maap-table-b7-4; maap-table-b7-5; maap-table-b7-6; maap-table-b7-7; maap-table-b7-8; maap-table-b7-9; maap-table-b7-10; maap-table-b7-11; maap-table-b7-12; maap-table-b7-13; maap-table-b7-14; maap-table-b7-15; maap-table-b7-16; maap-table-b7-17; maap-generic-initial-handles-conflict; maap-generic-probe-state-defends; maap-generic-probe-defend-uses-priority | MAAP-03, MFMAAP-01 |
 | [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318) | maap-begin-down-forgets-range | MAAP-02 |
