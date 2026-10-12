@@ -1,0 +1,12 @@
+[
+  {
+    "case": "base",
+    "rc": 1,
+    "first_error": "/usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/bits/stl_iterator.h:1337:19: error: member access into incomplete type 'const __normal_iterator<const char *, basic_string<char>>'"
+  },
+  {
+    "case": "head",
+    "rc": 1,
+    "first_error": "/usr/lib64/gcc/x86_64-pc-linux-gnu/16/../../../../include/c++/16/bits/stl_iterator.h:1337:19: error: member access into incomplete type 'const __normal_iterator<const char *, basic_string<char>>'"
+  }
+]

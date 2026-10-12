@@ -1,0 +1,26 @@
+[
+  {
+    "name": "exact-head",
+    "rc": 0,
+    "expected_rc": 0,
+    "pass": true
+  },
+  {
+    "name": "omit-pre-send-publication",
+    "rc": 1,
+    "expected_rc": 1,
+    "pass": true
+  },
+  {
+    "name": "publish-after-timer",
+    "rc": 1,
+    "expected_rc": 1,
+    "pass": true
+  },
+  {
+    "name": "publish-after-admission",
+    "rc": 1,
+    "expected_rc": 1,
+    "pass": true
+  }
+]

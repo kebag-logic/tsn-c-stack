@@ -1,0 +1,39 @@
+['gcc', '-std=c11', '-Wall', '-Wextra', '-Werror', '-DNDEBUG', '-DCTRL_REENTRY_ASSERT', '-I$REVIEWS/r623-1-tsn21/include', '-c', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/publish-after-admission/acmp.c', '-o', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/publish-after-admission/acmp.o']
+['g++', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/publish-after-admission/acmp.o', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.o', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/main.o', '-I$VALIDATION_TOOLS/gtest-1.14.0/include', '-DGTEST_HAS_PTHREAD=1', '-L$VALIDATION_TOOLS/gtest-1.14.0/lib', '-lgmock', '-lgtest', '-o', '$REVIEWS/tsn21-r623-1-packet/scratch/probes/publish-after-admission/test']
+['$REVIEWS/tsn21-r623-1-packet/scratch/probes/publish-after-admission/test', '--gtest_filter=AcmpCore.R623*', '--gtest_output=xml:$REVIEWS/tsn21-r623-1-packet/receipts/probes/publish-after-admission.xml']
+Note: Google Test filter = AcmpCore.R623*
+[==========] Running 3 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 3 tests from AcmpCore
+[ RUN      ] AcmpCore.R623PublicationPrecedesBlockedSendAndQueue
+[       OK ] AcmpCore.R623PublicationPrecedesBlockedSendAndQueue (0 ms)
+[ RUN      ] AcmpCore.R623CompletionPublicationPrecedesOtherCallbacks
+$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2231: Failure
+Expected: (fk.pubs[0].before) <= (static_cast<std::size_t>(fk.position(Call::TIMER))), actual: 3 vs 2
+R623 settlement publication precedes timer callback
+
+[  FAILED  ] AcmpCore.R623CompletionPublicationPrecedesOtherCallbacks (0 ms)
+[ RUN      ] AcmpCore.R623AllRestoredSinksPublishBeforeAdmission
+$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261: Failure
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+
+$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261: Failure
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+
+$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261: Failure
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+
+[  FAILED  ] AcmpCore.R623AllRestoredSinksPublishBeforeAdmission (0 ms)
+[----------] 3 tests from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 1 test.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] AcmpCore.R623CompletionPublicationPrecedesOtherCallbacks
+[  FAILED  ] AcmpCore.R623AllRestoredSinksPublishBeforeAdmission
+
+ 2 FAILED TESTS

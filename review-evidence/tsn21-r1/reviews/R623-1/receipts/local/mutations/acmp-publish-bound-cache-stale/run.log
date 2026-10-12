@@ -1,0 +1,27 @@
+Note: Google Test filter = AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AcmpCore
+[ RUN      ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt
+$REVIEWS/tsn21-r623-1-packet/scratch/mutations/baseline/tests/test_acmp.cpp:2054: Failure
+Expected equality of these values:
+  fk.pubs.size()
+    Which is: 3
+  1u
+    Which is: 1
+
+TSN_MESSAGE_BEGIN_12a48ecf65fb00e465b018e0590d1865
+A31 a BIND_RX publishes the sink's binding once
+TSN_MESSAGE_END_1afede495914284143910f828f3caa1c
+
+
+[  FAILED  ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt (0 ms)
+[----------] 1 test from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt
+
+ 1 FAILED TEST

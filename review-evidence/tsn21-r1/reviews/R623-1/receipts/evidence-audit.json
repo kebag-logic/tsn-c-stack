@@ -1,0 +1,35 @@
+{
+  "head": "2dcbe91ead981591d5bfb652f6616f6edb325875",
+  "hosted_run": 38186240742,
+  "artifact_digests_verified": true,
+  "executed_jobs": [
+    {
+      "id": 114609055817,
+      "name": "quality",
+      "conclusion": "success"
+    },
+    {
+      "id": 114609056067,
+      "name": "bare-metal",
+      "conclusion": "success"
+    }
+  ],
+  "skipped_job_steps": 0,
+  "passed_gate_commands": 25,
+  "campaigns": [
+    {
+      "source": "hosted",
+      "plants": 338,
+      "named_assertions_regraded": true,
+      "test_instances": 477,
+      "skips": 0
+    },
+    {
+      "source": "reviewer",
+      "plants": 14,
+      "named_assertions_regraded": true,
+      "test_instances": 14,
+      "skips": 0
+    }
+  ]
+}

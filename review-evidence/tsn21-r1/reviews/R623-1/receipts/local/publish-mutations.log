@@ -1,0 +1,16 @@
+COMMAND ['python3', 'scripts/mutation.py', '--work', '$REVIEWS/tsn21-r623-1-packet/scratch/mutations', '--jobs', '6', '--select', 'acmp-publish']
+CAUGHT acmp-publish-missing-finish
+CAUGHT acmp-publish-after-response
+CAUGHT acmp-publish-unguarded
+CAUGHT acmp-publish-ignores-started
+CAUGHT acmp-publish-unchanged-triple
+CAUGHT acmp-publish-reset-cache
+CAUGHT acmp-publish-bound-cache-stale
+CAUGHT acmp-publish-wrong-started
+CAUGHT acmp-publish-stream-moved-always
+CAUGHT acmp-publish-wrong-sink
+CAUGHT acmp-publish-stream-zero
+CAUGHT acmp-publish-wrong-interface
+CAUGHT acmp-publish-stream-cache-stale
+CAUGHT acmp-publish-started-cache-stale
+{"CAUGHT": 14, "ESCAPED": 0, "ERROR": 0}

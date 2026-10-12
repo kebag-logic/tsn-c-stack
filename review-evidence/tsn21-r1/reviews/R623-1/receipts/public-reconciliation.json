@@ -1,0 +1,47 @@
+{
+  "checked_utc": "2026-10-12T00:14:46.414021+00:00",
+  "independent_verdict_sha256": "7d77fe111d47ced053f0718123c0489ac3318c955efcfd7301b50abdaa2ddfd9",
+  "submitted_reviews": 0,
+  "inline_comments": 0,
+  "pr_issue_comments": [
+    {
+      "id": 6115360650,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/pull/22#issuecomment-6115360650",
+      "body": "[A10] INDEPENDENT REVIEW STARTED: R622-1\n\nR622 (internal reviewer) reconstructs issue #21 / PR #22 at exact head `2dcbe91ead981591d5bfb652f6616f6edb325875`, tree `977d677410f6d44f4b54301a10273f41600c3edc`, in a cleared context from public scope, requirements, diff and evidence, applying all five lenses with a reviewer-owned ledger. Owner decision 2026-09-23: while the previously assigned internal review system is at its usage limit, the internal role runs as a separate cleared-context independent session with its own clone; the two reviews stay independent. No source edits or merge while this review runs; merge still requires two independent positive reviews and the full completion bar.\n"
+    },
+    {
+      "id": 6115374191,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/pull/22#issuecomment-6115374191",
+      "body": "[A10] INDEPENDENT REVIEW STARTED: R623-1\n\nR623 (external reviewer) reconstructs issue #21 / PR #22 at exact head `2dcbe91ead981591d5bfb652f6616f6edb325875`, tree `977d677410f6d44f4b54301a10273f41600c3edc`, in a cleared context from public scope, requirements, diff and evidence, applying all five lenses with a reviewer-owned ledger. No source edits or merge while this review runs; merge still requires two independent positive reviews and the full completion bar.\n"
+    }
+  ],
+  "issue21_comments": [
+    {
+      "id": 6115109360,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115109360",
+      "body": "[A10] **Assignment.** Executor [A602], reviewers [R622] (internal) and [R623] (external). Branch `acmp-publish-port` from `1a9f651c`.\n\nDo the acceptance above exactly. Port only the ACMP core hunks and their tests from milan-fpga dev `09c7231e`; do not take the adapter (`acmp_mbx.*`) or the mutation scripts, which stay in milan-fpga. Prove item 2 with a byte diff of `src/acmp.c` and `include/acmp.h` against milan-fpga's copies at `09c7231e`, and show that every residual difference already existed at `1a9f651c`. STOP if the port needs any other core file, or if any change of behaviour beyond F-INT's is needed.\n\nPost TAKEN, then REVIEW READY (or STOP) with the head.\n"
+    },
+    {
+      "id": 6115119208,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115119208",
+      "body": "[A602] TAKEN"
+    },
+    {
+      "id": 6115175677,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115175677",
+      "body": "[A602] STOP \u2014 acmp-publish-port @ 1a9f651cdf7846b8e10ac246a6ef6916960fbb92. New F-INT prose in acmp.c/acmp.h fails the mandatory comment gate; removing it creates byte differences absent at the baseline and violates acceptance 2. Branch unchanged; no implementation commit. Baseline hosted validation also fails the Clang 18 sanitizer build against the host C++ headers; RV32 Debug/Release pass.\n"
+    },
+    {
+      "id": 6115181911,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115181911",
+      "body": "[A10] **Ruling on the STOP** ([6115175677](https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115175677)). Acceptance item 2 asked for byte identity, which is stricter than milan-fpga #697 needs. That lane pins cores that are **token-identical**, and its firmware images are byte-identical. Item 2 is amended:\n\n- `src/acmp.c` and `include/acmp.h` are token-identical to milan-fpga dev `09c7231e`'s copies once comments are removed, except for layout differences that already existed at `1a9f651c`. The comparison strips comments the way milan-fpga #697's pin check does.\n- Comments follow this repository's comment and assertion contract. Rewrite F-INT's prose until the comment gate passes, keeping its meaning: the port, its call order, and the \"published before promised\" contract.\n- Build both copies' objects for RV32 freestanding with the same flags and show they are equal, or name every difference and its cause.\n- **The sanitizer leg.** The local Clang 18 sanitizer build already fails at `1a9f651c` against this host's C++ headers, which is a host limit. Record it in HANDOFF.md. The hosted CI's sanitizer job on the PR is the judge for that leg; the manager reads it after the push.\n\nResume from the same branch. Post REVIEW READY (or STOP) with the head.\n"
+    },
+    {
+      "id": 6115338952,
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/21#issuecomment-6115338952",
+      "body": "[A602] REVIEW READY \u2014 `acmp-publish-port` @ `2dcbe91ead981591d5bfb652f6616f6edb325875`, parent `1a9f651cdf7846b8e10ac246a6ef6916960fbb92`.\n\nThe two ACMP core files match the reference's non-comment tokens; same-flag RV32 objects are byte-identical. All six publication cases are ported, all 338 mutation plants are caught, and RV32 Debug/Release pass. All available branch gates return 0 except the sanitizer build, which reproduces the accepted baseline host-header failure; hosted CI remains the judge under the amendment. HANDOFF.md includes the complete byte diff, residual ledger, test defects and gate table. PR-BODY.md says Relates to #21 because hosted CI, main integration, two reviews and merge remain pending. Branch is clean; no push or PR was made.\n"
+    }
+  ],
+  "prior_findings": [],
+  "disposition": "No prior public findings to resolve or retain"
+}

@@ -1,0 +1,1 @@
+['/usr/bin/riscv64-elf-gcc', '-std=c11', '-march=rv32i', '-mabi=ilp32', '-ffreestanding', '-fno-builtin', '-nostdinc', '-isystem', '/usr/lib/gcc/riscv64-elf/16.2.0/include', '-I$REVIEWS/r623-1-tsn21/examples/rv32/include', '-Wall', '-Wextra', '-Werror', '-g0', '-frandom-seed=0', '-DCTRL_REENTRY_ASSERT', '-O0', '-c', 'acmp.c', '-o', 'O0-debug.o']

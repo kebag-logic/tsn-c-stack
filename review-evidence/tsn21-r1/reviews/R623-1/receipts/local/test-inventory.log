@@ -1,0 +1,17 @@
+COMMAND ['python3', 'scripts/test_inventory.py', '--build', '$REVIEWS/tsn21-r623-1-packet/scratch/gcc', '--jobs', '1']
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: $REVIEWS/tsn21-r623-1-packet/scratch/gcc
+[ 11%] Built target tsn
+[ 23%] Built target tsn_test
+[ 32%] Built target adp_tests
+[ 41%] Built target acmp_tests
+[ 50%] Built target maap_tests
+[ 55%] Built target example_port
+[ 64%] Built target port_tests
+[ 73%] Built target adp_release
+[ 82%] Built target tsn_debug
+[ 91%] Built target adp_debug
+[100%] Built target maap_debug
+registration: 7 binaries; 378 instances
+test sensitivity: 117 declarations, 338 plants

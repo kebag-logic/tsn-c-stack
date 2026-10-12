@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="3" failures="2" disabled="0" errors="0" time="0." timestamp="2026-10-12T02:08:14.615" name="AllTests">
+  <testsuite name="AcmpCore" tests="3" failures="2" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T02:08:14.615">
+    <testcase name="R623PublicationPrecedesBlockedSendAndQueue" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2205" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.615" classname="AcmpCore" />
+    <testcase name="R623CompletionPublicationPrecedesOtherCallbacks" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2225" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.615" classname="AcmpCore">
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2231&#x0A;Expected: (fk.pubs[0].before) &lt;= (static_cast&lt;std::size_t&gt;(fk.position(Call::TIMER))), actual: 3 vs 2&#x0A;R623 settlement publication precedes timer callback&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2231
+Expected: (fk.pubs[0].before) <= (static_cast<std::size_t>(fk.position(Call::TIMER))), actual: 3 vs 2
+R623 settlement publication precedes timer callback
+]]></failure>
+    </testcase>
+    <testcase name="R623AllRestoredSinksPublishBeforeAdmission" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2247" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.615" classname="AcmpCore">
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261&#x0A;Expected: (fk.pubs[k].before) &lt;= (static_cast&lt;std::size_t&gt;(fk.position(Call::ADMIT))), actual: 3 vs 0&#x0A;R623 all restored publications precede admission&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+]]></failure>
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261&#x0A;Expected: (fk.pubs[k].before) &lt;= (static_cast&lt;std::size_t&gt;(fk.position(Call::ADMIT))), actual: 3 vs 0&#x0A;R623 all restored publications precede admission&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+]]></failure>
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261&#x0A;Expected: (fk.pubs[k].before) &lt;= (static_cast&lt;std::size_t&gt;(fk.position(Call::ADMIT))), actual: 3 vs 0&#x0A;R623 all restored publications precede admission&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2261
+Expected: (fk.pubs[k].before) <= (static_cast<std::size_t>(fk.position(Call::ADMIT))), actual: 3 vs 0
+R623 all restored publications precede admission
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

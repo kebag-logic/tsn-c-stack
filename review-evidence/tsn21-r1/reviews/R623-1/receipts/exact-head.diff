@@ -1,0 +1,860 @@
+diff --git a/docs/ARCHITECTURE.md b/docs/ARCHITECTURE.md
+index cd26290..b54df1c 100644
+--- a/docs/ARCHITECTURE.md
++++ b/docs/ARCHITECTURE.md
+@@ -52,6 +52,11 @@ sequenceDiagram
+ ADP guards port calls across instances. ACMP and MAAP guard each active instance.
+ These guards detect integration errors. They are not locks.
+ There is one dispatch context. Interrupts queue events for that context.
++ACMP publishes each changed sink binding through its required `publish` port before
++new frame transmission and first at completion, before timers, admission, persistence
++and notification. Publication includes bound, started and settled stream ID; its
++cache survives sink reset. This [published before promised contract](PORTING.md#acmp-callbacks-and-public-fields)
++lets the datapath apply the state before a response promises it.
+ ACMP deadlines use unsigned millisecond clocks and signed wrap comparisons.
+ ADP and MAAP request relative delays. The adapter owns expiry cancellation.
+ 
+diff --git a/docs/PORTING.md b/docs/PORTING.md
+index 79b49fd..d8641eb 100644
+--- a/docs/PORTING.md
++++ b/docs/PORTING.md
+@@ -86,7 +86,7 @@ and [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/).
+ | Core | Integrator supplies |
+ |---|---|
+ | [ADP](../include/adp.h) | Frame send; relative timer start/stop; link level; grandmaster/domain; entropy seed. Supply link and grandmaster change events. |
+-| [ACMP](../include/acmp.h) | Frame send; monotonic milliseconds; per-interface absolute timer; grandmaster/domain; entropy; bound-talker admission. Environment ports supply lock owner and live source state, SRP requests, persist requests and changed notifications. |
++| [ACMP](../include/acmp.h) | Frame send; monotonic milliseconds; per-interface absolute timer; grandmaster/domain; entropy; bound-talker admission; sink-state publication. Environment ports supply lock owner and live source state, SRP requests, persist requests and changed notifications. |
+ | [MAAP](../include/maap.h) | Frame send; relative timer start/stop; tentative or valid range publication; clock entropy. Supply operational link edges once per change. |
+ 
+ Cancel or replace the previous timer when asked. Ignore obsolete expiries.
+@@ -167,6 +167,7 @@ Every pointer is required. Both tables pass their `ctx` unchanged and obey the [
+ | `ports->timer` | Replace the interface timer with one expiry at `deadline_ms`. With `armed=false`, cancel it. |
+ | `ports->gptp` | Return the interface's current grandmaster identity and domain. |
+ | `ports->seed` | Supply entropy for random TMR_DELAY draws. |
++| `ports->publish` | Publish a changed sink binding before new frames and first at entry completion; see the ordering contract below. |
+ | `ports->admit` | Admit the bound talker's ENTITY_AVAILABLE and ENTITY_DEPARTING on the sink's interface, with one admission entry per sink. |
+ 
+ The `ports->admit` callback receives the `interface`, `sink`, `bound` and `talker_entity_id` values.
+@@ -174,6 +175,36 @@ With `bound=false`, withdraw that sink's admission entry.
+ The core calls it on bind, unbind and rebind. `acmp_open` also calls it for each restored binding.
+ The core still filters the admitted frames itself.
+ 
++The `ports->publish` callback implements the **published before promised** contract.
++It receives `interface`, `sink`, `bound`, `started`, `stream_id` and `stream_moved`.
++The triple is the sink's bound level, started level and settled stream ID.
++Only `ACMP_SETTLED_NO_RSV` and `ACMP_SETTLED_RSV_OK` publish the accepted
++PROBE_TX_RESPONSE's stream ID; outside those states the published ID is zero.
++`stream_moved` is true exactly when that ID differs from its last published value;
++a bound or started change alone leaves it false. The core calls `ports->publish`
++only when the triple changes. The callback must apply the state
++synchronously before returning, without re-entry, so the datapath sees it before a promise leaves.
++
++The core calls `ports->publish` before each new frame is offered to `ports->send`
++or placed in the owed queue. It also publishes first in `finish`, before timers,
++admission, persistence and change notification. A queued frame was already preceded
++by publication when queued; `acmp_poll` retains the existing ordered retry path.
++BIND_RX promises bound and started state through STREAMING_WAIT, UNBIND_RX promises
++withdrawal, and GET_RX_STATE reports the published stream. `acmp_set_started`
++returns only after publication, so its caller must send a START_STREAMING or
++STOP_STREAMING response after that return. This ordering also holds when the
++entry sends no frame. The started/stopped semantics follow
++[Milan v1.2 5.3.8.7](https://avnu.org/resource/milan-specification/) and the commands
++[IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/).
++The local callback ordering makes these states visible before their responses.
++
++Initialization and `acmp_restore_binding` publish nothing. `acmp_open` publishes
++changed restored bindings after transport startup; repeated opens publish nothing
++when the triple is unchanged. Sink reset and rollback preserve the last published
++triple, so the next open or completed event can publish its withdrawal. Initialize
++the receiving publication storage to unbound, stopped and stream ID zero before
++opening: the zero triple is the initial cache value and is not sent redundantly.
++
+ | Environment callback | Contract |
+ |---|---|
+ | `env->locked` | Return true when locked and write the locking controller's entity ID. |
+@@ -232,6 +263,7 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
+ | `timer`, `timer_deadline`, `timer_held` | Connection timer and absolute deadline. A held TMR_NO_RESP waits for its owed probe to leave. |
+ | `adp_armed`, `adp_deadline` | Discovery timer state and its absolute millisecond deadline. It runs beside the connection timer. |
+ | `admitted`, `admitted_talker` | Admission state last supplied to the ingress port for that sink. |
++| `published_bound`, `published_started`, `published_stream` | Last triple supplied to `ports->publish`, preserved across sink reset and rollback. |
+ | `change_owed` | Owed frames whose acceptance releases this sink's pending change. |
+ | `reported` | View last reported through `env->changed`. |
+ | `saved` | Binding record last announced through `env->persist`. |
+diff --git a/docs/REQUIREMENTS.md b/docs/REQUIREMENTS.md
+index 4243c17..2f84b86 100644
+--- a/docs/REQUIREMENTS.md
++++ b/docs/REQUIREMENTS.md
+@@ -30,6 +30,7 @@ Build, memory and testing policies are local decisions. They have source links r
+ | ACMP-07 | Restore and latch bindings for fast connect without a storage-device dependency. | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) |
+ | ACMP-08 | Answer talker commands from live source state with the prescribed flags. | [Milan v1.2 5.5.4](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) |
+ | ACMP-09 | Queue bounded responses and delay notifications until their responses are accepted. | [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/); [Local transport and port work budgets](PORTING.md) |
++| ACMP-10 | Publish changed bound, started and settled stream-ID state before promises, preserve the publication cache across reset, and guard the callback. | Local [published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); Milan v1.2 5.3.8.7, 5.5.3.5.18 and 5.5.3.5.36; IEEE 1722.1-2021 7.4.35 and 7.4.36. |
+ | MAAP-01 | Validate frame fields, destination, source, lengths and supported version behavior. | [IEEE 1722-2016 B.2, especially B.2.3](https://standards.ieee.org/ieee/1722/5979/) |
+ | MAAP-02 | Reserve valid ranges using three probe retransmissions and randomized timer intervals. | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) |
+ | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
+diff --git a/docs/TESTS.md b/docs/TESTS.md
+index ef5a745..4d572ff 100644
+--- a/docs/TESTS.md
++++ b/docs/TESTS.md
+@@ -59,6 +59,12 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
+ | [AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1918) | acmp-probe-timer-before-its-send; acmp-taken-probe-timer-from-the-entry-clock | ACMP-05 |
+ | [AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1882) | acmp-probe-timer-before-its-send | ACMP-05 |
+ | [AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry](../tests/test_acmp.cpp#L1951) | acmp-expiry-due-at-its-first-read | ACMP-05 |
++| [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194) | acmp-publish-unguarded | ACMP-10, PORT-01 |
++| [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085) | acmp-publish-wrong-interface | ACMP-10 |
++| [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107) | acmp-publish-unchanged-triple | ACMP-10 |
++| [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157) | acmp-publish-missing-finish; acmp-publish-reset-cache; acmp-publish-wrong-sink | ACMP-10, ACMP-07 |
++| [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052) | acmp-publish-after-response; acmp-publish-stream-zero; acmp-publish-wrong-started; acmp-publish-bound-cache-stale; acmp-publish-started-cache-stale; acmp-publish-stream-cache-stale | ACMP-10 |
++| [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122) | acmp-publish-ignores-started; acmp-publish-stream-moved-always | ACMP-10 |
+ | [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392) | acmp-unbind-not-persisted; acmp-unbind-echoes-the-talker; acmp-unbind-keeps-srp; acmp-unbind-srp-after-response; acmp-unbind-keeps-discovery; acmp-unbind-change-before-response | ACMP-03, ACMP-02, MFCONN-01, MFSRP-01 |
+ | [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428) | acmp-not-authorized-is-13; acmp-lock-ignored | ACMP-03, ACMP-02 |
+ | [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460) | acmp-lock-refuses-the-holder; acmp-get-rx-state-locked | ACMP-03, ACMP-02 |
+diff --git a/docs/TRACEABILITY.md b/docs/TRACEABILITY.md
+index b5bc4c6..4c13770 100644
+--- a/docs/TRACEABILITY.md
++++ b/docs/TRACEABILITY.md
+@@ -11,16 +11,17 @@ Port obligations are not claims of completed integration or measured target timi
+ | [ADP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) | [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L628); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+ | [ADP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L539); [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L587); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L612); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpInputControl.InheritedDiscoveryAcceptance](../tests/test_adp.cpp#L702) |
+ | [ADP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) | [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L543); [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L551); [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L555); [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L559); [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L563); [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L567); [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L571); [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L575); [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L579) |
+-| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
++| [PORT-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) | [AcmpCore.A23EveryEntryRefusesACallFromInsideAPort](../tests/test_acmp.cpp#L1335); [AcmpCore.A23EveryPortIsGuarded](../tests/test_acmp.cpp#L1371); [AcmpCore.CommandPortBudgets](../tests/test_acmp.cpp#L1991); [AcmpCore.TimerPortBudgets](../tests/test_acmp.cpp#L2010); [AcmpCore.DiscoveryPortBudgets](../tests/test_acmp.cpp#L2029); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194); [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L535); [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L547); [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L583); [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L585); [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L590); [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L671); [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132); [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160); [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188); [MaapCore.ReentrantPortsAreCountedAndIgnored](../tests/test_maap.cpp#L394); [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9); [ExamplePort.DefersExpiryAndRetainsBlockedOutput](../tests/test_port.cpp#L8) |
+ | [ACMP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local capacity contract supporting Milan v1.2 5.5.3.5.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A0InitRefusesWhatTheStaticSizesCannotHold](../tests/test_acmp.cpp#L209); [AcmpCore.A0EverySinkStartsUnboundAndNothingIsCalled](../tests/test_acmp.cpp#L248) |
+ | [ACMP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.5.2.2 and 5.5.3.1](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530); [AcmpCore.A21MessagesNotForThisEntityAreIgnored](../tests/test_acmp.cpp#L1018); [AcmpCore.A21MalformedFramesAreCounted](../tests/test_acmp.cpp#L1039); [AcmpCore.A25OnlyTable522ItemsAreReported](../tests/test_acmp.cpp#L1510); [AcmpCore.A26AnotherAvtpVersionIsDiscardedBeforeItIsRead](../tests/test_acmp.cpp#L1537) |
+ | [ACMP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.2.4, 5.5.2.5 and 5.5.3.5, Tables 5.30 and 5.32](https://avnu.org/resource/milan-specification/) | [AcmpCore.A1BindFromUnboundRespondsThenProbes](../tests/test_acmp.cpp#L265); [AcmpCore.A1BindWithoutStreamingWaitBindsStarted](../tests/test_acmp.cpp#L315); [AcmpCore.A2GetRxStateInEveryState](../tests/test_acmp.cpp#L324); [AcmpCore.A2GetRxStateReportsStreamingWaitAndRegisteringFailed](../tests/test_acmp.cpp#L357); [AcmpCore.A2UnknownSinkIsAnsweredListenerUnknownId](../tests/test_acmp.cpp#L369); [AcmpCore.A3UnbindInEveryState](../tests/test_acmp.cpp#L392); [AcmpCore.A4LockedByAnotherControllerRefusesBindAndUnbind](../tests/test_acmp.cpp#L428); [AcmpCore.A4TheLockingControllerPassesAndGetRxStateIsNotLocked](../tests/test_acmp.cpp#L460); [AcmpCore.A5RebindTheSameSourceUpdatesAndExits](../tests/test_acmp.cpp#L473); [AcmpCore.A6BindAnotherSourceRestartsTheSink](../tests/test_acmp.cpp#L500); [AcmpCore.A6TheSameTalkerAnotherSourceIsANewBinding](../tests/test_acmp.cpp#L530) |
+ | [ACMP-04](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5, Tables 5.29 and 5.30](https://avnu.org/resource/milan-specification/) | [AcmpCore.A7ResponsesKeyOnTheListenerUniqueId](../tests/test_acmp.cpp#L542); [AcmpCore.A7EachGuardTermIsChecked](../tests/test_acmp.cpp#L554); [AcmpCore.A7TheGuardReadsTheSentProbeNotTheBinding](../tests/test_acmp.cpp#L576); [AcmpCore.A7ResponsesOutsideProbingAreIgnored](../tests/test_acmp.cpp#L587); [AcmpCore.A8SuccessSettles](../tests/test_acmp.cpp#L612); [AcmpCore.A9FailureWaitsForTheRetry](../tests/test_acmp.cpp#L635); [AcmpCore.A10NoResponseSendsTheDuplicateThenGivesUp](../tests/test_acmp.cpp#L650); [AcmpCore.A11RetryWaitsForTheTalkerOrDelays](../tests/test_acmp.cpp#L671); [AcmpCore.A12DelaySendsANewProbe](../tests/test_acmp.cpp#L691); [AcmpCore.A13NoTalkerAttributeReprobes](../tests/test_acmp.cpp#L706); [AcmpCore.A14RegisteredSettlesTheReservation](../tests/test_acmp.cpp#L728); [AcmpCore.A15UnregisteredReprobes](../tests/test_acmp.cpp#L753); [AcmpCore.KindChangesOnlyTheSettledView](../tests/test_acmp.cpp#L786); [AcmpCore.A16OneCounterForEveryNewProbe](../tests/test_acmp.cpp#L817) |
+ | [ACMP-05](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.2.3, 5.5.3.5.3 and 5.5.3.5.16, Table 5.26](https://avnu.org/resource/milan-specification/); [Local timer and accepted-send contract](PORTING.md) | [AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline](../tests/test_acmp.cpp#L831); [AcmpCore.A18AZeroDelayProbesInTheSameExpiry](../tests/test_acmp.cpp#L859); [AcmpCore.A18TheSeedIsTakenAtTheFirstDraw](../tests/test_acmp.cpp#L883); [AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves](../tests/test_acmp.cpp#L1588); [AcmpCore.A27AStalledDuplicateGetsItsWholeInterval](../tests/test_acmp.cpp#L1625); [AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing](../tests/test_acmp.cpp#L1669); [AcmpCore.A28EveryTimerExpiresAtItsDeadlineAcrossTheWrap](../tests/test_acmp.cpp#L1723); [AcmpCore.A28TheEarliestDeadlineIsChosenAcrossTheWrap](../tests/test_acmp.cpp#L1788); [AcmpCore.A30AProbeTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1882); [AcmpCore.A30ADuplicateTakenAtOnceRunsFromTheClockAfterItsSend](../tests/test_acmp.cpp#L1918); [AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry](../tests/test_acmp.cpp#L1951) |
+ | [ACMP-06](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.6.4.1 and 5.6.4.5, Table 5.54](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.5](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A22AvailableDiscoversWhenTheGrandmasterMatches](../tests/test_acmp.cpp#L1152); [AcmpCore.A22DiscoveredStartsTheProbeFromPrbWAvail](../tests/test_acmp.cpp#L1183); [AcmpCore.A22DiscoveredStateCells](../tests/test_acmp.cpp#L1198); [AcmpCore.A22DepartingAndAging](../tests/test_acmp.cpp#L1255); [AcmpCore.DepartingRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1282); [AcmpCore.AdpTimeoutRetainsBindingAndReprobes](../tests/test_acmp.cpp#L1287); [AcmpCore.A22OnlyBoundSinksOfThatTalkerOnThatInterface](../tests/test_acmp.cpp#L1292); [AcmpCore.A22OtherAdpFramesAreIgnored](../tests/test_acmp.cpp#L1315); [AcmpCore.A29TheAdmitPortFollowsEachSinksBoundTalker](../tests/test_acmp.cpp#L1814); [AcmpCore.DepartingStopsEveryProbingTimer](../tests/test_acmp.cpp#L1973) |
+-| [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848) |
++| [ACMP-07](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5.2 and 5.5.2.4](https://avnu.org/resource/milan-specification/); [Local binding-record format](PORTING.md) | [AcmpCore.A24ARestoredBindingFastConnects](../tests/test_acmp.cpp#L1396); [AcmpCore.A24UnboundRecordsRefusalsAndRollback](../tests/test_acmp.cpp#L1416); [AcmpCore.A24StartedIsSavedAndReported](../tests/test_acmp.cpp#L1445); [AcmpCore.A24TheRecordIsTheProcessorsPayloadOneFlagAtATime](../tests/test_acmp.cpp#L1476); [AcmpCore.A29RestoredBindingsAreAdmittedWhenTheTransportOpens](../tests/test_acmp.cpp#L1848); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157) |
+ | [ACMP-08](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.4](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 8.2.1](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A20ProbeTxIsAnsweredFromTheSource](../tests/test_acmp.cpp#L901); [AcmpCore.A20DisconnectGetTxStateAndGetTxConnection](../tests/test_acmp.cpp#L954) |
+ | [ACMP-09](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/); [Local transport and port work budgets](PORTING.md) | [AcmpCore.A19AResponseWithoutRoomIsOwedAndItsChangeWaits](../tests/test_acmp.cpp#L1059); [AcmpCore.A19NothingPassesAnOwedFrame](../tests/test_acmp.cpp#L1083); [AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs](../tests/test_acmp.cpp#L1097); [AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered](../tests/test_acmp.cpp#L1114); [AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether](../tests/test_acmp.cpp#L1134) |
++| [ACMP-10](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [Local published-before-promised contract](PORTING.md#acmp-callbacks-and-public-fields); [Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 7.4.35 and 7.4.36](https://standards.ieee.org/ieee/1722.1/6670/) | [AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt](../tests/test_acmp.cpp#L2052); [AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath](../tests/test_acmp.cpp#L2085); [AcmpCore.A31OnlyAMovedTripleIsPublished](../tests/test_acmp.cpp#L2107); [AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised](../tests/test_acmp.cpp#L2122); [AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens](../tests/test_acmp.cpp#L2157); [AcmpCore.A31ACallBackFromThePublishPortIsRefused](../tests/test_acmp.cpp#L2194) |
+ | [MAAP-01](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.2, especially B.2.3](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.MalformedAndVersionCompatibility](../tests/test_maap.cpp#L244) |
+ | [MAAP-02](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3.3, B.3.6.1 and B.4, Tables B.8 and B.9](https://standards.ieee.org/ieee/1722/5979/) | [MaapCore.InitialAndThreeRetransmissions](../tests/test_maap.cpp#L94); [MaapCore.ConstantsStrictTimersAndSeed](../tests/test_maap.cpp#L117); [MaapCore.RestartDrawsNewRange](../tests/test_maap.cpp#L196); [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209); [MaapCore.InitAndPreferredRangeBounds](../tests/test_maap.cpp#L271); [MaapCore.BeginBeforePortOperationalRetainsRange](../tests/test_maap.cpp#L318); [MaapCore.LinkBounceDrawsAfterSuppliedRange](../tests/test_maap.cpp#L338) |
+ | [MAAP-03](REQUIREMENTS.md) | [Import baseline](REQUIREMENTS.md) | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) | [MaapCell.TableB7](../tests/test_maap.cpp#L139); [MaapCore.ReverseOctetPriority](../tests/test_maap.cpp#L170); [MaapCore.PriorityAfterTiedOctets](../tests/test_maap.cpp#L179); [MaapCore.DefendEchoAndIntersection](../tests/test_maap.cpp#L219); [MaapCore.DisjointAdjacentZeroAndDefendRange](../tests/test_maap.cpp#L232) |
+diff --git a/docs/VERIFICATION.md b/docs/VERIFICATION.md
+index 9b6268b..33098f1 100644
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@ -20,7 +20,7 @@ No failing build, skipped test or empty test binary can establish a pass.
+ |---|---|---|
+ | GCC C11 and core tests | `cmake -S . -B build-gcc -DTSN_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug`, then `cmake --build build-gcc -j16` and `ctest --test-dir build-gcc --output-on-failure -j16` | All tests pass. Warnings fail. |
+ | Coverage | `python3 scripts/coverage.py build-gcc` | 100% lines and branches after exact exclusions. |
+-| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 324 core plants caught by their named assertions. |
++| Mutation | `python3 scripts/mutation.py --work build-mutations --jobs 16` | All 338 core plants caught by their named assertions. |
+ | Sanitizers and Clang | `cmake -S . -B build-sanitize -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DTSN_SANITIZERS=ON -DCMAKE_BUILD_TYPE=Debug`, then build and test as above | Address and undefined-behavior sanitizers pass. The full runner enables leak detection and stops on findings. |
+ | Static analysis | `python3 scripts/static_analysis.py` | No project findings after [listed suppressions](STATIC_ANALYSIS.md). |
+ | Boundary | `python3 scripts/check_boundary.py --selftest` | Compiler dependencies permit only C library and owned headers. Object symbols refuse heap and OS use. Ten forbidden controls compile and are refused with both compilers; two pass controls compile and pass. |
+@@ -132,7 +132,7 @@ The [smoke checks](../examples/rv32/smoke.c) reuse cases from the hosted tests:
+ | ADP schedule and wire fields | Wrong advertisement period, frame size or entity byte order. |
+ | ADP valid and inherited malformed discovery | Changed acceptance of version 1, 26-byte input or zero control length. |
+ | ADP blocked departure | Dropped queued frame or failure to reset the next advertisement index. |
+-| ACMP restore, admission, latch and rollback | Wrong binding byte order, startup state, admission or rollback. |
++| ACMP restore, admission, latch, rollback and publication | Wrong binding byte order, startup state, admission, rollback cache, bound/started/stream publication or response ordering. |
+ | MAAP pool bounds and probe schedule | Off-by-one range end, wrong retransmit count, premature validity or missing withdrawal. |
+ 
+ Any failed check exits the simulator with a nonzero status. A hang times out and fails the gate.
+diff --git a/docs/requirements.json b/docs/requirements.json
+index 56cc960..f0af3a9 100644
+--- a/docs/requirements.json
++++ b/docs/requirements.json
+@@ -173,6 +173,24 @@
+       }
+     ]
+   },
++  {
++    "id": "ACMP-10",
++    "text": "Publish each changed bound, started and settled stream-ID triple before new frames and first at entry completion; preserve the publication cache across restore/reset and refuse callback re-entry.",
++    "clauses": [
++      {
++        "text": "Local published-before-promised contract",
++        "url": "PORTING.md#acmp-callbacks-and-public-fields"
++      },
++      {
++        "text": "Milan v1.2 5.3.8.7, 5.5.3.5.18 step 4 and 5.5.3.5.36 step 1",
++        "url": "https://avnu.org/resource/milan-specification/"
++      },
++      {
++        "text": "IEEE 1722.1-2021 7.4.35 and 7.4.36",
++        "url": "https://standards.ieee.org/ieee/1722.1/6670/"
++      }
++    ]
++  },
+   {
+     "id": "MAAP-01",
+     "text": "Validate frame fields, destination, source, lengths and supported version behavior.",
+diff --git a/examples/rv32/smoke.c b/examples/rv32/smoke.c
+index 8a82b53..83c5976 100644
+--- a/examples/rv32/smoke.c
++++ b/examples/rv32/smoke.c
+@@ -139,11 +139,43 @@ static int adp_smoke(void)
+     return 0;
+ }
+ 
+-// REQ: ACMP-01, ACMP-07, PORT-01
++struct acmp_port {
++    struct port io;
++    unsigned publications, interface, sink, admissions_before;
++    bool bound, started, moved, ordering_error;
++    uint64_t stream;
++};
++
++static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
++                    uint64_t stream, bool moved)
++{
++    struct acmp_port *p = ctx;
++    ++p->publications;
++    p->interface = interface;
++    p->sink = sink;
++    p->bound = bound;
++    p->started = started;
++    p->stream = stream;
++    p->moved = moved;
++    p->admissions_before = p->io.admissions;
++}
++
++static bool acmp_send(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
++{
++    struct acmp_port *p = ctx;
++    if (frame[15] == 7) {
++        if (!p->bound || p->started != ((wire_be16(frame + 64) & 8u) == 0)) p->ordering_error = true;
++    } else if (frame[15] == 9) {
++        if (p->bound || p->started || p->stream != 0) p->ordering_error = true;
++    }
++    return send_frame(&p->io, interface, frame, length);
++}
++
++// REQ: ACMP-01, ACMP-07, ACMP-10, PORT-01
+ static int acmp_smoke(void)
+ {
+-    struct port p = {.room = true};
+-    const struct acmp_ports ports = {&p, send_frame, clock_ms, timer, gptp, clock_ms, admit};
++    struct acmp_port p = {.io = {.room = true}};
++    const struct acmp_ports ports = {&p, acmp_send, clock_ms, timer, gptp, clock_ms, admit, publish};
+     const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+     const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 1};
+     struct acmp core;
+@@ -156,11 +188,44 @@ static int acmp_smoke(void)
+     CHECK(acmp_restore_binding(&core, 0, record, sizeof record) == ACMP_RESTORE_APPLIED, 11);
+     CHECK(acmp_view(&core, 0, &view) && view.state == ACMP_PRB_W_AVAIL && view.bound, 12);
+     CHECK(view.binding.talker_unique_id == 0x1234 && view.binding.talker_entity_id == wire_be64(record + 4), 13);
++    CHECK(p.publications == 0, 30);
+     acmp_open(&core);
+-    CHECK(p.admissions == 1 && acmp_binding_latch(&core, 0, saved), 14);
++    CHECK(p.publications == 1 && p.bound && !p.started && p.stream == 0 && !p.moved, 31);
++    CHECK(p.interface == 0 && p.sink == 0 && p.admissions_before == 0, 32);
++    CHECK(p.io.admissions == 1 && acmp_binding_latch(&core, 0, saved), 14);
+     for (unsigned i = 0; i < sizeof record; ++i) CHECK(saved[i] == record[i], 15);
+     acmp_restore_rollback(&core);
+     CHECK(acmp_view(&core, 0, &view) && !view.bound && view.state == ACMP_UNBOUND, 16);
++    CHECK(p.publications == 1, 33);
++    acmp_open(&core);
++    CHECK(p.publications == 2 && !p.bound && !p.started && p.stream == 0, 34);
++    acmp_open(&core);
++    CHECK(p.publications == 2, 35);
++    uint8_t frame[ACMP_FRAME_BYTES] = {0};
++    wire_put_be(frame + 12, 0x22f0, 2);
++    frame[14] = 0xfc;
++    frame[15] = 6;
++    wire_put_be(frame + 26, UINT64_C(0x1112131415161718), 8);
++    wire_put_be(frame + 34, UINT64_C(0x0102030405060708), 8);
++    wire_put_be(frame + 42, 1, 8);
++    wire_put_be(frame + 64, 8, 2);
++    acmp_rx(&core, 0, frame, sizeof frame);
++    CHECK(p.publications == 3 && p.bound && !p.started && !p.ordering_error, 36);
++    CHECK(p.io.sends == 2 && p.io.frame[15] == 0, 37);
++    memcpy(frame, p.io.frame, sizeof frame);
++    frame[15] = 1;
++    wire_put_be(frame + 18, UINT64_C(0x5544332211002233), 8);
++    acmp_rx(&core, 0, frame, sizeof frame);
++    CHECK(p.publications == 4 && p.stream == UINT64_C(0x5544332211002233) && p.moved, 38);
++    CHECK(acmp_set_started(&core, 0, true), 39);
++    CHECK(p.publications == 5 && p.started && !p.moved, 40);
++    CHECK(acmp_set_started(&core, 0, false), 41);
++    CHECK(p.publications == 6 && !p.started && !p.moved, 42);
++    CHECK(acmp_set_started(&core, 0, false) && p.publications == 6, 43);
++    frame[15] = 8;
++    acmp_rx(&core, 0, frame, sizeof frame);
++    CHECK(p.publications == 7 && !p.bound && p.stream == 0 && p.moved && !p.ordering_error, 44);
++    CHECK(p.io.frame[15] == 9, 45);
+     return 0;
+ }
+ 
+diff --git a/include/acmp.h b/include/acmp.h
+index 6844a37..2843df8 100644
+--- a/include/acmp.h
++++ b/include/acmp.h
+@@ -303,6 +303,9 @@ struct acmp_ports {
+ 
+ 
+ 	void (*admit)(void *ctx, unsigned interface, unsigned sink, bool bound, uint64_t talker_entity_id);
++	// REQ: ACMP-10
++	void (*publish)(void *ctx, unsigned interface, unsigned sink, bool bound, bool started, uint64_t stream_id,
++			bool stream_moved);
+ };
+ 
+ 
+@@ -355,6 +358,10 @@ struct acmp_sink {
+ 
+ 	bool admitted;
+ 	uint64_t admitted_talker;
++	// REQ: ACMP-10
++	bool published_bound;
++	bool published_started;
++	uint64_t published_stream;
+ 
+ 	uint8_t change_owed;
+ 	struct acmp_sink_view reported;
+diff --git a/scripts/check_port_contracts.py b/scripts/check_port_contracts.py
+index 51f4796..b61f10d 100644
+--- a/scripts/check_port_contracts.py
++++ b/scripts/check_port_contracts.py
+@@ -112,6 +112,11 @@ REQUIRED = {
+         'ports->admit',
+         'ports->gptp',
+         'ports->now_ms',
++        'ports->publish',
++        'stream_id',
++        'stream_moved',
++        'started',
++        'acmp_set_started',
+         'ports->seed',
+         'ports->send',
+         'ports->timer',
+@@ -176,6 +181,9 @@ REQUIRED = {
+         'probe_talker',
+         'probe_talker_uid',
+         'release',
++        'published_bound',
++        'published_started',
++        'published_stream',
+         'reported',
+         'rng',
+         'saved',
+@@ -253,6 +261,7 @@ REQUIRED = {
+ 
+ CRITICAL = {
+     'ACMP callbacks and public fields': {
++        'ports->publish': ('published before promised', 'before each new frame', 'first in `finish`', 'before timers', 'admission, persistence and change notification', 'synchronously before returning, without re-entry'),
+         'env->srp': ('starts SRP reservation and listening', 'NULL stops listening', 'clears the stream parameters'),
+         'ports->admit': ('ENTITY_AVAILABLE and ENTITY_DEPARTING', 'on bind, unbind and rebind', 'for each restored binding'),
+         'bound=false': ("withdraw that sink's admission entry",),
+diff --git a/src/acmp.c b/src/acmp.c
+index c096904..dedcda2 100644
+--- a/src/acmp.c
++++ b/src/acmp.c
+@@ -185,6 +185,31 @@ static void p_admit(struct acmp *a, unsigned interface, unsigned sink, bool boun
+ 
+ 
+ 
++static void p_publish(struct acmp *a, unsigned interface, unsigned sink, bool bound, bool started, uint64_t stream,
++		      bool moved)
++{
++	a->in_port = true;
++	a->ports->publish(a->ports->ctx, interface, sink, bound, started, stream, moved);
++	a->in_port = false;
++}
++
++// REQ: ACMP-10
++static void publish(struct acmp *a)
++{
++	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
++		struct acmp_sink *s = &a->sinks[k];
++		bool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
++		uint64_t stream = settled ? s->stream.stream_id : 0u;
++		bool moved = stream != s->published_stream;
++		if (s->bound != s->published_bound || s->started != s->published_started || moved) {
++			s->published_bound = s->bound;
++			s->published_started = s->started;
++			s->published_stream = stream;
++			p_publish(a, s->interface, k, s->bound, s->started, stream, moved);
++		}
++	}
++}
++
+ static void decode(const uint8_t *frame, struct pdu *p)
+ {
+ 	p->msg = frame[O_MSG] & 0x0Fu;
+@@ -257,6 +282,7 @@ enum sent { SENT, OWED, LOST };
+ static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *frame, uint32_t release,
+ 			  unsigned probe_of)
+ {
++	publish(a);
+ 	if (a->owed_count == 0u && p_send(a, interface, frame)) {
+ 		return SENT;
+ 	}
+@@ -457,6 +483,7 @@ static void admit(struct acmp *a)
+ 
+ static void finish(struct acmp *a)
+ {
++	publish(a);
+ 	rearm(a);
+ 	admit(a);
+ 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+@@ -484,9 +511,15 @@ static void sink_reset(struct acmp *a, unsigned k)
+ 	struct acmp_sink *s = &a->sinks[k];
+ 	bool admitted = s->admitted;
+ 	uint64_t admitted_talker = s->admitted_talker;
++	bool published_bound = s->published_bound;
++	bool published_started = s->published_started;
++	uint64_t published_stream = s->published_stream;
+ 	memset(s, 0, sizeof *s);
+ 	s->admitted = admitted;
+ 	s->admitted_talker = admitted_talker;
++	s->published_bound = published_bound;
++	s->published_started = published_started;
++	s->published_stream = published_stream;
+ 	s->interface = a->cfg.sink_interface[k];
+ 	s->state = ACMP_UNBOUND;
+ 	s->probing = ACMP_PROBING_DISABLED;
+diff --git a/tests/acmp_fake.hpp b/tests/acmp_fake.hpp
+index 8e76be0..1d56b92 100644
+--- a/tests/acmp_fake.hpp
++++ b/tests/acmp_fake.hpp
+@@ -104,6 +104,17 @@ struct Fake {
+     acmp_source_state source[ACMP_MAX_SOURCES] = {};
+     std::vector<Sent> sent;
+     std::vector<Call> calls;
++    struct Pub {
++        unsigned interface;
++        unsigned sink;
++        bool bound;
++        bool started;
++        std::uint64_t stream;
++        bool moved;
++        std::size_t before;
++    };
++    std::vector<Pub> pubs;
++    std::function<void()> pub_hook;
+     bool armed[ACMP_MAX_INTERFACES] = {};
+     std::uint32_t at[ACMP_MAX_INTERFACES] = {};
+ 
+@@ -136,6 +147,7 @@ struct Fake {
+     void clear() {
+         sent.clear();
+         calls.clear();
++        pubs.clear();
+     }
+ };
+ 
+@@ -213,7 +225,17 @@ inline void f_admit(void*, unsigned interface, unsigned sink, bool bound, std::u
+     fk.reenter(Call::ADMIT);
+ }
+ 
+-inline const acmp_ports kPorts = {nullptr, f_send, f_now, f_timer, f_gptp, f_seed, f_admit};
++inline void f_publish(void*, unsigned interface, unsigned sink, bool bound, bool started, std::uint64_t stream,
++                      bool moved) {
++    fk.pubs.push_back({interface, sink, bound, started, stream, moved, fk.calls.size()});
++    if (fk.pub_hook) {
++        auto h = fk.pub_hook;
++        fk.pub_hook = nullptr;
++        h();
++    }
++}
++
++inline const acmp_ports kPorts = {nullptr, f_send, f_now, f_timer, f_gptp, f_seed, f_admit, f_publish};
+ inline const acmp_env kEnv = {nullptr, f_locked, f_source, f_srp, f_persist, f_changed};
+ 
+ struct Pdu {
+diff --git a/tests/coverage.ratchet b/tests/coverage.ratchet
+index e7561e2..0b8351a 100644
+--- a/tests/coverage.ratchet
++++ b/tests/coverage.ratchet
+@@ -2,6 +2,6 @@
+ # Exclusions and reasons: docs/COVERAGE.md
+ # Generated by scripts/coverage.py --write.
+ include/wire.h  lines 10/10  branches 2/2
+-src/acmp.c  lines 742/742  branches 348/348
++src/acmp.c  lines 767/767  branches 362/362
+ src/adp.c  lines 203/203  branches 93/93
+ src/maap.c  lines 209/209  branches 140/140
+diff --git a/tests/mutations.json b/tests/mutations.json
+index 03aab98..67039a4 100644
+--- a/tests/mutations.json
++++ b/tests/mutations.json
+@@ -5004,5 +5004,215 @@
+       "AcmpCore.DepartingRetainsBindingAndReprobes",
+       "AcmpCore.AdpTimeoutRetainsBindingAndReprobes"
+     ]
++  },
++  {
++    "name": "acmp-publish-after-response",
++    "path": "src/acmp.c",
++    "old": "\tpublish(a);\n\tif (a->owed_count == 0u",
++    "new": "\tif (a->owed_count == 0u",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 the binding is published before the BIND_RX response"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
++  },
++  {
++    "name": "acmp-publish-missing-finish",
++    "path": "src/acmp.c",
++    "old": "static void finish(struct acmp *a)\n{\n\tpublish(a);",
++    "new": "static void finish(struct acmp *a)\n{",
++    "kills": [
++      {
++        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++        "needle": "A31 acmp_open publishes each restored binding"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++    ]
++  },
++  {
++    "name": "acmp-publish-unchanged-triple",
++    "path": "src/acmp.c",
++    "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
++    "new": "true",
++    "kills": [
++      {
++        "test": "AcmpCore.A31OnlyAMovedTripleIsPublished",
++        "needle": "A31 a re-bind to the same talker, a registration, a start of a started sink and a discovery move"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31OnlyAMovedTripleIsPublished"
++    ]
++  },
++  {
++    "name": "acmp-publish-ignores-started",
++    "path": "src/acmp.c",
++    "old": "s->bound != s->published_bound || s->started != s->published_started || moved",
++    "new": "s->bound != s->published_bound || moved",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
++        "needle": "A31 a re-bind to the same talker without STREAMING_WAIT publishes once"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
++    ]
++  },
++  {
++    "name": "acmp-publish-reset-cache",
++    "path": "src/acmp.c",
++    "old": "\ts->published_bound = published_bound;\n\ts->published_started = published_started;\n\ts->published_stream = published_stream;",
++    "new": "\t(void)published_bound;\n\t(void)published_started;\n\t(void)published_stream;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++        "needle": "A31 a sink the store resets is published unbound at the next open"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++    ]
++  },
++  {
++    "name": "acmp-publish-unguarded",
++    "path": "src/acmp.c",
++    "old": "\ta->in_port = true;\n\ta->ports->publish",
++    "new": "\ta->in_port = false;\n\ta->ports->publish",
++    "kills": [
++      {
++        "test": "AcmpCore.A31ACallBackFromThePublishPortIsRefused",
++        "needle": "A31 an UNBIND_RX and a poll from inside the publish port are counted and change nothing"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31ACallBackFromThePublishPortIsRefused"
++    ]
++  },
++  {
++    "name": "acmp-publish-stream-zero",
++    "path": "src/acmp.c",
++    "old": "uint64_t stream = settled ? s->stream.stream_id : 0u;",
++    "new": "uint64_t stream = settled ? 0u : 0u;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 a PROBE_TX_RESPONSE that settles publishes the stream"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
++  },
++  {
++    "name": "acmp-publish-stream-moved-always",
++    "path": "src/acmp.c",
++    "old": "sink, bound, started, stream, moved);",
++    "new": "sink, bound, started, stream, true);\n\t(void)moved;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised",
++        "needle": "A31 stopped, the settled stream kept and not moved"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised"
++    ]
++  },
++  {
++    "name": "acmp-publish-wrong-interface",
++    "path": "src/acmp.c",
++    "old": "p_publish(a, s->interface, k,",
++    "new": "p_publish(a, 0u, k,",
++    "kills": [
++      {
++        "test": "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath",
++        "needle": "A31 sink 2, on interface 1"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath"
++    ]
++  },
++  {
++    "name": "acmp-publish-wrong-sink",
++    "path": "src/acmp.c",
++    "old": "p_publish(a, s->interface, k,",
++    "new": "p_publish(a, s->interface, 0u,",
++    "kills": [
++      {
++        "test": "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens",
++        "needle": "A31 sink 2, bound on interface 1, with no stream until it settles"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens"
++    ]
++  },
++  {
++    "name": "acmp-publish-wrong-started",
++    "path": "src/acmp.c",
++    "old": "sink, bound, started, stream, moved);",
++    "new": "sink, bound, !started, stream, moved);",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 started: the command had no STREAMING_WAIT"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
++  },
++  {
++    "name": "acmp-publish-bound-cache-stale",
++    "path": "src/acmp.c",
++    "old": "\t\t\ts->published_bound = s->bound;",
++    "new": "\t\t\ts->published_bound = false;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 a BIND_RX publishes the sink's binding once"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
++  },
++  {
++    "name": "acmp-publish-started-cache-stale",
++    "path": "src/acmp.c",
++    "old": "\t\t\ts->published_started = s->started;",
++    "new": "\t\t\ts->published_started = false;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 a BIND_RX publishes the sink's binding once"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
++  },
++  {
++    "name": "acmp-publish-stream-cache-stale",
++    "path": "src/acmp.c",
++    "old": "\t\t\ts->published_stream = stream;",
++    "new": "\t\t\ts->published_stream = 0u;",
++    "kills": [
++      {
++        "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
++        "needle": "A31 a GET_RX_STATE reports the stream already published, and publishes nothing"
++      }
++    ],
++    "original_tests": [
++      "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt"
++    ]
+   }
+ ]
+diff --git a/tests/test_acmp.cpp b/tests/test_acmp.cpp
+index eff2e38..1c409ae 100644
+--- a/tests/test_acmp.cpp
++++ b/tests/test_acmp.cpp
+@@ -2042,4 +2042,164 @@ TEST_F(AcmpCore, DiscoveryPortBudgets) {
+     EXPECT_EQ(fk.count(Call::GPTP), 0u) << "aging needs no grandmaster";
+ }
+ 
++int send_at(unsigned n) { return fk.position(Call::SEND, n); }
++
++bool published_before_send(unsigned m, unsigned n) {
++    return m < fk.pubs.size() && send_at(n) >= 0 && fk.pubs[m].before <= static_cast<std::size_t>(send_at(n));
++}
++
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt) {
++    bind(0);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a BIND_RX publishes the sink's binding once";
++    EXPECT_TRUE(fk.pubs[0].interface == 0u && fk.pubs[0].sink == 0u && fk.pubs[0].bound && fk.pubs[0].stream == 0u)
++        << "A31 bound, on the sink's interface, with no stream yet";
++    EXPECT_TRUE(fk.pubs[0].started) << "A31 started: the command had no STREAMING_WAIT (5.3.8.7)";
++    ASSERT_TRUE(fk.sent.size() == 2u && read(fk.sent[0].bytes.data()).msg == spec::MSG_BIND_RX_RESPONSE);
++    EXPECT_TRUE(published_before_send(0, 0)) << "A31 the binding is published before the BIND_RX response";
++    fk.clear();
++    rx(probe_answer(0));
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a PROBE_TX_RESPONSE that settles publishes the stream";
++    EXPECT_TRUE(fk.pubs[0].bound && fk.pubs[0].stream == kSid && fk.pubs[0].sink == 0u && fk.pubs[0].moved)
++        << "A31 the stream_id the response carried (5.5.3.5.18 step 4)";
++    const int changed = fk.position(Call::CHANGED);
++    EXPECT_TRUE(changed >= 0 && fk.pubs[0].before <= static_cast<std::size_t>(changed))
++        << "A31 and before the notifier hears of the settled sink";
++    fk.clear();
++    rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0));
++    EXPECT_TRUE(fk.pubs.empty() && last().stream_id == kSid)
++        << "A31 a GET_RX_STATE reports the stream already published, and publishes nothing";
++    rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 an UNBIND_RX publishes the sink unbound";
++    EXPECT_TRUE(!fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u)
++        << "A31 unbound, not started, with no stream";
++    ASSERT_EQ(read(fk.sent.back().bytes.data()).msg, spec::MSG_UNBIND_RX_RESPONSE);
++    EXPECT_TRUE(published_before_send(0, static_cast<unsigned>(fk.sent.size() - 1u)))
++        << "A31 the sink is published unbound before the UNBIND_RX response";
++    fk.clear();
++    rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 an UNBIND_RX of an unbound sink publishes nothing";
++}
++
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31LeavingSettlementTakesTheStreamOffTheDatapath) {
++    to_state(0, ACMP_SETTLED_NO_RSV);
++    fk.clear();
++    bind(0, kTkB);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a re-bind of a settled sink to another talker publishes once";
++    EXPECT_TRUE(fk.pubs[0].bound && fk.pubs[0].stream == 0u) << "A31 still bound, its old stream gone";
++    EXPECT_TRUE(published_before_send(0, 0)) << "A31 before the BIND_RX response";
++    to_state(1, ACMP_SETTLED_NO_RSV);
++    adp(Adp{});
++    fk.clear();
++    fire(1);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 TMR_NO_TK publishes the sink without its stream (5.5.3.5.36 step 1)";
++    EXPECT_TRUE(fk.pubs[0].sink == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u);
++    to_state(2, ACMP_SETTLED_RSV_OK);
++    fk.clear();
++    acmp_tk_unregistered(&a, 2);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 EVT_TK_UNREGISTERED publishes the sink without its stream (5.5.3.5.48)";
++    EXPECT_TRUE(fk.pubs[0].sink == 2u && fk.pubs[0].interface == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u)
++        << "A31 sink 2, on interface 1";
++}
++
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31OnlyAMovedTripleIsPublished) {
++    to_state(0, ACMP_SETTLED_NO_RSV);
++    fk.clear();
++    bind(0, kTkA, 1, kCtl2);
++    acmp_tk_registered(&a, 0, false);
++    EXPECT_TRUE(acmp_set_started(&a, 0, true));
++    adp(Adp{});
++    EXPECT_TRUE(fk.pubs.empty() && a.sinks[0].state == ACMP_SETTLED_RSV_OK)
++        << "A31 a re-bind to the same talker, a registration, a start of a started sink and a discovery move "
++           "neither bound, started nor stream";
++    acmp_tk_kind_changed(&a, 0, true);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 nor does a change of the registered kind";
++}
++
++// REQ: ACMP-10
++TEST_F(AcmpCore, A31TheStartedLevelIsPublishedBeforeItIsPromised) {
++    bind(0, kTkA, 1, kCtl1, true);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a BIND_RX with STREAMING_WAIT publishes once";
++    EXPECT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started)
++        << "A31 a bind with STREAMING_WAIT is published bound and stopped";
++    EXPECT_TRUE(published_before_send(0, 0)) << "A31 before the BIND_RX response that echoes STREAMING_WAIT";
++    fk.clear();
++    bind(0, kTkA, 1, kCtl2, false);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a re-bind to the same talker without STREAMING_WAIT publishes once";
++    EXPECT_TRUE(fk.pubs[0].bound && fk.pubs[0].started && !fk.pubs[0].moved && fk.pubs[0].stream == 0u)
++        << "A31 started now, the stream not moved";
++    ASSERT_TRUE(!fk.sent.empty() && read(fk.sent[0].bytes.data()).msg == spec::MSG_BIND_RX_RESPONSE);
++    EXPECT_TRUE(published_before_send(0, 0)) << "A31 the started move is published before the BIND_RX response";
++    rx(probe_answer(0));
++    ASSERT_EQ(a.sinks[0].state, ACMP_SETTLED_NO_RSV);
++    fk.clear();
++    ASSERT_TRUE(acmp_set_started(&a, 0, false));
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a STOP_STREAMING publishes once";
++    EXPECT_TRUE(fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == kSid && !fk.pubs[0].moved)
++        << "A31 stopped, the settled stream kept and not moved";
++    int changed = fk.position(Call::CHANGED);
++    EXPECT_TRUE(changed >= 0 && fk.pubs[0].before <= static_cast<std::size_t>(changed))
++        << "A31 the stop is published before the notifier hears of it";
++    fk.clear();
++    EXPECT_TRUE(acmp_set_started(&a, 0, false));
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 a STOP_STREAMING of a stopped sink publishes nothing";
++    ASSERT_TRUE(acmp_set_started(&a, 0, true));
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a START_STREAMING publishes once";
++    EXPECT_TRUE(fk.pubs[0].started && fk.pubs[0].stream == kSid && !fk.pubs[0].moved);
++    changed = fk.position(Call::CHANGED);
++    EXPECT_TRUE(changed >= 0 && fk.pubs[0].before <= static_cast<std::size_t>(changed))
++        << "A31 the start is published before the notifier hears of it";
++}
++
++// REQ: ACMP-10, ACMP-07
++TEST_F(AcmpCore, A31RestoredBindingsArePublishedWhenTheTransportOpens) {
++    const auto bound = payload(kRecValid, 1u, kTkB, kCtl1);
++    const auto none = payload(0u, 0u, 0u, 0u);
++    ASSERT_EQ(acmp_restore_binding(&a, 2, bound.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 the boot restore publishes nothing: the transport is not open";
++    acmp_open(&a);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 acmp_open publishes each restored binding";
++    EXPECT_TRUE(fk.pubs[0].sink == 2u && fk.pubs[0].interface == 1u && fk.pubs[0].bound && fk.pubs[0].stream == 0u)
++        << "A31 sink 2, bound on interface 1, with no stream until it settles";
++    EXPECT_FALSE(fk.pubs[0].started) << "A31 stopped, as its record saved it";
++    fk.clear();
++    acmp_open(&a);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 a second open publishes nothing";
++    SetUp();
++    const auto started = payload(kRecValid | kRecStarted, 1u, kTkB, kCtl1);
++    ASSERT_EQ(acmp_restore_binding(&a, 1, started.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    acmp_open(&a);
++    ASSERT_EQ(fk.pubs.size(), 1u);
++    EXPECT_TRUE(fk.pubs[0].sink == 1u && fk.pubs[0].bound && fk.pubs[0].started)
++        << "A31 a binding saved started is published started";
++    SetUp();
++    ASSERT_EQ(acmp_restore_binding(&a, 1, bound.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    acmp_restore_rollback(&a);
++    acmp_open(&a);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 a binding the roll-back dropped is never published";
++    SetUp();
++    bind(0, kTkA);
++    fk.clear();
++    ASSERT_EQ(acmp_restore_binding(&a, 0, none.data(), spec::BINDING_BYTES), ACMP_RESTORE_APPLIED);
++    EXPECT_TRUE(fk.pubs.empty()) << "A31 the store's reset of a sink is not published at once";
++    acmp_open(&a);
++    ASSERT_EQ(fk.pubs.size(), 1u) << "A31 a sink the store resets is published unbound at the next open";
++    EXPECT_TRUE(!fk.pubs[0].bound && fk.pubs[0].sink == 0u)
++        << "A31 what the port holds outlives the sink's reset, so the open publishes the change";
++}
++
++// REQ: ACMP-10, PORT-01
++TEST_F(AcmpCore, A31ACallBackFromThePublishPortIsRefused) {
++    fk.pub_hook = [this] {
++        rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
++        static_cast<void>(acmp_poll(&a));
++    };
++    bind(0);
++    EXPECT_TRUE(a.reentries == 2u && reentry_traps == 2u && a.sinks[0].bound && a.sinks[0].state == ACMP_PRB_W_RESP)
++        << "A31 an UNBIND_RX and a poll from inside the publish port are counted and change nothing (#678)";
++}
++
++
+ }

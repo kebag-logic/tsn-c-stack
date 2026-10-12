@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="3" failures="1" disabled="0" errors="0" time="0." timestamp="2026-10-12T02:08:14.611" name="AllTests">
+  <testsuite name="AcmpCore" tests="3" failures="1" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-10-12T02:08:14.611">
+    <testcase name="R623PublicationPrecedesBlockedSendAndQueue" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2205" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.611" classname="AcmpCore">
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2208&#x0A;Expected equality of these values:&#x0A;  a.owed_count&#x0A;    Which is: 2&#x0A;  0u&#x0A;    Which is: 0&#x0A;R623 publication precedes queue insertion&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2208
+Expected equality of these values:
+  a.owed_count
+    Which is: 2
+  0u
+    Which is: 0
+R623 publication precedes queue insertion
+]]></failure>
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2209&#x0A;Expected equality of these values:&#x0A;  fk.count(Call::SEND)&#x0A;    Which is: 1&#x0A;  0u&#x0A;    Which is: 0&#x0A;R623 publication precedes blocked send attempt&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2209
+Expected equality of these values:
+  fk.count(Call::SEND)
+    Which is: 1
+  0u
+    Which is: 0
+R623 publication precedes blocked send attempt
+]]></failure>
+      <failure message="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2213&#x0A;Value of: published_before_send(0, 0)&#x0A;  Actual: false&#x0A;Expected: true&#x0A;" type=""><![CDATA[$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp:2213
+Value of: published_before_send(0, 0)
+  Actual: false
+Expected: true
+]]></failure>
+    </testcase>
+    <testcase name="R623CompletionPublicationPrecedesOtherCallbacks" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2225" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.611" classname="AcmpCore" />
+    <testcase name="R623AllRestoredSinksPublishBeforeAdmission" file="$REVIEWS/tsn21-r623-1-packet/scratch/probes/tests.cpp" line="2247" status="run" result="completed" time="0." timestamp="2026-10-12T02:08:14.611" classname="AcmpCore" />
+  </testsuite>
+</testsuites>
