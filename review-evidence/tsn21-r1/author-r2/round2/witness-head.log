@@ -1,0 +1,29 @@
+Note: Google Test filter = AcmpCore.R622*:AcmpCore.A31*
+[==========] Running 10 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 10 tests from AcmpCore
+[ RUN      ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt
+[       OK ] AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt (0 ms)
+[ RUN      ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath
+[       OK ] AcmpCore.A31LeavingSettlementTakesTheStreamOffTheDatapath (0 ms)
+[ RUN      ] AcmpCore.A31OnlyAMovedTripleIsPublished
+[       OK ] AcmpCore.A31OnlyAMovedTripleIsPublished (0 ms)
+[ RUN      ] AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised
+[       OK ] AcmpCore.A31TheStartedLevelIsPublishedBeforeItIsPromised (0 ms)
+[ RUN      ] AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens
+[       OK ] AcmpCore.A31RestoredBindingsArePublishedWhenTheTransportOpens (0 ms)
+[ RUN      ] AcmpCore.A31ACallBackFromThePublishPortIsRefused
+[       OK ] AcmpCore.A31ACallBackFromThePublishPortIsRefused (0 ms)
+[ RUN      ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort
+[       OK ] AcmpCore.A31SettlementIsPublishedBeforeTheTimerPort (0 ms)
+[ RUN      ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream
+[       OK ] AcmpCore.A31StoreResetOfASettledSinkPublishesAMovedStream (0 ms)
+[ RUN      ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort
+[       OK ] AcmpCore.R622WitnessTheSettlementIsPublishedBeforeTheTimerPort (0 ms)
+[ RUN      ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream
+[       OK ] AcmpCore.R622WitnessAStoreResetOfASettledSinkMovesItsStream (0 ms)
+[----------] 10 tests from AcmpCore (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 1 test suite ran. (0 ms total)
+[  PASSED  ] 10 tests.

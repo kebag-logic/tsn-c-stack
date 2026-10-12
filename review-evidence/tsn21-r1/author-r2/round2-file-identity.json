@@ -1,0 +1,28 @@
+[
+  {
+    "file": "src/acmp.c",
+    "reference": {
+      "sha256": "fe24fac9658322009b8352107e4dc29de8c01ac4416c08a6bb26a59cba9a1978",
+      "size": 41101,
+      "lines": 1294
+    },
+    "candidate": {
+      "sha256": "9ffd9312567f613de5bdc61ca365facce981f4e087c699555897656a1958d98c",
+      "size": 32952,
+      "lines": 1294
+    }
+  },
+  {
+    "file": "include/acmp.h",
+    "reference": {
+      "sha256": "cd1d09dd905939b2da8daf5b0d29231ca3ed2b31f8b1496df6ff9c66e305d010",
+      "size": 25000,
+      "lines": 494
+    },
+    "candidate": {
+      "sha256": "0c2f009ec9699df2ce493da882cafb1964662452aeee03f00b40176a4432eef1",
+      "size": 9999,
+      "lines": 494
+    }
+  }
+]

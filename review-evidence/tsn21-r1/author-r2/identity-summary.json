@@ -1,0 +1,99 @@
+{
+  "base": "1a9f651cdf7846b8e10ac246a6ef6916960fbb92",
+  "reference": "09c7231eca343607c97c0d66abebb2553688712c",
+  "reference_parent": "0a62616e08dd58928e73183ecdf16dbee330becd",
+  "files": [
+    {
+      "file": "src/acmp.c",
+      "upstream": "sw/firmware/ctrl/acmp/acmp.c",
+      "baseline_preserved_byte_for_byte": true,
+      "insertions": [
+        {
+          "baseline_before_line": 188,
+          "ported_first_line": 188,
+          "ported_last_line": 212,
+          "bytes": 866
+        },
+        {
+          "baseline_before_line": 260,
+          "ported_first_line": 285,
+          "ported_last_line": 285,
+          "bytes": 13
+        },
+        {
+          "baseline_before_line": 460,
+          "ported_first_line": 486,
+          "ported_last_line": 486,
+          "bytes": 13
+        },
+        {
+          "baseline_before_line": 487,
+          "ported_first_line": 514,
+          "ported_last_line": 516,
+          "bytes": 142
+        },
+        {
+          "baseline_before_line": 490,
+          "ported_first_line": 520,
+          "ported_last_line": 522,
+          "bytes": 123
+        }
+      ],
+      "files": {
+        "reference": {
+          "bytes": 41101,
+          "sha256": "fe24fac9658322009b8352107e4dc29de8c01ac4416c08a6bb26a59cba9a1978"
+        },
+        "pre-F-INT": {
+          "bytes": 39584,
+          "sha256": "361ac852b68d4100f9da68b109e523da628b8a674065143b7b5887cb835cb6ad"
+        },
+        "baseline": {
+          "bytes": 31791,
+          "sha256": "50b9bdc0ce4884826dc7637908b8fb407a32e3e81909352c80b786b4ec33c74b"
+        },
+        "ported": {
+          "bytes": 32948,
+          "sha256": "699a5f685dd1d72fcd450a8af5b94e3b64356a0e30c4d3f25b908f8b6d58b583"
+        }
+      }
+    },
+    {
+      "file": "include/acmp.h",
+      "upstream": "sw/firmware/ctrl/acmp/acmp.h",
+      "baseline_preserved_byte_for_byte": true,
+      "insertions": [
+        {
+          "baseline_before_line": 306,
+          "ported_first_line": 306,
+          "ported_last_line": 308,
+          "bytes": 149
+        },
+        {
+          "baseline_before_line": 358,
+          "ported_first_line": 361,
+          "ported_last_line": 364,
+          "bytes": 93
+        }
+      ],
+      "files": {
+        "reference": {
+          "bytes": 25000,
+          "sha256": "cd1d09dd905939b2da8daf5b0d29231ca3ed2b31f8b1496df6ff9c66e305d010"
+        },
+        "pre-F-INT": {
+          "bytes": 23077,
+          "sha256": "9444106ae0a1114c88c1cf8d479d8385e7c5ebfbf60c7b147cb3dfed2e9f9270"
+        },
+        "baseline": {
+          "bytes": 9734,
+          "sha256": "966bbe2856cdd3463b56fafe4badf5d75da1d1f0ca68ccb7f227fd7c8e670cc9"
+        },
+        "ported": {
+          "bytes": 9976,
+          "sha256": "fb2f90128bdf4a2fbca35466dffbe162baacad250253b99d69f8dcece275e7d4"
+        }
+      }
+    }
+  ]
+}

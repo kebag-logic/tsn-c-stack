@@ -1,0 +1,19 @@
+{
+  "bound_cache_only": [
+    {
+      "configuration": "debug",
+      "configure_build_link": "passed",
+      "qemu_rc": 34,
+      "check": "rollback must publish the formerly bound sink unbound"
+    },
+    {
+      "configuration": "release",
+      "configure_build_link": "passed",
+      "qemu_rc": 34,
+      "check": "rollback must publish the formerly bound sink unbound"
+    }
+  ],
+  "blank_line_control": "passes both configurations",
+  "guard_left_set": "passes both configurations; unchanged review suggestion",
+  "audit_rc": 0
+}
