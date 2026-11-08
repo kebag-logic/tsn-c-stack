@@ -75,16 +75,20 @@ Use `acmp_change_pending` to inspect a notification held behind a response.
 
 The owed set holds `ACMP_OWED_MAX` (8) frames of 80 bytes each, 640 bytes on both targets.
 While all of them are owed, `acmp_rx` declines each command addressed to this entity's listener or talker.
-It returns false before changing state or calling a port, and increments `busy_declined`.
+A BIND_RX needs two free owed slots: one for its response and one for the first PROBE_TX of the binding it starts ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3).
+With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.
+The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink, also waits for two free slots.
+A declined command returns false before changing state or calling a port, and increments `busy_declined`.
 The command is not dropped: the port keeps it and delivers it again after `acmp_poll` accepts an owed frame.
 Deliver no later ACMP frame before a kept one, so commands keep their arrival order.
 `acmp_rx` returns true for every frame it takes, including malformed, foreign and probe-response frames.
 It also returns false for refused callback re-entry.
-`acmp_rx_ready` returns true when `acmp_rx` takes any frame now; it is false inside a port callback.
+`acmp_rx_ready` returns true when `acmp_rx` takes any frame now, which needs two free owed slots; it is false inside a port callback.
 A port that cannot keep a frame once taken tests `acmp_rx_ready` first and leaves the frame in its receive queue.
-A declined command costs its frame checks, its decode and one comparison; it makes no copy and no port call.
+A declined command costs its frame checks, its decode and the owed-bound comparison; it makes no copy and no port call.
 The served command receives its specified response behind the frames owed ahead of it, never an error status.
 A port that polls once per pass and delivers again in that pass sends it in pass `ACMP_OWED_MAX` + 1 after the egress returns.
+A deferred BIND_RX's first PROBE_TX leaves in the next pass.
 That delay plus the egress hold must stay within the 200 ms command timeouts of [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/).
 The answering duty follows [IEEE 1722.1-2021 8.2.4 and 8.2.5](https://standards.ieee.org/ieee/1722.1/6670/), whose Table 8-3 has no status for a full output queue.
 The receive queue's depth and overflow accounting belong to the port, as for any receive ring.
@@ -316,7 +320,7 @@ The [ACMP diagnostics](../include/acmp.h) count modulo 2^32.
 | `refused_locked` | CONTROLLER_NOT_AUTHORIZED answers. |
 | `adp_ignored` | ADPDUs no sink accepted, or ADPDUs the module cannot read, including a nonzero AVTP version. |
 | `impossible` | Events marked impossible by [Milan v1.2 Table 5.30 or Table 5.54](https://avnu.org/resource/milan-specification/). |
-| `busy_declined` | Commands `acmp_rx` declined, unchanged, because all `ACMP_OWED_MAX` frames were owed. Each declined offer counts. |
+| `busy_declined` | Commands `acmp_rx` declined, unchanged, because all `ACMP_OWED_MAX` frames were owed, or a BIND_RX found fewer than two free. Each declined offer counts. |
 | `probes_lost` | Probes dropped because the owed queue is full. Their timeout recovers the attempt. |
 | `deferred_sends` | Send attempts refused for lack of room. |
 | `reentries` | Calls refused while a port callback runs. |

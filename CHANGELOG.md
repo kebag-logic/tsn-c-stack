@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; the port delivers the command again once `acmp_poll` frees room. Add `acmp_rx_ready` and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
+- Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; the port delivers the command again once `acmp_poll` frees room. A BIND_RX waits for two free owed slots, so a deferred binding loses no probe. Add `acmp_rx_ready`, true with two free owed slots, and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
 
 - Add the required ACMP `publish` callback from milan-fpga F-INT. Publish changed bound, started and settled stream-ID state before new frames and first at completion; preserve the last publication across reset ([ACMP-10](docs/REQUIREMENTS.md#acmp-publish-port)). Integrators must supply the callback.
 

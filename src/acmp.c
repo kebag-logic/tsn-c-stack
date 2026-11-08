@@ -68,6 +68,7 @@
 #define BIND_VALID 0x01u
 #define BIND_STARTED 0x02u
 #define BIND_STREAMING_WAIT 0x04u
+#define OWED_BY_BIND 2u                                         // Milan v1.2 5.5.3.5.3
 
 
 struct pdu {
@@ -324,9 +325,9 @@ static void respond(struct acmp *a, unsigned interface, const struct pdu *r, uin
 
 // REQ: ACMP-12
 // Milan v1.2 5.5.2.3; Milan v1.2 Table 5.26; IEEE 1722.1-2021 8.2.4 and 8.2.5
-static bool room(struct acmp *a)
+static bool room(struct acmp *a, unsigned frames)
 {
-	if (a->owed_count < ACMP_OWED_MAX) {
+	if (a->owed_count + frames <= ACMP_OWED_MAX) {
 		return true;
 	}
 	a->busy_declined++;
@@ -1036,7 +1037,7 @@ bool acmp_init(struct acmp *a, const struct acmp_config *cfg, const struct acmp_
 // REQ: ACMP-12
 bool acmp_rx_ready(const struct acmp *a)
 {
-	return !a->in_port && a->owed_count < ACMP_OWED_MAX;
+	return !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;
 }
 
 bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
@@ -1058,7 +1059,7 @@ bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_DISCONNECT_TX_COMMAND:
 	case ACMP_MSG_GET_TX_STATE_COMMAND:
 	case ACMP_MSG_GET_TX_CONNECTION_COMMAND:
-		if (talker && !room(a)) {
+		if (talker && !room(a, 1u)) {
 			return false;
 		}
 		if (talker) {
@@ -1070,7 +1071,7 @@ bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_BIND_RX_COMMAND:
 	case ACMP_MSG_UNBIND_RX_COMMAND:
 	case ACMP_MSG_GET_RX_STATE_COMMAND:
-		if (listener && !room(a)) {
+		if (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {
 			return false;
 		}
 		if (listener) {

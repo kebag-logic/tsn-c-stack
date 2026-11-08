@@ -1851,8 +1851,8 @@
   {
     "name": "acmp-full-queue-acts",
     "path": "src/acmp.c",
-    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
-    "new": "\tif (true) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "old": "\tif (a->owed_count + frames <= ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "new": "\tif (a->owed_count + frames <= ACMP_OWED_MAX || true) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
     "kills": [
       {
         "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
@@ -1871,8 +1871,8 @@
   {
     "name": "owed-listener-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {\n\t\t\treturn false;",
-    "new": "\t\tif (listener && !room(a)) {\n\t\t\treturn true;",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn false;",
+    "new": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn true;",
     "kills": [
       {
         "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
@@ -1891,8 +1891,8 @@
   {
     "name": "owed-talker-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {\n\t\t\treturn false;",
-    "new": "\t\tif (talker && !room(a)) {\n\t\t\treturn true;",
+    "old": "\t\tif (talker && !room(a, 1u)) {\n\t\t\treturn false;",
+    "new": "\t\tif (talker && !room(a, 1u)) {\n\t\t\treturn true;",
     "kills": [
       {
         "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
@@ -1911,8 +1911,8 @@
   {
     "name": "owed-room-off-by-one",
     "path": "src/acmp.c",
-    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
-    "new": "\tif (a->owed_count + 1u < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "old": "\tif (a->owed_count + frames <= ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "new": "\tif (a->owed_count + frames < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
     "kills": [
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
@@ -1926,7 +1926,7 @@
   {
     "name": "owed-ready-ignores-full",
     "path": "src/acmp.c",
-    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
+    "old": "\treturn !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;",
     "new": "\treturn !a->in_port;",
     "kills": [
       {
@@ -1941,8 +1941,8 @@
   {
     "name": "owed-ready-ignores-reentry",
     "path": "src/acmp.c",
-    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
-    "new": "\treturn a->owed_count < ACMP_OWED_MAX;",
+    "old": "\treturn !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;",
+    "new": "\treturn a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;",
     "kills": [
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
@@ -1956,12 +1956,12 @@
   {
     "name": "owed-ready-off-by-one",
     "path": "src/acmp.c",
-    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
-    "new": "\treturn !a->in_port && a->owed_count <= ACMP_OWED_MAX;",
+    "old": "\treturn !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;",
+    "new": "\treturn !a->in_port && a->owed_count + OWED_BY_BIND < ACMP_OWED_MAX;",
     "kills": [
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
-        "needle": "a full owed set is not ready"
+        "needle": "two free owed slots keep the core ready"
       }
     ],
     "original_tests": [
@@ -2042,7 +2042,7 @@
     "name": "owed-declines-every-frame",
     "path": "src/acmp.c",
     "old": "\tstruct pdu cmd;\n\tdecode(frame, &cmd);\n\tbool talker",
-    "new": "\tif (!room(a)) {\n\t\treturn false;\n\t}\n\tstruct pdu cmd;\n\tdecode(frame, &cmd);\n\tbool talker",
+    "new": "\tif (!room(a, 1u)) {\n\t\treturn false;\n\t}\n\tstruct pdu cmd;\n\tdecode(frame, &cmd);\n\tbool talker",
     "kills": [
       {
         "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
@@ -2056,8 +2056,8 @@
   {
     "name": "owed-declines-foreign-listener",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {",
-    "new": "\t\tif (!room(a)) {",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (!room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
@@ -2071,8 +2071,8 @@
   {
     "name": "owed-declines-foreign-talker",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {",
-    "new": "\t\tif (!room(a)) {",
+    "old": "\t\tif (talker && !room(a, 1u)) {",
+    "new": "\t\tif (!room(a, 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
@@ -2086,8 +2086,8 @@
   {
     "name": "owed-listener-acts-then-declines",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {\n\t\t\treturn false;",
-    "new": "\t\tif (listener && !room(a)) {\n\t\t\tlistener_command(a, interface, &cmd);\n\t\t\treturn false;",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn false;",
+    "new": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\tlistener_command(a, interface, &cmd);\n\t\t\treturn false;",
     "kills": [
       {
         "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
@@ -2106,8 +2106,8 @@
   {
     "name": "owed-talker-acts-then-declines",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {\n\t\t\treturn false;",
-    "new": "\t\tif (talker && !room(a)) {\n\t\t\ttalker_command(a, interface, &cmd);\n\t\t\treturn false;",
+    "old": "\t\tif (talker && !room(a, 1u)) {\n\t\t\treturn false;",
+    "new": "\t\tif (talker && !room(a, 1u)) {\n\t\t\ttalker_command(a, interface, &cmd);\n\t\t\treturn false;",
     "kills": [
       {
         "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
@@ -2121,8 +2121,8 @@
   {
     "name": "owed-get-rx-state-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {",
-    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_GET_RX_STATE_COMMAND && !room(a)) {",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_GET_RX_STATE_COMMAND && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
@@ -2136,8 +2136,8 @@
   {
     "name": "owed-bind-rx-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {",
-    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_BIND_RX_COMMAND && !room(a)) {",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_BIND_RX_COMMAND && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
     "kills": [
       {
         "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
@@ -2156,8 +2156,8 @@
   {
     "name": "owed-unbind-rx-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a)) {",
-    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_UNBIND_RX_COMMAND && !room(a)) {",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_UNBIND_RX_COMMAND && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
@@ -2171,8 +2171,8 @@
   {
     "name": "owed-probe-tx-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {",
-    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_PROBE_TX_COMMAND && !room(a)) {",
+    "old": "\t\tif (talker && !room(a, 1u)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_PROBE_TX_COMMAND && !room(a, 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
@@ -2186,8 +2186,8 @@
   {
     "name": "owed-get-tx-state-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {",
-    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_STATE_COMMAND && !room(a)) {",
+    "old": "\t\tif (talker && !room(a, 1u)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_STATE_COMMAND && !room(a, 1u)) {",
     "kills": [
       {
         "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
@@ -2206,8 +2206,8 @@
   {
     "name": "owed-disconnect-tx-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {",
-    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_DISCONNECT_TX_COMMAND && !room(a)) {",
+    "old": "\t\tif (talker && !room(a, 1u)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_DISCONNECT_TX_COMMAND && !room(a, 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
@@ -2221,8 +2221,8 @@
   {
     "name": "owed-get-tx-connection-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (talker && !room(a)) {",
-    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_CONNECTION_COMMAND && !room(a)) {",
+    "old": "\t\tif (talker && !room(a, 1u)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_CONNECTION_COMMAND && !room(a, 1u)) {",
     "kills": [
       {
         "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
@@ -2234,6 +2234,66 @@
     ]
   },
   {
+    "name": "owed-ready-one-slot",
+    "path": "src/acmp.c",
+    "old": "\treturn !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;",
+    "new": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "one free owed slot is not ready, since a BIND_RX needs two"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-bind-one-slot",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (listener && !room(a, 1u)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+        "needle": "with one free owed slot the BIND_RX is declined again"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+        "needle": "a deferred binding loses no probe"
+      },
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "a BIND_RX with one free owed slot is declined"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+      "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-bind-owes-one",
+    "path": "src/acmp.c",
+    "old": "#define OWED_BY_BIND 2u",
+    "new": "#define OWED_BY_BIND 1u",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+        "needle": "a deferred binding loses no probe"
+      },
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "one free owed slot is not ready, since a BIND_RX needs two"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
     "name": "owed-bind-answer-lost-after-decline",
     "path": "src/acmp.c",
     "old": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\trespond(a, interface, &r, 1u << k);",
@@ -2242,10 +2302,15 @@
       {
         "test": "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold",
         "needle": "the BIND_RX behind the owed set is answered after the egress returns"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+        "needle": "the deferred BIND_RX is answered"
       }
     ],
     "original_tests": [
-      "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold"
+      "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold",
+      "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe"
     ]
   },
   {

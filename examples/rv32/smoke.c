@@ -288,18 +288,25 @@ static int acmp_owed_smoke(void)
     wire_put_be(frame + 42, 1, 8);
     for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
         wire_put_be(frame + 62, k, 2);
-        CHECK(acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 91);
+        CHECK(acmp_rx_ready(&core) == (k + 2 <= ACMP_OWED_MAX) && acmp_rx(&core, 0, frame, sizeof frame), 91);
     }
     const unsigned calls = p.io.calls;
     wire_put_be(frame + 62, ACMP_OWED_MAX, 2);
     CHECK(!acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 92);
     CHECK(core.busy_declined == 1 && core.owed_count == ACMP_OWED_MAX && p.io.calls == calls, 93);
     p.io.room = true;
-    CHECK(acmp_poll(&core) && acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 94);
-    for (unsigned n = 0; n < ACMP_OWED_MAX && acmp_poll(&core); ++n) {
+    CHECK(acmp_poll(&core) && acmp_rx(&core, 0, frame, sizeof frame), 94);
+    frame[15] = 6;
+    wire_put_be(frame + 62, ACMP_OWED_MAX + 1, 2);
+    CHECK(acmp_poll(&core) && !acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 97);
+    CHECK(acmp_poll(&core) && acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 98);
+    CHECK(core.busy_declined == 2 && core.owed_count == ACMP_OWED_MAX && core.probes_lost == 0, 99);
+    for (unsigned n = 0; n < ACMP_OWED_MAX && core.owed_count > 2 && acmp_poll(&core); ++n) {
     }
-    CHECK(core.owed_count == 0 && p.io.sends == ACMP_OWED_MAX + 1, 95);
+    CHECK(core.owed_count == 2 && p.io.sends == ACMP_OWED_MAX + 1, 95);
     CHECK(p.io.frame[15] == 11 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX && (p.io.frame[16] >> 3) == 0, 96);
+    CHECK(acmp_poll(&core) && p.io.frame[15] == 7 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX + 1, 100);
+    CHECK(!acmp_poll(&core) && p.io.frame[15] == 0 && core.probes_lost == 0, 101);
     return 0;
 }
 

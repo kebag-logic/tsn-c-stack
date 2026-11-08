@@ -2585,12 +2585,15 @@ class AcmpOwed : public AcmpCore {
             held.erase(held.begin());
         }
     }
-    void release_after_hold() {
-        fk.now += kHoldMs;
-        fk.room = true;
+    void drain() {
         for (unsigned n = 0; n < 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {
             pass();
         }
+    }
+    void release_after_hold() {
+        fk.now += kHoldMs;
+        fk.room = true;
+        drain();
     }
     unsigned position(const Sent* s) const { return static_cast<unsigned>(s - fk.sent.data()); }
     void fill(std::uint16_t first) {
@@ -2720,17 +2723,27 @@ TEST_F(AcmpOwed, DeclinedUnbindChangesNothingUntilItIsTaken) {
 // REQ: ACMP-12, PORT-01
 TEST_F(AcmpOwed, ReadyPredicateMatchesTheOwedBound) {
     fk.room = false;
-    for (unsigned k = 0; k + 1u < ACMP_OWED_MAX; ++k) {
+    for (unsigned k = 0; k + 2u < ACMP_OWED_MAX; ++k) {
         rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(k)));
     }
-    EXPECT_TRUE(acmp_rx_ready(&a)) << "one free owed slot keeps the core ready";
-    EXPECT_TRUE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 7u)))
+    EXPECT_TRUE(acmp_rx_ready(&a)) << "two free owed slots keep the core ready";
+    rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 6u));
+    ASSERT_EQ(a.owed_count, ACMP_OWED_MAX - 1u);
+    EXPECT_FALSE(acmp_rx_ready(&a)) << "one free owed slot is not ready, since a BIND_RX needs two";
+    auto bind_rx = acmpdu(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x77u));
+    EXPECT_FALSE(acmp_rx(&a, 0, bind_rx.data(), bind_rx.size()))
+        << "a BIND_RX with one free owed slot is declined";
+    EXPECT_TRUE(a.busy_declined == 1u && !a.sinks[1].bound) << "the BIND_RX declined at one free slot binds nothing";
+    auto last_slot = acmpdu(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 7u));
+    EXPECT_TRUE(acmp_rx(&a, 0, last_slot.data(), last_slot.size()))
         << "the command that takes the last owed slot is taken";
     EXPECT_EQ(a.owed_count, ACMP_OWED_MAX) << "the last owed slot holds that answer";
     EXPECT_FALSE(acmp_rx_ready(&a)) << "a full owed set is not ready";
     fk.room = true;
     EXPECT_TRUE(acmp_poll(&a));
-    EXPECT_TRUE(acmp_rx_ready(&a)) << "an accepted owed frame makes the core ready again";
+    EXPECT_FALSE(acmp_rx_ready(&a)) << "one accepted owed frame leaves one free slot, still not ready";
+    EXPECT_TRUE(acmp_poll(&a));
+    EXPECT_TRUE(acmp_rx_ready(&a)) << "a second accepted owed frame makes the core ready again";
     auto f = acmpdu(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 9u));
     fk.hook_kind = Call::SEND;
     fk.hook = [&]() {
@@ -2738,7 +2751,7 @@ TEST_F(AcmpOwed, ReadyPredicateMatchesTheOwedBound) {
         EXPECT_FALSE(acmp_rx(&a, 0, f.data(), f.size())) << "a frame offered by callback re-entry is declined";
     };
     EXPECT_TRUE(acmp_poll(&a));
-    EXPECT_TRUE(a.reentries == 1u && reentry_traps == 1u && a.busy_declined == 0u)
+    EXPECT_TRUE(a.reentries == 1u && reentry_traps == 1u && a.busy_declined == 1u)
         << "the re-entered frame counts as re-entry, not as a full owed set";
 }
 
@@ -2836,6 +2849,37 @@ TEST_F(AcmpOwed, DeclinedGetTxStateIsAnsweredAfterTheHold) {
     ASSERT_TRUE(behind != nullptr) << "the command held behind the GET_TX_STATE is answered too";
     EXPECT_EQ(position(behind), ACMP_OWED_MAX + 1u) << "the command held behind the GET_TX_STATE is answered next";
     EXPECT_LE(behind->at - arrival, kCommandTimeoutMs) << "the command behind the GET_TX_STATE is answered within 200 ms";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, DeferredBindWaitsForTwoSlotsAndLosesNoProbe) {
+    fill(0x7900);
+    fk.clear();
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7908)))
+        << "a new binding behind the full owed set is declined";
+    fk.now += kHoldMs;
+    fk.room = true;
+    pass();
+    EXPECT_TRUE(held.size() == 1u && a.owed_count == ACMP_OWED_MAX - 1u && a.busy_declined == 2u && !a.sinks[1].bound)
+        << "with one free owed slot the BIND_RX is declined again";
+    pass();
+    EXPECT_TRUE(held.empty() && a.owed_count == ACMP_OWED_MAX && a.sinks[1].bound)
+        << "with two free owed slots the BIND_RX is taken, and its answer and probe are both owed";
+    drain();
+    EXPECT_EQ(a.probes_lost, 0u) << "a deferred binding loses no probe";
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7908);
+    ASSERT_TRUE(s != nullptr) << "the deferred BIND_RX is answered";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the deferred BIND_RX answer leaves within 200 ms";
+    ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + 2u) << "the owed frames, the BIND_RX answer and one probe leave";
+    const Sent& probe = fk.sent.back();
+    Pdu q = read(probe.bytes.data());
+    EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.talker == kTkA && q.listener_uid == 1u &&
+                q.seq == a.sinks[1].probe_seq && probe.at == s->at + 1u)
+        << "the first probe leaves at once, in the pass after the BIND_RX answer";
+    EXPECT_TRUE(a.sinks[1].state == ACMP_PRB_W_RESP && !a.sinks[1].probe_retried &&
+                a.sinks[1].timer == ACMP_TIMER_NO_RESP && a.sinks[1].timer_deadline == probe.at + spec::TMR_NO_RESP_MS)
+        << "the probe's timeout runs from when it left, with its retry still unused";
 }
 
 }

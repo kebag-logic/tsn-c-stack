@@ -279,8 +279,9 @@ CRITICAL = {
     'ACMP owed bound': {
         'acmp_rx': ('declines each command addressed to this entity', 'before changing state or calling a port',
                     'delivers it again after', 'Deliver no later ACMP frame before a kept one',
-                    'returns false for refused callback re-entry'),
-        'acmp_rx_ready': ('false inside a port callback', 'leaves the frame in its receive queue'),
+                    'returns false for refused callback re-entry', 'A BIND_RX needs two free owed slots',
+                    'a deferred binding loses no probe'),
+        'acmp_rx_ready': ('false inside a port callback', 'leaves the frame in its receive queue', 'needs two free owed slots'),
         'ACMP_OWED_MAX': ('640 bytes on both targets', 'never an error status'),
     },
     'Ownership and dispatch': {
