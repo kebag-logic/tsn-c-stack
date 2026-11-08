@@ -5829,6 +5829,38 @@
     ]
   },
   {
+    "name": "wire-put-be-skips-an-odd-field-first-byte",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes; i > (bytes & 1u); --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "wire-put-be-writes-past-an-odd-field",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes + (bytes & 1u); i > 0u; --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
     "name": "entity-wrong-count",
     "path": "examples/entities/ax7101/entity_config.c",
     "old": "        .talker_stream_sources = 2u,",

@@ -33,6 +33,10 @@ def run(cmd, log, **kwargs):
     return result.returncode
 
 
+def arm_module(arm):
+    return "adp" if arm == "port" else arm.split("_")[0]
+
+
 def cflags(arm):
     return ["-std=c11", "-O0", "-g", "-Wall", "-Wextra", "-Werror"] + (
         [] if arm.endswith("_debug") else ["-DNDEBUG", "-DCTRL_REENTRY_ASSERT"])
@@ -134,7 +138,7 @@ def main():
     entity_objects = {path: baseline / ('entity_' + str(index) + '.o')
                       for index, path in enumerate(entity_sources)}
     def prepare(arm):
-        module = "adp" if arm == "port" else arm.split("_")[0]
+        module = arm_module(arm)
         local = []
         if arm == 'entity':
             commands = [[cc, *cflags(arm), '-I' + str(ROOT / 'include'), '-I' + str(ROOT / 'examples'),
@@ -212,7 +216,13 @@ def main():
                     failures_all.update(failures)
                     all_caught = all_caught and rc == 1 and count > 0 and all(matches(k, failures) for k in kills)
                     continue
-                rc = run([cc, *cflags(arm), "-I" + str(directory / "include"), "-c", str(directory / f"src/{module}.c"), "-o", str(obj)], local)
+                if arm not in SOURCES:
+                    raise RuntimeError("unknown mutation arm: " + arm)
+                # A header with no source of its own builds its kill's arm module.
+                source = directory / f"src/{module}.c"
+                if not source.exists():
+                    source = directory / f"src/{arm_module(arm)}.c"
+                rc = run([cc, *cflags(arm), "-I" + str(directory / "include"), "-c", str(source), "-o", str(obj)], local)
                 if rc != 0:
                     raise RuntimeError("mutant build failed")
                 test_obj = baseline / (arm + ".cpp.o")
