@@ -322,12 +322,14 @@ static void respond(struct acmp *a, unsigned interface, const struct pdu *r, uin
 
 
 
+// REQ: ACMP-12
+// Milan v1.2 5.5.2.3; Milan v1.2 Table 5.26; IEEE 1722.1-2021 8.2.4 and 8.2.5
 static bool room(struct acmp *a)
 {
 	if (a->owed_count < ACMP_OWED_MAX) {
 		return true;
 	}
-	a->busy_drops++;
+	a->busy_declined++;
 	return false;
 }
 
@@ -896,9 +898,6 @@ static void get_rx_state(struct acmp *a, unsigned interface, unsigned k, const s
 
 static void listener_command(struct acmp *a, unsigned interface, const struct pdu *cmd)
 {
-	if (!room(a)) {
-		return;
-	}
 	unsigned k = cmd->listener_uid;
 	if (k >= a->cfg.n_sinks) {
 		a->unknown_sink++;
@@ -958,9 +957,6 @@ static void probe_response(struct acmp *a, const struct pdu *rsp)
 
 static void talker_command(struct acmp *a, unsigned interface, const struct pdu *cmd)
 {
-	if (!room(a)) {
-		return;
-	}
 	unsigned src = cmd->talker_uid;
 	if (cmd->msg == ACMP_MSG_GET_TX_CONNECTION_COMMAND) {
 		struct pdu r = echo(cmd, ACMP_STATUS_NOT_SUPPORTED);              // Milan v1.2 5.5.4.4; Milan v1.2 Table 5.48
@@ -1037,15 +1033,21 @@ bool acmp_init(struct acmp *a, const struct acmp_config *cfg, const struct acmp_
 	return true;
 }
 
-void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
+// REQ: ACMP-12
+bool acmp_rx_ready(const struct acmp *a)
+{
+	return !a->in_port && a->owed_count < ACMP_OWED_MAX;
+}
+
+bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
 {
 	if (!enter(a)) {
-		return;
+		return false;
 	}
 	if (interface >= a->cfg.n_interfaces || len < ACMP_FRAME_BYTES || wire_be16(frame + 12) != ACMP_ETHERTYPE ||
 	    frame[PDU] != ACMP_SUBTYPE || AVTP_VERSION(frame) != ACMP_AVTP_VERSION) {
 		a->rx_malformed++;
-		return;
+		return true;
 	}
 	struct pdu cmd;
 	decode(frame, &cmd);
@@ -1056,6 +1058,9 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_DISCONNECT_TX_COMMAND:
 	case ACMP_MSG_GET_TX_STATE_COMMAND:
 	case ACMP_MSG_GET_TX_CONNECTION_COMMAND:
+		if (talker && !room(a)) {
+			return false;
+		}
 		if (talker) {
 			talker_command(a, interface, &cmd);
 		} else {
@@ -1065,6 +1070,9 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_BIND_RX_COMMAND:
 	case ACMP_MSG_UNBIND_RX_COMMAND:
 	case ACMP_MSG_GET_RX_STATE_COMMAND:
+		if (listener && !room(a)) {
+			return false;
+		}
 		if (listener) {
 			listener_command(a, interface, &cmd);
 		} else {
@@ -1083,6 +1091,7 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 		break;
 	}
 	finish(a);
+	return true;
 }
 
 void acmp_adp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)

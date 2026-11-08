@@ -1851,16 +1851,376 @@
   {
     "name": "acmp-full-queue-acts",
     "path": "src/acmp.c",
-    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_drops++;",
-    "new": "\tif (true) {\n\t\treturn true;\n\t}\n\ta->busy_drops++;",
+    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "new": "\tif (true) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
     "kills": [
       {
-        "test": "AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs",
-        "needle": "A19 a command whose response would find the queue full is dropped"
+        "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+        "needle": "is declined before it changes anything"
+      },
+      {
+        "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+        "needle": "is declined to the port, not taken"
       }
     ],
     "original_tests": [
-      "AcmpCore.A19AFullQueueDropsTheCommandBeforeItActs"
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+      "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet"
+    ]
+  },
+  {
+    "name": "owed-listener-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {\n\t\t\treturn false;",
+    "new": "\t\tif (listener && !room(a)) {\n\t\t\treturn true;",
+    "kills": [
+      {
+        "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+        "needle": "the command behind the owed set is answered after"
+      },
+      {
+        "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+        "needle": "declines a BIND_RX to its caller"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+    ]
+  },
+  {
+    "name": "owed-talker-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {\n\t\t\treturn false;",
+    "new": "\t\tif (talker && !room(a)) {\n\t\t\treturn true;",
+    "kills": [
+      {
+        "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+        "needle": "the PROBE_TX behind the owed set is answered"
+      },
+      {
+        "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+        "needle": "declines a GET_TX_STATE to its caller"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+    ]
+  },
+  {
+    "name": "owed-room-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "new": "\tif (a->owed_count + 1u < ACMP_OWED_MAX) {\n\t\treturn true;\n\t}\n\ta->busy_declined++;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "the command that takes the last owed slot is taken"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-ready-ignores-full",
+    "path": "src/acmp.c",
+    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
+    "new": "\treturn !a->in_port;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "a full owed set is not ready"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-ready-ignores-reentry",
+    "path": "src/acmp.c",
+    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
+    "new": "\treturn a->owed_count < ACMP_OWED_MAX;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "the core is not ready inside a port callback"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-ready-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\treturn !a->in_port && a->owed_count < ACMP_OWED_MAX;",
+    "new": "\treturn !a->in_port && a->owed_count <= ACMP_OWED_MAX;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "a full owed set is not ready"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-decline-uncounted",
+    "path": "src/acmp.c",
+    "old": "\t}\n\ta->busy_declined++;\n\treturn false;",
+    "new": "\t}\n\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+        "needle": "makes no port call and is counted once"
+      },
+      {
+        "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
+        "needle": "the declined UNBIND_RX is counted once"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+      "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken"
+    ]
+  },
+  {
+    "name": "owed-reentry-taken",
+    "path": "src/acmp.c",
+    "old": "bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)\n{\n\tif (!enter(a)) {\n\t\treturn false;",
+    "new": "bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)\n{\n\tif (!enter(a)) {\n\t\treturn true;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "a frame offered by callback re-entry is declined"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-malformed-declined",
+    "path": "src/acmp.c",
+    "old": "\t\ta->rx_malformed++;\n\t\treturn true;",
+    "new": "\t\ta->rx_malformed++;\n\t\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
+        "needle": "a malformed frame is taken and counted"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyOwnCommandsAreDeclined"
+    ]
+  },
+  {
+    "name": "owed-served-reported-declined",
+    "path": "src/acmp.c",
+    "old": "\t\tbreak;\n\t}\n\tfinish(a);\n\treturn true;\n}",
+    "new": "\t\tbreak;\n\t}\n\tfinish(a);\n\treturn false;\n}",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
+        "needle": "a listener command for another entity is taken"
+      },
+      {
+        "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+        "needle": "the command that takes the last owed slot is taken"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyOwnCommandsAreDeclined",
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+    ]
+  },
+  {
+    "name": "owed-declines-every-frame",
+    "path": "src/acmp.c",
+    "old": "\tstruct pdu cmd;\n\tdecode(frame, &cmd);\n\tbool talker",
+    "new": "\tif (!room(a)) {\n\t\treturn false;\n\t}\n\tstruct pdu cmd;\n\tdecode(frame, &cmd);\n\tbool talker",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
+        "needle": "a probe response needs no owed slot"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyOwnCommandsAreDeclined"
+    ]
+  },
+  {
+    "name": "owed-declines-foreign-listener",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {",
+    "new": "\t\tif (!room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
+        "needle": "a listener command for another entity is taken"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyOwnCommandsAreDeclined"
+    ]
+  },
+  {
+    "name": "owed-declines-foreign-talker",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {",
+    "new": "\t\tif (!room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyOwnCommandsAreDeclined",
+        "needle": "a talker command for another entity is taken"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyOwnCommandsAreDeclined"
+    ]
+  },
+  {
+    "name": "owed-listener-acts-then-declines",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {\n\t\t\treturn false;",
+    "new": "\t\tif (listener && !room(a)) {\n\t\t\tlistener_command(a, interface, &cmd);\n\t\t\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
+        "needle": "calls no port or environment service"
+      },
+      {
+        "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
+        "needle": "changes no instance state but its counter"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
+      "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken"
+    ]
+  },
+  {
+    "name": "owed-talker-acts-then-declines",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {\n\t\t\treturn false;",
+    "new": "\t\tif (talker && !room(a)) {\n\t\t\ttalker_command(a, interface, &cmd);\n\t\t\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+        "needle": "reads no source state and is counted"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime"
+    ]
+  },
+  {
+    "name": "owed-get-rx-state-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_GET_RX_STATE_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+        "needle": "the command behind the owed set is answered after"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet"
+    ]
+  },
+  {
+    "name": "owed-bind-rx-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_BIND_RX_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+        "needle": "declines a BIND_RX to its caller"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+    ]
+  },
+  {
+    "name": "owed-unbind-rx-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a)) {",
+    "new": "\t\tif (listener && cmd.msg != ACMP_MSG_UNBIND_RX_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
+        "needle": "the UNBIND_RX behind the owed set is answered"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken"
+    ]
+  },
+  {
+    "name": "owed-probe-tx-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_PROBE_TX_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+        "needle": "the PROBE_TX behind the owed set is answered"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime"
+    ]
+  },
+  {
+    "name": "owed-get-tx-state-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_STATE_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+        "needle": "declines a GET_TX_STATE to its caller"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+    ]
+  },
+  {
+    "name": "owed-disconnect-tx-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_DISCONNECT_TX_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+        "needle": "the DISCONNECT_TX behind the owed set is answered"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime"
+    ]
+  },
+  {
+    "name": "owed-get-tx-connection-drop-restored",
+    "path": "src/acmp.c",
+    "old": "\t\tif (talker && !room(a)) {",
+    "new": "\t\tif (talker && cmd.msg != ACMP_MSG_GET_TX_CONNECTION_COMMAND && !room(a)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime",
+        "needle": "the GET_TX_CONNECTION behind the owed set is answered"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime"
     ]
   },
   {

@@ -31,6 +31,13 @@ REQUIRED = {
         'probes_lost',
         'send',
     ),
+    'ACMP owed bound': (
+        'ACMP_OWED_MAX',
+        'acmp_poll',
+        'acmp_rx',
+        'acmp_rx_ready',
+        'busy_declined',
+    ),
     'ADP input validation': (
         'adp_rx',
         'control_data_length',
@@ -199,7 +206,7 @@ REQUIRED = {
     'ACMP counters': (
         'CTRL_REENTRY_ASSERT',
         'adp_ignored',
-        'busy_drops',
+        'busy_declined',
         'ctrl_reentry_assert',
         'deferred_sends',
         'draws',
@@ -268,6 +275,13 @@ CRITICAL = {
         'acmp_source_state.dest_mac_valid': ('MAAP holds a destination MAC',),
         'acmp_source_state.asking_failed': ('Listener Asking Failed attribute is registered',),
         'acmp_tk_registered': ("sink's settled stream", 'true when the registered Talker attribute is Talker Failed'),
+    },
+    'ACMP owed bound': {
+        'acmp_rx': ('declines each command addressed to this entity', 'before changing state or calling a port',
+                    'delivers it again after', 'Deliver no later ACMP frame before a kept one',
+                    'returns false for refused callback re-entry'),
+        'acmp_rx_ready': ('false inside a port callback', 'leaves the frame in its receive queue'),
+        'ACMP_OWED_MAX': ('640 bytes on both targets', 'never an error status'),
     },
     'Ownership and dispatch': {
         'adp_reentry_count': ('Builds without `NDEBUG` assert on re-entry', 'Builds with `NDEBUG` ignore it', 'modulo 2^32'),

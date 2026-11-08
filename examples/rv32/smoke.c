@@ -271,6 +271,38 @@ static int acmp_smoke(void)
     return 0;
 }
 
+// Milan v1.2 Table 5.26
+// REQ: ACMP-12, ACMP-09
+static int acmp_owed_smoke(void)
+{
+    struct acmp_port p = {.io = {.room = false}};
+    const struct acmp_ports ports = {&p, acmp_send, clock_ms, timer, gptp, clock_ms, admit, publish};
+    const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+    const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 1};
+    struct acmp core;
+    uint8_t frame[ACMP_FRAME_BYTES] = {0};
+    CHECK(acmp_init(&core, &config, &ports, &env), 90);
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    frame[15] = 10;
+    wire_put_be(frame + 42, 1, 8);
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        wire_put_be(frame + 62, k, 2);
+        CHECK(acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 91);
+    }
+    const unsigned calls = p.io.calls;
+    wire_put_be(frame + 62, ACMP_OWED_MAX, 2);
+    CHECK(!acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 92);
+    CHECK(core.busy_declined == 1 && core.owed_count == ACMP_OWED_MAX && p.io.calls == calls, 93);
+    p.io.room = true;
+    CHECK(acmp_poll(&core) && acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 94);
+    for (unsigned n = 0; n < ACMP_OWED_MAX && acmp_poll(&core); ++n) {
+    }
+    CHECK(core.owed_count == 0 && p.io.sends == ACMP_OWED_MAX + 1, 95);
+    CHECK(p.io.frame[15] == 11 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX && (p.io.frame[16] >> 3) == 0, 96);
+    return 0;
+}
+
 // REQ: MAAP-02, MAAP-04, PORT-01
 static int maap_smoke(void)
 {
@@ -295,6 +327,7 @@ int main(void)
     int result = adp_smoke();
     if (!result) result = adp_discovery_smoke();
     if (!result) result = acmp_smoke();
+    if (!result) result = acmp_owed_smoke();
     if (!result) result = maap_smoke();
     if (!result) result = entity_check_adp();
     if (!result) result = entity_check_acmp();

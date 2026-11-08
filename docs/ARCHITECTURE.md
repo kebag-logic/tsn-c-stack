@@ -8,7 +8,7 @@ The [porting guide](PORTING.md) defines timing and ownership.
 | Module | Responsibilities | Storage |
 |---|---|---|
 | [ADP](../include/adp.h) | Advertise one interface. Process discovery requests and link changes. | One instance per interface. Two owed departures and one owed advertisement. |
-| [ACMP](../include/acmp.h) | Listener binding, discovery, probing, talker replies, saved binding records. | Fixed sink, source, interface and response arrays. |
+| [ACMP](../include/acmp.h) | Listener binding, discovery, probing, talker replies, saved binding records. | Fixed sink, source, interface and response arrays. Eight owed frames; past them a command is [declined to the port](PORTING.md#acmp-owed-bound). |
 | [MAAP](../include/maap.h) | Acquire, defend and release one multicast range. | One instance per range and interface. Sixteen pending frames. |
 | [Wire](../include/wire.h) | Read and write big-endian fields without unaligned loads. | Caller-owned buffers. |
 
