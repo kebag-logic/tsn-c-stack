@@ -3487,6 +3487,62 @@ TEST_F(AcmpOwed, AnsweredProbeEndsTheHoldOfItsRetry) {
     }
 }
 
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, CommandOfferedAfterTheTakenBindDelaysTheHeldRetry) {
+    for (unsigned later : {0u, 1u, 3u}) {
+        SetUp();
+        sinks_on_one_interface(3u);
+        retries_due(2u, 1u, 1u);
+        fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+        fill(0x7B80);
+        fk.clear();
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7B88)));
+        fk.now += kHoldMs;
+        fk.room = true;
+        released = fk.now;
+        std::uint32_t taken = 0;
+        std::uint32_t owed = 0;
+        unsigned offered = 0;
+        for (std::uint32_t n = 1; n <= 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty() || owed == 0u); ++n) {
+            fk.now += 1u;
+            static_cast<void>(acmp_poll(&a));
+            while (!held.empty() &&
+                   acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size())) {
+                held.erase(held.begin());
+            }
+            if (taken != 0u && offered < later) {
+                EXPECT_TRUE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0,
+                                            static_cast<std::uint16_t>(0x7B90 + offered))))
+                    << "a GET_RX_STATE offered for the first time after an accepting poll takes the freed slot";
+                ++offered;
+            }
+            if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+                acmp_timer_expired(&a, 0);
+            }
+            taken = taken == 0u && a.sinks[1].bound ? n : taken;
+            owed = owed == 0u && !a.sinks[2].probe_held && a.sinks[2].state == ACMP_PRB_W_RESP2 ? n : owed;
+        }
+        ASSERT_TRUE(taken == 2u && held.empty() && a.owed_count == 0u)
+            << "the kept BIND_RX is taken in pass two and every owed frame left";
+        EXPECT_EQ(owed, taken + 1u + later)
+            << "after the BIND_RX is taken, a GET_RX_STATE offered after the next accepting poll delays the held retry one pass";
+        const Sent* retry = nullptr;
+        for (const Sent& s : fk.sent) {
+            Pdu q = read(s.bytes.data());
+            retry = q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 2u ? &s : retry;
+        }
+        ASSERT_TRUE(retry != nullptr) << "the held retry leaves once no command takes the freed slot";
+        for (unsigned i = 0; i < later; ++i) {
+            const Sent* s = answer(spec::MSG_GET_RX_STATE_RESPONSE, static_cast<std::uint16_t>(0x7B90 + i));
+            ASSERT_TRUE(s != nullptr) << "each GET_RX_STATE offered after the BIND_RX is taken is answered";
+            EXPECT_TRUE(position(s) < position(retry)) << "no command answer waits for the held retry";
+        }
+        EXPECT_TRUE(a.probes_lost == 0u && a.sinks[2].timer == ACMP_TIMER_NO_RESP &&
+                    a.sinks[2].timer_deadline == retry->at + spec::TMR_NO_RESP_MS)
+            << "the held retry is never dropped for want of a slot, and its TMR_NO_RESP runs from when it leaves";
+    }
+}
 }
 
 // REQ: ACMP-02

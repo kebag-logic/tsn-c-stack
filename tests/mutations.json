@@ -2739,6 +2739,26 @@
     ]
   },
   {
+    "name": "owed-held-probe-owed-at-the-poll",
+    "path": "src/acmp.c",
+    "old": "\t\t\ta->bind_waiting = false;\n\t\t\tfinish(a);",
+    "new": "\t\t\tstatic uint32_t seen;\n\t\t\tbool first = !a->bind_waiting && seen == a->busy_declined;\n\t\t\tseen = a->busy_declined;\n\t\t\ta->bind_waiting = false;\n\t\t\tfor (unsigned k = 0; first && k < a->cfg.n_sinks; ++k) {\n\t\t\t\tif (a->sinks[k].probe_held) {\n\t\t\t\t\tsm_expired(a, k);\n\t\t\t\t\tbreak;\n\t\t\t\t}\n\t\t\t}\n\t\t\tfinish(a);",
+    "kills": [
+      {
+        "test": "AcmpOwed.CommandOfferedAfterTheTakenBindDelaysTheHeldRetry",
+        "needle": "after the BIND_RX is taken, a GET_RX_STATE offered after the next accepting poll delays the held retry one pass"
+      },
+      {
+        "test": "AcmpOwed.CommandOfferedAfterTheTakenBindDelaysTheHeldRetry",
+        "needle": "no command answer waits for the held retry"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.CommandOfferedAfterTheTakenBindDelaysTheHeldRetry",
+      "AcmpOwed.CommandOfferedAfterTheTakenBindDelaysTheHeldRetry"
+    ]
+  },
+  {
     "name": "owed-probe-held-never-set",
     "path": "src/acmp.c",
     "old": "\t\ts->probe_held = true;\n",
