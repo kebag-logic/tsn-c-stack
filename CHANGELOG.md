@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Exempt the merge of #29 from the one-line message rule by its exact commit; its identity and content are still checked.
 - Add the required ACMP `publish` callback from milan-fpga F-INT. Publish changed bound, started and settled stream-ID state before new frames and first at completion; preserve the last publication across reset ([ACMP-10](docs/REQUIREMENTS.md#acmp-publish-port)). Integrators must supply the callback.
 
 - Port the applicable [milan-fpga requirements](docs/REQUIREMENTS.md) with origins, linked clauses, both targets and verification methods. Record every source disposition. Test advertisement fields and peer-loss recovery with planted defects. Check each pinned source anchor.

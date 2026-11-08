@@ -13,7 +13,7 @@ PATTERNS = [re.compile(r"(?i)\b" + re.escape(word)) for word in WORDS]
 PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users", "data", "tmp")]
 PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
 OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
-# Merge of #29 (d7e6a2a1) was recorded with a second message paragraph; it is exempt from the one-line rule only.
+# Merge of #29 (d7e6a2a1) was recorded with a second message paragraph; it is exempt from the one-line rule only, since main's published history is not rewritten.
 TWO_LINE_MERGES = {"d7e6a2a19a57a8277cd26042557a8c99f2ee5496"}
 IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
 WEB_FLOW = ["hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>", "GitHub <noreply@github.com>"]
@@ -52,11 +52,13 @@ def selftest():
         ("foreign", ["someone <a@b.c>", "someone <a@b.c>", "Subject"], False),
         ("two-line-merge", WEB_FLOW + ["Merge (#29)", "", "Body"], True),
         ("two-line-merge-foreign", ["someone <a@b.c>", "someone <a@b.c>", "Merge (#29)", "", "Body"], False),
+        ("two-line-merge-near-miss", WEB_FLOW + ["Merge (#29)", "", "Body"], False),
     ]
     bad = []
     for name, lines, want in cases:
         commit = OWNER_SQUASH if name == "owner-squash" else "0" * 40
         commit = next(iter(TWO_LINE_MERGES)) if name.startswith("two-line-merge") else commit
+        commit = commit[:-1] + ("0" if commit[-1] != "0" else "1") if name.endswith("near-miss") else commit
         if (not commit_errors(commit, lines)) != want:
             bad.append(name)
     print("privacy selftest: " + ("fail " + ", ".join(bad) if bad else f"{len(cases)} commit controls pass"))
@@ -77,6 +79,8 @@ def main():
         errors += scan(commit, data)
     if OWNER_SQUASH in commits:
         print("privacy: exact owner squash metadata exception; content scanning remains enabled")
+    if TWO_LINE_MERGES & set(commits):
+        print("privacy: exact #29 merge one-line exception; identity and content checks remain enabled")
     objects = git("rev-list", "--objects", "HEAD").decode().splitlines()
     unique = {line.split(" ", 1)[0] for line in objects}
     blobs = 0
