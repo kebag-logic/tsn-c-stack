@@ -2557,3 +2557,24 @@ TEST_F(AcmpFresh, ListenerWithdrawalAndReset) {
 }
 
 }
+
+// REQ: ACMP-02
+TEST(Wire, W1PutBeWritesTheLowBytesMostSignificantFirst) {
+    for (std::uint64_t value : {0x0102030405060708ull, 0x8899AABBCCDDEEFFull, 0xF0E1D2C3B4A59687ull,
+                                0x00000000FFFFFFFFull, 0xFFFFFFFF00000000ull}) {
+        for (unsigned k = 0; k < 4; ++k) {
+            ASSERT_NE(static_cast<std::uint8_t>(value >> (32u + 8u * k)), static_cast<std::uint8_t>(value >> (8u * k)))
+                << "W1 oracle halves differ in every crossing byte";
+        }
+        for (unsigned bytes = 1; bytes <= 8; ++bytes) {
+            std::array<std::uint8_t, 10> got{};
+            got.fill(0x5A);
+            std::array<std::uint8_t, 10> want = got;
+            for (unsigned i = 0; i < bytes; ++i) {
+                want[1u + i] = static_cast<std::uint8_t>(value >> (8u * (bytes - 1u - i)));
+            }
+            wire_put_be(got.data() + 1, value, bytes);
+            EXPECT_EQ(got, want) << "W1 wire_put_be writes the low bytes most significant first and nothing past them";
+        }
+    }
+}
