@@ -3,7 +3,7 @@
 ## Unreleased
 
 - Exempt the merge of #29 from the one-line message rule by its exact commit; its identity and content are still checked.
-- Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; the port delivers the command again once `acmp_poll` frees room, before it services timers. A BIND_RX waits for two free owed slots, so a deferred binding loses no probe; while it waits, a timer probe of another sink is held and re-armed for the next pass instead of owed, so it neither delays the BIND_RX nor is lost (`probes_held`). Add `acmp_rx_ready`, true with two free owed slots, and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
+- Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; the port delivers the command again once `acmp_poll` frees room, before it services timers. A BIND_RX waits for two free owed slots, so a deferred binding loses no probe; while it waits, a timer probe of any sink is held and re-armed for the next pass instead of owed, so it neither delays the BIND_RX nor is lost (`probes_held`). Add `acmp_rx_ready`, true with two free owed slots, and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
 
 - Add the required ACMP `publish` callback from milan-fpga F-INT. Publish changed bound, started and settled stream-ID state before new frames and first at completion; preserve the last publication across reset ([ACMP-10](docs/REQUIREMENTS.md#acmp-publish-port)). Integrators must supply the callback.
 

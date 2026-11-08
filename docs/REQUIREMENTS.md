@@ -41,7 +41,7 @@ ACMP-12 originates from [issue #26](https://github.com/kebag-logic/tsn-c-stack/i
 The core owes at most `ACMP_OWED_MAX` frames. A command it cannot owe is declined to the port
 unchanged and is served when the port delivers it again after room returns, with its specified response.
 A BIND_RX waits for two free owed slots, so its response and the first PROBE_TX of its binding are both owed and no probe is lost.
-While it waits, timer probes of other sinks are held, never lost, so they cannot delay it.
+While it waits, timer probes of any sink are held, never lost, so they cannot delay it.
 The [port contract](PORTING.md#acmp-owed-bound) defines the decline, the redelivery order and the readiness query.
 Authority: [IEEE 1722.1-2021 8.2.4 and 8.2.5, Tables 8-1 and 8-3](https://standards.ieee.org/ieee/1722.1/6670/)
 and [Milan v1.2 5.5.2.3, 5.5.3.5 and 5.5.4, Table 5.26](https://avnu.org/resource/milan-specification/).
