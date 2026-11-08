@@ -112,6 +112,7 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2353) | dafresh-no-renewal; dafresh-answer-stamped-before-send | ACMP-11 |
 | [AcmpFresh.ZeroWindow](../tests/test_acmp.cpp#L2448) | x-zero-never-expires; dafresh-zero-blocks-listener | ACMP-11 |
 | [AcmpOwed.AnsweredOnlyBindAlsoWaitsForTwoSlots](../tests/test_acmp.cpp#L3105) | owed-answered-bind-takes-one-slot | ACMP-12 |
+| [AcmpOwed.AnsweredProbeEndsTheHoldOfItsRetry](../tests/test_acmp.cpp#L3457) | owed-answer-keeps-the-hold | ACMP-12, ACMP-09 |
 | [AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe](../tests/test_acmp.cpp#L3125) | owed-bind-wait-set-at-full; owed-hold-whenever-full | ACMP-12, ACMP-09 |
 | [AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces](../tests/test_acmp.cpp#L3230) | owed-rebind-keeps-the-hold; owed-hold-whenever-full | ACMP-12, ACMP-09 |
 | [AcmpOwed.DeclinedBindIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2881) | owed-bind-rx-drop-restored; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-03 |
@@ -182,4 +183,4 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
 | [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
 | [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |
-| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3459) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |
+| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3493) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |

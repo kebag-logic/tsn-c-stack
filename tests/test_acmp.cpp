@@ -3453,6 +3453,40 @@ TEST_F(AcmpOwed, KeptCommandsBehindSevenOwedLeaveOnePassSooner) {
     }
 }
 
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, AnsweredProbeEndsTheHoldOfItsRetry) {
+    for (std::uint8_t status : {spec::STATUS_TALKER_UNKNOWN_ID, spec::STATUS_SUCCESS}) {
+        SetUp();
+        sinks_on_one_interface(3u);
+        retries_due(2u, 1u, 1u);
+        fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+        fill(0x7B40);
+        fk.clear();
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7B48)));
+        EXPECT_FALSE(deliver(probe_answer(2u, status))) << "the answer to the probing sink's probe waits behind the kept BIND_RX";
+        fk.now += kHoldMs;
+        fk.room = true;
+        pass();
+        ASSERT_TRUE(a.sinks[2].probe_held && a.bind_waiting && held.size() == 2u)
+            << "the retry is held while the answer to the probe it repeats waits behind the BIND_RX";
+        const std::uint32_t holds = a.probes_held;
+        pass();
+        ASSERT_TRUE(held.empty() && a.sinks[1].bound) << "the BIND_RX is taken, then the answer behind it";
+        const bool ok = status == spec::STATUS_SUCCESS;
+        EXPECT_TRUE(!a.sinks[2].probe_held && a.sinks[2].state == (ok ? ACMP_SETTLED_NO_RSV : ACMP_PRB_W_RETRY) &&
+                    a.sinks[2].timer == (ok ? ACMP_TIMER_NO_TK : ACMP_TIMER_RETRY) && a.sinks[2].acmp_status == status)
+            << "an answer to the probe a held retry repeats ends the hold, and the sink goes on as the answer says";
+        drain();
+        unsigned retries = 0;
+        for (const Sent& s : fk.sent) {
+            Pdu q = read(s.bytes.data());
+            retries += q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 2u ? 1u : 0u;
+        }
+        EXPECT_TRUE(retries == 0u && a.probes_held == holds && a.probes_lost == 0u)
+            << "the retry whose earlier probe was answered is never sent, held or lost";
+    }
+}
+
 }
 
 // REQ: ACMP-02
