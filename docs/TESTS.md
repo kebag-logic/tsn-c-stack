@@ -6,6 +6,7 @@ The campaign requires that named assertion to fail in a completed test run.
 A build error, timeout, crash or unrelated failure never counts as a caught plant.
 Parameterized declarations expand at runtime; release and debug re-entry use separate binaries.
 The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
+In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound](PORTING.md#acmp-owed-bound) assumes: it advances the clock 1 ms, polls once, offers every waiting frame in arrival order until `acmp_rx` declines one or none is left, then services each due interface timer.
 
 | Test | Defect caught | Requirements |
 |---|---|---|
