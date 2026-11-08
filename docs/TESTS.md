@@ -167,3 +167,4 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
 | [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
 | [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |
+| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L2893) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |

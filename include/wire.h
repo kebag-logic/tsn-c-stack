@@ -37,8 +37,12 @@ static inline uint64_t wire_be64(const uint8_t *p)
 
 static inline void wire_put_be(uint8_t *p, uint64_t value, unsigned bytes)
 {
-	for (unsigned i = 0; i < bytes; ++i) {
-		p[i] = (uint8_t)(value >> (8u * (bytes - 1u - i)));
+	uint32_t high = (uint32_t)(value >> 32);
+	uint32_t low = (uint32_t)value;
+	for (unsigned i = bytes; i > 0u; --i) {
+		p[i - 1u] = (uint8_t)low;
+		low = (low >> 8) | (high << 24);
+		high >>= 8;
 	}
 }
 
