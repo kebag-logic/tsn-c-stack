@@ -110,11 +110,13 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AcmpFresh.WindowRange](../tests/test_acmp.cpp#L2463) | dafresh-half-range; dafresh-range-wipes-instance; dafresh-range-calls-clock | ACMP-11, PORT-01 |
 | [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2353) | dafresh-no-renewal; dafresh-answer-stamped-before-send | ACMP-11 |
 | [AcmpFresh.ZeroWindow](../tests/test_acmp.cpp#L2448) | x-zero-never-expires; dafresh-zero-blocks-listener | ACMP-11 |
-| [AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken](../tests/test_acmp.cpp#L2694) | owed-decline-uncounted; owed-listener-acts-then-declines; owed-unbind-rx-drop-restored | ACMP-12, ACMP-03 |
-| [AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet](../tests/test_acmp.cpp#L2620) | acmp-full-queue-acts; owed-listener-drop-restored; owed-decline-uncounted; owed-get-rx-state-drop-restored | ACMP-12, ACMP-09 |
-| [AcmpOwed.OnlyOwnCommandsAreDeclined](../tests/test_acmp.cpp#L2745) | owed-malformed-declined; owed-served-reported-declined; owed-declines-every-frame; owed-declines-foreign-listener; owed-declines-foreign-talker | ACMP-12, ACMP-02 |
-| [AcmpOwed.ReadyPredicateMatchesTheOwedBound](../tests/test_acmp.cpp#L2720) | owed-room-off-by-one; owed-ready-ignores-full; owed-ready-ignores-reentry; owed-ready-off-by-one; owed-reentry-taken; owed-served-reported-declined | ACMP-12, PORT-01 |
-| [AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime](../tests/test_acmp.cpp#L2649) | owed-talker-drop-restored; owed-talker-acts-then-declines; owed-probe-tx-drop-restored; owed-disconnect-tx-drop-restored; owed-get-tx-connection-drop-restored | ACMP-12, ACMP-08 |
+| [AcmpOwed.DeclinedBindIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2769) | owed-bind-rx-drop-restored; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-03 |
+| [AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2804) | owed-get-tx-state-drop-restored; owed-get-tx-state-answer-lost-after-decline | ACMP-12, ACMP-08 |
+| [AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken](../tests/test_acmp.cpp#L2695) | owed-decline-uncounted; owed-listener-acts-then-declines; owed-unbind-rx-drop-restored | ACMP-12, ACMP-03 |
+| [AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet](../tests/test_acmp.cpp#L2621) | acmp-full-queue-acts; owed-listener-drop-restored; owed-decline-uncounted; owed-get-rx-state-drop-restored | ACMP-12, ACMP-09 |
+| [AcmpOwed.OnlyOwnCommandsAreDeclined](../tests/test_acmp.cpp#L2746) | owed-malformed-declined; owed-served-reported-declined; owed-declines-every-frame; owed-declines-foreign-listener; owed-declines-foreign-talker | ACMP-12, ACMP-02 |
+| [AcmpOwed.ReadyPredicateMatchesTheOwedBound](../tests/test_acmp.cpp#L2721) | owed-room-off-by-one; owed-ready-ignores-full; owed-ready-ignores-reentry; owed-ready-off-by-one; owed-reentry-taken; owed-served-reported-declined | ACMP-12, PORT-01 |
+| [AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime](../tests/test_acmp.cpp#L2650) | owed-talker-drop-restored; owed-talker-acts-then-declines; owed-probe-tx-drop-restored; owed-disconnect-tx-drop-restored; owed-get-tx-connection-drop-restored | ACMP-12, ACMP-08 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
 | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
 | [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |

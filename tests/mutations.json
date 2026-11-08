@@ -2142,10 +2142,15 @@
       {
         "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
         "needle": "declines a BIND_RX to its caller"
+      },
+      {
+        "test": "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold",
+        "needle": "a BIND_RX behind the full owed set is declined to the port"
       }
     ],
     "original_tests": [
-      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+      "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold"
     ]
   },
   {
@@ -2187,10 +2192,15 @@
       {
         "test": "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
         "needle": "declines a GET_TX_STATE to its caller"
+      },
+      {
+        "test": "AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold",
+        "needle": "a GET_TX_STATE behind the full owed set is declined to the port"
       }
     ],
     "original_tests": [
-      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs"
+      "AcmpCore.A19AFullQueueDeclinesTheCommandBeforeItActs",
+      "AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold"
     ]
   },
   {
@@ -2221,6 +2231,36 @@
     ],
     "original_tests": [
       "AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime"
+    ]
+  },
+  {
+    "name": "owed-bind-answer-lost-after-decline",
+    "path": "src/acmp.c",
+    "old": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\trespond(a, interface, &r, 1u << k);",
+    "new": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\tif (a->busy_declined == 0u) {\n\t\trespond(a, interface, &r, 1u << k);\n\t}",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold",
+        "needle": "the BIND_RX behind the owed set is answered after the egress returns"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold"
+    ]
+  },
+  {
+    "name": "owed-get-tx-state-answer-lost-after-decline",
+    "path": "src/acmp.c",
+    "old": "\tr.vlan = st.stream.vlan_id;\n\trespond(a, interface, &r, 0u);\n}",
+    "new": "\tr.vlan = st.stream.vlan_id;\n\tif (a->busy_declined == 0u) {\n\t\trespond(a, interface, &r, 0u);\n\t}\n}",
+    "kills": [
+      {
+        "test": "AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold",
+        "needle": "the GET_TX_STATE behind the owed set is answered after the egress returns"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold"
     ]
   },
   {

@@ -2592,6 +2592,7 @@ class AcmpOwed : public AcmpCore {
             pass();
         }
     }
+    unsigned position(const Sent* s) const { return static_cast<unsigned>(s - fk.sent.data()); }
     void fill(std::uint16_t first) {
         fk.room = false;
         for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
@@ -2762,6 +2763,79 @@ TEST_F(AcmpOwed, OnlyOwnCommandsAreDeclined) {
     EXPECT_TRUE(take(probe_answer(0))) << "a probe response needs no owed slot and is taken";
     EXPECT_TRUE(a.busy_declined == 0u && a.rx_malformed == 1u && a.rx_ignored == 3u)
         << "frames without an owed answer are never declined";
+}
+
+// REQ: ACMP-12, ACMP-03
+TEST_F(AcmpOwed, DeclinedBindIsAnsweredAfterTheHold) {
+    fill(0x7700);
+    fk.clear();
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, spec::FLAG_STREAMING_WAIT, 0x7708)))
+        << "a BIND_RX behind the full owed set is declined to the port";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u && !a.sinks[1].bound && a.sinks[1].state == ACMP_UNBOUND)
+        << "the declined BIND_RX binds nothing and makes no port call";
+    EXPECT_FALSE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 1, 0, 0, kCtl2, 0, 0x7709)))
+        << "a GET_RX_STATE waits in the port behind the declined BIND_RX";
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held BIND_RX and the command behind it were taken";
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7708);
+    ASSERT_TRUE(s != nullptr) << "the BIND_RX behind the owed set is answered after the egress returns";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.controller == kCtl1 && r.talker == kTkA && r.talker_uid == 1u &&
+                r.listener == kOwn && r.listener_uid == 1u && r.count == 1u && r.flags == spec::FLAG_STREAMING_WAIT &&
+                r.stream_id == 0u && r.dest_mac == 0u && r.vlan == 0u)
+        << "the BIND_RX answer carries the Milan Table 5.32 fields";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the BIND_RX answer leaves within its 200 ms command timeout";
+    EXPECT_EQ(position(s), ACMP_OWED_MAX) << "the BIND_RX answer leaves right after the eight frames owed ahead of it";
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        EXPECT_EQ(static_cast<unsigned>(read(fk.sent[k].bytes.data()).seq), 0x7700u + k)
+            << "the frames owed ahead of the BIND_RX leave first, in order";
+    }
+    const Sent* behind = answer(spec::MSG_GET_RX_STATE_RESPONSE, 0x7709);
+    ASSERT_TRUE(behind != nullptr) << "the command held behind the BIND_RX is answered too";
+    EXPECT_TRUE(behind->at > s->at && read(behind->bytes.data()).count == 1u)
+        << "the command held behind the BIND_RX is answered after it and sees the new binding";
+    EXPECT_LE(behind->at - arrival, kCommandTimeoutMs) << "the command behind the BIND_RX is answered within 200 ms";
+    EXPECT_TRUE(a.sinks[1].bound && a.sinks[1].binding.talker_entity_id == kTkA && a.sinks[1].binding.streaming_wait)
+        << "the binding takes effect when the BIND_RX is taken";
+}
+
+// REQ: ACMP-12, ACMP-08
+TEST_F(AcmpOwed, DeclinedGetTxStateIsAnsweredAfterTheHold) {
+    fill(0x7800);
+    fk.clear();
+    Pdu p;
+    p.controller = kCtl2;
+    p.talker = kOwn;
+    p.talker_uid = 1u;
+    p.listener = kTkB;
+    p.listener_uid = 3u;
+    p.msg = spec::MSG_GET_TX_STATE_COMMAND;
+    p.seq = 0x7808;
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(p)) << "a GET_TX_STATE behind the full owed set is declined to the port";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u)
+        << "the declined GET_TX_STATE reads no source state and is counted";
+    p.msg = spec::MSG_GET_TX_CONNECTION_COMMAND;
+    p.seq = 0x7809;
+    EXPECT_FALSE(deliver(p)) << "a GET_TX_CONNECTION waits in the port behind the declined GET_TX_STATE";
+    fk.source[1] = acmp_source_state{true, {kSid + 7u, kDa + 7u, 3u}, true};
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held GET_TX_STATE and the command behind it were taken";
+    const Sent* s = answer(spec::MSG_GET_TX_STATE_RESPONSE, 0x7808);
+    ASSERT_TRUE(s != nullptr) << "the GET_TX_STATE behind the owed set is answered after the egress returns";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.controller == kCtl2 && r.talker == kOwn && r.talker_uid == 1u &&
+                r.listener == 0u && r.listener_uid == 0u && r.flags == spec::FLAG_REGISTERING_FAILED &&
+                r.stream_id == kSid + 7u && r.dest_mac == kDa + 7u && r.vlan == 3u)
+        << "the GET_TX_STATE answer carries the Milan Table 5.47 fields from the source state when taken";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the GET_TX_STATE answer leaves within its 200 ms command timeout";
+    EXPECT_EQ(position(s), ACMP_OWED_MAX)
+        << "the GET_TX_STATE answer leaves right after the eight frames owed ahead of it";
+    const Sent* behind = answer(spec::MSG_GET_TX_CONNECTION_RESPONSE, 0x7809);
+    ASSERT_TRUE(behind != nullptr) << "the command held behind the GET_TX_STATE is answered too";
+    EXPECT_EQ(position(behind), ACMP_OWED_MAX + 1u) << "the command held behind the GET_TX_STATE is answered next";
+    EXPECT_LE(behind->at - arrival, kCommandTimeoutMs) << "the command behind the GET_TX_STATE is answered within 200 ms";
 }
 
 }
