@@ -2541,7 +2541,7 @@
     "kills": [
       {
         "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
-        "needle": "each pass that holds a probe counts once"
+        "needle": "each held probe counts once for each pass it is held"
       },
       {
         "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",

@@ -3040,7 +3040,7 @@ TEST_F(AcmpOwed, ProbesFallingDueInTheDrainWaitForTheDeferredBind) {
                 << "a held delay expiry sends the first probe and a held retry the duplicate";
             holds += owed_in[j] - due_in[j];
         }
-        EXPECT_EQ(a.probes_held, holds) << "each pass that holds a probe counts once";
+        EXPECT_EQ(a.probes_held, holds) << "each held probe counts once for each pass it is held";
     }
 }
 
