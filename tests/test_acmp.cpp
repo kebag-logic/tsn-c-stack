@@ -1093,21 +1093,23 @@ TEST_F(AcmpCore, A19NothingPassesAnOwedFrame) {
         << "A19 they leave in the order they were made";
 }
 
-// REQ: ACMP-09
-TEST_F(AcmpCore, A19AFullQueueDropsTheCommandBeforeItActs) {
+// REQ: ACMP-09, ACMP-12
+TEST_F(AcmpCore, A19AFullQueueDeclinesTheCommandBeforeItActs) {
     fk.room = false;
     for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
         rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(k)));
     }
     ASSERT_EQ(a.owed_count, ACMP_OWED_MAX);
     fk.clear();
-    bind(1);
+    auto b = acmpdu(command(spec::MSG_BIND_RX_COMMAND, 1));
+    EXPECT_FALSE(acmp_rx(&a, 0, b.data(), b.size())) << "A19 a full queue declines a BIND_RX to its caller";
     Pdu t;
     t.msg = spec::MSG_GET_TX_STATE_COMMAND;
     t.talker = kOwn;
-    rx(t);
-    EXPECT_TRUE(a.busy_drops == 2u && a.sinks[1].state == ACMP_UNBOUND && fk.calls.empty())
-        << "A19 a command whose response would find the queue full is dropped before it changes anything";
+    auto g = acmpdu(t);
+    EXPECT_FALSE(acmp_rx(&a, 0, g.data(), g.size())) << "A19 a full queue declines a GET_TX_STATE to its caller";
+    EXPECT_TRUE(a.busy_declined == 2u && a.sinks[1].state == ACMP_UNBOUND && fk.calls.empty())
+        << "A19 a command whose response would find the queue full is declined before it changes anything";
 }
 
 // REQ: ACMP-09
@@ -2556,6 +2558,991 @@ TEST_F(AcmpFresh, ListenerWithdrawalAndReset) {
     EXPECT_EQ(a.sources[0].answered_at, 0u) << "initialization clears the saved answer timestamp itself";
 }
 
+class AcmpOwed : public AcmpCore {
+ protected:
+    static constexpr std::uint32_t kCommandTimeoutMs = 200u;   // Milan v1.2 Table 5.26; IEEE 1722.1-2021 Table 8-1
+    static constexpr std::uint32_t kHoldMs = 60u;
+
+    struct Held {
+        unsigned interface;
+        std::array<std::uint8_t, spec::FRAME_BYTES> bytes;
+    };
+    std::vector<Held> held;
+
+    bool deliver(const Pdu& p, unsigned interface = 0) {
+        auto f = acmpdu(p);
+        if (held.empty() && acmp_rx(&a, interface, f.data(), f.size())) {
+            return true;
+        }
+        held.push_back({interface, f});
+        return false;
+    }
+    void pass() {
+        fk.now += 1u;
+        static_cast<void>(acmp_poll(&a));
+        while (!held.empty() &&
+               acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size())) {
+            held.erase(held.begin());
+        }
+        for (unsigned i = 0; i < cfg.n_interfaces; ++i) {
+            if (fk.armed[i] && static_cast<std::int32_t>(fk.now - fk.at[i]) >= 0) {
+                acmp_timer_expired(&a, i);
+            }
+        }
+    }
+    void drain() {
+        for (unsigned n = 0; n < 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {
+            pass();
+        }
+    }
+    void release_after_hold() {
+        fk.now += kHoldMs;
+        fk.room = true;
+        drain();
+    }
+    unsigned position(const Sent* s) const { return static_cast<unsigned>(s - fk.sent.data()); }
+    void fill(std::uint16_t first) {
+        fk.room = false;
+        for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+            rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(first + k)));
+        }
+    }
+    const Sent* answer(std::uint8_t msg, std::uint16_t seq) const {
+        for (const Sent& s : fk.sent) {
+            Pdu p = read(s.bytes.data());
+            if (p.msg == msg && p.seq == seq) {
+                return &s;
+            }
+        }
+        return nullptr;
+    }
+    bool unchanged_since(const acmp& before) const {
+        acmp now_image;
+        std::memcpy(&now_image, &a, sizeof a);
+        now_image.busy_declined = before.busy_declined;
+        now_image.now_read = before.now_read;
+        return std::memcmp(&now_image, &before, sizeof a) == 0;
+    }
+
+    // Milan v1.2 5.5.3.5.10; Milan v1.2 5.5.3.5.16
+    std::vector<unsigned> others;
+    std::vector<std::uint32_t> due_in;
+    std::vector<std::uint32_t> owed_in;
+    std::uint32_t arrival = 0;
+    std::uint32_t released = 0;
+    std::uint32_t taken_in = 0;
+    void sinks_on_one_interface(unsigned n) {
+        held.clear();
+        others.clear();
+        cfg.n_sinks = n;
+        for (unsigned k = 0; k < n; ++k) {
+            cfg.sink_interface[k] = 0;
+        }
+        ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv));
+        fk.room = true;
+    }
+    void retries_due(unsigned first, unsigned count, std::uint32_t step_ms) {
+        for (unsigned k = first; k < first + count; ++k) {
+            fk.now += step_ms;
+            bind(k, kTkB, static_cast<std::uint16_t>(k));
+            others.push_back(k);
+        }
+    }
+    void bind_behind_the_owed_set_with_probes_due(std::uint32_t hold_ms, unsigned behind = 0) {
+        std::uint32_t first_due = a.sinks[others.front()].timer_deadline;
+        for (unsigned k : others) {
+            first_due = static_cast<std::int32_t>(a.sinks[k].timer_deadline - first_due) < 0 ? a.sinks[k].timer_deadline
+                                                                                               : first_due;
+        }
+        fk.now = first_due - hold_ms - 1u;
+        fill(0x7A00);
+        fk.clear();
+        arrival = fk.now;
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7A08)))
+            << "a BIND_RX behind the full owed set is declined while other probes are about to fall due";
+        for (unsigned i = 0; i < behind; ++i) {
+            EXPECT_FALSE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 1, 0, 0, kCtl2, 0,
+                                         static_cast<std::uint16_t>(0x7A09 + i))))
+                << "a command waits in the port behind the deferred BIND_RX";
+        }
+        std::vector<acmp_sink_state> from;
+        due_in.clear();
+        owed_in.assign(others.size(), 0u);
+        for (unsigned k : others) {
+            from.push_back(a.sinks[k].state);
+            due_in.push_back(a.sinks[k].timer_deadline - (first_due - 1u));
+        }
+        fk.now += hold_ms;
+        fk.room = true;
+        released = fk.now;
+        taken_in = 0;
+        unsigned waiting_with_room = 0;
+        for (std::uint32_t n = 1; n <= 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {
+            pass();
+            taken_in = taken_in == 0u && a.sinks[1].bound ? n : taken_in;
+            for (unsigned j = 0; j < others.size(); ++j) {
+                owed_in[j] = owed_in[j] == 0u && a.sinks[others[j]].state != from[j] ? n : owed_in[j];
+            }
+            waiting_with_room += a.bind_waiting && a.owed_count + 1u < ACMP_OWED_MAX ? 1u : 0u;
+        }
+        EXPECT_EQ(waiting_with_room, 0u) << "while bind_waiting is set at most one owed slot is free";
+    }
+
+    // Milan v1.2 5.5.3.5.3
+    struct Kept {
+        Pdu pdu;
+        std::uint8_t rsp;
+        unsigned owes;
+    };
+    static Kept kept_bind(unsigned sink, std::uint16_t uid, std::uint16_t seq, unsigned owes = 2u) {
+        return {command(spec::MSG_BIND_RX_COMMAND, sink, kTkA, uid, kCtl1, 0, seq), spec::MSG_BIND_RX_RESPONSE, owes};
+    }
+    static Kept kept_get(unsigned sink, std::uint16_t seq) {
+        return {command(spec::MSG_GET_RX_STATE_COMMAND, sink, 0, 0, kCtl2, 0, seq), spec::MSG_GET_RX_STATE_RESPONSE, 1u};
+    }
+    std::vector<const Sent*> kept_answers;
+    void keep_and_release(const std::vector<Kept>& kept, std::uint32_t hold_ms) {
+        fill(0x7D00);
+        fk.clear();
+        arrival = fk.now;
+        for (const Kept& k : kept) {
+            EXPECT_FALSE(deliver(k.pdu)) << "a command behind the full owed set waits in the port";
+        }
+        fk.now += hold_ms;
+        fk.room = true;
+        released = fk.now;
+        drain();
+        kept_answers.clear();
+        for (const Kept& k : kept) {
+            kept_answers.push_back(k.owes == 0u ? nullptr : answer(k.rsp, k.pdu.seq));
+        }
+    }
+};
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, HeldEgressDefersTheCommandBehindTheOwedSet) {
+    fill(0x7380);
+    ASSERT_EQ(a.owed_count, ACMP_OWED_MAX);
+    fk.clear();
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 0x7388)))
+        << "a GET_RX_STATE behind the full owed set is declined to the port, not taken";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u && a.owed_count == ACMP_OWED_MAX)
+        << "the declined GET_RX_STATE makes no port call and is counted once";
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held command was taken and every owed frame left";
+    const Sent* s = answer(spec::MSG_GET_RX_STATE_RESPONSE, 0x7388);
+    ASSERT_TRUE(s != nullptr) << "the command behind the owed set is answered after the egress returns";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.controller == kCtl2 && r.listener == kOwn &&
+                r.listener_uid == 0u && r.talker == 0u && r.talker_uid == 0u && r.count == 0u && r.flags == 0u &&
+                r.stream_id == 0u)
+        << "its answer is the Milan Table 5.34 response, not an error status";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the deferred answer leaves within its 200 ms command timeout";
+    ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + 1u);
+    for (unsigned k = 0; k <= ACMP_OWED_MAX; ++k) {
+        EXPECT_EQ(static_cast<unsigned>(read(fk.sent[k].bytes.data()).seq), 0x7380u + k)
+            << "the answers leave in command order, none lost";
+    }
+    EXPECT_EQ(s->at - arrival, kHoldMs + ACMP_OWED_MAX + 1u)
+        << "the deferred answer leaves in the pass after the eight frames owed ahead of it";
+}
+
+// REQ: ACMP-12, ACMP-08
+TEST_F(AcmpOwed, TalkerCommandsBehindTheOwedSetAreAnsweredInTime) {
+    fill(0x7400);
+    fk.clear();
+    Pdu p;
+    p.controller = kCtl2;
+    p.talker = kOwn;
+    p.listener = kTkB;
+    p.listener_uid = 3u;
+    p.flags = spec::FLAG_FAST_CONNECT;
+    const std::uint32_t arrival = fk.now;
+    p.msg = spec::MSG_PROBE_TX_COMMAND;
+    p.seq = 0x7408;
+    EXPECT_FALSE(deliver(p)) << "a PROBE_TX behind the full owed set is declined to the port";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u)
+        << "the declined PROBE_TX reads no source state and is counted";
+    p.msg = spec::MSG_DISCONNECT_TX_COMMAND;
+    p.seq = 0x7409;
+    EXPECT_FALSE(deliver(p)) << "a DISCONNECT_TX waits in the port behind the declined command";
+    p.msg = spec::MSG_GET_TX_CONNECTION_COMMAND;
+    p.seq = 0x740A;
+    EXPECT_FALSE(deliver(p)) << "a GET_TX_CONNECTION waits in the port behind the declined commands";
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held talker commands were all taken";
+    const Sent* probe = answer(spec::MSG_PROBE_TX_RESPONSE, 0x7408);
+    ASSERT_TRUE(probe != nullptr) << "the PROBE_TX behind the owed set is answered";
+    Pdu r = read(probe->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.stream_id == kSid && r.dest_mac == kDa && r.vlan == 2u &&
+                r.flags == spec::FLAG_FAST_CONNECT && r.listener == kTkB && r.listener_uid == 3u)
+        << "the PROBE_TX answer carries the Milan Table 5.43 fields";
+    const Sent* disconnect = answer(spec::MSG_DISCONNECT_TX_RESPONSE, 0x7409);
+    ASSERT_TRUE(disconnect != nullptr) << "the DISCONNECT_TX behind the owed set is answered";
+    EXPECT_TRUE(read(disconnect->bytes.data()).status == spec::STATUS_SUCCESS)
+        << "the DISCONNECT_TX answer is the Milan Table 5.45 success";
+    const Sent* connection = answer(spec::MSG_GET_TX_CONNECTION_RESPONSE, 0x740A);
+    ASSERT_TRUE(connection != nullptr) << "the GET_TX_CONNECTION behind the owed set is answered";
+    EXPECT_TRUE(read(connection->bytes.data()).status == spec::STATUS_NOT_SUPPORTED)
+        << "the GET_TX_CONNECTION answer is the Milan Table 5.48 refusal";
+    for (const Sent* s : {probe, disconnect, connection}) {
+        EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "each talker answer leaves within its 200 ms command timeout";
+    }
+    EXPECT_TRUE(probe->at < disconnect->at && disconnect->at < connection->at)
+        << "the held talker answers leave in arrival order";
+}
+
+// REQ: ACMP-12, ACMP-03
+TEST_F(AcmpOwed, DeclinedUnbindChangesNothingUntilItIsTaken) {
+    bind(1);
+    ASSERT_TRUE(a.sinks[1].bound);
+    fill(0x7500);
+    fk.clear();
+    acmp before;
+    std::memcpy(&before, &a, sizeof a);
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_UNBIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7508)))
+        << "an UNBIND_RX behind the full owed set is declined";
+    EXPECT_TRUE(fk.calls.empty() && fk.pubs.empty())
+        << "the declined UNBIND_RX calls no port or environment service";
+    EXPECT_TRUE(unchanged_since(before)) << "the declined UNBIND_RX changes no instance state but its counter";
+    EXPECT_EQ(a.busy_declined, before.busy_declined + 1u) << "the declined UNBIND_RX is counted once";
+    release_after_hold();
+    const Sent* s = answer(spec::MSG_UNBIND_RX_RESPONSE, 0x7508);
+    ASSERT_TRUE(s != nullptr) << "the UNBIND_RX behind the owed set is answered once it is taken";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.talker == 0u && r.talker_uid == 0u && r.listener_uid == 1u)
+        << "the UNBIND_RX answer is the Milan Table 5.36 success";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the UNBIND_RX answer leaves within its 200 ms command timeout";
+    EXPECT_TRUE(!a.sinks[1].bound && a.sinks[1].state == ACMP_UNBOUND)
+        << "the unbinding takes effect only when the command is taken";
+}
+
+// REQ: ACMP-12, PORT-01
+TEST_F(AcmpOwed, ReadyPredicateMatchesTheOwedBound) {
+    fk.room = false;
+    for (unsigned k = 0; k + 2u < ACMP_OWED_MAX; ++k) {
+        rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(k)));
+    }
+    EXPECT_TRUE(acmp_rx_ready(&a)) << "two free owed slots keep the core ready";
+    rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 6u));
+    ASSERT_EQ(a.owed_count, ACMP_OWED_MAX - 1u);
+    EXPECT_FALSE(acmp_rx_ready(&a)) << "one free owed slot is not ready, since a BIND_RX needs two";
+    auto bind_rx = acmpdu(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x77u));
+    EXPECT_FALSE(acmp_rx(&a, 0, bind_rx.data(), bind_rx.size()))
+        << "a BIND_RX with one free owed slot is declined";
+    EXPECT_TRUE(a.busy_declined == 1u && !a.sinks[1].bound) << "the BIND_RX declined at one free slot binds nothing";
+    auto last_slot = acmpdu(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 7u));
+    EXPECT_TRUE(acmp_rx(&a, 0, last_slot.data(), last_slot.size()))
+        << "the command that takes the last owed slot is taken";
+    EXPECT_EQ(a.owed_count, ACMP_OWED_MAX) << "the last owed slot holds that answer";
+    EXPECT_FALSE(acmp_rx_ready(&a)) << "a full owed set is not ready";
+    fk.room = true;
+    EXPECT_TRUE(acmp_poll(&a));
+    EXPECT_FALSE(acmp_rx_ready(&a)) << "one accepted owed frame leaves one free slot, still not ready";
+    EXPECT_TRUE(acmp_poll(&a));
+    EXPECT_TRUE(acmp_rx_ready(&a)) << "a second accepted owed frame makes the core ready again";
+    auto f = acmpdu(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 9u));
+    fk.hook_kind = Call::SEND;
+    fk.hook = [&]() {
+        EXPECT_FALSE(acmp_rx_ready(&a)) << "the core is not ready inside a port callback";
+        EXPECT_FALSE(acmp_rx(&a, 0, f.data(), f.size())) << "a frame offered by callback re-entry is declined";
+    };
+    EXPECT_TRUE(acmp_poll(&a));
+    EXPECT_TRUE(a.reentries == 1u && reentry_traps == 1u && a.busy_declined == 1u)
+        << "the re-entered frame counts as re-entry, not as a full owed set";
+}
+
+// REQ: ACMP-12, ACMP-02
+TEST_F(AcmpOwed, OnlyOwnCommandsAreDeclined) {
+    fill(0x7600);
+    fk.clear();
+    auto f = acmpdu(command(spec::MSG_GET_RX_STATE_COMMAND, 0));
+    EXPECT_TRUE(acmp_rx(&a, 0, f.data(), spec::FRAME_BYTES - 1u))
+        << "a malformed frame is taken and counted while the owed set is full";
+    auto take = [&](const Pdu& p) {
+        auto g = acmpdu(p);
+        return acmp_rx(&a, 0, g.data(), g.size());
+    };
+    Pdu other_listener = command(spec::MSG_GET_RX_STATE_COMMAND, 0);
+    other_listener.listener = kTkB;
+    EXPECT_TRUE(take(other_listener)) << "a listener command for another entity is taken and ignored";
+    Pdu other_talker;
+    other_talker.msg = spec::MSG_GET_TX_STATE_COMMAND;
+    other_talker.talker = kTkB;
+    EXPECT_TRUE(take(other_talker)) << "a talker command for another entity is taken and ignored";
+    EXPECT_TRUE(take(probe_answer(0))) << "a probe response needs no owed slot and is taken";
+    EXPECT_TRUE(a.busy_declined == 0u && a.rx_malformed == 1u && a.rx_ignored == 3u)
+        << "frames without an owed answer are never declined";
+}
+
+// REQ: ACMP-12, ACMP-03
+TEST_F(AcmpOwed, DeclinedBindIsAnsweredAfterTheHold) {
+    fill(0x7700);
+    fk.clear();
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, spec::FLAG_STREAMING_WAIT, 0x7708)))
+        << "a BIND_RX behind the full owed set is declined to the port";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u && !a.sinks[1].bound && a.sinks[1].state == ACMP_UNBOUND)
+        << "the declined BIND_RX binds nothing and makes no port call";
+    EXPECT_FALSE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 1, 0, 0, kCtl2, 0, 0x7709)))
+        << "a GET_RX_STATE waits in the port behind the declined BIND_RX";
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held BIND_RX and the command behind it were taken";
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7708);
+    ASSERT_TRUE(s != nullptr) << "the BIND_RX behind the owed set is answered after the egress returns";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.controller == kCtl1 && r.talker == kTkA && r.talker_uid == 1u &&
+                r.listener == kOwn && r.listener_uid == 1u && r.count == 1u && r.flags == spec::FLAG_STREAMING_WAIT &&
+                r.stream_id == 0u && r.dest_mac == 0u && r.vlan == 0u)
+        << "the BIND_RX answer carries the Milan Table 5.32 fields";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the BIND_RX answer leaves within its 200 ms command timeout";
+    EXPECT_EQ(position(s), ACMP_OWED_MAX) << "the BIND_RX answer leaves right after the eight frames owed ahead of it";
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        EXPECT_EQ(static_cast<unsigned>(read(fk.sent[k].bytes.data()).seq), 0x7700u + k)
+            << "the frames owed ahead of the BIND_RX leave first, in order";
+    }
+    const Sent* behind = answer(spec::MSG_GET_RX_STATE_RESPONSE, 0x7709);
+    ASSERT_TRUE(behind != nullptr) << "the command held behind the BIND_RX is answered too";
+    EXPECT_TRUE(behind->at > s->at && read(behind->bytes.data()).count == 1u)
+        << "the command held behind the BIND_RX is answered after it and sees the new binding";
+    EXPECT_LE(behind->at - arrival, kCommandTimeoutMs) << "the command behind the BIND_RX is answered within 200 ms";
+    EXPECT_TRUE(a.sinks[1].bound && a.sinks[1].binding.talker_entity_id == kTkA && a.sinks[1].binding.streaming_wait)
+        << "the binding takes effect when the BIND_RX is taken";
+}
+
+// REQ: ACMP-12, ACMP-08
+TEST_F(AcmpOwed, DeclinedGetTxStateIsAnsweredAfterTheHold) {
+    fill(0x7800);
+    fk.clear();
+    Pdu p;
+    p.controller = kCtl2;
+    p.talker = kOwn;
+    p.talker_uid = 1u;
+    p.listener = kTkB;
+    p.listener_uid = 3u;
+    p.msg = spec::MSG_GET_TX_STATE_COMMAND;
+    p.seq = 0x7808;
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(p)) << "a GET_TX_STATE behind the full owed set is declined to the port";
+    EXPECT_TRUE(fk.calls.empty() && a.busy_declined == 1u)
+        << "the declined GET_TX_STATE reads no source state and is counted";
+    p.msg = spec::MSG_GET_TX_CONNECTION_COMMAND;
+    p.seq = 0x7809;
+    EXPECT_FALSE(deliver(p)) << "a GET_TX_CONNECTION waits in the port behind the declined GET_TX_STATE";
+    fk.source[1] = acmp_source_state{true, {kSid + 7u, kDa + 7u, 3u}, true};
+    release_after_hold();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the held GET_TX_STATE and the command behind it were taken";
+    const Sent* s = answer(spec::MSG_GET_TX_STATE_RESPONSE, 0x7808);
+    ASSERT_TRUE(s != nullptr) << "the GET_TX_STATE behind the owed set is answered after the egress returns";
+    Pdu r = read(s->bytes.data());
+    EXPECT_TRUE(r.status == spec::STATUS_SUCCESS && r.controller == kCtl2 && r.talker == kOwn && r.talker_uid == 1u &&
+                r.listener == 0u && r.listener_uid == 0u && r.count == 0u && r.flags == spec::FLAG_REGISTERING_FAILED &&
+                r.stream_id == kSid + 7u && r.dest_mac == kDa + 7u && r.vlan == 3u)
+        << "the GET_TX_STATE answer carries the Milan Table 5.47 fields from the source state when taken";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the GET_TX_STATE answer leaves within its 200 ms command timeout";
+    EXPECT_EQ(position(s), ACMP_OWED_MAX)
+        << "the GET_TX_STATE answer leaves right after the eight frames owed ahead of it";
+    const Sent* behind = answer(spec::MSG_GET_TX_CONNECTION_RESPONSE, 0x7809);
+    ASSERT_TRUE(behind != nullptr) << "the command held behind the GET_TX_STATE is answered too";
+    EXPECT_EQ(position(behind), ACMP_OWED_MAX + 1u) << "the command held behind the GET_TX_STATE is answered next";
+    EXPECT_LE(behind->at - arrival, kCommandTimeoutMs) << "the command behind the GET_TX_STATE is answered within 200 ms";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, DeferredBindWaitsForTwoSlotsAndLosesNoProbe) {
+    fill(0x7900);
+    fk.clear();
+    const std::uint32_t arrival = fk.now;
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7908)))
+        << "a new binding behind the full owed set is declined";
+    fk.now += kHoldMs;
+    fk.room = true;
+    pass();
+    EXPECT_TRUE(held.size() == 1u && a.owed_count == ACMP_OWED_MAX - 1u && a.busy_declined == 2u && !a.sinks[1].bound)
+        << "with one free owed slot the BIND_RX is declined again";
+    pass();
+    EXPECT_TRUE(held.empty() && a.owed_count == ACMP_OWED_MAX && a.sinks[1].bound)
+        << "with two free owed slots the BIND_RX is taken, and its answer and probe are both owed";
+    drain();
+    EXPECT_EQ(a.probes_lost, 0u) << "a deferred binding loses no probe";
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7908);
+    ASSERT_TRUE(s != nullptr) << "the deferred BIND_RX is answered";
+    EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the deferred BIND_RX answer leaves within 200 ms";
+    ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + 2u) << "the owed frames, the BIND_RX answer and one probe leave";
+    const Sent& probe = fk.sent.back();
+    Pdu q = read(probe.bytes.data());
+    EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.talker == kTkA && q.listener_uid == 1u &&
+                q.seq == a.sinks[1].probe_seq && probe.at == s->at + 1u)
+        << "the first probe leaves at once, in the pass after the BIND_RX answer";
+    EXPECT_TRUE(a.sinks[1].state == ACMP_PRB_W_RESP && !a.sinks[1].probe_retried &&
+                a.sinks[1].timer == ACMP_TIMER_NO_RESP && a.sinks[1].timer_deadline == probe.at + spec::TMR_NO_RESP_MS)
+        << "the probe's timeout runs from when it left, with its retry still unused";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, ProbesFallingDueInTheDrainWaitForTheDeferredBind) {
+    struct Case {
+        unsigned retries;
+        std::uint32_t step_ms;
+        bool delay;
+        unsigned behind;
+    };
+    for (const Case& c : {Case{1u, 1u, false, 0u}, Case{0u, 0u, true, 0u}, Case{4u, 1u, false, 0u},
+                          Case{4u, 0u, false, 0u}, Case{2u, 1u, false, 2u}}) {
+        SetUp();
+        sinks_on_one_interface(2u + c.retries + (c.delay ? 1u : 0u));
+        retries_due(2u, c.retries, c.step_ms);
+        if (c.delay) {
+            to_state(2u + c.retries, ACMP_PRB_W_DELAY);
+            others.push_back(2u + c.retries);
+        }
+        bind_behind_the_owed_set_with_probes_due(kHoldMs, c.behind);
+        ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "the deferred BIND_RX was taken and every owed frame left";
+        EXPECT_EQ(taken_in, 2u) << "the deferred BIND_RX is declined once more at one free slot and taken in pass two";
+        EXPECT_EQ(a.busy_declined, 2u + c.behind) << "no probe makes the deferred BIND_RX wait another pass";
+        const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7A08);
+        ASSERT_TRUE(s != nullptr) << "the deferred BIND_RX is answered while other probes fall due";
+        EXPECT_EQ(s->at - released, ACMP_OWED_MAX + 1u)
+            << "the deferred BIND_RX is answered in pass ACMP_OWED_MAX + 1 though other probes fall due";
+        EXPECT_EQ(position(s), ACMP_OWED_MAX) << "no held probe leaves ahead of the deferred BIND_RX answer";
+        EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "the BIND_RX answer still leaves within 200 ms";
+        EXPECT_EQ(a.probes_lost, 0u) << "no probe held for the deferred BIND_RX is lost";
+        ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + 2u + c.behind + others.size())
+            << "the owed frames, the BIND_RX answer and its probe, and every held probe leave";
+        Pdu own = read(fk.sent[ACMP_OWED_MAX + 1u].bytes.data());
+        EXPECT_TRUE(own.msg == spec::MSG_PROBE_TX_COMMAND && own.listener_uid == 1u && own.talker == kTkA)
+            << "the deferred binding's own probe leaves right after its answer";
+        for (unsigned i = 0; i < c.behind; ++i) {
+            const Sent& left = fk.sent[ACMP_OWED_MAX + 2u + i];
+            Pdu kept = read(left.bytes.data());
+            EXPECT_TRUE(kept.msg == spec::MSG_GET_RX_STATE_RESPONSE && kept.seq == 0x7A09u + i && kept.count == 1u)
+                << "each command kept behind the BIND_RX is answered after its frames and before any held probe";
+            const Sent* kept_answer = answer(spec::MSG_GET_RX_STATE_RESPONSE, static_cast<std::uint16_t>(0x7A09u + i));
+            ASSERT_TRUE(kept_answer != nullptr) << "each command kept behind the BIND_RX is answered";
+            EXPECT_EQ(kept_answer->at - released, ACMP_OWED_MAX + 1u + 2u + i)
+                << "a command kept behind the BIND_RX leaves in pass ACMP_OWED_MAX + 1 + f, f the frames owed ahead of it";
+        }
+        std::uint32_t holds = 0;
+        for (unsigned j = 0; j < others.size(); ++j) {
+            const Sent& left = fk.sent[ACMP_OWED_MAX + 2u + c.behind + j];
+            Pdu q = read(left.bytes.data());
+            const acmp_sink& sink = a.sinks[others[j]];
+            EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == others[j] && q.seq == sink.probe_seq)
+                << "each held probe leaves after the deferred binding's frames, in sink order";
+            EXPECT_EQ(owed_in[j], taken_in + 1u + c.behind + j)
+                << "each held probe is owed in the pass after the BIND_RX is taken, one pass per probe before it";
+            EXPECT_TRUE(sink.timer == ACMP_TIMER_NO_RESP && !sink.timer_held && !sink.probe_held &&
+                        sink.timer_deadline == left.at + spec::TMR_NO_RESP_MS)
+                << "each held probe was sent, and its timeout runs from when it left";
+            EXPECT_TRUE(sink.state == (c.delay && j + 1u == others.size() ? ACMP_PRB_W_RESP : ACMP_PRB_W_RESP2))
+                << "a held delay expiry sends the first probe and a held retry the duplicate";
+            holds += owed_in[j] - due_in[j];
+        }
+        EXPECT_EQ(a.probes_held, holds) << "each held probe counts once for each pass it is held";
+    }
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, DeferredBindAtTheDocumentedMarginMeetsItsTimeout) {
+    const std::uint32_t margin = kCommandTimeoutMs - (ACMP_OWED_MAX + 1u);
+    for (unsigned retries : {1u, 4u}) {
+        SetUp();
+        sinks_on_one_interface(2u + retries);
+        retries_due(2u, retries, 1u);
+        bind_behind_the_owed_set_with_probes_due(margin);
+        const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7A08);
+        ASSERT_TRUE(s != nullptr) << "the BIND_RX deferred for the margin hold is answered";
+        EXPECT_EQ(s->at - arrival, kCommandTimeoutMs)
+            << "a 191 ms hold leaves the deferred BIND_RX exactly the documented passes of its 200 ms timeout";
+        EXPECT_TRUE(a.probes_lost == 0u && a.probes_held != 0u && fk.sent.size() == ACMP_OWED_MAX + 2u + retries)
+            << "at the margin every probe falling due is held and sent, none lost";
+    }
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, HoldEndsWithTheLastHeldProbe) {
+    sinks_on_one_interface(3u);
+    retries_due(2u, 1u, 1u);
+    Adp here;
+    here.entity = kTkB;
+    adp(here);
+    ASSERT_TRUE(a.sinks[2].discovered && a.sinks[2].state == ACMP_PRB_W_RESP) << "the probing sink knows its talker";
+    fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+    fill(0x7B00);
+    fk.clear();
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7B08)))
+        << "a BIND_RX is declined behind the full owed set before the retry falls due";
+    fk.now += kHoldMs;
+    fk.room = true;
+    pass();
+    ASSERT_TRUE(a.sinks[2].probe_held && a.probes_held == 1u && a.owed_count == ACMP_OWED_MAX - 1u)
+        << "the retry falling due beside the deferred BIND_RX is held, not owed";
+    Adp gone = here;
+    gone.msg = spec::ADPDU_ENTITY_DEPARTING;
+    adp(gone);
+    EXPECT_TRUE(!a.sinks[2].probe_held && a.sinks[2].state == ACMP_PRB_W_AVAIL && a.sinks[2].timer == ACMP_TIMER_NONE)
+        << "a held probe whose talker departs is dropped with the probing it belonged to";
+    drain();
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u && a.sinks[1].bound) << "the deferred BIND_RX was taken";
+    ASSERT_TRUE(a.sinks[1].state == ACMP_PRB_W_RESP && a.probes_lost == 0u) << "the new binding's first probe left";
+    fill(0x7C00);
+    fk.now = a.sinks[1].timer_deadline;
+    acmp_timer_expired(&a, 0);
+    EXPECT_TRUE(a.probes_lost == 1u && a.probes_held == 1u && !a.sinks[1].probe_held &&
+                a.sinks[1].state == ACMP_PRB_W_RESP2)
+        << "with no probe held and no BIND_RX waiting, a retry that finds every slot owed is lost and counted";
+}
+
+// REQ: ACMP-12
+TEST_F(AcmpOwed, OwedSetIsEightFramesOfEightyBytes) {
+    EXPECT_TRUE(ACMP_OWED_MAX == 8u && sizeof a.owed[0] == 80u && sizeof a.owed == 640u)
+        << "the owed set holds eight frames of 80 bytes, 640 bytes";
+}
+
+// REQ: ACMP-12
+TEST_F(AcmpOwed, AnsweredOnlyBindAlsoWaitsForTwoSlots) {
+    bind(1);
+    ASSERT_TRUE(a.sinks[1].bound);
+    fk.room = false;
+    for (unsigned k = 0; k + 1u < ACMP_OWED_MAX; ++k) {
+        rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(0x7E00 + k)));
+    }
+    ASSERT_EQ(a.owed_count, ACMP_OWED_MAX - 1u);
+    fk.clear();
+    for (const Pdu& p : {command(spec::MSG_BIND_RX_COMMAND, 40, kTkA, 1, kCtl1, 0, 0x7E08),
+                         command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7E09)}) {
+        auto f = acmpdu(p);
+        EXPECT_FALSE(acmp_rx(&a, 0, f.data(), f.size()))
+            << "a BIND_RX that is only answered also waits for two free owed slots";
+    }
+    EXPECT_TRUE(a.busy_declined == 2u && a.unknown_sink == 0u && fk.calls.empty() && a.bind_waiting)
+        << "the BIND_RX for an unknown sink and the same-talker rebind are declined unchanged at one free slot";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, BindDeclinedBehindTheFullSetHoldsNoProbe) {
+    sinks_on_one_interface(3u);
+    retries_due(2u, 1u, 1u);
+    fk.now = a.sinks[2].timer_deadline - 10u;
+    fill(0x7E80);
+    fk.clear();
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7E88)))
+        << "a BIND_RX behind the full owed set is declined";
+    EXPECT_FALSE(a.bind_waiting) << "a BIND_RX declined with no slot free does not set bind_waiting";
+    fk.now = a.sinks[2].timer_deadline;
+    acmp_timer_expired(&a, 0);
+    EXPECT_TRUE(!a.sinks[2].probe_held && a.probes_held == 0u && a.probes_lost == 1u &&
+                a.sinks[2].state == ACMP_PRB_W_RESP2 && a.sinks[2].timer == ACMP_TIMER_NO_RESP &&
+                a.sinks[2].timer_deadline == fk.now + spec::TMR_NO_RESP_MS)
+        << "a retry falling due while a BIND_RX waits behind the full set is lost and counted, and its timeout runs";
+    release_after_hold();
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7E88);
+    ASSERT_TRUE(s != nullptr) << "the BIND_RX declined behind the full set is answered after the egress returns";
+    EXPECT_EQ(position(s), ACMP_OWED_MAX) << "the BIND_RX answer leaves right after the eight frames owed ahead of it";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, OnlyTimerProbesAreHeldBesideTheWaitingBind) {
+    sinks_on_one_interface(5u);
+    to_state(3u, ACMP_PRB_W_RESP2);
+    to_state(2u, ACMP_PRB_W_RETRY);
+    to_state(4u, ACMP_SETTLED_NO_RSV);
+    ASSERT_TRUE(a.sinks[2].timer == ACMP_TIMER_RETRY && a.sinks[3].timer == ACMP_TIMER_NO_RESP &&
+                a.sinks[4].timer == ACMP_TIMER_NO_TK && fk.now + 100u < a.sinks[3].timer_deadline)
+        << "three sinks wait on timers whose expiry sends no probe";
+    fk.now += 100u;
+    fill(0x7F00);
+    fk.clear();
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7F08)));
+    fk.room = true;
+    pass();
+    fk.room = false;
+    ASSERT_TRUE(a.bind_waiting && a.owed_count == ACMP_OWED_MAX - 1u && held.size() == 1u)
+        << "the BIND_RX waits for its second slot while the egress is held again";
+    fire(3);
+    EXPECT_TRUE(a.sinks[3].state == ACMP_PRB_W_RETRY && a.sinks[3].timer == ACMP_TIMER_RETRY &&
+                a.sinks[3].timer_deadline == fk.now + spec::TMR_RETRY_MS && !a.sinks[3].probe_held &&
+                a.sinks[3].acmp_status == spec::STATUS_LISTENER_TALKER_TIMEOUT)
+        << "the TMR_NO_RESP that ends PRB_W_RESP2 is not held beside a waiting BIND_RX";
+    fire(2);
+    EXPECT_TRUE(a.sinks[2].state == ACMP_PRB_W_AVAIL && a.sinks[2].timer == ACMP_TIMER_NONE && !a.sinks[2].probe_held)
+        << "a TMR_RETRY expiry is not held beside a waiting BIND_RX";
+    fire(4);
+    EXPECT_TRUE(a.sinks[4].state == ACMP_PRB_W_AVAIL && a.sinks[4].timer == ACMP_TIMER_NONE && !a.sinks[4].probe_held)
+        << "a TMR_NO_TK expiry is not held beside a waiting BIND_RX";
+    EXPECT_TRUE(a.probes_held == 0u && a.bind_waiting && a.owed_count == ACMP_OWED_MAX - 1u)
+        << "no expiry that sends no probe is held or counted in probes_held";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, RefusedPollLeavesTheBindWaitingAndItsHold) {
+    for (bool again : {false, true}) {
+        SetUp();
+        sinks_on_one_interface(3u);
+        retries_due(2u, 1u, 1u);
+        fk.now = a.sinks[2].timer_deadline - kHoldMs - 2u;
+        fill(0x7F80);
+        fk.clear();
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7F88)));
+        fk.now += kHoldMs;
+        released = fk.now;
+        for (std::uint32_t n = 1; n <= 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {
+            fk.room = n != 2u;
+            fk.now += 1u;
+            const unsigned before = a.owed_count;
+            static_cast<void>(acmp_poll(&a));
+            if (n == 2u) {
+                EXPECT_TRUE(a.owed_count == before && a.bind_waiting)
+                    << "a refused acmp_poll frees nothing and leaves bind_waiting set";
+            }
+            while ((again || a.owed_count < before) && !held.empty() &&
+                   acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size())) {
+                held.erase(held.begin());
+            }
+            if (n == 2u) {
+                EXPECT_TRUE(held.size() == 1u && !a.sinks[1].bound)
+                    << "a BIND_RX delivered again after a refused poll is declined again";
+            }
+            if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+                acmp_timer_expired(&a, 0);
+            }
+            if (n == 2u) {
+                EXPECT_TRUE(a.sinks[2].probe_held && a.probes_held == 1u && a.owed_count == ACMP_OWED_MAX - 1u &&
+                            a.sinks[2].timer_deadline == fk.now + 1u && a.sinks[2].state == ACMP_PRB_W_RESP)
+                    << "a retry falling due in the refused pass is held, its timer re-armed 1 ms on";
+            }
+        }
+        const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7F88);
+        ASSERT_TRUE(s != nullptr) << "the BIND_RX is answered after the refused poll";
+        EXPECT_EQ(position(s), ACMP_OWED_MAX) << "no probe leaves ahead of the BIND_RX answer after a refused poll";
+        EXPECT_EQ(s->at - released, ACMP_OWED_MAX + 1u + 1u) << "one refused poll delays the kept BIND_RX one pass";
+        ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + 3u) << "the owed frames, the BIND_RX answer, its probe and the retry leave";
+        Pdu q = read(fk.sent.back().bytes.data());
+        EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 2u && a.probes_lost == 0u &&
+                    !a.sinks[2].probe_held)
+            << "the retry held through the refused poll leaves after the deferred binding's frames, not lost";
+    }
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces) {
+    sinks_on_one_interface(4u);
+    retries_due(2u, 2u, 3u);
+    fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+    fill(0x7C80);
+    fk.clear();
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7C88)));
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 2, kTkA, 1, kCtl1, 0, 0x7C89)))
+        << "a BIND_RX to another talker for the probing sink waits behind the first";
+    fk.now += kHoldMs;
+    fk.room = true;
+    pass();
+    ASSERT_TRUE(a.sinks[2].probe_held && a.bind_waiting) << "the retry beside the waiting BIND_RX is held";
+    pass();
+    pass();
+    ASSERT_TRUE(a.sinks[1].bound && held.size() == 1u && a.sinks[2].probe_held && a.bind_waiting)
+        << "the first BIND_RX is taken and the second waits for its second slot, the retry still held";
+    pass();
+    EXPECT_TRUE(held.empty() && a.sinks[2].binding.talker_entity_id == kTkA && a.sinks[2].state == ACMP_PRB_W_RESP &&
+                !a.sinks[2].probe_held)
+        << "a BIND_RX to another talker ends the hold of the probe it replaces";
+    EXPECT_TRUE(a.probes_lost == 1u && !a.sinks[3].probe_held && a.sinks[3].state == ACMP_PRB_W_RESP2)
+        << "with nothing held and no BIND_RX waiting, the next retry that finds every slot owed is lost";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, SameTalkerRebindKeepsTheHeldProbe) {
+    sinks_on_one_interface(3u);
+    retries_due(2u, 1u, 1u);
+    fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+    fill(0x7C40);
+    fk.clear();
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7C48)));
+    EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 2, kTkB, 2, kCtl2, 0, 0x7C49)))
+        << "a BIND_RX to the same talker for the probing sink waits behind the first";
+    fk.now += kHoldMs;
+    fk.room = true;
+    pass();
+    pass();
+    pass();
+    ASSERT_TRUE(a.sinks[1].bound && held.size() == 1u && a.sinks[2].probe_held && a.bind_waiting)
+        << "the first BIND_RX is taken and the rebind waits for its second slot, the retry still held";
+    pass();
+    EXPECT_TRUE(held.empty() && a.sinks[2].binding.controller_entity_id == kCtl2 && !a.sinks[2].probe_held &&
+                a.sinks[2].state == ACMP_PRB_W_RESP2 && a.sinks[2].timer == ACMP_TIMER_NO_RESP &&
+                a.sinks[2].timer_held)
+        << "a BIND_RX to the same talker keeps the held probe, which is owed once a slot is free";
+    drain();
+    EXPECT_EQ(a.probes_lost, 0u) << "the probe held through the same-talker rebind is not lost";
+}
+
+// REQ: ACMP-12, PORT-01
+TEST_F(AcmpOwed, GatedPortBudgetsOnePassPerProbeOwedAhead) {
+    sinks_on_one_interface(6u);
+    retries_due(2u, 4u, 1u);
+    fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+    fill(0x7C00);
+    fk.clear();
+    held.push_back({0u, acmpdu(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7C08))});
+    fk.now += kHoldMs;
+    fk.room = true;
+    released = fk.now;
+    for (std::uint32_t n = 1; n <= 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {
+        fk.now += 1u;
+        static_cast<void>(acmp_poll(&a));
+        while (!held.empty() && acmp_rx_ready(&a)) {
+            const bool taken = acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size());
+            EXPECT_TRUE(taken) << "a gated port offers its frame only when acmp_rx_ready is true, and it is taken";
+            if (!taken) {
+                break;
+            }
+            held.erase(held.begin());
+        }
+        if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+            acmp_timer_expired(&a, 0);
+        }
+    }
+    const Sent* s = answer(spec::MSG_BIND_RX_RESPONSE, 0x7C08);
+    ASSERT_TRUE(s != nullptr) << "the BIND_RX the gated port waited to offer is answered";
+    EXPECT_TRUE(a.busy_declined == 0u && a.probes_held == 0u && !a.bind_waiting && a.probes_lost == 0u)
+        << "a port that tests acmp_rx_ready gives the core no sign of the waiting frame: nothing is declined or held";
+    EXPECT_EQ(s->at - released, ACMP_OWED_MAX + 1u + others.size())
+        << "each timer probe owed while the frame waits delays it one pass, one per sink";
+    EXPECT_LE(s->at - released, ACMP_OWED_MAX + 1u + cfg.n_sinks)
+        << "the gated port's BIND_RX leaves within ACMP_OWED_MAX + 1 + n_sinks passes";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem) {
+    sinks_on_one_interface(6u);
+    retries_due(2u, 4u, 1u);
+    fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+    Pdu foreign = command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, 0x7D0E);
+    foreign.listener = kTkB;
+    Pdu tx_state = command(spec::MSG_GET_TX_STATE_COMMAND, 3, kOwn, 1, kCtl2, 0, 0x7D0F);
+    tx_state.listener = kTkB;
+    const std::vector<Kept> kept{
+        kept_bind(1, 1, 0x7D08),
+        kept_get(1, 0x7D09),
+        kept_bind(40, 1, 0x7D0A, 1u),
+        kept_bind(1, 1, 0x7D0B, 1u),
+        {command(spec::MSG_UNBIND_RX_COMMAND, 0, 0, 0, kCtl1, 0, 0x7D0C), spec::MSG_UNBIND_RX_RESPONSE, 1u},
+        {foreign, spec::MSG_GET_RX_STATE_RESPONSE, 0u},
+        {tx_state, spec::MSG_GET_TX_STATE_RESPONSE, 1u},
+        kept_bind(0, 2, 0x7D10),
+        kept_get(0, 0x7D11),
+    };
+    keep_and_release(kept, kHoldMs);
+    ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "every kept command was taken and every owed frame left";
+    unsigned f = 0;
+    for (unsigned i = 0; i < kept.size(); ++i) {
+        if (kept[i].owes == 0u) {
+            continue;
+        }
+        ASSERT_TRUE(kept_answers[i] != nullptr) << "each kept command is answered";
+        EXPECT_EQ(kept_answers[i]->at - released, ACMP_OWED_MAX + 1u + f)
+            << "each kept command leaves in pass ACMP_OWED_MAX + 1 + f, f the frames owed by the kept commands ahead of it";
+        f += kept[i].owes;
+    }
+    unsigned first_binding_probes = 0;
+    for (const Sent& s : fk.sent) {
+        Pdu q = read(s.bytes.data());
+        first_binding_probes += q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 1u ? 1u : 0u;
+    }
+    EXPECT_TRUE(a.rx_ignored == 1u && a.unknown_sink == 1u && first_binding_probes == 1u)
+        << "the foreign frame owes nothing, the unknown sink and the same-talker rebind owe only their answers";
+    ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX + f + others.size())
+        << "every kept command and every held probe left, none lost";
+    for (unsigned j = 0; j < others.size(); ++j) {
+        const Sent& left = fk.sent[ACMP_OWED_MAX + f + j];
+        Pdu q = read(left.bytes.data());
+        EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == others[j] &&
+                    left.at - released == ACMP_OWED_MAX + 1u + f + j)
+            << "held probes follow the frames of the last kept command, one per pass in sink order";
+    }
+    EXPECT_EQ(a.probes_lost, 0u) << "no probe held behind the kept commands is lost";
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout) {
+    const std::vector<std::vector<Kept>> backlogs{
+        {kept_bind(1, 1, 0x7D08)},
+        {kept_bind(1, 1, 0x7D08), kept_get(1, 0x7D09)},
+        {kept_get(1, 0x7D08), kept_get(0, 0x7D09)},
+        {kept_bind(0, 1, 0x7D08), kept_bind(1, 1, 0x7D09), kept_bind(2, 1, 0x7D0A)},
+        {kept_bind(0, 1, 0x7D08), kept_get(0, 0x7D09), kept_bind(1, 1, 0x7D0A), kept_get(1, 0x7D0B)},
+    };
+    for (const auto& kept : backlogs) {
+        SetUp();
+        sinks_on_one_interface(4u);
+        retries_due(3u, 1u, 1u);
+        unsigned f = 0;
+        for (unsigned i = 0; i + 1u < kept.size(); ++i) {
+            f += kept[i].owes;
+        }
+        const std::uint32_t hold = kCommandTimeoutMs - (ACMP_OWED_MAX + 1u + f);
+        fk.now = a.sinks[3].timer_deadline - hold - 1u;
+        keep_and_release(kept, hold);
+        for (const Sent* s : kept_answers) {
+            ASSERT_TRUE(s != nullptr) << "each kept command is answered";
+            EXPECT_LE(s->at - arrival, kCommandTimeoutMs) << "each kept command is answered within 200 ms";
+        }
+        EXPECT_EQ(kept_answers.back()->at - arrival, kCommandTimeoutMs)
+            << "a hold of 200 ms less ACMP_OWED_MAX + 1 + f passes leaves the last kept command exactly at 200 ms";
+    }
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, KeptCommandsBehindSevenOwedLeaveOnePassSooner) {
+    for (bool bind_first : {false, true}) {
+        for (bool again : {false, true}) {
+            SetUp();
+            sinks_on_one_interface(4u);
+            retries_due(3u, 1u, 1u);
+            fk.now = a.sinks[3].timer_deadline - 2u;
+            fk.room = false;
+            for (unsigned k = 0; k < (bind_first ? ACMP_OWED_MAX - 3u : ACMP_OWED_MAX - 1u); ++k) {
+                rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(0x7D80 + k)));
+            }
+            if (bind_first) {
+                rx(command(spec::MSG_BIND_RX_COMMAND, 0, kTkB, 0, kCtl1, 0, 0x7D87));
+            }
+            ASSERT_TRUE(a.owed_count == ACMP_OWED_MAX - 1u && a.busy_declined == 0u)
+                << "seven frames are owed and nothing was declined before the kept BIND_RX arrives";
+            fk.clear();
+            const std::vector<Kept> kept{kept_bind(1, 1, 0x7D88), kept_get(1, 0x7D89), kept_bind(2, 1, 0x7D8A)};
+            for (const Kept& k : kept) {
+                EXPECT_FALSE(deliver(k.pdu)) << "a command behind the BIND_RX declined with one slot free waits in the port";
+            }
+            for (unsigned n = 0; n < 2u; ++n) {
+                fk.now += 1u;
+                static_cast<void>(acmp_poll(&a));
+                if (again) {
+                    EXPECT_FALSE(acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size()))
+                        << "the BIND_RX delivered again in a refused pass of the hold is declined again";
+                }
+                if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+                    acmp_timer_expired(&a, 0);
+                }
+            }
+            EXPECT_TRUE(a.owed_count == ACMP_OWED_MAX - 1u && a.bind_waiting && a.sinks[3].probe_held &&
+                        a.sinks[3].state == ACMP_PRB_W_RESP && held.size() == kept.size())
+                << "the egress returns with seven owed: a retry falling due in the hold is held beside the waiting BIND_RX";
+            fk.now += kHoldMs;
+            fk.room = true;
+            released = fk.now;
+            drain();
+            ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "every command kept behind seven owed frames was taken";
+            unsigned f = 0;
+            for (const Kept& k : kept) {
+                const Sent* s = answer(k.rsp, k.pdu.seq);
+                ASSERT_TRUE(s != nullptr) << "each command kept behind seven owed frames is answered";
+                EXPECT_EQ(s->at - released, ACMP_OWED_MAX + f)
+                    << "from seven owed each kept command leaves in pass ACMP_OWED_MAX + f, one pass sooner than from a full set";
+                f += k.owes;
+            }
+            ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX - 1u + f + 1u)
+                << "the seven owed frames, the kept commands' frames and the held retry leave";
+            Pdu q = read(fk.sent.back().bytes.data());
+            EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 3u &&
+                        fk.sent.back().at - released == ACMP_OWED_MAX + f && a.probes_lost == 0u)
+                << "the retry held through the hold at seven owed follows the last kept command's frames, not lost";
+        }
+    }
+}
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, AnsweredProbeEndsTheHoldOfItsRetry) {
+    for (std::uint8_t status : {spec::STATUS_TALKER_UNKNOWN_ID, spec::STATUS_SUCCESS}) {
+        SetUp();
+        sinks_on_one_interface(3u);
+        retries_due(2u, 1u, 1u);
+        fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+        fill(0x7B40);
+        fk.clear();
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7B48)));
+        EXPECT_FALSE(deliver(probe_answer(2u, status))) << "the answer to the probing sink's probe waits behind the kept BIND_RX";
+        fk.now += kHoldMs;
+        fk.room = true;
+        pass();
+        ASSERT_TRUE(a.sinks[2].probe_held && a.bind_waiting && held.size() == 2u)
+            << "the retry is held while the answer to the probe it repeats waits behind the BIND_RX";
+        const std::uint32_t holds = a.probes_held;
+        pass();
+        ASSERT_TRUE(held.empty() && a.sinks[1].bound) << "the BIND_RX is taken, then the answer behind it";
+        const bool ok = status == spec::STATUS_SUCCESS;
+        EXPECT_TRUE(!a.sinks[2].probe_held && a.sinks[2].state == (ok ? ACMP_SETTLED_NO_RSV : ACMP_PRB_W_RETRY) &&
+                    a.sinks[2].timer == (ok ? ACMP_TIMER_NO_TK : ACMP_TIMER_RETRY) && a.sinks[2].acmp_status == status)
+            << "an answer to the probe a held retry repeats ends the hold, and the sink goes on as the answer says";
+        drain();
+        unsigned retries = 0;
+        for (const Sent& s : fk.sent) {
+            Pdu q = read(s.bytes.data());
+            retries += q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 2u ? 1u : 0u;
+        }
+        EXPECT_TRUE(retries == 0u && a.probes_held == holds && a.probes_lost == 0u)
+            << "the retry whose earlier probe was answered is never sent, held or lost";
+    }
+}
+
+
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, CommandOfferedAfterTheTakenBindDelaysTheHeldRetry) {
+    for (unsigned later : {0u, 1u, 3u}) {
+        SetUp();
+        sinks_on_one_interface(3u);
+        retries_due(2u, 1u, 1u);
+        fk.now = a.sinks[2].timer_deadline - kHoldMs - 1u;
+        fill(0x7B80);
+        fk.clear();
+        EXPECT_FALSE(deliver(command(spec::MSG_BIND_RX_COMMAND, 1, kTkA, 1, kCtl1, 0, 0x7B88)));
+        fk.now += kHoldMs;
+        fk.room = true;
+        released = fk.now;
+        std::uint32_t taken = 0;
+        std::uint32_t owed = 0;
+        unsigned offered = 0;
+        for (std::uint32_t n = 1; n <= 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty() || owed == 0u); ++n) {
+            fk.now += 1u;
+            static_cast<void>(acmp_poll(&a));
+            while (!held.empty() &&
+                   acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size())) {
+                held.erase(held.begin());
+            }
+            if (taken != 0u && offered < later) {
+                EXPECT_TRUE(deliver(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0,
+                                            static_cast<std::uint16_t>(0x7B90 + offered))))
+                    << "a GET_RX_STATE offered for the first time after an accepting poll takes the freed slot";
+                ++offered;
+            }
+            if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+                acmp_timer_expired(&a, 0);
+            }
+            taken = taken == 0u && a.sinks[1].bound ? n : taken;
+            owed = owed == 0u && !a.sinks[2].probe_held && a.sinks[2].state == ACMP_PRB_W_RESP2 ? n : owed;
+        }
+        ASSERT_TRUE(taken == 2u && held.empty() && a.owed_count == 0u)
+            << "the kept BIND_RX is taken in pass two and every owed frame left";
+        EXPECT_EQ(owed, taken + 1u + later)
+            << "after the BIND_RX is taken, a GET_RX_STATE offered after the next accepting poll delays the held retry one pass";
+        const Sent* retry = nullptr;
+        for (const Sent& s : fk.sent) {
+            Pdu q = read(s.bytes.data());
+            retry = q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 2u ? &s : retry;
+        }
+        ASSERT_TRUE(retry != nullptr) << "the held retry leaves once no command takes the freed slot";
+        for (unsigned i = 0; i < later; ++i) {
+            const Sent* s = answer(spec::MSG_GET_RX_STATE_RESPONSE, static_cast<std::uint16_t>(0x7B90 + i));
+            ASSERT_TRUE(s != nullptr) << "each GET_RX_STATE offered after the BIND_RX is taken is answered";
+            EXPECT_TRUE(position(s) < position(retry)) << "no command answer waits for the held retry";
+        }
+        EXPECT_TRUE(a.probes_lost == 0u && a.sinks[2].timer == ACMP_TIMER_NO_RESP &&
+                    a.sinks[2].timer_deadline == retry->at + spec::TMR_NO_RESP_MS)
+            << "the held retry is never dropped for want of a slot, and its TMR_NO_RESP runs from when it leaves";
+    }
+}
 }
 
 // REQ: ACMP-02

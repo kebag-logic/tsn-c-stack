@@ -35,6 +35,23 @@ Build, memory and testing policies are local decisions. They have source links r
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
 
+## ACMP owed bound
+
+ACMP-12 originates from [issue #26](https://github.com/kebag-logic/tsn-c-stack/issues/26).
+The core owes at most `ACMP_OWED_MAX` frames. A command it cannot owe is declined to the port
+unchanged and is served when the port delivers it again after room returns, with its specified response.
+A BIND_RX waits for two free owed slots, so its response and the first PROBE_TX of its binding are both owed and no probe is lost.
+While it waits with one slot free, timer probes of any sink are held, never lost, so they cannot delay it; no other expiry is held.
+A command kept behind others leaves one pass later for each frame they owe; the port contract gives the whole bound and the egress-hold budget.
+The [port contract](PORTING.md#acmp-owed-bound) defines the decline, the redelivery order and the readiness query.
+Authority: [IEEE 1722.1-2021 8.2.4 and 8.2.5, Tables 8-1 and 8-3](https://standards.ieee.org/ieee/1722.1/6670/)
+and [Milan v1.2 5.5.2.3, 5.5.3.5 and 5.5.4, Table 5.26](https://avnu.org/resource/milan-specification/).
+Both Linux and bare-metal RV32 are required.
+
+| ID | Required behavior | Clause |
+|---|---|---|
+| ACMP-12 | Answer every received command: with all `ACMP_OWED_MAX` frames owed, decline each command addressed to this entity, and each BIND_RX while fewer than two owed slots are free, to the caller before any state change or port call, and serve it when delivered again; while a BIND_RX declined with one slot free waits for the next accepted owed frame, hold each timer probe, and no other expiry, instead of owing it, and never lose a held probe; take every other frame. | [IEEE 1722.1-2021 8.2.4 and 8.2.5, Tables 8-1 and 8-3](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.5.2.3, 5.5.3.5 and 5.5.4, Table 5.26](https://avnu.org/resource/milan-specification/); [Local decline and redelivery contract](PORTING.md#acmp-owed-bound) |
+
 ## ACMP DA freshness
 
 ACMP-11 originates from [issue #24](https://github.com/kebag-logic/tsn-c-stack/issues/24).

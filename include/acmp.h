@@ -378,6 +378,7 @@ struct acmp_sink {
 	enum acmp_timer timer;
 	uint32_t timer_deadline;
 	bool timer_held;
+	bool probe_held;
 	bool adp_armed;
 	uint32_t adp_deadline;
 
@@ -419,6 +420,7 @@ struct acmp {
 	bool seeded;
 	bool in_port;
 	bool now_read;
+	bool bind_waiting;
 	uint32_t now;
 	bool timer_armed[ACMP_MAX_INTERFACES];
 	uint32_t timer_at[ACMP_MAX_INTERFACES];
@@ -433,8 +435,10 @@ struct acmp {
 	uint32_t refused_locked;
 	uint32_t adp_ignored;
 	uint32_t impossible;                    // Milan v1.2 Table 5.30; Milan v1.2 Table 5.54
-	uint32_t busy_drops;
+	// REQ: ACMP-12
+	uint32_t busy_declined;
 	uint32_t probes_lost;
+	uint32_t probes_held;
 	uint32_t deferred_sends;
 	uint32_t reentries;
 	uint32_t draws;
@@ -448,7 +452,9 @@ bool acmp_init(struct acmp *a, const struct acmp_config *cfg, const struct acmp_
 	       const struct acmp_env *env);
 
 
-void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len);
+// REQ: ACMP-12
+bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len);
+bool acmp_rx_ready(const struct acmp *a);
 void acmp_adp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len);
 void acmp_timer_expired(struct acmp *a, unsigned interface);
 

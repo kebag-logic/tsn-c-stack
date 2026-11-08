@@ -3,6 +3,8 @@
 ## Unreleased
 
 - Exempt the merge of #29 from the one-line message rule by its exact commit; its identity and content are still checked.
+- Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; after each `acmp_poll` that frees room the port offers the kept command and the frames waiting behind it, in arrival order until one is declined, before it services timers. A BIND_RX waits for two free owed slots, so a deferred binding loses no probe; while it waits with one slot free, a timer probe of any sink is held and re-armed 1 ms on instead of owed, so it neither delays the BIND_RX nor is lost (`probes_held`). The port contract derives the answer pass of every kept command, n + 1 + f + r, with n the frames owed when the egress returns (`ACMP_OWED_MAX`, or one less when the first kept frame is a BIND_RX declined with one slot free), and the egress-hold budget for the deepest backlog a port keeps. Add `acmp_rx_ready`, true with two free owed slots, and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
+
 - Add the required ACMP `publish` callback from milan-fpga F-INT. Publish changed bound, started and settled stream-ID state before new frames and first at completion; preserve the last publication across reset ([ACMP-10](docs/REQUIREMENTS.md#acmp-publish-port)). Integrators must supply the callback.
 
 - Port the applicable [milan-fpga requirements](docs/REQUIREMENTS.md) with origins, linked clauses, both targets and verification methods. Record every source disposition. Test advertisement fields and peer-loss recovery with planted defects. Check each pinned source anchor.

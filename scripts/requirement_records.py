@@ -14,6 +14,10 @@ BEGIN = '<!-- requirements-port:start -->'
 END = '<!-- requirements-port:end -->'
 LOCAL_ORIGINS = {'ENTITY-01': ('tsn-c-stack issue 2', 'https://github.com/kebag-logic/tsn-c-stack/issues/2')}
 ADDITIONAL_ORIGINS = {
+    'ACMP-12': {
+        'text': 'tsn-c-stack issue 26',
+        'url': 'https://github.com/kebag-logic/tsn-c-stack/issues/26',
+    },
     'ACMP-11': {
         'text': 'tsn-c-stack issue 24',
         'url': 'https://github.com/kebag-logic/tsn-c-stack/issues/24',

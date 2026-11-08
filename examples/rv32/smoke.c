@@ -186,6 +186,12 @@ struct acmp_port {
     unsigned publications, interface, sink, admissions_before;
     bool bound, started, moved, ordering_error;
     uint64_t stream;
+    uint32_t now, at;
+    bool armed;
+    unsigned logged;
+    uint8_t msg[ACMP_OWED_MAX + 4];
+    uint16_t uid[ACMP_OWED_MAX + 4];
+    uint32_t sent_at[ACMP_OWED_MAX + 4];
 };
 
 static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
@@ -210,7 +216,43 @@ static bool acmp_send(void *ctx, unsigned interface, const uint8_t *frame, size_
     } else if (frame[15] == 9) {
         if (p->bound || p->started || p->stream != 0) p->ordering_error = true;
     }
-    return send_frame(&p->io, interface, frame, length);
+    if (!send_frame(&p->io, interface, frame, length)) return false;
+    if (p->logged < sizeof p->msg) {
+        p->msg[p->logged] = frame[15];
+        p->uid[p->logged] = wire_be16(frame + 52);
+        p->sent_at[p->logged] = p->now;
+        ++p->logged;
+    }
+    return true;
+}
+
+static uint32_t owed_clock(void *ctx)
+{
+    struct acmp_port *p = ctx;
+    ++p->io.calls;
+    return p->now;
+}
+
+static void owed_timer(void *ctx, unsigned interface, bool armed, uint32_t deadline)
+{
+    struct acmp_port *p = ctx;
+    p->armed = armed;
+    p->at = deadline;
+    timer(ctx, interface, armed, deadline);
+}
+
+static void egress(struct acmp_port *p, bool room)
+{
+    p->io.room = room;
+}
+
+// REQ: ACMP-12
+static void owed_pass(struct acmp *core, struct acmp_port *p, const uint8_t *kept, bool *keeping)
+{
+    ++p->now;
+    (void)acmp_poll(core);
+    if (*keeping && acmp_rx(core, 0, kept, ACMP_FRAME_BYTES)) *keeping = false;
+    if (p->armed && (int32_t)(p->now - p->at) >= 0) acmp_timer_expired(core, 0);
 }
 
 // REQ: ACMP-01, ACMP-07, ACMP-10, PORT-01
@@ -271,6 +313,71 @@ static int acmp_smoke(void)
     return 0;
 }
 
+// Milan v1.2 Table 5.26
+// REQ: ACMP-12, ACMP-09
+static int acmp_owed_smoke(void)
+{
+    struct acmp_port p = {.io = {.room = false}, .now = 123};
+    const struct acmp_ports ports = {&p, acmp_send, owed_clock, owed_timer, gptp, clock_ms, admit, publish};
+    const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+    const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 2};
+    struct acmp core;
+    uint8_t frame[ACMP_FRAME_BYTES] = {0};
+    uint8_t bind_rx[ACMP_FRAME_BYTES];
+    bool keeping = true;
+    CHECK(acmp_init(&core, &config, &ports, &env), 90);
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    frame[15] = 10;
+    wire_put_be(frame + 42, 1, 8);
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        wire_put_be(frame + 62, k, 2);
+        CHECK(acmp_rx_ready(&core) == (k + 2 <= ACMP_OWED_MAX) && acmp_rx(&core, 0, frame, sizeof frame), 91);
+    }
+    const unsigned calls = p.io.calls;
+    wire_put_be(frame + 62, ACMP_OWED_MAX, 2);
+    CHECK(!acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 92);
+    CHECK(core.busy_declined == 1 && core.owed_count == ACMP_OWED_MAX && p.io.calls == calls, 93);
+    p.io.room = true;
+    CHECK(acmp_poll(&core) && acmp_rx(&core, 0, frame, sizeof frame), 94);
+    frame[15] = 6;
+    wire_put_be(frame + 62, ACMP_OWED_MAX + 1, 2);
+    CHECK(acmp_poll(&core) && !acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 97);
+    CHECK(acmp_poll(&core) && acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 98);
+    CHECK(core.busy_declined == 2 && core.owed_count == ACMP_OWED_MAX && core.probes_lost == 0, 99);
+    for (unsigned n = 0; n < ACMP_OWED_MAX && core.owed_count > 2 && acmp_poll(&core); ++n) {
+    }
+    CHECK(core.owed_count == 2 && p.io.sends == ACMP_OWED_MAX + 1, 95);
+    CHECK(p.io.frame[15] == 11 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX && (p.io.frame[16] >> 3) == 0, 96);
+    CHECK(acmp_poll(&core) && p.io.frame[15] == 7 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX + 1, 100);
+    CHECK(!acmp_poll(&core) && p.io.frame[15] == 0 && core.probes_lost == 0, 101);
+    frame[15] = 10;
+    egress(&p, false);
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        wire_put_be(frame + 62, 0x20 + k, 2);
+        CHECK(acmp_rx(&core, 0, frame, sizeof frame), 102);
+    }
+    memcpy(bind_rx, frame, sizeof frame);
+    bind_rx[15] = 6;
+    wire_put_be(bind_rx + 52, 1, 2);
+    wire_put_be(bind_rx + 62, 0x20 + ACMP_OWED_MAX, 2);
+    CHECK(!acmp_rx(&core, 0, bind_rx, sizeof bind_rx) && core.sinks[0].state == ACMP_PRB_W_RESP, 103);
+    p.now = core.sinks[0].timer_deadline - 1;
+    const uint32_t released = p.now;
+    egress(&p, true);
+    p.logged = 0;
+    owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(keeping && core.owed_count == ACMP_OWED_MAX - 1 && core.sinks[0].probe_held && core.probes_held == 1, 104);
+    owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(!keeping && core.owed_count == ACMP_OWED_MAX && core.sinks[1].bound && core.sinks[0].probe_held, 105);
+    for (unsigned n = 0; n < 4 * ACMP_OWED_MAX && core.owed_count != 0; ++n) owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(core.owed_count == 0 && p.logged == ACMP_OWED_MAX + 3 && core.probes_lost == 0 && core.probes_held == 2, 106);
+    CHECK(p.msg[ACMP_OWED_MAX] == 7 && p.uid[ACMP_OWED_MAX] == 1 && p.sent_at[ACMP_OWED_MAX] - released == ACMP_OWED_MAX + 1, 107);
+    CHECK(p.msg[ACMP_OWED_MAX + 1] == 0 && p.uid[ACMP_OWED_MAX + 1] == 1, 108);
+    CHECK(p.msg[ACMP_OWED_MAX + 2] == 0 && p.uid[ACMP_OWED_MAX + 2] == 0 && core.sinks[0].state == ACMP_PRB_W_RESP2, 109);
+    return 0;
+}
+
 // REQ: MAAP-02, MAAP-04, PORT-01
 static int maap_smoke(void)
 {
@@ -295,6 +402,7 @@ int main(void)
     int result = adp_smoke();
     if (!result) result = adp_discovery_smoke();
     if (!result) result = acmp_smoke();
+    if (!result) result = acmp_owed_smoke();
     if (!result) result = maap_smoke();
     if (!result) result = entity_check_adp();
     if (!result) result = entity_check_acmp();

@@ -68,6 +68,7 @@
 #define BIND_VALID 0x01u
 #define BIND_STARTED 0x02u
 #define BIND_STREAMING_WAIT 0x04u
+#define OWED_BY_BIND 2u                                         // Milan v1.2 5.5.3.5.3
 
 
 struct pdu {
@@ -322,12 +323,14 @@ static void respond(struct acmp *a, unsigned interface, const struct pdu *r, uin
 
 
 
-static bool room(struct acmp *a)
+// REQ: ACMP-12
+// Milan v1.2 5.5.2.3; Milan v1.2 Table 5.26; IEEE 1722.1-2021 8.2.4 and 8.2.5
+static bool room(struct acmp *a, unsigned frames)
 {
-	if (a->owed_count < ACMP_OWED_MAX) {
+	if (a->owed_count + frames <= ACMP_OWED_MAX) {
 		return true;
 	}
-	a->busy_drops++;
+	a->busy_declined++;
 	return false;
 }
 
@@ -349,6 +352,7 @@ static void sm_stop(struct acmp_sink *s)
 {
 	s->timer = ACMP_TIMER_NONE;
 	s->timer_held = false;
+	s->probe_held = false;
 }
 
 
@@ -769,11 +773,35 @@ static void probe(struct acmp *a, unsigned k)
 	send_probe(a, k);
 }
 
+// REQ: ACMP-12, ACMP-09
+// Milan v1.2 5.5.3.5.3; Milan v1.2 Table 5.26
+static bool probe_yields(const struct acmp *a)
+{
+	if (a->bind_waiting) {
+		return true;
+	}
+	if (a->owed_count < ACMP_OWED_MAX) {
+		return false;
+	}
+	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+		if (a->sinks[k].probe_held) {
+			return true;
+		}
+	}
+	return false;
+}
 
 static void sm_expired(struct acmp *a, unsigned k)
 {
 	struct acmp_sink *s = &a->sinks[k];
 	enum acmp_timer kind = s->timer;
+	bool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);
+	if (probes && probe_yields(a)) {
+		s->timer_deadline = now(a) + 1u;
+		s->probe_held = true;
+		a->probes_held++;
+		return;
+	}
 	sm_stop(s);
 	if (kind == ACMP_TIMER_DELAY) {                         // Milan v1.2 5.5.3.5.10
 		probe(a, k);
@@ -896,9 +924,6 @@ static void get_rx_state(struct acmp *a, unsigned interface, unsigned k, const s
 
 static void listener_command(struct acmp *a, unsigned interface, const struct pdu *cmd)
 {
-	if (!room(a)) {
-		return;
-	}
 	unsigned k = cmd->listener_uid;
 	if (k >= a->cfg.n_sinks) {
 		a->unknown_sink++;
@@ -958,9 +983,6 @@ static void probe_response(struct acmp *a, const struct pdu *rsp)
 
 static void talker_command(struct acmp *a, unsigned interface, const struct pdu *cmd)
 {
-	if (!room(a)) {
-		return;
-	}
 	unsigned src = cmd->talker_uid;
 	if (cmd->msg == ACMP_MSG_GET_TX_CONNECTION_COMMAND) {
 		struct pdu r = echo(cmd, ACMP_STATUS_NOT_SUPPORTED);              // Milan v1.2 5.5.4.4; Milan v1.2 Table 5.48
@@ -1037,15 +1059,21 @@ bool acmp_init(struct acmp *a, const struct acmp_config *cfg, const struct acmp_
 	return true;
 }
 
-void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
+// REQ: ACMP-12
+bool acmp_rx_ready(const struct acmp *a)
+{
+	return !a->in_port && a->owed_count + OWED_BY_BIND <= ACMP_OWED_MAX;
+}
+
+bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
 {
 	if (!enter(a)) {
-		return;
+		return false;
 	}
 	if (interface >= a->cfg.n_interfaces || len < ACMP_FRAME_BYTES || wire_be16(frame + 12) != ACMP_ETHERTYPE ||
 	    frame[PDU] != ACMP_SUBTYPE || AVTP_VERSION(frame) != ACMP_AVTP_VERSION) {
 		a->rx_malformed++;
-		return;
+		return true;
 	}
 	struct pdu cmd;
 	decode(frame, &cmd);
@@ -1056,6 +1084,9 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_DISCONNECT_TX_COMMAND:
 	case ACMP_MSG_GET_TX_STATE_COMMAND:
 	case ACMP_MSG_GET_TX_CONNECTION_COMMAND:
+		if (talker && !room(a, 1u)) {
+			return false;
+		}
 		if (talker) {
 			talker_command(a, interface, &cmd);
 		} else {
@@ -1065,6 +1096,12 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_BIND_RX_COMMAND:
 	case ACMP_MSG_UNBIND_RX_COMMAND:
 	case ACMP_MSG_GET_RX_STATE_COMMAND:
+		if (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {
+			if (cmd.msg == ACMP_MSG_BIND_RX_COMMAND && a->owed_count < ACMP_OWED_MAX) {
+				a->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3
+			}
+			return false;
+		}
 		if (listener) {
 			listener_command(a, interface, &cmd);
 		} else {
@@ -1083,6 +1120,7 @@ void acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 		break;
 	}
 	finish(a);
+	return true;
 }
 
 void acmp_adp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t len)
@@ -1227,6 +1265,7 @@ bool acmp_poll(struct acmp *a)
 			probe_left(a, o);
 			a->owed_head = (a->owed_head + 1u) % ACMP_OWED_MAX;
 			a->owed_count--;
+			a->bind_waiting = false;
 			finish(a);
 		}
 	}
