@@ -3394,6 +3394,65 @@ TEST_F(AcmpOwed, KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout) {
     }
 }
 
+// REQ: ACMP-12, ACMP-09
+TEST_F(AcmpOwed, KeptCommandsBehindSevenOwedLeaveOnePassSooner) {
+    for (bool bind_first : {false, true}) {
+        for (bool again : {false, true}) {
+            SetUp();
+            sinks_on_one_interface(4u);
+            retries_due(3u, 1u, 1u);
+            fk.now = a.sinks[3].timer_deadline - 2u;
+            fk.room = false;
+            for (unsigned k = 0; k < (bind_first ? ACMP_OWED_MAX - 3u : ACMP_OWED_MAX - 1u); ++k) {
+                rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0, 0, 0, kCtl2, 0, static_cast<std::uint16_t>(0x7D80 + k)));
+            }
+            if (bind_first) {
+                rx(command(spec::MSG_BIND_RX_COMMAND, 0, kTkB, 0, kCtl1, 0, 0x7D87));
+            }
+            ASSERT_TRUE(a.owed_count == ACMP_OWED_MAX - 1u && a.busy_declined == 0u)
+                << "seven frames are owed and nothing was declined before the kept BIND_RX arrives";
+            fk.clear();
+            const std::vector<Kept> kept{kept_bind(1, 1, 0x7D88), kept_get(1, 0x7D89), kept_bind(2, 1, 0x7D8A)};
+            for (const Kept& k : kept) {
+                EXPECT_FALSE(deliver(k.pdu)) << "a command behind the BIND_RX declined with one slot free waits in the port";
+            }
+            for (unsigned n = 0; n < 2u; ++n) {
+                fk.now += 1u;
+                static_cast<void>(acmp_poll(&a));
+                if (again) {
+                    EXPECT_FALSE(acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size()))
+                        << "the BIND_RX delivered again in a refused pass of the hold is declined again";
+                }
+                if (fk.armed[0] && static_cast<std::int32_t>(fk.now - fk.at[0]) >= 0) {
+                    acmp_timer_expired(&a, 0);
+                }
+            }
+            EXPECT_TRUE(a.owed_count == ACMP_OWED_MAX - 1u && a.bind_waiting && a.sinks[3].probe_held &&
+                        a.sinks[3].state == ACMP_PRB_W_RESP && held.size() == kept.size())
+                << "the egress returns with seven owed: a retry falling due in the hold is held beside the waiting BIND_RX";
+            fk.now += kHoldMs;
+            fk.room = true;
+            released = fk.now;
+            drain();
+            ASSERT_TRUE(held.empty() && a.owed_count == 0u) << "every command kept behind seven owed frames was taken";
+            unsigned f = 0;
+            for (const Kept& k : kept) {
+                const Sent* s = answer(k.rsp, k.pdu.seq);
+                ASSERT_TRUE(s != nullptr) << "each command kept behind seven owed frames is answered";
+                EXPECT_EQ(s->at - released, ACMP_OWED_MAX + f)
+                    << "from seven owed each kept command leaves in pass ACMP_OWED_MAX + f, one pass sooner than from a full set";
+                f += k.owes;
+            }
+            ASSERT_EQ(fk.sent.size(), ACMP_OWED_MAX - 1u + f + 1u)
+                << "the seven owed frames, the kept commands' frames and the held retry leave";
+            Pdu q = read(fk.sent.back().bytes.data());
+            EXPECT_TRUE(q.msg == spec::MSG_PROBE_TX_COMMAND && q.listener_uid == 3u &&
+                        fk.sent.back().at - released == ACMP_OWED_MAX + f && a.probes_lost == 0u)
+                << "the retry held through the hold at seven owed follows the last kept command's frames, not lost";
+        }
+    }
+}
+
 }
 
 // REQ: ACMP-02

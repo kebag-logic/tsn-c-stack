@@ -123,6 +123,7 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet](../tests/test_acmp.cpp#L2723) | acmp-full-queue-acts; owed-listener-drop-restored; owed-decline-uncounted; owed-get-rx-state-drop-restored; owed-deferred-answer-error-status | ACMP-12, ACMP-09 |
 | [AcmpOwed.HoldEndsWithTheLastHeldProbe](../tests/test_acmp.cpp#L3065) | owed-timer-probe-not-held; owed-hold-skips-retry; owed-bind-wait-unset; owed-bind-wait-kept; owed-hold-uncounted; owed-held-flag-kept; owed-probe-held-never-set; owed-hold-whenever-full | ACMP-12, ACMP-09 |
 | [AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout](../tests/test_acmp.cpp#L3369) | owed-timer-probe-not-held; owed-bind-wait-unset | ACMP-12, ACMP-09 |
+| [AcmpOwed.KeptCommandsBehindSevenOwedLeaveOnePassSooner](../tests/test_acmp.cpp#L3398) | owed-bind-wait-only-on-a-second-decline | ACMP-12, ACMP-09 |
 | [AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem](../tests/test_acmp.cpp#L3318) | acmp-rebind-same-reprobes; owed-timer-probe-not-held; owed-bind-wait-unset | ACMP-12, ACMP-09 |
 | [AcmpOwed.OnlyOwnCommandsAreDeclined](../tests/test_acmp.cpp#L2858) | owed-malformed-declined; owed-served-reported-declined; owed-declines-every-frame; owed-declines-foreign-listener; owed-declines-foreign-talker | ACMP-12, ACMP-02 |
 | [AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind](../tests/test_acmp.cpp#L3147) | owed-hold-widened-to-second-no-resp; owed-hold-widened-to-every-timer | ACMP-12, ACMP-09 |
@@ -181,4 +182,4 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
 | [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
 | [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |
-| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3400) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |
+| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3459) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |

@@ -2639,6 +2639,26 @@
     ]
   },
   {
+    "name": "owed-bind-wait-only-on-a-second-decline",
+    "path": "src/acmp.c",
+    "old": "\t\t\tif (cmd.msg == ACMP_MSG_BIND_RX_COMMAND && a->owed_count < ACMP_OWED_MAX) {",
+    "new": "\t\t\tif (cmd.msg == ACMP_MSG_BIND_RX_COMMAND && a->owed_count < ACMP_OWED_MAX && a->busy_declined > 1u) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.KeptCommandsBehindSevenOwedLeaveOnePassSooner",
+        "needle": "from seven owed each kept command leaves in pass ACMP_OWED_MAX + f"
+      },
+      {
+        "test": "AcmpOwed.KeptCommandsBehindSevenOwedLeaveOnePassSooner",
+        "needle": "the egress returns with seven owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.KeptCommandsBehindSevenOwedLeaveOnePassSooner",
+      "AcmpOwed.KeptCommandsBehindSevenOwedLeaveOnePassSooner"
+    ]
+  },
+  {
     "name": "owed-hold-widened-to-second-no-resp",
     "path": "src/acmp.c",
     "old": "\tbool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);",
