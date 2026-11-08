@@ -2584,6 +2584,11 @@ class AcmpOwed : public AcmpCore {
                acmp_rx(&a, held.front().interface, held.front().bytes.data(), held.front().bytes.size())) {
             held.erase(held.begin());
         }
+        for (unsigned i = 0; i < cfg.n_interfaces; ++i) {
+            if (fk.armed[i] && static_cast<std::int32_t>(fk.now - fk.at[i]) >= 0) {
+                acmp_timer_expired(&a, i);
+            }
+        }
     }
     void drain() {
         for (unsigned n = 0; n < 4u * ACMP_OWED_MAX && (a.owed_count != 0u || !held.empty()); ++n) {

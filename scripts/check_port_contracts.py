@@ -278,7 +278,7 @@ CRITICAL = {
     },
     'ACMP owed bound': {
         'acmp_rx': ('declines each command addressed to this entity', 'before changing state or calling a port',
-                    'delivers it again after', 'Deliver no later ACMP frame before a kept one',
+                    'delivers it again after', 'before it services `acmp_timer_expired`', 'Deliver no later ACMP frame before a kept one',
                     'returns false for refused callback re-entry', 'A BIND_RX needs two free owed slots',
                     'a deferred binding loses no probe'),
         'acmp_rx_ready': ('false inside a port callback', 'leaves the frame in its receive queue', 'needs two free owed slots'),

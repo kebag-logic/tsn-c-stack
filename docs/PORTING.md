@@ -79,7 +79,9 @@ A BIND_RX needs two free owed slots: one for its response and one for the first 
 With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.
 The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink, also waits for two free slots.
 A declined command returns false before changing state or calling a port, and increments `busy_declined`.
-The command is not dropped: the port keeps it and delivers it again after `acmp_poll` accepts an owed frame.
+The command is not dropped: the port keeps it and delivers it again after each `acmp_poll` that accepts an owed frame, at once and before it services `acmp_timer_expired`.
+Timer service first could let a probe take the freed slot, and the kept command would be declined again for another pass.
+A timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it.
 Deliver no later ACMP frame before a kept one, so commands keep their arrival order.
 `acmp_rx` returns true for every frame it takes, including malformed, foreign and probe-response frames.
 It also returns false for refused callback re-entry.
@@ -88,8 +90,8 @@ A port that cannot keep a frame once taken tests `acmp_rx_ready` first and leave
 A declined command costs its frame checks, its decode and the owed-bound comparison; it makes no copy and no port call.
 The served command receives its specified response behind the frames owed ahead of it, never an error status.
 A port that polls once per pass and delivers again in that pass sends it in pass `ACMP_OWED_MAX` + 1 after the egress returns.
-A deferred BIND_RX's first PROBE_TX leaves in the next pass.
 That delay plus the egress hold must stay within the 200 ms command timeouts of [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/).
+A deferred BIND_RX's first PROBE_TX leaves in the next pass.
 The answering duty follows [IEEE 1722.1-2021 8.2.4 and 8.2.5](https://standards.ieee.org/ieee/1722.1/6670/), whose Table 8-3 has no status for a full output queue.
 The receive queue's depth and overflow accounting belong to the port, as for any receive ring.
 See [ACMP-12](REQUIREMENTS.md#acmp-owed-bound).
