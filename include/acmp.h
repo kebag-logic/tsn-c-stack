@@ -378,6 +378,7 @@ struct acmp_sink {
 	enum acmp_timer timer;
 	uint32_t timer_deadline;
 	bool timer_held;
+	bool probe_held;
 	bool adp_armed;
 	uint32_t adp_deadline;
 
@@ -419,6 +420,7 @@ struct acmp {
 	bool seeded;
 	bool in_port;
 	bool now_read;
+	bool bind_waiting;
 	uint32_t now;
 	bool timer_armed[ACMP_MAX_INTERFACES];
 	uint32_t timer_at[ACMP_MAX_INTERFACES];
@@ -436,6 +438,7 @@ struct acmp {
 	// REQ: ACMP-12
 	uint32_t busy_declined;
 	uint32_t probes_lost;
+	uint32_t probes_held;
 	uint32_t deferred_sends;
 	uint32_t reentries;
 	uint32_t draws;

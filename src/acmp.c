@@ -352,6 +352,7 @@ static void sm_stop(struct acmp_sink *s)
 {
 	s->timer = ACMP_TIMER_NONE;
 	s->timer_held = false;
+	s->probe_held = false;
 }
 
 
@@ -772,11 +773,35 @@ static void probe(struct acmp *a, unsigned k)
 	send_probe(a, k);
 }
 
+// REQ: ACMP-12, ACMP-09
+// Milan v1.2 5.5.3.5.3; Milan v1.2 Table 5.26
+static bool probe_yields(const struct acmp *a)
+{
+	if (a->bind_waiting) {
+		return true;
+	}
+	if (a->owed_count < ACMP_OWED_MAX) {
+		return false;
+	}
+	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+		if (a->sinks[k].probe_held) {
+			return true;
+		}
+	}
+	return false;
+}
 
 static void sm_expired(struct acmp *a, unsigned k)
 {
 	struct acmp_sink *s = &a->sinks[k];
 	enum acmp_timer kind = s->timer;
+	bool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);
+	if (probes && probe_yields(a)) {
+		s->timer_deadline = now(a) + 1u;
+		s->probe_held = true;
+		a->probes_held++;
+		return;
+	}
 	sm_stop(s);
 	if (kind == ACMP_TIMER_DELAY) {                         // Milan v1.2 5.5.3.5.10
 		probe(a, k);
@@ -1072,6 +1097,9 @@ bool acmp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_t le
 	case ACMP_MSG_UNBIND_RX_COMMAND:
 	case ACMP_MSG_GET_RX_STATE_COMMAND:
 		if (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {
+			if (cmd.msg == ACMP_MSG_BIND_RX_COMMAND && a->owed_count < ACMP_OWED_MAX) {
+				a->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3
+			}
 			return false;
 		}
 		if (listener) {
@@ -1237,6 +1265,7 @@ bool acmp_poll(struct acmp *a)
 			probe_left(a, o);
 			a->owed_head = (a->owed_head + 1u) % ACMP_OWED_MAX;
 			a->owed_count--;
+			a->bind_waiting = false;
 			finish(a);
 		}
 	}

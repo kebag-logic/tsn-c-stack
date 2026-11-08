@@ -1871,8 +1871,8 @@
   {
     "name": "owed-listener-drop-restored",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn false;",
-    "new": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn true;",
+    "old": "\t\t\t\ta->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3\n\t\t\t}\n\t\t\treturn false;",
+    "new": "\t\t\t\ta->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3\n\t\t\t}\n\t\t\treturn true;",
     "kills": [
       {
         "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
@@ -2086,8 +2086,8 @@
   {
     "name": "owed-listener-acts-then-declines",
     "path": "src/acmp.c",
-    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\treturn false;",
-    "new": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {\n\t\t\tlistener_command(a, interface, &cmd);\n\t\t\treturn false;",
+    "old": "\t\t\t\ta->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3\n\t\t\t}\n\t\t\treturn false;",
+    "new": "\t\t\t\ta->bind_waiting = true;                 // Milan v1.2 5.5.3.5.3\n\t\t\t}\n\t\t\tlistener_command(a, interface, &cmd);\n\t\t\treturn false;",
     "kills": [
       {
         "test": "AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken",
@@ -2326,6 +2326,186 @@
     ],
     "original_tests": [
       "AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold"
+    ]
+  },
+  {
+    "name": "owed-timer-probe-not-held",
+    "path": "src/acmp.c",
+    "old": "\tif (probes && probe_yields(a)) {",
+    "new": "\tif (probes && probe_yields(a) && kind == ACMP_TIMER_NONE) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "is answered in pass ACMP_OWED_MAX + 1 though other probes fall due"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+        "needle": "leaves the deferred BIND_RX exactly the documented passes"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-hold-skips-delay",
+    "path": "src/acmp.c",
+    "old": "\tbool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);",
+    "new": "\tbool probes = kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "is answered in pass ACMP_OWED_MAX + 1 though other probes fall due"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+    ]
+  },
+  {
+    "name": "owed-hold-skips-retry",
+    "path": "src/acmp.c",
+    "old": "\tbool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);",
+    "new": "\tbool probes = kind == ACMP_TIMER_DELAY;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "is answered in pass ACMP_OWED_MAX + 1 though other probes fall due"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+        "needle": "leaves the deferred BIND_RX exactly the documented passes"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-held-probe-lost",
+    "path": "src/acmp.c",
+    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn false;",
+    "new": "\tif (a->owed_count <= ACMP_OWED_MAX) {\n\t\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "no probe held for the deferred BIND_RX is lost"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+    ]
+  },
+  {
+    "name": "owed-bind-wait-unset",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\ta->bind_waiting = true;",
+    "new": "\t\t\t\ta->bind_waiting = false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "is answered in pass ACMP_OWED_MAX + 1 though other probes fall due"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+        "needle": "leaves the deferred BIND_RX exactly the documented passes"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-bind-wait-kept",
+    "path": "src/acmp.c",
+    "old": "\t\t\ta->owed_count--;\n\t\t\ta->bind_waiting = false;",
+    "new": "\t\t\ta->owed_count--;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "and every held probe leave"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "a retry that finds every slot owed is lost and counted"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-hold-uncounted",
+    "path": "src/acmp.c",
+    "old": "\t\ts->probe_held = true;\n\t\ta->probes_held++;",
+    "new": "\t\ts->probe_held = true;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "each pass that holds a probe counts once"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-hold-rearmed-late",
+    "path": "src/acmp.c",
+    "old": "\t\ts->timer_deadline = now(a) + 1u;",
+    "new": "\t\ts->timer_deadline = now(a) + 2u;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "one pass per probe before it"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+    ]
+  },
+  {
+    "name": "owed-held-flag-kept",
+    "path": "src/acmp.c",
+    "old": "\ts->timer = ACMP_TIMER_NONE;\n\ts->timer_held = false;\n\ts->probe_held = false;\n}",
+    "new": "\ts->timer = ACMP_TIMER_NONE;\n\ts->timer_held = false;\n}",
+    "kills": [
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "is dropped with the probing it belonged to"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "a retry that finds every slot owed is lost and counted"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
     ]
   },
   {
@@ -3838,8 +4018,8 @@
   {
     "name": "acmp-stop-keeps-the-hold",
     "path": "src/acmp.c",
-    "old": "\ts->timer = ACMP_TIMER_NONE;\n\ts->timer_held = false;\n}",
-    "new": "\ts->timer = ACMP_TIMER_NONE;\n}",
+    "old": "\ts->timer = ACMP_TIMER_NONE;\n\ts->timer_held = false;\n\ts->probe_held = false;\n}",
+    "new": "\ts->timer = ACMP_TIMER_NONE;\n\ts->probe_held = false;\n}",
     "kills": [
       {
         "test": "AcmpCore.A27AProbeOwedPastAnUnbindARebindOrASuccessStartsNothing",

@@ -66,7 +66,7 @@ ADP retains at most two departures. Further shutdowns coalesce into the queued d
 The oldest departure keeps its shutdown index. A queued departure carries zero.
 Advertisements cannot pass either departure. Link loss or shutdown cancels an owed advertisement.
 ACMP queues at most `ACMP_OWED_MAX` frames, in order.
-An overflowed probe increments `probes_lost`; its timeout recovers the attempt.
+An overflowed probe increments `probes_lost`; its timeout recovers the attempt. A probe held for a waiting BIND_RX is never lost ([ACMP owed bound](#acmp-owed-bound)).
 A queued probe starts its timeout only when accepted, if its sink still waits for the same sequence ID.
 Changes caused by a command reach `env->changed` only after that command's response is accepted.
 Use `acmp_change_pending` to inspect a notification held behind a response.
@@ -79,19 +79,26 @@ A BIND_RX needs two free owed slots: one for its response and one for the first 
 With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.
 The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink, also waits for two free slots.
 A declined command returns false before changing state or calling a port, and increments `busy_declined`.
+A BIND_RX declined with one slot free also sets `bind_waiting`, which only holds timer probes, as below; the next `acmp_poll` that accepts an owed frame clears it.
 The command is not dropped: the port keeps it and delivers it again after each `acmp_poll` that accepts an owed frame, at once and before it services `acmp_timer_expired`.
 Timer service first could let a probe take the freed slot, and the kept command would be declined again for another pass.
-A timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it.
+Delivering first gives the kept command the freed slot, but a kept BIND_RX also needs the next one.
+While `bind_waiting` is set, a probe of another sink that falls due, a TMR_DELAY expiry or a TMR_NO_RESP retry, is held instead of owed: its timer is re-armed 1 ms on, so a port that services its timers once per pass retries it in the next pass ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3, 5.5.3.5.10 and 5.5.3.5.16; [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/)).
+A held probe is never lost: while any probe is held, a probe that finds every slot owed is held with it, and held probes take freed slots one per pass, in sink order, after the commands still kept. Each pass that holds a probe increments `probes_held`.
+A held probe therefore waits from the pass it falls due through the pass that takes the BIND_RX, plus one pass for each frame owed by a command kept behind the BIND_RX and for each other probe owed before it, at most one per other sink. Its TMR_NO_RESP runs from when it leaves.
+With no probe held and no BIND_RX waiting, a timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it.
 Deliver no later ACMP frame before a kept one, so commands keep their arrival order.
 `acmp_rx` returns true for every frame it takes, including malformed, foreign and probe-response frames.
 It also returns false for refused callback re-entry.
 `acmp_rx_ready` returns true when `acmp_rx` takes any frame now, which needs two free owed slots; it is false inside a port callback.
 A port that cannot keep a frame once taken tests `acmp_rx_ready` first and leaves the frame in its receive queue.
-A declined command costs its frame checks, its decode and the owed-bound comparison; it makes no copy and no port call.
+A declined command costs its frame checks, its decode, the owed-bound comparison and, for a BIND_RX with one slot free, the `bind_waiting` store; it makes no copy and no port call.
 The served command receives its specified response behind the frames owed ahead of it, never an error status.
-A port that polls once per pass and delivers again in that pass sends it in pass `ACMP_OWED_MAX` + 1 after the egress returns.
+A port that polls once per pass and delivers again in that pass sends it in pass `ACMP_OWED_MAX` + 1 after the egress returns, a BIND_RX included, whatever timer probes fall due meanwhile: no timer probe is owed ahead of a kept command.
 That delay plus the egress hold must stay within the 200 ms command timeouts of [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/).
 A deferred BIND_RX's first PROBE_TX leaves in the next pass.
+A port that tests `acmp_rx_ready` instead of offering a waiting frame gives the core no sign of it: each timer probe owed while the frame waits takes a slot ahead of it and delays it one pass, at most one per sink.
+Such a port budgets `ACMP_OWED_MAX` + 1 + `n_sinks` passes, or offers the frame from its queue after each accepting `acmp_poll` and leaves it there when declined.
 The answering duty follows [IEEE 1722.1-2021 8.2.4 and 8.2.5](https://standards.ieee.org/ieee/1722.1/6670/), whose Table 8-3 has no status for a full output queue.
 The receive queue's depth and overflow accounting belong to the port, as for any receive ring.
 See [ACMP-12](REQUIREMENTS.md#acmp-owed-bound).
@@ -293,6 +300,7 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
 | `stream`, `tk_failed` | Settled stream held for `env->srp`, and whether its registered Talker attribute is Talker Failed. |
 | `disc_running`, `discovered`, `disc_interface_index`, `disc_available_index` | Discovery activity and the remote talker's last interface and available indices. |
 | `timer`, `timer_deadline`, `timer_held` | Connection timer and absolute deadline. A held TMR_NO_RESP waits for its owed probe to leave. |
+| `probe_held` | The probe this timer's expiry sends is held for a waiting BIND_RX or behind another held probe; the timer is re-armed 1 ms on until a slot is free. |
 | `adp_armed`, `adp_deadline` | Discovery timer state and its absolute millisecond deadline. It runs beside the connection timer. |
 | `admitted`, `admitted_talker` | Admission state last supplied to the ingress port for that sink. |
 | `published_bound`, `published_started`, `published_stream` | Last triple supplied to `ports->publish`, preserved across sink reset and rollback. |
@@ -306,6 +314,7 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
 | `rng`, `seeded` | TMR_DELAY xorshift32 state and whether port entropy has been mixed in. |
 | `in_port` | A port callback is running. |
 | `now_read`, `now` | Whether this entry sampled time, and its latest clock value. |
+| `bind_waiting` | A BIND_RX was declined with one owed slot free since the last accepted owed frame, so timer probes are held. |
 | `timer_armed`, `timer_at` | Timer state and absolute deadline held by each interface's port. |
 | `owed`, `owed_head`, `owed_count` | Bounded output queue, oldest frame index and queued frame count. |
 
@@ -324,6 +333,7 @@ The [ACMP diagnostics](../include/acmp.h) count modulo 2^32.
 | `impossible` | Events marked impossible by [Milan v1.2 Table 5.30 or Table 5.54](https://avnu.org/resource/milan-specification/). |
 | `busy_declined` | Commands `acmp_rx` declined, unchanged, because all `ACMP_OWED_MAX` frames were owed, or a BIND_RX found fewer than two free. Each declined offer counts. |
 | `probes_lost` | Probes dropped because the owed queue is full. Their timeout recovers the attempt. |
+| `probes_held` | Passes that held a timer probe for a waiting BIND_RX or behind another held probe. A held probe is never dropped. |
 | `deferred_sends` | Send attempts refused for lack of room. |
 | `reentries` | Calls refused while a port callback runs. |
 | `draws` | Random TMR_DELAY draws. |

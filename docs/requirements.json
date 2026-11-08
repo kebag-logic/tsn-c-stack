@@ -219,7 +219,7 @@
   },
   {
     "id": "ACMP-12",
-    "text": "Answer every received command: with all ACMP_OWED_MAX frames owed, decline each command addressed to this entity, and each BIND_RX while fewer than two owed slots are free, to the caller before any state change or port call, and serve it when delivered again; take every other frame.",
+    "text": "Answer every received command: with all ACMP_OWED_MAX frames owed, decline each command addressed to this entity, and each BIND_RX while fewer than two owed slots are free, to the caller before any state change or port call, and serve it when delivered again; while a BIND_RX declined with one slot free waits, hold each timer probe instead of owing it, and never lose a held probe; take every other frame.",
     "clauses": [
       {
         "text": "IEEE 1722.1-2021 8.2.4 and 8.2.5, Tables 8-1 and 8-3",
