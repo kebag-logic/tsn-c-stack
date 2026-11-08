@@ -110,17 +110,19 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [AcmpFresh.WindowRange](../tests/test_acmp.cpp#L2463) | dafresh-half-range; dafresh-range-wipes-instance; dafresh-range-calls-clock | ACMP-11, PORT-01 |
 | [AcmpFresh.WithinWindowAndRefresh](../tests/test_acmp.cpp#L2353) | dafresh-no-renewal; dafresh-answer-stamped-before-send | ACMP-11 |
 | [AcmpFresh.ZeroWindow](../tests/test_acmp.cpp#L2448) | x-zero-never-expires; dafresh-zero-blocks-listener | ACMP-11 |
-| [AcmpOwed.DeclinedBindIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2848) | owed-bind-rx-drop-restored; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-03 |
-| [AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2883) | owed-get-tx-state-drop-restored; owed-get-tx-state-answer-lost-after-decline | ACMP-12, ACMP-08 |
-| [AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken](../tests/test_acmp.cpp#L2764) | owed-decline-uncounted; owed-listener-acts-then-declines; owed-unbind-rx-drop-restored | ACMP-12, ACMP-03 |
-| [AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout](../tests/test_acmp.cpp#L3010) | owed-timer-probe-not-held; owed-hold-skips-retry; owed-bind-wait-unset | ACMP-12, ACMP-09 |
-| [AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe](../tests/test_acmp.cpp#L2921) | owed-bind-one-slot; owed-bind-owes-one; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-09 |
-| [AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet](../tests/test_acmp.cpp#L2690) | acmp-full-queue-acts; owed-listener-drop-restored; owed-decline-uncounted; owed-get-rx-state-drop-restored | ACMP-12, ACMP-09 |
-| [AcmpOwed.HoldEndsWithTheLastHeldProbe](../tests/test_acmp.cpp#L3027) | owed-timer-probe-not-held; owed-hold-skips-retry; owed-bind-wait-unset; owed-bind-wait-kept; owed-hold-uncounted; owed-held-flag-kept | ACMP-12, ACMP-09 |
-| [AcmpOwed.OnlyOwnCommandsAreDeclined](../tests/test_acmp.cpp#L2825) | owed-malformed-declined; owed-served-reported-declined; owed-declines-every-frame; owed-declines-foreign-listener; owed-declines-foreign-talker | ACMP-12, ACMP-02 |
-| [AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind](../tests/test_acmp.cpp#L2952) | owed-timer-probe-not-held; owed-hold-skips-delay; owed-hold-skips-retry; owed-held-probe-lost; owed-bind-wait-unset; owed-bind-wait-kept; owed-hold-uncounted; owed-hold-rearmed-late | ACMP-12, ACMP-09 |
-| [AcmpOwed.ReadyPredicateMatchesTheOwedBound](../tests/test_acmp.cpp#L2790) | owed-room-off-by-one; owed-ready-ignores-full; owed-ready-ignores-reentry; owed-ready-off-by-one; owed-reentry-taken; owed-served-reported-declined; owed-ready-one-slot; owed-bind-one-slot; owed-bind-owes-one | ACMP-12, PORT-01 |
-| [AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime](../tests/test_acmp.cpp#L2719) | owed-talker-drop-restored; owed-talker-acts-then-declines; owed-probe-tx-drop-restored; owed-disconnect-tx-drop-restored; owed-get-tx-connection-drop-restored | ACMP-12, ACMP-08 |
+| [AcmpOwed.DeclinedBindIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2878) | owed-bind-rx-drop-restored; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-03 |
+| [AcmpOwed.DeclinedGetTxStateIsAnsweredAfterTheHold](../tests/test_acmp.cpp#L2913) | owed-get-tx-state-drop-restored; owed-get-tx-state-answer-lost-after-decline | ACMP-12, ACMP-08 |
+| [AcmpOwed.DeclinedUnbindChangesNothingUntilItIsTaken](../tests/test_acmp.cpp#L2794) | owed-decline-uncounted; owed-listener-acts-then-declines; owed-unbind-rx-drop-restored | ACMP-12, ACMP-03 |
+| [AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout](../tests/test_acmp.cpp#L3043) | owed-timer-probe-not-held; owed-hold-skips-retry; owed-bind-wait-unset | ACMP-12, ACMP-09 |
+| [AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe](../tests/test_acmp.cpp#L2951) | owed-bind-one-slot; owed-bind-owes-one; owed-bind-answer-lost-after-decline | ACMP-12, ACMP-09 |
+| [AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet](../tests/test_acmp.cpp#L2720) | acmp-full-queue-acts; owed-listener-drop-restored; owed-decline-uncounted; owed-get-rx-state-drop-restored | ACMP-12, ACMP-09 |
+| [AcmpOwed.HoldEndsWithTheLastHeldProbe](../tests/test_acmp.cpp#L3060) | owed-timer-probe-not-held; owed-hold-skips-retry; owed-bind-wait-unset; owed-bind-wait-kept; owed-hold-uncounted; owed-held-flag-kept | ACMP-12, ACMP-09 |
+| [AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout](../tests/test_acmp.cpp#L3145) | owed-timer-probe-not-held; owed-bind-wait-unset | ACMP-12, ACMP-09 |
+| [AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem](../tests/test_acmp.cpp#L3094) | acmp-rebind-same-reprobes; owed-timer-probe-not-held; owed-bind-wait-unset | ACMP-12, ACMP-09 |
+| [AcmpOwed.OnlyOwnCommandsAreDeclined](../tests/test_acmp.cpp#L2855) | owed-malformed-declined; owed-served-reported-declined; owed-declines-every-frame; owed-declines-foreign-listener; owed-declines-foreign-talker | ACMP-12, ACMP-02 |
+| [AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind](../tests/test_acmp.cpp#L2982) | owed-timer-probe-not-held; owed-hold-skips-delay; owed-hold-skips-retry; owed-held-probe-lost; owed-bind-wait-unset; owed-bind-wait-kept; owed-hold-uncounted; owed-hold-rearmed-late | ACMP-12, ACMP-09 |
+| [AcmpOwed.ReadyPredicateMatchesTheOwedBound](../tests/test_acmp.cpp#L2820) | owed-room-off-by-one; owed-ready-ignores-full; owed-ready-ignores-reentry; owed-ready-off-by-one; owed-reentry-taken; owed-served-reported-declined; owed-ready-one-slot; owed-bind-one-slot; owed-bind-owes-one | ACMP-12, PORT-01 |
+| [AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime](../tests/test_acmp.cpp#L2749) | owed-talker-drop-restored; owed-talker-acts-then-declines; owed-probe-tx-drop-restored; owed-disconnect-tx-drop-restored; owed-get-tx-connection-drop-restored | ACMP-12, ACMP-08 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
 | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
 | [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
@@ -170,4 +172,4 @@ The [traceability matrix](TRACEABILITY.md) maps these tests to clauses.
 | [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
 | [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
 | [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |
-| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3063) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |
+| [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3176) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |

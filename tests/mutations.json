@@ -1123,11 +1123,16 @@
       {
         "test": "AcmpCore.A5RebindTheSameSourceUpdatesAndExits",
         "needle": "A5 a re-bind of the same source sends the response alone"
+      },
+      {
+        "test": "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+        "needle": "each kept command leaves in pass ACMP_OWED_MAX + 1 + f, f the frames owed by the kept commands ahead of it"
       }
     ],
     "original_tests": [
       "AcmpCore.A5RebindTheSameSourceUpdatesAndExits",
-      "Table530/ListenerWalk.Graded/BIND_SAME_PWR"
+      "Table530/ListenerWalk.Graded/BIND_SAME_PWR",
+      "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem"
     ]
   },
   {
@@ -2345,12 +2350,22 @@
       {
         "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
         "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      },
+      {
+        "test": "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+        "needle": "each kept command leaves in pass ACMP_OWED_MAX + 1 + f, f the frames owed by the kept commands ahead of it"
+      },
+      {
+        "test": "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+        "needle": "a hold of 200 ms less ACMP_OWED_MAX + 1 + f passes leaves the last kept command exactly at 200 ms"
       }
     ],
     "original_tests": [
       "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
       "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
-      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+      "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout"
     ]
   },
   {
@@ -2425,12 +2440,22 @@
       {
         "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
         "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      },
+      {
+        "test": "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+        "needle": "each kept command leaves in pass ACMP_OWED_MAX + 1 + f, f the frames owed by the kept commands ahead of it"
+      },
+      {
+        "test": "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+        "needle": "a hold of 200 ms less ACMP_OWED_MAX + 1 + f passes leaves the last kept command exactly at 200 ms"
       }
     ],
     "original_tests": [
       "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
       "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
-      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+      "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout"
     ]
   },
   {

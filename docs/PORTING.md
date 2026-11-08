@@ -80,12 +80,13 @@ With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred bin
 The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink, also waits for two free slots.
 A declined command returns false before changing state or calling a port, and increments `busy_declined`.
 A BIND_RX declined with one slot free also sets `bind_waiting`, which only holds timer probes, as below; the next `acmp_poll` that accepts an owed frame clears it.
+A refused `acmp_poll` leaves it set.
 The command is not dropped: the port keeps it and delivers it again after each `acmp_poll` that accepts an owed frame, at once and before it services `acmp_timer_expired`.
+This is the redelivery rule the bound below assumes. A refused `acmp_poll` frees no slot, so the port may wait for the next accepting poll or deliver the kept frame again, which `acmp_rx` declines again.
 Timer service first could let a probe take the freed slot, and the kept command would be declined again for another pass.
 Delivering first gives the kept command the freed slot, but a kept BIND_RX also needs the next one.
 While `bind_waiting` is set, at most one owed slot is free. A timer probe that falls due then, a TMR_DELAY expiry or a TMR_NO_RESP retry of any sink, would take that slot or find none, so it is held instead of owed: its timer is re-armed 1 ms on, so a port that services its timers once per pass retries it in the next pass ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3, 5.5.3.5.10 and 5.5.3.5.16; [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/)).
 A held probe is never lost: while any probe is held, a probe that finds every slot owed is held with it, and held probes take freed slots one per pass, after the commands still kept. Each pass that holds a probe increments `probes_held`.
-A held probe therefore waits from the pass it falls due through the pass that takes the BIND_RX, plus one pass for each frame owed by a command kept behind the BIND_RX and for each other probe owed before it, at most one per other sink. Its TMR_NO_RESP runs from when it leaves.
 With no probe held and no BIND_RX waiting, a timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it.
 Deliver no later ACMP frame before a kept one, so commands keep their arrival order.
 `acmp_rx` returns true for every frame it takes, including malformed, foreign and probe-response frames.
@@ -94,9 +95,16 @@ It also returns false for refused callback re-entry.
 A port that cannot keep a frame once taken tests `acmp_rx_ready` first and leaves the frame in its receive queue.
 A declined command costs its frame checks, its decode, the owed-bound comparison and, for a BIND_RX with one slot free, the `bind_waiting` store; it makes no copy and no port call.
 The served command receives its specified response behind the frames owed ahead of it, never an error status.
-A port that polls once per pass and delivers again in that pass sends it in pass `ACMP_OWED_MAX` + 1 after the egress returns, a BIND_RX included, whatever timer probes fall due meanwhile: no timer probe is owed ahead of a kept command.
-That delay plus the egress hold must stay within the 200 ms command timeouts of [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/).
-A deferred BIND_RX's first PROBE_TX leaves in the next pass.
+The bound follows for a port that polls once per pass and keeps the redelivery rule; passes are counted from the one in which the egress returns.
+Each accepted `acmp_poll` sends the oldest owed frame, and the owed set never empties while a command is kept, since a command is declined only with seven or eight frames owed. So owed frames leave one per pass in the order they were owed, and each refused poll delays every later frame by one pass.
+Each slot an accepted poll frees goes to the oldest kept command, and no timer probe is owed ahead of a kept command: one that falls due meanwhile is held, or lost as above.
+A command in the backlog the port keeps when the egress returns, or one that joins it before it empties, therefore leaves in pass `ACMP_OWED_MAX` + 1 + f + r, where f counts the frames owed by the kept commands ahead of it and r the polls refused since the egress returned.
+A kept command owes two frames if it is a BIND_RX that starts a binding, its response and its first PROBE_TX, and one if it is any other command, a BIND_RX that is only answered included; a kept frame that needs no answer owes none.
+So the first kept command, a BIND_RX included, leaves in pass `ACMP_OWED_MAX` + 1 after the egress returns when no poll is refused, whatever timer probes fall due meanwhile. A deferred BIND_RX's first PROBE_TX leaves in the next pass.
+Held probes follow the frames of the last kept command, one per pass, in the order the port's timer service reaches their sinks. A held probe therefore waits from the pass it falls due through the pass that takes the BIND_RX, plus one pass for each frame owed by a command kept behind the BIND_RX and for each other probe owed before it, at most one per other sink. Its TMR_NO_RESP runs from when it leaves.
+Each answer must leave within the 200 ms command timeouts of [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/), counted from the command's arrival, which comes at most one egress hold before the egress returns.
+Budget the egress hold for the deepest backlog the port keeps: with passes p ms apart, the hold plus (`ACMP_OWED_MAX` + 1 + f + r) * p ms must stay within 200 ms for the last command it keeps.
+For Q kept commands f is at most 2 * (Q - 1), so with 1 ms passes and no refused poll a hold of at most 193 - 2 * Q ms meets every timeout: 191 ms for one kept command, 189 ms for two.
 A port that tests `acmp_rx_ready` instead of offering a waiting frame gives the core no sign of it: each timer probe owed while the frame waits takes a slot ahead of it and delays it one pass, at most one per sink.
 Such a port budgets `ACMP_OWED_MAX` + 1 + `n_sinks` passes, or offers the frame from its queue after each accepting `acmp_poll` and leaves it there when declined.
 The answering duty follows [IEEE 1722.1-2021 8.2.4 and 8.2.5](https://standards.ieee.org/ieee/1722.1/6670/), whose Table 8-3 has no status for a full output queue.
