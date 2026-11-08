@@ -782,10 +782,15 @@
       {
         "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
         "needle": "A1 BIND_RX_RESPONSE is Table 5.32"
+      },
+      {
+        "test": "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
+        "needle": "the first probe leaves at once, in the pass after the BIND_RX answer"
       }
     ],
     "original_tests": [
-      "AcmpCore.A1BindFromUnboundRespondsThenProbes"
+      "AcmpCore.A1BindFromUnboundRespondsThenProbes",
+      "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe"
     ]
   },
   {
@@ -1937,10 +1942,15 @@
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
         "needle": "a full owed set is not ready"
+      },
+      {
+        "test": "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead",
+        "needle": "a gated port offers its frame only when acmp_rx_ready is true, and it is taken"
       }
     ],
     "original_tests": [
-      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+      "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead"
     ]
   },
   {
@@ -2247,10 +2257,20 @@
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
         "needle": "one free owed slot is not ready, since a BIND_RX needs two"
+      },
+      {
+        "test": "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead",
+        "needle": "a gated port offers its frame only when acmp_rx_ready is true, and it is taken"
+      },
+      {
+        "test": "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead",
+        "needle": "gives the core no sign of the waiting frame: nothing is declined or held"
       }
     ],
     "original_tests": [
-      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+      "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead",
+      "AcmpOwed.GatedPortBudgetsOnePassPerProbeOwedAhead"
     ]
   },
   {
@@ -2270,12 +2290,17 @@
       {
         "test": "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
         "needle": "a BIND_RX with one free owed slot is declined"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "a BIND_RX delivered again after a refused poll is declined again"
       }
     ],
     "original_tests": [
       "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
       "AcmpOwed.DeferredBindWaitsForTwoSlotsAndLosesNoProbe",
-      "AcmpOwed.ReadyPredicateMatchesTheOwedBound"
+      "AcmpOwed.ReadyPredicateMatchesTheOwedBound",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold"
     ]
   },
   {
@@ -2358,6 +2383,18 @@
       {
         "test": "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
         "needle": "a hold of 200 ms less ACMP_OWED_MAX + 1 + f passes leaves the last kept command exactly at 200 ms"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "no probe leaves ahead of the BIND_RX answer after a refused poll"
+      },
+      {
+        "test": "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+        "needle": "each kept command is answered within 200 ms"
+      },
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "no held probe leaves ahead of the deferred BIND_RX answer"
       }
     ],
     "original_tests": [
@@ -2365,7 +2402,10 @@
       "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
       "AcmpOwed.HoldEndsWithTheLastHeldProbe",
       "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
-      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout"
+      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
     ]
   },
   {
@@ -2448,6 +2488,14 @@
       {
         "test": "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
         "needle": "a hold of 200 ms less ACMP_OWED_MAX + 1 + f passes leaves the last kept command exactly at 200 ms"
+      },
+      {
+        "test": "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+        "needle": "held probes follow the frames of the last kept command, one per pass in sink order"
+      },
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "each held probe leaves after the deferred binding's frames, in sink order"
       }
     ],
     "original_tests": [
@@ -2455,7 +2503,9 @@
       "AcmpOwed.DeferredBindAtTheDocumentedMarginMeetsItsTimeout",
       "AcmpOwed.HoldEndsWithTheLastHeldProbe",
       "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
-      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout"
+      "AcmpOwed.KeptBacklogWithinTheDocumentedBudgetMeetsItsTimeout",
+      "AcmpOwed.KeptCommandsLeaveOnePassPerFrameOwedAheadOfThem",
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
     ]
   },
   {
@@ -2471,11 +2521,16 @@
       {
         "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
         "needle": "a retry that finds every slot owed is lost and counted"
+      },
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "while bind_waiting is set at most one owed slot is free"
       }
     ],
     "original_tests": [
       "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
-      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
     ]
   },
   {
@@ -2507,10 +2562,15 @@
       {
         "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
         "needle": "one pass per probe before it"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "a retry falling due in the refused pass is held, its timer re-armed 1 ms on"
       }
     ],
     "original_tests": [
-      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold"
     ]
   },
   {
@@ -2531,6 +2591,286 @@
     "original_tests": [
       "AcmpOwed.HoldEndsWithTheLastHeldProbe",
       "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-bind-wait-cleared-by-refused-poll",
+    "path": "src/acmp.c",
+    "old": "\tif (a->owed_count != 0u) {\n\t\tconst struct acmp_owed *o = &a->owed[a->owed_head];",
+    "new": "\ta->bind_waiting = false;\n\tif (a->owed_count != 0u) {\n\t\tconst struct acmp_owed *o = &a->owed[a->owed_head];",
+    "kills": [
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "a refused acmp_poll frees nothing and leaves bind_waiting set"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "no probe leaves ahead of the BIND_RX answer after a refused poll"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "one refused poll delays the kept BIND_RX one pass"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold"
+    ]
+  },
+  {
+    "name": "owed-bind-wait-set-at-full",
+    "path": "src/acmp.c",
+    "old": "\t\t\tif (cmd.msg == ACMP_MSG_BIND_RX_COMMAND && a->owed_count < ACMP_OWED_MAX) {",
+    "new": "\t\t\tif (cmd.msg == ACMP_MSG_BIND_RX_COMMAND) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe",
+        "needle": "a BIND_RX declined with no slot free does not set bind_waiting"
+      },
+      {
+        "test": "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe",
+        "needle": "is lost and counted, and its timeout runs"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe",
+      "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe"
+    ]
+  },
+  {
+    "name": "owed-hold-widened-to-second-no-resp",
+    "path": "src/acmp.c",
+    "old": "\tbool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);",
+    "new": "\tbool probes = kind == ACMP_TIMER_DELAY || kind == ACMP_TIMER_NO_RESP;",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+        "needle": "the TMR_NO_RESP that ends PRB_W_RESP2 is not held beside a waiting BIND_RX"
+      },
+      {
+        "test": "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+        "needle": "no expiry that sends no probe is held or counted in probes_held"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+      "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind"
+    ]
+  },
+  {
+    "name": "owed-hold-widened-to-every-timer",
+    "path": "src/acmp.c",
+    "old": "\tbool probes = kind == ACMP_TIMER_DELAY || (kind == ACMP_TIMER_NO_RESP && s->state == ACMP_PRB_W_RESP);",
+    "new": "\tbool probes = kind != ACMP_TIMER_NONE;",
+    "kills": [
+      {
+        "test": "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+        "needle": "the TMR_NO_RESP that ends PRB_W_RESP2 is not held beside a waiting BIND_RX"
+      },
+      {
+        "test": "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+        "needle": "a TMR_RETRY expiry is not held beside a waiting BIND_RX"
+      },
+      {
+        "test": "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+        "needle": "a TMR_NO_TK expiry is not held beside a waiting BIND_RX"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+      "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind",
+      "AcmpOwed.OnlyTimerProbesAreHeldBesideTheWaitingBind"
+    ]
+  },
+  {
+    "name": "owed-rebind-keeps-the-hold",
+    "path": "src/acmp.c",
+    "old": "\tdisc_stop(s);\n\tsm_stop(s);\n\ts->bound = true;",
+    "new": "\tdisc_stop(s);\n\tbool kept_hold = s->probe_held;\n\tsm_stop(s);\n\ts->probe_held = kept_hold;\n\ts->bound = true;",
+    "kills": [
+      {
+        "test": "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces",
+        "needle": "a BIND_RX to another talker ends the hold of the probe it replaces"
+      },
+      {
+        "test": "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces",
+        "needle": "the next retry that finds every slot owed is lost"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces",
+      "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces"
+    ]
+  },
+  {
+    "name": "owed-probe-held-never-set",
+    "path": "src/acmp.c",
+    "old": "\t\ts->probe_held = true;\n",
+    "new": "\t\ts->probe_held = false;\n",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "no probe held for the deferred BIND_RX is lost"
+      },
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "the retry falling due beside the deferred BIND_RX is held, not owed"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-hold-scan-skips-the-last-sink",
+    "path": "src/acmp.c",
+    "old": "\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tif (a->sinks[k].probe_held) {",
+    "new": "\tfor (unsigned k = 0; k + 1u < a->cfg.n_sinks; ++k) {\n\t\tif (a->sinks[k].probe_held) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "no probe held for the deferred BIND_RX is lost"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+    ]
+  },
+  {
+    "name": "owed-hold-whenever-full",
+    "path": "src/acmp.c",
+    "old": "\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tif (a->sinks[k].probe_held) {\n\t\t\treturn true;\n\t\t}\n\t}\n\treturn false;\n}",
+    "new": "\treturn true;\n}",
+    "kills": [
+      {
+        "test": "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+        "needle": "a retry that finds every slot owed is lost and counted"
+      },
+      {
+        "test": "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe",
+        "needle": "is lost and counted, and its timeout runs"
+      },
+      {
+        "test": "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces",
+        "needle": "the next retry that finds every slot owed is lost"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HoldEndsWithTheLastHeldProbe",
+      "AcmpOwed.BindDeclinedBehindTheFullSetHoldsNoProbe",
+      "AcmpOwed.BindToAnotherTalkerEndsTheHoldOfTheProbeItReplaces"
+    ]
+  },
+  {
+    "name": "owed-hold-at-seven",
+    "path": "src/acmp.c",
+    "old": "\tif (a->owed_count < ACMP_OWED_MAX) {\n\t\treturn false;",
+    "new": "\tif (a->owed_count + 1u < ACMP_OWED_MAX) {\n\t\treturn false;",
+    "kills": [
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "one pass per probe before it"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
+    ]
+  },
+  {
+    "name": "owed-answered-bind-takes-one-slot",
+    "path": "src/acmp.c",
+    "old": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND ? OWED_BY_BIND : 1u)) {",
+    "new": "\t\tif (listener && !room(a, cmd.msg == ACMP_MSG_BIND_RX_COMMAND && cmd.listener_uid < a->cfg.n_sinks ? OWED_BY_BIND : 1u)) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.AnsweredOnlyBindAlsoWaitsForTwoSlots",
+        "needle": "a BIND_RX that is only answered also waits for two free owed slots"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.AnsweredOnlyBindAlsoWaitsForTwoSlots"
+    ]
+  },
+  {
+    "name": "owed-entry-widened",
+    "path": "include/acmp.h",
+    "old": "\tuint8_t probe_of;\n\tuint32_t release;",
+    "new": "\tuint8_t probe_of;\n\tuint64_t release;",
+    "kills": [
+      {
+        "test": "AcmpOwed.OwedSetIsEightFramesOfEightyBytes",
+        "needle": "the owed set holds eight frames of 80 bytes, 640 bytes"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.OwedSetIsEightFramesOfEightyBytes"
+    ]
+  },
+  {
+    "name": "owed-deferred-answer-error-status",
+    "path": "src/acmp.c",
+    "old": "\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);\n\tr.talker = s->binding.talker_entity_id;",
+    "new": "\tstruct pdu r = echo(cmd, a->busy_declined != 0u ? ACMP_STATUS_NOT_SUPPORTED : ACMP_STATUS_SUCCESS);\n\tr.talker = s->binding.talker_entity_id;",
+    "kills": [
+      {
+        "test": "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet",
+        "needle": "its answer is the Milan Table 5.34 response, not an error status"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.HeldEgressDefersTheCommandBehindTheOwedSet"
+    ]
+  },
+  {
+    "name": "owed-same-talker-rebind-cancels-the-hold",
+    "path": "src/acmp.c",
+    "old": "\t\ts->started = !sw;\n\t\tbind_response(a, interface, k, cmd);\n\t\treturn;",
+    "new": "\t\ts->started = !sw;\n\t\tsm_stop(s);\n\t\tbind_response(a, interface, k, cmd);\n\t\treturn;",
+    "kills": [
+      {
+        "test": "AcmpOwed.SameTalkerRebindKeepsTheHeldProbe",
+        "needle": "a BIND_RX to the same talker keeps the held probe, which is owed once a slot is free"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.SameTalkerRebindKeepsTheHeldProbe"
+    ]
+  },
+  {
+    "name": "owed-refused-poll-drops-the-frame",
+    "path": "src/acmp.c",
+    "old": "\t\tif (p_send(a, o->interface, o->frame)) {",
+    "new": "\t\tif (p_send(a, o->interface, o->frame) || true) {",
+    "kills": [
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "a refused acmp_poll frees nothing and leaves bind_waiting set"
+      },
+      {
+        "test": "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+        "needle": "one refused poll delays the kept BIND_RX one pass"
+      }
+    ],
+    "original_tests": [
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold",
+      "AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold"
+    ]
+  },
+  {
+    "name": "owed-ninth-frame-taken",
+    "path": "src/acmp.c",
+    "old": "\tif (a->owed_count >= ACMP_OWED_MAX) {\n\t\treturn LOST;",
+    "new": "\tif (a->owed_count > ACMP_OWED_MAX) {\n\t\treturn LOST;",
+    "kills": [
+      {
+        "test": "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered",
+        "needle": "A19 a probe the full queue cannot take is lost and counted"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A19AProbeWithoutRoomIsLostAndRecovered"
     ]
   },
   {
@@ -3894,10 +4234,15 @@
       {
         "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
         "needle": "A27 the probe leaves 5 ms late and TMR_NO_RESP runs 200 ms from that send"
+      },
+      {
+        "test": "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind",
+        "needle": "each held probe was sent, and its timeout runs from when it left"
       }
     ],
     "original_tests": [
-      "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves"
+      "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
+      "AcmpOwed.ProbesFallingDueInTheDrainWaitForTheDeferredBind"
     ]
   },
   {

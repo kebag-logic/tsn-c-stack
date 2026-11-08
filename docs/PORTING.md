@@ -77,17 +77,18 @@ The owed set holds `ACMP_OWED_MAX` (8) frames of 80 bytes each, 640 bytes on bot
 While all of them are owed, `acmp_rx` declines each command addressed to this entity's listener or talker.
 A BIND_RX needs two free owed slots: one for its response and one for the first PROBE_TX of the binding it starts ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3).
 With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.
-The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink, also waits for two free slots.
+The rule reads only the message type, so a BIND_RX that is only answered, such as one for an unknown sink or a rebind to the same talker, also waits for two free slots.
 A declined command returns false before changing state or calling a port, and increments `busy_declined`.
 A BIND_RX declined with one slot free also sets `bind_waiting`, which only holds timer probes, as below; the next `acmp_poll` that accepts an owed frame clears it.
-A refused `acmp_poll` leaves it set.
+A refused `acmp_poll` leaves it set, and a BIND_RX declined with no slot free does not set it.
 The command is not dropped: the port keeps it and delivers it again after each `acmp_poll` that accepts an owed frame, at once and before it services `acmp_timer_expired`.
 This is the redelivery rule the bound below assumes. A refused `acmp_poll` frees no slot, so the port may wait for the next accepting poll or deliver the kept frame again, which `acmp_rx` declines again.
 Timer service first could let a probe take the freed slot, and the kept command would be declined again for another pass.
 Delivering first gives the kept command the freed slot, but a kept BIND_RX also needs the next one.
 While `bind_waiting` is set, at most one owed slot is free. A timer probe that falls due then, a TMR_DELAY expiry or a TMR_NO_RESP retry of any sink, would take that slot or find none, so it is held instead of owed: its timer is re-armed 1 ms on, so a port that services its timers once per pass retries it in the next pass ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3, 5.5.3.5.10 and 5.5.3.5.16; [Milan v1.2 Table 5.26](https://avnu.org/resource/milan-specification/)).
+No other expiry is held: a TMR_RETRY or TMR_NO_TK expiry, or the TMR_NO_RESP that ends PRB_W_RESP2, sends no probe and takes its transition at its deadline ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.23, 5.5.3.5.30, 5.5.3.5.31 and 5.5.3.5.36).
 A held probe is never lost: while any probe is held, a probe that finds every slot owed is held with it, and held probes take freed slots one per pass, after the commands still kept. Each pass that holds a probe increments `probes_held`.
-With no probe held and no BIND_RX waiting, a timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it.
+With no probe held and no BIND_RX waiting, a timer probe that finds every slot owed after the kept command is counted in `probes_lost`, and its timeout recovers it; so is one that falls due while a BIND_RX is declined behind the full set.
 Deliver no later ACMP frame before a kept one, so commands keep their arrival order.
 `acmp_rx` returns true for every frame it takes, including malformed, foreign and probe-response frames.
 It also returns false for refused callback re-entry.
