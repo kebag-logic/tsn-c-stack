@@ -130,8 +130,11 @@ Its tree equals the reviewed head. The map records export provenance; those comm
 The owner-created [squash commit](https://github.com/kebag-logic/tsn-c-stack/commit/ae982af85ec97286bd35b39403926d8f0eaec81d)
 uses hosted merge identities and a message body.
 The [follow-up assignment](https://github.com/kebag-logic/milan-fpga/issues/697#issuecomment-6074811248) fixes it as the branch base.
-The [privacy gate](../scripts/check_privacy.py) exempts only that exact commit from identity and one-line checks.
+The [privacy gate](../scripts/check_privacy.py) exempts that exact commit from identity and one-line checks.
 It still scans that commit's content and every reachable blob.
+The [merge of #29](https://github.com/kebag-logic/tsn-c-stack/commit/d7e6a2a19a57a8277cd26042557a8c99f2ee5496) was recorded with a second message paragraph.
+The gate exempts that exact commit from the one-line rule only. Its identity and content are still checked.
+Main's published history is not rewritten, so the exemption stands in place of a corrected message.
 Later pull requests are squash-merged on GitHub. Their commits carry the account's noreply author and GitHub as committer.
 Every new commit must use one of these two identity pairs and a one-line subject:
 the configured holder identity as author and committer, or that hosted squash pair.
