@@ -73,7 +73,9 @@ Use `acmp_change_pending` to inspect a notification held behind a response.
 
 ### ACMP owed bound
 
-The owed set holds `ACMP_OWED_MAX` (8) frames of 80 bytes each, 640 bytes on both targets.
+The owed set holds `ACMP_OWED_MAX` (8) frames of 80 bytes each, 640 bytes on both targets, at up to 32 sinks.
+Each frame's `release` mask takes `ACMP_RELEASE_WORDS` 32-bit words, one bit per sink, so each further 32 sinks of `ACMP_MAX_SINKS` add 4 bytes to every frame ([issue 31](https://github.com/kebag-logic/tsn-c-stack/issues/31)).
+A build whose mask cannot hold a bit for each of `ACMP_MAX_SINKS` sinks is refused.
 While all of them are owed, `acmp_rx` declines each command addressed to this entity's listener or talker.
 A BIND_RX needs two free owed slots: one for its response and one for the first PROBE_TX of the binding it starts ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3).
 With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.
@@ -323,7 +325,7 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
 | `saved` | Binding record last announced through `env->persist`. |
 | `acmp_owed.interface`, `frame` | Output interface and complete frame waiting for room. |
 | `probe_of` | One plus the sink index for a probe; zero for a response. |
-| `release` | Bit s releases sink s's pending change when this frame leaves. |
+| `release` | Bit s % 32 of word s / 32 releases sink s's pending change when this frame leaves. |
 | `acmp.sequence_id` | Sequence ID for the next new PROBE_TX_COMMAND. Duplicates retain the previous ID. |
 | `rng`, `seeded` | TMR_DELAY xorshift32 state and whether port entropy has been mixed in. |
 | `in_port` | A port callback is running. |

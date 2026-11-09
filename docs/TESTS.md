@@ -135,6 +135,8 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AcmpOwed.RefusedPollLeavesTheBindWaitingAndItsHold](../tests/test_acmp.cpp#L3180) | owed-bind-one-slot; owed-timer-probe-not-held; owed-hold-rearmed-late; owed-bind-wait-cleared-by-refused-poll; owed-refused-poll-drops-the-frame | ACMP-12, ACMP-09 |
 | [AcmpOwed.SameTalkerRebindKeepsTheHeldProbe](../tests/test_acmp.cpp#L3256) | owed-same-talker-rebind-cancels-the-hold | ACMP-12, ACMP-09 |
 | [AcmpOwed.TalkerCommandsBehindTheOwedSetAreAnsweredInTime](../tests/test_acmp.cpp#L2752) | owed-talker-drop-restored; owed-talker-acts-then-declines; owed-probe-tx-drop-restored; owed-disconnect-tx-drop-restored; owed-get-tx-connection-drop-restored | ACMP-12, ACMP-08 |
+| [AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges](../tests/test_acmp_wide.cpp#L67) | acmp-wide-release-word-ignored; acmp-wide-owed-count-word-ignored; acmp-wide-release-loop-word-ignored | ACMP-09 |
+| [AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree](../tests/test_acmp_wide.cpp#L92) | acmp-wide-owed-count-word-ignored; acmp-wide-release-loop-word-ignored | ACMP-09 |
 | [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L537) | gm-change-ignored; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
 | [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L553) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
 | [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L557) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
