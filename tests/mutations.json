@@ -6959,6 +6959,126 @@
     ]
   },
   {
+    "name": "acmp-wide-release-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\to->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "new": "\t\to->release[release / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's change waits behind its own owed response",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses"
+    ]
+  },
+  {
+    "name": "acmp-wide-owed-count-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
+    "new": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u));",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's change waits behind its own owed response",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's response left: one change is reported",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "once every owed frame left, no sink is held",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-loop-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed - ((o->release[k / 32u] >> (k % 32u)) & 1u));",
+    "new": "\t\t\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed - ((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u));",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's response left: one change is reported",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "once every owed frame left, no sink is held",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-owed-release-not-cleared",
+    "path": "src/acmp.c",
+    "old": "\tmemset(o->release, 0, sizeof o->release);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: the last is free"
+      },
+      {
+        "test": "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+        "needle": "a change of the last sink is reported at once"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 31 is free",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 32 is free",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+      "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-clears-one-word",
+    "path": "src/acmp.c",
+    "old": "\tmemset(o->release, 0, sizeof o->release);",
+    "new": "\tmemset(o->release, 0, sizeof o->release[0]);",
+    "kills": [
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 32 is free",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "a change of sink 32 is reported at once",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink"
+    ]
+  },
+  {
     "name": "wire-put-be-skips-an-odd-field-first-byte",
     "path": "include/wire.h",
     "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
