@@ -142,6 +142,13 @@ class AcmpCore : public ::testing::Test {
         static_cast<void>(acmp_view(&a, k, &v));
         return v;
     }
+    unsigned owed_changes() const {
+        unsigned n = 0;
+        for (unsigned k = 0; k < ACMP_MAX_SINKS; ++k) {
+            n += a.sinks[k].change_owed;
+        }
+        return n;
+    }
 
     // Milan v1.2 5.5.1.2; Milan v1.2 5.5.2.6
     // Milan v1.2 5.6.4.5.3; Milan v1.2 5.6.4.5.4
@@ -1146,6 +1153,43 @@ TEST_F(AcmpCore, A19TwoOwedResponsesForOneSinkReleaseTogether) {
     static_cast<void>(acmp_poll(&a));
     EXPECT_TRUE(fk.count(Call::CHANGED) == 0u && !acmp_change_pending(&a, 0))
         << "A19 once the unbind's response leaves nothing is reported: the sink is as it was (unbound)";
+}
+
+// REQ: ACMP-09
+TEST_F(AcmpCore, A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink) {
+    cfg.n_sinks = ACMP_MAX_SINKS;
+    for (unsigned k = 0; k < ACMP_MAX_SINKS; ++k) {
+        cfg.sink_interface[k] = static_cast<std::uint8_t>(k % 2u);
+    }
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &kEnv)) << "A19 the entity has every sink the build holds";
+    const unsigned held = ACMP_MAX_SINKS - 1u;
+    const unsigned slot = (a.owed_head + a.owed_count) % ACMP_OWED_MAX;
+    fk.room = false;
+    bind(held);
+    fk.room = true;
+    static_cast<void>(acmp_poll(&a));
+    static_cast<void>(acmp_poll(&a));
+    ASSERT_TRUE(a.owed_count == 0u && !acmp_change_pending(&a, held) && fk.count(Call::CHANGED) == 1u)
+        << "A19 the last sink's response and probe left, and its change was reported";
+    fk.room = false;
+    rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0));
+    for (unsigned k = 1; k <= 3u; ++k) {
+        bind(k);
+    }
+    ASSERT_TRUE(a.owed_count == 7u && a.owed[slot].probe_of == 4u)
+        << "A19 sink 3's probe is owed in the slot that held the last sink's response";
+    EXPECT_TRUE(!acmp_change_pending(&a, held) && owed_changes() == 3u)
+        << "A19 the probe in that slot holds no sink: the last is free, and sinks 1 to 3 each wait for their own response";
+    fk.clear();
+    EXPECT_TRUE(acmp_set_started(&a, held, false) && fk.count(Call::CHANGED) == 1u &&
+                fk.calls[static_cast<std::size_t>(fk.position(Call::CHANGED))].index == held)
+        << "A19 a change of the last sink is reported at once";
+    fk.room = true;
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        static_cast<void>(acmp_poll(&a));
+    }
+    EXPECT_TRUE(a.owed_count == 0u && owed_changes() == 0u)
+        << "A19 once every owed frame left, no sink is held: " << owed_changes();
 }
 
 // Milan v1.2 5.6.4; Milan v1.2 Table 5.54
