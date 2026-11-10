@@ -135,6 +135,39 @@ def selftest(work):
         assembly.write_text('#ifdef NDEBUG\nnop\n#else\n.word 42\n#endif\n')
         compile_file(root, 'examples/rv32/control.S', root / 'assembly', 2)
         print('conditional control: both assembly sides compiled and found in object symbols')
+    capacity_controls(work)
+
+
+def capacity_controls(work):
+    """Refuse at build time each ACMP_MAX_SINKS that the owed storage cannot hold."""
+    header = (ROOT / 'include/acmp.h').read_text()
+    words = '#define ACMP_RELEASE_WORDS ((ACMP_MAX_SINKS + 31u) / 32u)\n'
+    if header.count(words) != 1:
+        raise RuntimeError('capacity control: the release word count is not defined once')
+    mask = 'the owed release mask holds a bit for every sink'
+    probe = 'the owed probe_of names one plus the index of every sink'
+    cases = (('committed', header, '33u', None), ('committed', header, '255u', None),
+             ('committed', header, '256u', probe),
+             ('one-word', header.replace(words, '#define ACMP_RELEASE_WORDS 1u\n'), '32u', None),
+             ('one-word', header.replace(words, '#define ACMP_RELEASE_WORDS 1u\n'), '33u', mask))
+    with tempfile.TemporaryDirectory(dir=work) as name:
+        for variant, text, sinks, refusal in cases:
+            root = Path(name) / variant
+            if not root.exists():
+                shutil.copytree(ROOT / 'include', root / 'include')
+                shutil.copytree(ROOT / 'src', root / 'src')
+                (root / 'include/acmp.h').write_text(text)
+            for cc in ('gcc', 'clang'):
+                result = subprocess.run([cc, '-x', 'c', '-std=c11', '-Wall', '-Wextra', '-Werror',
+                                         '-I' + str(root / 'include'), '-DACMP_MAX_SINKS=' + sinks,
+                                         '-fsyntax-only', str(root / 'src/acmp.c')],
+                                        text=True, capture_output=True, timeout=120)
+                named = [m for m in (mask, probe) if m in result.stderr]
+                if bool(result.returncode) != bool(refusal) or named != ([refusal] if refusal else []):
+                    raise RuntimeError(f'capacity control {variant} at {sinks} sinks with {cc}: rc '
+                                       f'{result.returncode}\n{result.stderr}')
+            print(f'capacity control: {variant} owed storage at {sinks} sinks ' +
+                  (f'refused, "{refusal}"' if refusal else 'compiles') + ' with gcc and clang')
 
 
 def main():

@@ -32,6 +32,10 @@
 
 #include "wire.h"
 
+_Static_assert(sizeof ((struct acmp_owed *)0)->release * 8u >= ACMP_MAX_SINKS,
+	       "the owed release mask holds a bit for every sink");
+_Static_assert(ACMP_MAX_SINKS <= UINT8_MAX, "the owed probe_of names one plus the index of every sink");
+
 #ifdef CTRL_REENTRY_ASSERT
 #define REENTRY_TRAP() ctrl_reentry_assert("acmp")
 #else
@@ -305,7 +309,7 @@ enum sent { SENT, OWED, LOST };
 
 
 
-static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *frame, uint32_t release,
+static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *frame, unsigned release,
 			  unsigned probe_of)
 {
 	publish(a);
@@ -318,18 +322,21 @@ static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *fra
 	struct acmp_owed *o = &a->owed[(a->owed_head + a->owed_count) % ACMP_OWED_MAX];
 	o->interface = (uint8_t)interface;
 	o->probe_of = (uint8_t)probe_of;
-	o->release = release;
+	memset(o->release, 0, sizeof o->release);
+	if (release != 0u) {
+		o->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);
+	}
 	memcpy(o->frame, frame, ACMP_FRAME_BYTES);
 	a->owed_count++;
 	a->deferred_sends++;
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		a->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((release >> k) & 1u));
+		a->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));
 	}
 	return OWED;
 }
 
 
-static void respond(struct acmp *a, unsigned interface, const struct pdu *r, uint32_t release)
+static void respond(struct acmp *a, unsigned interface, const struct pdu *r, unsigned release)
 {
 	uint8_t frame[ACMP_FRAME_BYTES];
 	build(a, interface, r, frame);
@@ -871,7 +878,7 @@ static void bind_response(struct acmp *a, unsigned interface, unsigned k, const 
 	struct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.32
 	r.count = 1u;
 	r.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;
-	respond(a, interface, &r, 1u << k);
+	respond(a, interface, &r, k + 1u);
 }
 
 // Milan v1.2 5.5.3.5.3
@@ -928,7 +935,7 @@ static void unbind(struct acmp *a, unsigned interface, unsigned k, const struct 
 	struct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.36
 	r.talker = 0u;
 	r.talker_uid = 0u;
-	respond(a, interface, &r, 1u << k);
+	respond(a, interface, &r, k + 1u);
 	s->state = ACMP_UNBOUND;
 }
 
@@ -1301,7 +1308,7 @@ bool acmp_poll(struct acmp *a)
 		const struct acmp_owed *o = &a->owed[a->owed_head];
 		if (p_send(a, o->interface, o->frame)) {
 			for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-				if (((o->release >> k) & 1u) != 0u) {
+				if (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {
 					mark(a, k);
 					a->sinks[k].change_owed--;
 				}

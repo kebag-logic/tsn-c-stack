@@ -983,8 +983,8 @@
   {
     "name": "acmp-unbind-echoes-the-talker",
     "path": "src/acmp.c",
-    "old": "\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);",
-    "new": "\trespond(a, interface, &r, 1u << k);",
+    "old": "\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, k + 1u);",
+    "new": "\trespond(a, interface, &r, k + 1u);",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -1015,8 +1015,8 @@
   {
     "name": "acmp-unbind-srp-after-response",
     "path": "src/acmp.c",
-    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.36\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\ts->state = ACMP_UNBOUND;\n",
-    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\tif (settled) {\n\t\tsrp_stop(a, k);\n\t}\n\ts->state = ACMP_UNBOUND;\n",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.36\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, k + 1u);\n\ts->state = ACMP_UNBOUND;\n",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, k + 1u);\n\tif (settled) {\n\t\tsrp_stop(a, k);\n\t}\n\ts->state = ACMP_UNBOUND;\n",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -1046,8 +1046,8 @@
   {
     "name": "acmp-unbind-change-before-response",
     "path": "src/acmp.c",
-    "old": "\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);",
-    "new": "\tr.talker_uid = 0u;\n\tp_changed(a, k);\n\trespond(a, interface, &r, 1u << k);",
+    "old": "\tr.talker_uid = 0u;\n\trespond(a, interface, &r, k + 1u);",
+    "new": "\tr.talker_uid = 0u;\n\tp_changed(a, k);\n\trespond(a, interface, &r, k + 1u);",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -1845,7 +1845,7 @@
   {
     "name": "acmp-change-not-held-for-its-response",
     "path": "src/acmp.c",
-    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((release >> k) & 1u));",
+    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
     "new": "\t\t(void)release;",
     "kills": [
       {
@@ -2326,8 +2326,8 @@
   {
     "name": "owed-bind-answer-lost-after-decline",
     "path": "src/acmp.c",
-    "old": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\trespond(a, interface, &r, 1u << k);",
-    "new": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\tif (a->busy_declined == 0u) {\n\t\trespond(a, interface, &r, 1u << k);\n\t}",
+    "old": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\trespond(a, interface, &r, k + 1u);",
+    "new": "\tr.flags = cmd->flags & ACMP_FLAG_STREAMING_WAIT;\n\tif (a->busy_declined == 0u) {\n\t\trespond(a, interface, &r, k + 1u);\n\t}",
     "kills": [
       {
         "test": "AcmpOwed.DeclinedBindIsAnsweredAfterTheHold",
@@ -2851,8 +2851,8 @@
   {
     "name": "owed-entry-widened",
     "path": "include/acmp.h",
-    "old": "\tuint8_t probe_of;\n\tuint32_t release;",
-    "new": "\tuint8_t probe_of;\n\tuint64_t release;",
+    "old": "\tuint8_t probe_of;\n\tuint32_t release[ACMP_RELEASE_WORDS];",
+    "new": "\tuint8_t probe_of;\n\tuint64_t release[ACMP_RELEASE_WORDS];",
     "kills": [
       {
         "test": "AcmpOwed.OwedSetIsEightFramesOfEightyBytes",
@@ -2946,7 +2946,7 @@
   {
     "name": "acmp-first-owed-releases-every-change",
     "path": "src/acmp.c",
-    "old": "\t\t\t\tif (((o->release >> k) & 1u) != 0u) {\n\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;\n\t\t\t\t}",
+    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {\n\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;\n\t\t\t\t}",
     "new": "\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed = 0u;",
     "kills": [
       {
@@ -6899,6 +6899,257 @@
     ]
   },
   {
+    "name": "acmp-wide-release-word-ignored",
+    "path": "src/acmp.c",
+    "old": "\t\to->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "new": "\t\to->release[0] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "kills": [
+      {
+        "test": "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
+        "needle": "sink 32's change waits behind its owed response",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges"
+    ]
+  },
+  {
+    "name": "acmp-wide-owed-count-word-ignored",
+    "path": "src/acmp.c",
+    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
+    "new": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[0] >> (k % 32u)) & 1u));",
+    "kills": [
+      {
+        "test": "AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree",
+        "needle": "sink 0's owed response holds sink 0 and not sink 32",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
+        "needle": "sink 32's change waits behind its owed response",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
+      "AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-loop-word-ignored",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {",
+    "new": "\t\t\t\tif (((o->release[0] >> (k % 32u)) & 1u) != 0u) {",
+    "kills": [
+      {
+        "test": "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
+        "needle": "sink 32's response left: one change is reported",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree",
+        "needle": "leaves sink 32's count at zero",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
+      "AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\to->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "new": "\t\to->release[release / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's change waits behind its own owed response",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses"
+    ]
+  },
+  {
+    "name": "acmp-wide-owed-count-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
+    "new": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u));",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's change waits behind its own owed response",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's response left: one change is reported",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "once every owed frame left, no sink is held",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-loop-word-off-by-one",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {",
+    "new": "\t\t\t\tif (((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u) != 0u) {",
+    "kills": [
+      {
+        "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+        "needle": "sink 31's response left: one change is reported",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "once every owed frame left, no sink is held",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-owed-release-not-cleared",
+    "path": "src/acmp.c",
+    "old": "\tmemset(o->release, 0, sizeof o->release);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: the last is free"
+      },
+      {
+        "test": "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+        "needle": "a change of the last sink is reported at once"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 31 is free",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 32 is free",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+      "AcmpCore.A19AProbeInTheSlotOfAnEarlierResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyOnesResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "acmp-wide-release-clears-one-word",
+    "path": "src/acmp.c",
+    "old": "\tmemset(o->release, 0, sizeof o->release);",
+    "new": "\tmemset(o->release, 0, sizeof o->release[0]);",
+    "kills": [
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "the probe in that slot holds no sink: sink 32 is free",
+        "arm": "acmp_wide"
+      },
+      {
+        "test": "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+        "needle": "a change of sink 32 is reported at once",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink",
+      "AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink"
+    ]
+  },
+  {
+    "name": "wire-put-be-skips-an-odd-field-first-byte",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes; i > (bytes & 1u); --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "wire-put-be-writes-past-an-odd-field",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes + (bytes & 1u); i > 0u; --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "entity-wrong-count",
+    "path": "examples/entities/ax7101/entity_config.c",
+    "old": "        .talker_stream_sources = 2u,",
+    "new": "        .talker_stream_sources = 1u,",
+    "kills": [
+      {
+        "test": "EntityYaml.AdpRoundTrip",
+        "needle": "generated ADP fields match the independent entity oracle",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-swapped-interface",
+    "path": "examples/entities/duplex/entity_config.c",
+    "old": "    .sink_interface = {1u, 0u},",
+    "new": "    .sink_interface = {0u, 1u},",
+    "kills": [
+      {
+        "test": "EntityYaml.AcmpRoundTrip",
+        "needle": "generated ACMP interfaces preserve binding admission routes",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-dropped-field",
+    "path": "examples/entities/talker/entity_config.c",
+    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
+    "new": "",
+    "kills": [
+      {
+        "test": "EntityYaml.MaapRoundTrip",
+        "needle": "generated MAAP arguments preserve range and interface ownership",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
     "name": "walk-bind-unmarked",
     "path": "src/acmp.c",
     "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool sw",
@@ -7412,77 +7663,6 @@
     ],
     "original_tests": [
       "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
-    ]
-  },
-  {
-    "name": "wire-put-be-skips-an-odd-field-first-byte",
-    "path": "include/wire.h",
-    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
-    "new": "\tfor (unsigned i = bytes; i > (bytes & 1u); --i) {\n",
-    "kills": [
-      {
-        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
-        "needle": "W1 wire_put_be writes the low bytes most significant first",
-        "arm": "acmp"
-      }
-    ],
-    "original_tests": [
-      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
-    ]
-  },
-  {
-    "name": "wire-put-be-writes-past-an-odd-field",
-    "path": "include/wire.h",
-    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
-    "new": "\tfor (unsigned i = bytes + (bytes & 1u); i > 0u; --i) {\n",
-    "kills": [
-      {
-        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
-        "needle": "W1 wire_put_be writes the low bytes most significant first",
-        "arm": "acmp"
-      }
-    ],
-    "original_tests": [
-      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
-    ]
-  },
-  {
-    "name": "entity-wrong-count",
-    "path": "examples/entities/ax7101/entity_config.c",
-    "old": "        .talker_stream_sources = 2u,",
-    "new": "        .talker_stream_sources = 1u,",
-    "kills": [
-      {
-        "test": "EntityYaml.AdpRoundTrip",
-        "needle": "generated ADP fields match the independent entity oracle",
-        "arm": "entity"
-      }
-    ]
-  },
-  {
-    "name": "entity-swapped-interface",
-    "path": "examples/entities/duplex/entity_config.c",
-    "old": "    .sink_interface = {1u, 0u},",
-    "new": "    .sink_interface = {0u, 1u},",
-    "kills": [
-      {
-        "test": "EntityYaml.AcmpRoundTrip",
-        "needle": "generated ACMP interfaces preserve binding admission routes",
-        "arm": "entity"
-      }
-    ]
-  },
-  {
-    "name": "entity-dropped-field",
-    "path": "examples/entities/talker/entity_config.c",
-    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
-    "new": "",
-    "kills": [
-      {
-        "test": "EntityYaml.MaapRoundTrip",
-        "needle": "generated MAAP arguments preserve range and interface ownership",
-        "arm": "entity"
-      }
     ]
   }
 ]

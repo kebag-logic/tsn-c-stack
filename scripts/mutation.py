@@ -21,9 +21,10 @@ from assertion_forms import package_flags, require_version
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"entity": "test_entity.cpp", "port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
            "adp_debug": "test_adp_reentry.cpp", "adp_release": "test_adp_reentry.cpp", "maap_debug": "test_maap_debug.cpp",
-           "acmp_walk": "test_acmp_walk.cpp"}
-# The changed-sink walk arm builds its core and its test at 33 sinks with the CMake target's sanitizers (#32).
-WALK = ["-DACMP_MAX_SINKS=33u", "-fsanitize=shift,undefined", "-fno-sanitize-recover=shift,undefined"]
+           "acmp_wide": "test_acmp_wide.cpp", "acmp_walk": "test_acmp_walk.cpp"}
+# The 33-sink arms build their core and their test with the CMake target's definition and sanitizers: the wide
+# arm's (#31) and the changed-sink walk arm's (#32), on the same target.
+WIDE = ["-DACMP_MAX_SINKS=33u", "-fsanitize=shift,undefined", "-fno-sanitize-recover=shift,undefined"]
 HEADER_SLOTS = threading.Semaphore(3)
 MESSAGE_MARKERS = ('TSN_MESSAGE_BEGIN_' + secrets.token_hex(16),
                    'TSN_MESSAGE_END_' + secrets.token_hex(16))
@@ -42,16 +43,16 @@ def arm_module(arm):
 
 def cflags(arm):
     return ["-std=c11", "-O0", "-g", "-Wall", "-Wextra", "-Werror"] + (
-        [] if arm.endswith("_debug") else ["-DNDEBUG", "-DCTRL_REENTRY_ASSERT"]) + walk(arm)
+        [] if arm.endswith("_debug") else ["-DNDEBUG", "-DCTRL_REENTRY_ASSERT"]) + wide(arm)
 
 
 def cppflags(arm):
     return ["-std=c++20", "-O0", "-g", "-Wall", "-Wextra", "-Werror"] + (
-        ["-DADP_TEST_RELEASE"] if arm == "adp_release" else []) + walk(arm)
+        ["-DADP_TEST_RELEASE"] if arm == "adp_release" else []) + wide(arm)
 
 
-def walk(arm):
-    return WALK if arm == "acmp_walk" else []
+def wide(arm):
+    return WIDE if arm in ("acmp_wide", "acmp_walk") else []
 
 
 def execute(binary, xml, log, filters=None):
@@ -139,7 +140,7 @@ def main():
     if not (run([cc, *cflags("port"), "-I" + str(ROOT / "include"), "-c", str(ROOT / "examples/adp_port.c"), "-o", str(baseline / "port_extra.o")], log) == 0):
         raise RuntimeError('baseline example port build failed: ' + ''.join(log))
     def extra(arm):
-        return ([str(baseline / "port_extra.o")] if arm == "port" else []) + walk(arm)
+        return ([str(baseline / "port_extra.o")] if arm == "port" else []) + wide(arm)
     entity_sources = ['src/adp.c', 'src/acmp.c', 'src/maap.c', 'examples/entity_roundtrip.c'] + [
         f'examples/entities/{persona}/entity_config.c' for persona in ('listener', 'talker', 'duplex', 'ax7101')]
     entity_objects = {path: baseline / ('entity_' + str(index) + '.o')

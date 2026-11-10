@@ -162,6 +162,7 @@ extern "C" {
 #endif
 #define ACMP_MAX_INTERFACES 4u
 #define ACMP_OWED_MAX 8u
+#define ACMP_RELEASE_WORDS ((ACMP_MAX_SINKS + 31u) / 32u)
 // REQ: ACMP-13
 #define ACMP_DIRTY_WORDS ((ACMP_MAX_SINKS + 31u) / 32u)
 #define ACMP_AVTP_VERSION 0u            // IEEE 1722.1-2021 8.2.1.3; IEEE 1722.1-2021 6.2.2.3
@@ -400,7 +401,7 @@ struct acmp_sink {
 struct acmp_owed {
 	uint8_t interface;
 	uint8_t probe_of;
-	uint32_t release;
+	uint32_t release[ACMP_RELEASE_WORDS];
 	uint8_t frame[ACMP_FRAME_BYTES];
 };
 
