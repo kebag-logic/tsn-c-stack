@@ -7079,77 +7079,6 @@
     ]
   },
   {
-    "name": "wire-put-be-skips-an-odd-field-first-byte",
-    "path": "include/wire.h",
-    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
-    "new": "\tfor (unsigned i = bytes; i > (bytes & 1u); --i) {\n",
-    "kills": [
-      {
-        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
-        "needle": "W1 wire_put_be writes the low bytes most significant first",
-        "arm": "acmp"
-      }
-    ],
-    "original_tests": [
-      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
-    ]
-  },
-  {
-    "name": "wire-put-be-writes-past-an-odd-field",
-    "path": "include/wire.h",
-    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
-    "new": "\tfor (unsigned i = bytes + (bytes & 1u); i > 0u; --i) {\n",
-    "kills": [
-      {
-        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
-        "needle": "W1 wire_put_be writes the low bytes most significant first",
-        "arm": "acmp"
-      }
-    ],
-    "original_tests": [
-      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
-    ]
-  },
-  {
-    "name": "entity-wrong-count",
-    "path": "examples/entities/ax7101/entity_config.c",
-    "old": "        .talker_stream_sources = 2u,",
-    "new": "        .talker_stream_sources = 1u,",
-    "kills": [
-      {
-        "test": "EntityYaml.AdpRoundTrip",
-        "needle": "generated ADP fields match the independent entity oracle",
-        "arm": "entity"
-      }
-    ]
-  },
-  {
-    "name": "entity-swapped-interface",
-    "path": "examples/entities/duplex/entity_config.c",
-    "old": "    .sink_interface = {1u, 0u},",
-    "new": "    .sink_interface = {0u, 1u},",
-    "kills": [
-      {
-        "test": "EntityYaml.AcmpRoundTrip",
-        "needle": "generated ACMP interfaces preserve binding admission routes",
-        "arm": "entity"
-      }
-    ]
-  },
-  {
-    "name": "entity-dropped-field",
-    "path": "examples/entities/talker/entity_config.c",
-    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
-    "new": "",
-    "kills": [
-      {
-        "test": "EntityYaml.MaapRoundTrip",
-        "needle": "generated MAAP arguments preserve range and interface ownership",
-        "arm": "entity"
-      }
-    ]
-  },
-  {
     "name": "walk-bind-unmarked",
     "path": "src/acmp.c",
     "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool sw",
@@ -7663,6 +7592,77 @@
     ],
     "original_tests": [
       "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "wire-put-be-skips-an-odd-field-first-byte",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes; i > (bytes & 1u); --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "wire-put-be-writes-past-an-odd-field",
+    "path": "include/wire.h",
+    "old": "\tfor (unsigned i = bytes; i > 0u; --i) {\n",
+    "new": "\tfor (unsigned i = bytes + (bytes & 1u); i > 0u; --i) {\n",
+    "kills": [
+      {
+        "test": "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst",
+        "needle": "W1 wire_put_be writes the low bytes most significant first",
+        "arm": "acmp"
+      }
+    ],
+    "original_tests": [
+      "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "entity-wrong-count",
+    "path": "examples/entities/ax7101/entity_config.c",
+    "old": "        .talker_stream_sources = 2u,",
+    "new": "        .talker_stream_sources = 1u,",
+    "kills": [
+      {
+        "test": "EntityYaml.AdpRoundTrip",
+        "needle": "generated ADP fields match the independent entity oracle",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-swapped-interface",
+    "path": "examples/entities/duplex/entity_config.c",
+    "old": "    .sink_interface = {1u, 0u},",
+    "new": "    .sink_interface = {0u, 1u},",
+    "kills": [
+      {
+        "test": "EntityYaml.AcmpRoundTrip",
+        "needle": "generated ACMP interfaces preserve binding admission routes",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-dropped-field",
+    "path": "examples/entities/talker/entity_config.c",
+    "old": ", .preferred = UINT64_C(0x91e0f0000010)",
+    "new": "",
+    "kills": [
+      {
+        "test": "EntityYaml.MaapRoundTrip",
+        "needle": "generated MAAP arguments preserve range and interface ownership",
+        "arm": "entity"
+      }
     ]
   }
 ]
