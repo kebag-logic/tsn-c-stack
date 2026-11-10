@@ -162,6 +162,8 @@ extern "C" {
 #endif
 #define ACMP_MAX_INTERFACES 4u
 #define ACMP_OWED_MAX 8u
+// REQ: ACMP-13
+#define ACMP_DIRTY_WORDS ((ACMP_MAX_SINKS + 31u) / 32u)
 #define ACMP_AVTP_VERSION 0u            // IEEE 1722.1-2021 8.2.1.3; IEEE 1722.1-2021 6.2.2.3
 
 #define ACMP_ETHERTYPE 0x22F0u          // IEEE 1722-2016 Table 5
@@ -424,6 +426,9 @@ struct acmp {
 	uint32_t now;
 	bool timer_armed[ACMP_MAX_INTERFACES];
 	uint32_t timer_at[ACMP_MAX_INTERFACES];
+	// REQ: ACMP-13
+	uint32_t dirty[ACMP_DIRTY_WORDS];
+	uint32_t dirty_if;
 	struct acmp_owed owed[ACMP_OWED_MAX];
 	unsigned owed_head;
 	unsigned owed_count;

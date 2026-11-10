@@ -999,8 +999,8 @@
   {
     "name": "acmp-unbind-keeps-srp",
     "path": "src/acmp.c",
-    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;",
-    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tdisc_stop(s);\n\ts->bound = false;",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tdisc_stop(s);\n\ts->bound = false;",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -1015,8 +1015,8 @@
   {
     "name": "acmp-unbind-srp-after-response",
     "path": "src/acmp.c",
-    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.36\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\ts->state = ACMP_UNBOUND;\n",
-    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tbool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\tif (settled) {\n\t\tsrp_stop(a, k);\n\t}\n\ts->state = ACMP_UNBOUND;\n",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {\n\t\tsrp_stop(a, k);\n\t}\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);             // Milan v1.2 Table 5.36\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\ts->state = ACMP_UNBOUND;\n",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;\n\tdisc_stop(s);\n\ts->bound = false;\n\tmemset(&s->binding, 0, sizeof s->binding);\n\ts->started = false;\n\ts->probing = ACMP_PROBING_DISABLED;\n\ts->acmp_status = ACMP_STATUS_SUCCESS;\n\tsm_stop(s);\n\tstruct pdu r = echo(cmd, ACMP_STATUS_SUCCESS);\n\tr.talker = 0u;\n\tr.talker_uid = 0u;\n\trespond(a, interface, &r, 1u << k);\n\tif (settled) {\n\t\tsrp_stop(a, k);\n\t}\n\ts->state = ACMP_UNBOUND;\n",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -1584,8 +1584,8 @@
   {
     "name": "acmp-registered-keeps-no-tk",
     "path": "src/acmp.c",
-    "old": "\t}\n\tstruct acmp_sink *s = &a->sinks[sink];                  // Milan v1.2 5.5.3.5.42\n\tsm_stop(s);\n\ts->tk_failed = failed;\n",
-    "new": "\t}\n\tstruct acmp_sink *s = &a->sinks[sink];\n\ts->tk_failed = failed;\n",
+    "old": "\t}\n\tstruct acmp_sink *s = &a->sinks[sink];                  // Milan v1.2 5.5.3.5.42\n\tmark(a, sink);\n\tsm_stop(s);\n\ts->tk_failed = failed;\n",
+    "new": "\t}\n\tstruct acmp_sink *s = &a->sinks[sink];\n\tmark(a, sink);\n\ts->tk_failed = failed;\n",
     "kills": [
       {
         "test": "AcmpCore.A14RegisteredSettlesTheReservation",
@@ -1662,8 +1662,8 @@
   {
     "name": "acmp-unregistered-keeps-srp",
     "path": "src/acmp.c",
-    "old": "\t}\n\tsrp_stop(a, sink);                                      // Milan v1.2 5.5.3.5.48\n\treprobe(a, &a->sinks[sink]);\n",
-    "new": "\t}\n\t(void)sink;\n\treprobe(a, &a->sinks[sink]);\n",
+    "old": "\t}\n\tmark(a, sink);\n\tsrp_stop(a, sink);                                      // Milan v1.2 5.5.3.5.48\n\treprobe(a, &a->sinks[sink]);\n",
+    "new": "\t}\n\tmark(a, sink);\n\t(void)sink;\n\treprobe(a, &a->sinks[sink]);\n",
     "kills": [
       {
         "test": "AcmpCore.A15UnregisteredReprobes",
@@ -1698,7 +1698,7 @@
     "kills": [
       {
         "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
-        "needle": "A17 the port is called only when the earliest deadline moves"
+        "needle": "A17 a change that leaves an interface's earliest deadline keeps its timer"
       }
     ],
     "original_tests": [
@@ -1739,8 +1739,8 @@
   {
     "name": "acmp-expiry-not-consumed",
     "path": "src/acmp.c",
-    "old": "\t}\n\ta->timer_armed[interface] = false;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
-    "new": "\t}\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
+    "old": "\t}\n\ta->timer_armed[interface] = false;\n\ta->dirty_if |= 1u << interface;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
+    "new": "\t}\n\ta->dirty_if |= 1u << interface;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
     "kills": [
       {
         "test": "AcmpCore.A17EachInterfaceTimerHoldsItsEarliestDeadline",
@@ -2726,8 +2726,8 @@
   {
     "name": "owed-answer-keeps-the-hold",
     "path": "src/acmp.c",
-    "old": "\t\ta->probe_mismatch++;\n\t\treturn;\n\t}\n\tsm_stop(s);\n\tif (rsp->status != ACMP_STATUS_SUCCESS) {",
-    "new": "\t\ta->probe_mismatch++;\n\t\treturn;\n\t}\n\tbool kept_hold = s->probe_held;\n\tsm_stop(s);\n\ts->probe_held = kept_hold;\n\tif (rsp->status != ACMP_STATUS_SUCCESS) {",
+    "old": "\t\ta->probe_mismatch++;\n\t\treturn;\n\t}\n\tmark(a, k);\n\tsm_stop(s);\n\tif (rsp->status != ACMP_STATUS_SUCCESS) {",
+    "new": "\t\ta->probe_mismatch++;\n\t\treturn;\n\t}\n\tmark(a, k);\n\tbool kept_hold = s->probe_held;\n\tsm_stop(s);\n\ts->probe_held = kept_hold;\n\tif (rsp->status != ACMP_STATUS_SUCCESS) {",
     "kills": [
       {
         "test": "AcmpOwed.AnsweredProbeEndsTheHoldOfItsRetry",
@@ -2946,8 +2946,8 @@
   {
     "name": "acmp-first-owed-releases-every-change",
     "path": "src/acmp.c",
-    "old": "\t\t\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed - ((o->release >> k) & 1u));",
-    "new": "\t\t\t\ta->sinks[k].change_owed = 0u;",
+    "old": "\t\t\t\tif (((o->release >> k) & 1u) != 0u) {\n\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;\n\t\t\t\t}",
+    "new": "\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed = 0u;",
     "kills": [
       {
         "test": "AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether",
@@ -3368,8 +3368,8 @@
   {
     "name": "acmp-no-aging",
     "path": "src/acmp.c",
-    "old": "\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a))) {      // Milan v1.2 5.6.4.5.4\n\t\t\ts->adp_armed = false;\n",
-    "new": "\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a)) && false) {\n\t\t\ts->adp_armed = false;\n",
+    "old": "\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a))) {      // Milan v1.2 5.6.4.5.4\n\t\t\tmark(a, k);\n\t\t\ts->adp_armed = false;\n",
+    "new": "\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a)) && false) {\n\t\t\tmark(a, k);\n\t\t\ts->adp_armed = false;\n",
     "kills": [
       {
         "test": "AcmpCore.A22DepartingAndAging",
@@ -3721,7 +3721,7 @@
   {
     "name": "acmp-roll-back-keeps-the-bindings",
     "path": "src/acmp.c",
-    "old": "\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tsink_reset(a, k);\n\t\tsink_settle(&a->sinks[k]);\n\t}\n}",
+    "old": "\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tsink_reset(a, k);\n\t\tsink_settle(&a->sinks[k]);\n\t\tmark(a, k);\n\t}\n}",
     "new": "\t(void)a;\n}",
     "kills": [
       {
@@ -3889,8 +3889,8 @@
   {
     "name": "acmp-expiry-reads-the-clock-twice",
     "path": "src/acmp.c",
-    "old": "\ta->timer_armed[interface] = false;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
-    "new": "\ta->timer_armed[interface] = false;\n\t(void)a->ports->now_ms(a->ports->ctx);\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
+    "old": "\ta->timer_armed[interface] = false;\n\ta->dirty_if |= 1u << interface;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
+    "new": "\ta->timer_armed[interface] = false;\n\ta->dirty_if |= 1u << interface;\n\t(void)a->ports->now_ms(a->ports->ctx);\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n",
     "kills": [
       {
         "test": "AcmpCore.TimerPortBudgets",
@@ -4263,7 +4263,7 @@
   {
     "name": "acmp-owed-probe-never-starts",
     "path": "src/acmp.c",
-    "old": "\tif (s->timer_held && wire_be16(o->frame + O_SEQ) == s->probe_seq) {\n\t\tno_resp_from_send(a, s);\n\t}",
+    "old": "\tif (s->timer_held && wire_be16(o->frame + O_SEQ) == s->probe_seq) {\n\t\tmark(a, o->probe_of - 1u);\n\t\tno_resp_from_send(a, s);\n\t}",
     "new": "\t(void)s;",
     "kills": [
       {
@@ -4283,8 +4283,8 @@
   {
     "name": "acmp-owed-probe-no-resp-2s",
     "path": "src/acmp.c",
-    "old": "== s->probe_seq) {\n\t\tno_resp_from_send(a, s);",
-    "new": "== s->probe_seq) {\n\t\tno_resp_from_send(a, s);\n\t\ts->timer_deadline += 9u * ACMP_TMR_NO_RESP_MS;",
+    "old": "== s->probe_seq) {\n\t\tmark(a, o->probe_of - 1u);\n\t\tno_resp_from_send(a, s);",
+    "new": "== s->probe_seq) {\n\t\tmark(a, o->probe_of - 1u);\n\t\tno_resp_from_send(a, s);\n\t\ts->timer_deadline += 9u * ACMP_TMR_NO_RESP_MS;",
     "kills": [
       {
         "test": "AcmpCore.A27AnOwedProbeStartsItsTimerWhenItLeaves",
@@ -4383,8 +4383,8 @@
   {
     "name": "acmp-expiry-due-at-its-first-read",
     "path": "src/acmp.c",
-    "old": "\ta->timer_armed[interface] = false;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tif (s->interface != interface) {\n\t\t\tcontinue;\n\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a))) {      // Milan v1.2 5.6.4.5.4\n\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile (sm_running(s) && due(s->timer_deadline, now(a))) {\n\t\t\tsm_expired(a, k);\n",
-    "new": "\ta->timer_armed[interface] = false;\n\tconst uint32_t t = now(a);\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tif (s->interface != interface) {\n\t\t\tcontinue;\n\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, t)) {\n\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile (sm_running(s) && due(s->timer_deadline, t)) {\n\t\t\tsm_expired(a, k);\n",
+    "old": "\ta->timer_armed[interface] = false;\n\ta->dirty_if |= 1u << interface;\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tif (s->interface != interface) {\n\t\t\tcontinue;\n\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, now(a))) {      // Milan v1.2 5.6.4.5.4\n\t\t\tmark(a, k);\n\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile (sm_running(s) && due(s->timer_deadline, now(a))) {\n\t\t\tmark(a, k);\n\t\t\tsm_expired(a, k);\n",
+    "new": "\ta->timer_armed[interface] = false;\n\ta->dirty_if |= 1u << interface;\n\tconst uint32_t t = now(a);\n\tfor (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tif (s->interface != interface) {\n\t\t\tcontinue;\n\t\t}\n\t\tif (s->adp_armed && due(s->adp_deadline, t)) {\n\t\t\tmark(a, k);\n\t\t\ts->adp_armed = false;\n\t\t\ttk_departed(s);\n\t\t}\n\t\twhile (sm_running(s) && due(s->timer_deadline, t)) {\n\t\t\tmark(a, k);\n\t\t\tsm_expired(a, k);\n",
     "kills": [
       {
         "test": "AcmpCore.A30ATimerDueAfterAnEarlierSinksSendIsTakenInTheSameExpiry",
@@ -6266,7 +6266,7 @@
     "kills": [
       {
         "test": "AcmpCore.A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt",
-        "needle": "A31 a GET_RX_STATE reports the stream already published, and publishes nothing"
+        "needle": "A31 an entry that leaves the settled stream publishes nothing"
       }
     ],
     "original_tests": [
@@ -6896,6 +6896,522 @@
         "test": "AcmpFresh.ZeroWindow",
         "needle": "a zero interval still allows a registered Listener to declare"
       }
+    ]
+  },
+  {
+    "name": "walk-bind-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool sw",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tbool sw",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-unbind-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tif (s->state",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-probe-response-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tmark(a, k);\n\tsm_stop(s);\n\tif (rsp->status",
+    "new": "\tsm_stop(s);\n\tif (rsp->status",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-adp-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\ttaken++;\n\t\tmark(a, k);\n",
+    "new": "\t\ttaken++;\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-expired-interface-unmarked",
+    "path": "src/acmp.c",
+    "old": "\ta->dirty_if |= 1u << interface;\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-aging-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\t\tmark(a, k);\n\t\t\ts->adp_armed = false;\n",
+    "new": "\t\t\ts->adp_armed = false;\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-expiry-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\t\tmark(a, k);\n\t\t\tsm_expired(a, k);",
+    "new": "\t\t\tsm_expired(a, k);",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-registered-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tmark(a, sink);\n\tsm_stop(s);\n",
+    "new": "\tsm_stop(s);\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-kind-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tmark(a, sink);\n\ta->sinks[sink].tk_failed = failed;",
+    "new": "\ta->sinks[sink].tk_failed = failed;",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-unregistered-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tmark(a, sink);\n\tsrp_stop(a, sink);",
+    "new": "\tsrp_stop(a, sink);",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-started-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tmark(a, sink);\n\ta->sinks[sink].started = started;",
+    "new": "\ta->sinks[sink].started = started;",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-release-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "\t\t\t\t\ta->sinks[k].change_owed--;",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-probe-left-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\tmark(a, o->probe_of - 1u);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-restore-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tsink_reset(a, sink);\n\tmark(a, sink);\n",
+    "new": "\tsink_reset(a, sink);\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-rollback-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\tsink_settle(&a->sinks[k]);\n\t\tmark(a, k);\n",
+    "new": "\t\tsink_settle(&a->sinks[k]);\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-mark-interface-dropped",
+    "path": "src/acmp.c",
+    "old": "\ta->dirty_if |= 1u << a->sinks[k].interface;\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-mark-word-zero",
+    "path": "src/acmp.c",
+    "old": "\ta->dirty[k / 32u] |= 1u << (k % 32u);",
+    "new": "\ta->dirty[0] |= 1u << (k % 32u);",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-marked-word-zero",
+    "path": "src/acmp.c",
+    "old": "return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;",
+    "new": "return ((a->dirty[0] >> (k % 32u)) & 1u) != 0u;",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
     ]
   },
   {

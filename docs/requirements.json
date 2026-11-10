@@ -240,6 +240,24 @@
     }
   },
   {
+    "id": "ACMP-13",
+    "text": "At entry completion, and before each new frame, publish, re-arm, admit, persist and report only the sinks the entry changed, and the timers of their interfaces and of an expired one, making the calls a walk over every sink makes, in its order and with its arguments.",
+    "clauses": [
+      {
+        "text": "Local changed-sink walk contract",
+        "url": "PORTING.md#acmp-changed-sink-walk"
+      },
+      {
+        "text": "Milan v1.2 5.5.3.5",
+        "url": "https://avnu.org/resource/milan-specification/"
+      }
+    ],
+    "origin": {
+      "text": "tsn-c-stack issue 32",
+      "url": "https://github.com/kebag-logic/tsn-c-stack/issues/32"
+    }
+  },
+  {
     "id": "MAAP-01",
     "text": "Validate frame fields, destination, source, lengths and supported version behavior.",
     "clauses": [

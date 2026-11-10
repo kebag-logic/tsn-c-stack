@@ -330,7 +330,21 @@ The [public storage](../include/acmp.h) lets callers allocate fixed instances. T
 | `now_read`, `now` | Whether this entry sampled time, and its latest clock value. |
 | `bind_waiting` | A BIND_RX was declined with one owed slot free since the last accepted owed frame, so timer probes are held. |
 | `timer_armed`, `timer_at` | Timer state and absolute deadline held by each interface's port. |
+| `dirty` | Bit s of word s / 32 marks sink s changed since the last entry completion; `ACMP_DIRTY_WORDS` words, one at up to 32 sinks. |
+| `dirty_if` | Bit i marks interface i, whose timer the next completion re-arms. |
 | `owed`, `owed_head`, `owed_count` | Bounded output queue, oldest frame index and queued frame count. |
+
+### ACMP changed-sink walk
+
+[ACMP-13](REQUIREMENTS.md#acmp-changed-sink-walk) bounds the work each entry does at completion by the sinks it changed, not by `n_sinks`.
+A BIND_RX or UNBIND_RX marks its sink, a matching PROBE_TX_RESPONSE its sink, an ADPDU each bound sink of its talker on its interface,
+a timer expiry each sink of its interface whose discovery ages or whose connection timer is due, and its interface.
+`acmp_tk_registered`, `acmp_tk_kind_changed`, `acmp_tk_unregistered` and `acmp_set_started` mark their sink.
+An accepted `acmp_poll` marks each sink its frame releases and the sink of a probe it sends.
+`acmp_restore_binding` marks its sink and `acmp_restore_rollback` every sink, for the next `acmp_open`.
+A GET_RX_STATE, a refused command and a talker command mark nothing.
+Completion then publishes, admits, persists and reports only the marked sinks, and re-arms only the interfaces of marked sinks and an expired one.
+The publication before each new frame reads the same marks. A sink no entry marked has no change to make, so the calls are those of a walk over every sink.
 
 ### ACMP counters
 

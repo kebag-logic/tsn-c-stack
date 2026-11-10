@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Walk only the sinks an ACMP entry changed. Each entry marks the sinks it changes, and its interface's timer for an expiry; completion and each publication before a new frame publish, re-arm, admit, persist and report only those, with the calls a walk over every sink makes, in its order and with its arguments ([ACMP-13](docs/REQUIREMENTS.md#acmp-changed-sink-walk)). Add `dirty`, `ACMP_DIRTY_WORDS` words, and `dirty_if` to `struct acmp`. A differential test drives random entries into a core and one with every sink marked before each entry, at 1, 8, 32 and 33 sinks, and requires the same calls.
+
 - Exempt the merge of #29 from the one-line message rule by its exact commit; its identity and content are still checked.
 - Never drop an ACMP command at the owed bound. With all `ACMP_OWED_MAX` frames owed, `acmp_rx` now returns false and leaves state unchanged; after each `acmp_poll` that frees room the port offers the kept command and the frames waiting behind it, in arrival order until one is declined, before it services timers. A BIND_RX waits for two free owed slots, so a deferred binding loses no probe; while it waits with one slot free, a timer probe of any sink is held and re-armed 1 ms on instead of owed, so it neither delays the BIND_RX nor is lost (`probes_held`). The port contract derives the answer pass of every kept command, n + 1 + f + r, with n the frames owed when the egress returns (`ACMP_OWED_MAX`, or one less when the first kept frame is a BIND_RX declined with one slot free), and the egress-hold budget for the deepest backlog a port keeps. Add `acmp_rx_ready`, true with two free owed slots, and rename `busy_drops` to `busy_declined` ([ACMP-12](docs/REQUIREMENTS.md#acmp-owed-bound)). Ports must keep declined frames.
 
