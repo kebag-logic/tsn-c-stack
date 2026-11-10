@@ -76,6 +76,7 @@ Use `acmp_change_pending` to inspect a notification held behind a response.
 The owed set holds `ACMP_OWED_MAX` (8) frames of 80 bytes each, 640 bytes on both targets, at up to 32 sinks.
 Each frame's `release` mask takes `ACMP_RELEASE_WORDS` 32-bit words, one bit per sink, so each further 32 sinks of `ACMP_MAX_SINKS` add 4 bytes to every frame ([issue 31](https://github.com/kebag-logic/tsn-c-stack/issues/31)).
 A build whose mask cannot hold a bit for each of `ACMP_MAX_SINKS` sinks is refused.
+So is a build of more than 255 sinks, because `probe_of` holds one plus a sink index in 8 bits.
 While all of them are owed, `acmp_rx` declines each command addressed to this entity's listener or talker.
 A BIND_RX needs two free owed slots: one for its response and one for the first PROBE_TX of the binding it starts ([Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/), 5.5.3.5.3).
 With fewer free, `acmp_rx` declines a BIND_RX in the same way, so a deferred binding loses no probe and needs no TMR_NO_RESP retry.

@@ -34,6 +34,7 @@
 
 _Static_assert(sizeof ((struct acmp_owed *)0)->release * 8u >= ACMP_MAX_SINKS,
 	       "the owed release mask holds a bit for every sink");
+_Static_assert(ACMP_MAX_SINKS <= UINT8_MAX, "the owed probe_of names one plus the index of every sink");
 
 #ifdef CTRL_REENTRY_ASSERT
 #define REENTRY_TRAP() ctrl_reentry_assert("acmp")
@@ -308,7 +309,7 @@ static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *fra
 	o->probe_of = (uint8_t)probe_of;
 	memset(o->release, 0, sizeof o->release);
 	if (release != 0u) {
-		o->release[(release - 1u) / 32u] = 1u << ((release - 1u) % 32u);
+		o->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);
 	}
 	memcpy(o->frame, frame, ACMP_FRAME_BYTES);
 	a->owed_count++;

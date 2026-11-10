@@ -6901,8 +6901,8 @@
   {
     "name": "acmp-wide-release-word-ignored",
     "path": "src/acmp.c",
-    "old": "\t\to->release[(release - 1u) / 32u] = 1u << ((release - 1u) % 32u);",
-    "new": "\t\to->release[0] = 1u << ((release - 1u) % 32u);",
+    "old": "\t\to->release[(release - 1u) / 32u] = UINT32_C(1) << ((release - 1u) % 32u);",
+    "new": "\t\to->release[0] = UINT32_C(1) << ((release - 1u) % 32u);",
     "kills": [
       {
         "test": "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
