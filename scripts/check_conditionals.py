@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from assertion_forms import package_flags
 from compiler_tokens import compiler, raw_tokens
 from conditional_policy import GUARDS, MACROS, inspect
 
@@ -136,6 +137,7 @@ def selftest(work):
         compile_file(root, 'examples/rv32/control.S', root / 'assembly', 2)
         print('conditional control: both assembly sides compiled and found in object symbols')
     capacity_controls(work)
+    interface_controls(work)
 
 
 def capacity_controls(work):
@@ -167,6 +169,32 @@ def capacity_controls(work):
                     raise RuntimeError(f'capacity control {variant} at {sinks} sinks with {cc}: rc '
                                        f'{result.returncode}\n{result.stderr}')
             print(f'capacity control: {variant} owed storage at {sinks} sinks ' +
+                  (f'refused, "{refusal}"' if refusal else 'compiles') + ' with gcc and clang')
+
+
+def interface_controls(work):
+    """Refuse at build time an ACMP_MAX_INTERFACES that the interface mark cannot hold."""
+    header = (ROOT / 'include/acmp.h').read_text()
+    bound = '#define ACMP_MAX_INTERFACES 4u\n'
+    if header.count(bound) != 1:
+        raise RuntimeError('interface control: the interface bound is not defined once')
+    mark = 'the interface mark holds a bit for every interface'
+    flags = package_flags('--cflags')
+    with tempfile.TemporaryDirectory(dir=work) as name:
+        for interfaces, refusal in (('4', None), ('32', None), ('33', mark)):
+            root = Path(name) / interfaces
+            shutil.copytree(ROOT / 'include', root / 'include')
+            (root / 'include/acmp.h').write_text(header.replace(bound, f'#define ACMP_MAX_INTERFACES {interfaces}u\n'))
+            for cxx in ('g++', 'clang++'):
+                result = subprocess.run([cxx, '-x', 'c++', '-std=c++20', '-Wall', '-Wextra', '-Werror', *flags,
+                                         '-I' + str(root / 'include'), '-I' + str(ROOT / 'examples'),
+                                         '-I' + str(ROOT / 'tests'), '-DACMP_MAX_SINKS=33u', '-fsyntax-only',
+                                         str(ROOT / 'tests/test_acmp_walk.cpp')],
+                                        text=True, capture_output=True, timeout=120)
+                if bool(result.returncode) != bool(refusal) or (mark in result.stderr) != bool(refusal):
+                    raise RuntimeError(f'interface control at {interfaces} interfaces with {cxx}: rc '
+                                       f'{result.returncode}\n{result.stderr}')
+            print(f'interface control: the walk test at {interfaces} interfaces ' +
                   (f'refused, "{refusal}"' if refusal else 'compiles') + ' with gcc and clang')
 
 

@@ -21,8 +21,9 @@ from assertion_forms import package_flags, require_version
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {"entity": "test_entity.cpp", "port": "test_port.cpp", "adp": "test_adp.cpp", "acmp": "test_acmp.cpp", "maap": "test_maap.cpp",
            "adp_debug": "test_adp_reentry.cpp", "adp_release": "test_adp_reentry.cpp", "maap_debug": "test_maap_debug.cpp",
-           "acmp_wide": "test_acmp_wide.cpp"}
-# The 33-sink arm builds its core and its test with the CMake target's definition and sanitizers (#31).
+           "acmp_wide": "test_acmp_wide.cpp", "acmp_walk": "test_acmp_walk.cpp"}
+# The 33-sink arms build their core and their test with the CMake target's definition and sanitizers: the wide
+# arm's (#31) and the changed-sink walk arm's (#32), on the same target.
 WIDE = ["-DACMP_MAX_SINKS=33u", "-fsanitize=shift,undefined", "-fno-sanitize-recover=shift,undefined"]
 HEADER_SLOTS = threading.Semaphore(3)
 MESSAGE_MARKERS = ('TSN_MESSAGE_BEGIN_' + secrets.token_hex(16),
@@ -51,7 +52,7 @@ def cppflags(arm):
 
 
 def wide(arm):
-    return WIDE if arm == "acmp_wide" else []
+    return WIDE if arm in ("acmp_wide", "acmp_walk") else []
 
 
 def execute(binary, xml, log, filters=None):

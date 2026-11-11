@@ -851,6 +851,9 @@ TEST_F(AcmpCore, A17EachInterfaceTimerHoldsItsEarliestDeadline) {
     EXPECT_TRUE(fk.armed[0] && fk.at[0] == a.sinks[1].timer_deadline) << "A17 and re-arms at the next deadline";
     EXPECT_EQ(fk.count(Call::TIMER), 1u) << "A17 the port is called only when the earliest deadline moves";
     fk.clear();
+    ASSERT_TRUE(acmp_set_started(&a, 2, false));
+    EXPECT_EQ(fk.count(Call::TIMER), 0u) << "A17 a change that leaves an interface's earliest deadline keeps its timer";
+    fk.clear();
     rx(command(spec::MSG_UNBIND_RX_COMMAND, 2, kTkA, 1, kCtl1), 1);
     EXPECT_TRUE(!fk.armed[1] && fk.count(Call::TIMER) == 1u && fk.calls[unsigned(fk.position(Call::TIMER))].index == 1u)
         << "A17 an interface whose sinks hold no deadline has its timer stopped";
@@ -2115,6 +2118,8 @@ TEST_F(AcmpCore, A31TheBindingIsPublishedBeforeTheResponseThatPromisesIt) {
     rx(command(spec::MSG_GET_RX_STATE_COMMAND, 0));
     EXPECT_TRUE(fk.pubs.empty() && last().stream_id == kSid)
         << "A31 a GET_RX_STATE reports the stream already published, and publishes nothing";
+    ASSERT_TRUE(acmp_set_started(&a, 0, true));
+    EXPECT_TRUE(fk.pubs.empty()) << "A31 an entry that leaves the settled stream publishes nothing";
     rx(command(spec::MSG_UNBIND_RX_COMMAND, 0));
     ASSERT_EQ(fk.pubs.size(), 1u) << "A31 an UNBIND_RX publishes the sink unbound";
     EXPECT_TRUE(!fk.pubs[0].bound && !fk.pubs[0].started && fk.pubs[0].stream == 0u)

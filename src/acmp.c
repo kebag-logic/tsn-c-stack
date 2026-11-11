@@ -206,10 +206,25 @@ static void p_publish(struct acmp *a, unsigned interface, unsigned sink, bool bo
 }
 
 
-// REQ: ACMP-10
+// REQ: ACMP-13
+static void mark(struct acmp *a, unsigned k)
+{
+	a->dirty[k / 32u] |= 1u << (k % 32u);
+	a->dirty_if |= 1u << a->sinks[k].interface;
+}
+
+static bool marked(const struct acmp *a, unsigned k)
+{
+	return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;
+}
+
+// REQ: ACMP-10, ACMP-13
 static void publish(struct acmp *a)
 {
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+		if (!marked(a, k)) {
+			continue;
+		}
 		struct acmp_sink *s = &a->sinks[k];
 		bool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
 		uint64_t stream = settled ? s->stream.stream_id : 0u;
@@ -401,9 +416,13 @@ static void earliest(bool *any, uint32_t *at, bool armed, uint32_t deadline)
 
 
 
+// REQ: ACMP-13
 static void rearm(struct acmp *a)
 {
 	for (unsigned i = 0; i < a->cfg.n_interfaces; ++i) {
+		if (((a->dirty_if >> i) & 1u) == 0u) {
+			continue;
+		}
 		bool any = false;
 		uint32_t at = 0;
 		for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
@@ -488,9 +507,13 @@ static bool same_record(const uint8_t *x, const uint8_t *y)
 // Milan v1.2 5.6.4.1
 
 
+// REQ: ACMP-13
 static void admit(struct acmp *a)
 {
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+		if (!marked(a, k)) {
+			continue;
+		}
 		struct acmp_sink *s = &a->sinks[k];
 		uint64_t talker = s->binding.talker_entity_id;
 		if (s->bound != s->admitted || (s->bound && talker != s->admitted_talker)) {
@@ -503,12 +526,16 @@ static void admit(struct acmp *a)
 
 
 
+// REQ: ACMP-13
 static void finish(struct acmp *a)
 {
 	publish(a);
 	rearm(a);
 	admit(a);
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
+		if (!marked(a, k)) {
+			continue;
+		}
 		struct acmp_sink *s = &a->sinks[k];
 		uint8_t record[ACMP_BINDING_BYTES];
 		record_of(s, record);
@@ -523,6 +550,8 @@ static void finish(struct acmp *a)
 			p_changed(a, k);
 		}
 	}
+	memset(a->dirty, 0, sizeof a->dirty);
+	a->dirty_if = 0u;
 }
 
 // Milan v1.2 5.5.3.5.1
@@ -762,6 +791,7 @@ static void probe_left(struct acmp *a, const struct acmp_owed *o)
 	}
 	struct acmp_sink *s = &a->sinks[o->probe_of - 1u];
 	if (s->timer_held && wire_be16(o->frame + O_SEQ) == s->probe_seq) {
+		mark(a, o->probe_of - 1u);
 		no_resp_from_send(a, s);
 	}
 }
@@ -855,6 +885,7 @@ static void bind_response(struct acmp *a, unsigned interface, unsigned k, const 
 static void bind(struct acmp *a, unsigned interface, unsigned k, const struct pdu *cmd)
 {
 	struct acmp_sink *s = &a->sinks[k];
+	mark(a, k);
 	bool sw = (cmd->flags & ACMP_FLAG_STREAMING_WAIT) != 0u;
 	if (s->bound && cmd->talker == s->binding.talker_entity_id && cmd->talker_uid == s->binding.talker_unique_id) {
 
@@ -890,6 +921,7 @@ static void bind(struct acmp *a, unsigned interface, unsigned k, const struct pd
 static void unbind(struct acmp *a, unsigned interface, unsigned k, const struct pdu *cmd)
 {
 	struct acmp_sink *s = &a->sinks[k];
+	mark(a, k);
 	if (s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK) {
 		srp_stop(a, k);
 	}
@@ -969,6 +1001,7 @@ static void probe_response(struct acmp *a, const struct pdu *rsp)
 		a->probe_mismatch++;
 		return;
 	}
+	mark(a, k);
 	sm_stop(s);
 	if (rsp->status != ACMP_STATUS_SUCCESS) {
 		sm_timer(a, s, ACMP_TIMER_RETRY, ACMP_TMR_RETRY_MS);
@@ -1158,6 +1191,7 @@ void acmp_adp_rx(struct acmp *a, unsigned interface, const uint8_t *frame, size_
 			continue;
 		}
 		taken++;
+		mark(a, k);
 		if (msg == ACMP_ADP_MSG_ENTITY_DEPARTING) {
 			disc_departing(s, d.ifx);
 		} else {
@@ -1186,16 +1220,19 @@ void acmp_timer_expired(struct acmp *a, unsigned interface)
 		return;
 	}
 	a->timer_armed[interface] = false;
+	a->dirty_if |= 1u << interface;
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
 		struct acmp_sink *s = &a->sinks[k];
 		if (s->interface != interface) {
 			continue;
 		}
 		if (s->adp_armed && due(s->adp_deadline, now(a))) {      // Milan v1.2 5.6.4.5.4
+			mark(a, k);
 			s->adp_armed = false;
 			tk_departed(s);
 		}
 		while (sm_running(s) && due(s->timer_deadline, now(a))) {
+			mark(a, k);
 			sm_expired(a, k);
 		}
 	}
@@ -1212,6 +1249,7 @@ void acmp_tk_registered(struct acmp *a, unsigned sink, bool failed)
 		return;
 	}
 	struct acmp_sink *s = &a->sinks[sink];                  // Milan v1.2 5.5.3.5.42
+	mark(a, sink);
 	sm_stop(s);
 	s->tk_failed = failed;
 	s->state = ACMP_SETTLED_RSV_OK;
@@ -1227,6 +1265,7 @@ void acmp_tk_kind_changed(struct acmp *a, unsigned sink, bool failed)
 		a->impossible++;
 		return;
 	}
+	mark(a, sink);
 	a->sinks[sink].tk_failed = failed;
 	finish(a);
 }
@@ -1240,6 +1279,7 @@ void acmp_tk_unregistered(struct acmp *a, unsigned sink)
 		a->impossible++;                                // Milan v1.2 Table 5.30
 		return;
 	}
+	mark(a, sink);
 	srp_stop(a, sink);                                      // Milan v1.2 5.5.3.5.48
 	reprobe(a, &a->sinks[sink]);
 	finish(a);
@@ -1253,6 +1293,7 @@ bool acmp_set_started(struct acmp *a, unsigned sink, bool started)
 	if (sink >= a->cfg.n_sinks || !a->sinks[sink].bound) {
 		return false;
 	}
+	mark(a, sink);
 	a->sinks[sink].started = started;
 	finish(a);
 	return true;
@@ -1267,7 +1308,10 @@ bool acmp_poll(struct acmp *a)
 		const struct acmp_owed *o = &a->owed[a->owed_head];
 		if (p_send(a, o->interface, o->frame)) {
 			for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-				a->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed - ((o->release[k / 32u] >> (k % 32u)) & 1u));
+				if (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {
+					mark(a, k);
+					a->sinks[k].change_owed--;
+				}
 			}
 			probe_left(a, o);
 			a->owed_head = (a->owed_head + 1u) % ACMP_OWED_MAX;
@@ -1320,6 +1364,7 @@ enum acmp_restore acmp_restore_binding(struct acmp *a, unsigned sink, const uint
 		return ACMP_RESTORE_REFUSED;
 	}
 	sink_reset(a, sink);
+	mark(a, sink);
 	struct acmp_sink *s = &a->sinks[sink];
 	if ((payload[0] & BIND_VALID) != 0u) {                  // Milan v1.2 5.5.3.5.2
 		s->bound = true;
@@ -1344,6 +1389,7 @@ void acmp_restore_rollback(struct acmp *a)
 	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
 		sink_reset(a, k);
 		sink_settle(&a->sinks[k]);
+		mark(a, k);
 	}
 }
 

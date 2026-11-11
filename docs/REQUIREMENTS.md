@@ -35,6 +35,20 @@ Build, memory and testing policies are local decisions. They have source links r
 | MAAP-03 | Resolve full-width range conflicts and priority. Defend the exact intersection. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 4.3.5.1](https://avnu.org/resource/milan-specification/) |
 | MAAP-04 | Withdraw on loss and publish allocation only after accepted ANNOUNCE. Bound pending work. | [IEEE 1722-2016 B.3, Table B.7](https://standards.ieee.org/ieee/1722/5979/); [Local transport contract](PORTING.md) |
 
+## ACMP changed-sink walk
+
+ACMP-13 originates from [issue #32](https://github.com/kebag-logic/tsn-c-stack/issues/32).
+At entry completion the core walks only the sinks the entry changed. Each entry marks a sink before the next walk
+reads it: before it changes the sink's binding, state, timers or owed changes, and, for `acmp_restore_binding` and
+`acmp_restore_rollback`, right after the reset. An expiry marks its interface; completion clears every mark.
+Publication, timer arming, admission, persistence and change reports keep the calls of a walk over every sink,
+in its order and with its arguments. The [port contract](PORTING.md#acmp-changed-sink-walk) gives what each entry walks.
+Both Linux and bare-metal RV32 are required.
+
+| ID | Required behavior | Clause |
+|---|---|---|
+| ACMP-13 | At entry completion, and before each new frame, publish, re-arm, admit, persist and report only the sinks the entry changed, and the timers of their interfaces and of an expired one, making the calls a walk over every sink makes, in its order and with its arguments. | [Local changed-sink walk contract](PORTING.md#acmp-changed-sink-walk); [Milan v1.2 5.5.3.5](https://avnu.org/resource/milan-specification/) |
+
 ## ACMP owed bound
 
 ACMP-12 originates from [issue #26](https://github.com/kebag-logic/tsn-c-stack/issues/26).
