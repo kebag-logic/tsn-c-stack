@@ -38,8 +38,9 @@ Build, memory and testing policies are local decisions. They have source links r
 ## ACMP changed-sink walk
 
 ACMP-13 originates from [issue #32](https://github.com/kebag-logic/tsn-c-stack/issues/32).
-At entry completion the core walks only the sinks the entry changed. Each entry marks a sink before it changes
-the sink's binding, state, timers or owed changes, and an expiry marks its interface; completion clears every mark.
+At entry completion the core walks only the sinks the entry changed. Each entry marks a sink before the next walk
+reads it: before it changes the sink's binding, state, timers or owed changes, and, for `acmp_restore_binding` and
+`acmp_restore_rollback`, right after the reset. An expiry marks its interface; completion clears every mark.
 Publication, timer arming, admission, persistence and change reports keep the calls of a walk over every sink,
 in its order and with its arguments. The [port contract](PORTING.md#acmp-changed-sink-walk) gives what each entry walks.
 Both Linux and bare-metal RV32 are required.
