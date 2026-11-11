@@ -17,6 +17,8 @@
 
 using namespace acmp_test;
 
+static_assert(ACMP_MAX_INTERFACES <= sizeof(acmp::dirty_if) * 8u, "the interface mark holds a bit for every interface");
+
 extern "C" void ctrl_reentry_assert(const char* module) {
     static_cast<void>(module);
 }
