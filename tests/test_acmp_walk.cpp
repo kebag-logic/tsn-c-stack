@@ -131,12 +131,13 @@ class AcmpWalk : public ::testing::Test {
     void start(unsigned sinks) {
         wide = sinks > 32u;
         cfg.entity_id = kOwn;
-        cfg.n_interfaces = 2;
+        cfg.n_interfaces = wide ? 3u : 2u;
         cfg.mac[0] = kMac0;
         cfg.mac[1] = kMac1;
+        cfg.mac[2] = kMac1 + 1u;
         cfg.n_sinks = sinks;
         for (unsigned k = 0; k < sinks; ++k) {
-            cfg.sink_interface[k] = static_cast<std::uint8_t>((k * 7u + k / 3u) % 2u);
+            cfg.sink_interface[k] = static_cast<std::uint8_t>(k < 32u ? (k * 7u + k / 3u) % 2u : 2u);
         }
         cfg.n_sources = 2;
         cfg.source_interface[0] = 0;
@@ -183,8 +184,7 @@ class AcmpWalk : public ::testing::Test {
     }
 
     unsigned commanded_sink() {
-        unsigned k = sink();
-        return wide && k >= 32u ? k - 32u : k;
+        return wide && rng.below(4u) == 0u ? cfg.n_sinks - 1u : sink();
     }
 
     void rx(const Pdu& p, unsigned interface) {
@@ -234,7 +234,7 @@ class AcmpWalk : public ::testing::Test {
         p.listener = kTkA;
         p.talker_uid = static_cast<std::uint16_t>(rng.below(3u));
         p.seq = static_cast<std::uint16_t>(rng.next());
-        rx(p, rng.below(2u));
+        rx(p, rng.below(cfg.n_interfaces));
     }
 
     void adp() {
@@ -246,7 +246,7 @@ class AcmpWalk : public ::testing::Test {
         d.gm = rng.below(8u) == 0u ? kGm0 + 1u : kGm0;
         d.interface_index = static_cast<std::uint16_t>(rng.below(2u));
         auto f = adpdu(d);
-        unsigned interface = rng.below(2u);
+        unsigned interface = rng.below(cfg.n_interfaces);
         both([&](Side& s) { acmp_adp_rx(&s.a, interface, f.data(), f.size()); });
     }
 
@@ -264,6 +264,10 @@ class AcmpWalk : public ::testing::Test {
     }
 
     void step() {
+        if (wide && walked.a.owed_count != 0u && walked.room && rng.below(2u) == 0u) {
+            both([&](Side& s) { (void)acmp_poll(&s.a); });
+            return;
+        }
         unsigned r = rng.below(100u);
         if (r < 14u) {
             listener(spec::MSG_BIND_RX_COMMAND);
@@ -279,7 +283,7 @@ class AcmpWalk : public ::testing::Test {
             adp();
         } else if (r < 62u) {
             std::uint32_t ms = rng.below(5u) == 0u ? 4000u + rng.below(8000u) : rng.below(400u);
-            unsigned interface = rng.below(2u);
+            unsigned interface = rng.below(cfg.n_interfaces);
             walked.now += ms;
             full.now += ms;
             both([&](Side& s) { acmp_timer_expired(&s.a, interface); });
@@ -301,7 +305,7 @@ class AcmpWalk : public ::testing::Test {
         } else if (r < 87u) {
             both([&](Side& s) { (void)acmp_poll(&s.a); });
         } else if (r < 92u) {
-            bool room = wide || rng.below(3u) != 0u;
+            bool room = rng.below(3u) != 0u;
             walked.room = room;
             full.room = room;
         } else if (r < 95u) {
@@ -320,19 +324,37 @@ class AcmpWalk : public ::testing::Test {
 
     void walk(unsigned sinks, unsigned steps) {
         start(sinks);
+        unsigned first = wide ? sinks - 1u : 0u;
         unsigned reached = 0;
+        unsigned answers = 0;
+        unsigned probes = 0;
         for (unsigned n = 0; n < steps; ++n) {
+            unsigned head = walked.a.owed_head;
+            unsigned of = walked.a.owed_count != 0u ? walked.a.owed[head].probe_of : 0u;
+            bool held = of > first && walked.a.sinks[of - 1u].timer_held;
             step();
             ASSERT_TRUE(walked.trace == full.trace)
                 << "the changed-sink walk makes the full walk's calls, in order, at step " << n << " of "
                 << sinks << " sinks";
+            for (std::uint32_t word : walked.a.dirty) {
+                ASSERT_EQ(word, 0u) << "a completed entry leaves no sink marked, at step " << n << " of " << sinks
+                                    << " sinks";
+            }
+            ASSERT_EQ(walked.a.dirty_if, 0u)
+                << "a completed entry leaves no interface marked, at step " << n << " of " << sinks << " sinks";
             walked.trace.clear();
             full.trace.clear();
-            for (unsigned k = wide ? sinks - 1u : 0u; k < sinks; ++k) {
+            probes += held && walked.a.owed_head != head && !walked.a.sinks[of - 1u].timer_held ? 1u : 0u;
+            for (unsigned k = first; k < sinks; ++k) {
                 reached += walked.a.sinks[k].state == ACMP_SETTLED_RSV_OK ? 1u : 0u;
+                answers += walked.a.sinks[k].change_owed != 0u ? 1u : 0u;
             }
         }
         EXPECT_NE(reached, 0u) << "the random entries reach a reservation, on the second mark word at 33 sinks";
+        EXPECT_NE(answers, 0u) << "the random entries owe a sink's response, on the second mark word at 33 sinks";
+        if (wide) {
+            EXPECT_NE(probes, 0u) << "at 33 sinks the second mark word's sink sends an owed probe its timer waits for";
+        }
     }
 };
 

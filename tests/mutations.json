@@ -7433,6 +7433,11 @@
         "arm": "acmp_walk"
       },
       {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
         "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
         "needle": "the changed-sink walk makes the full walk's calls",
         "arm": "acmp_walk"
@@ -7441,6 +7446,7 @@
     "original_tests": [
       "AcmpWalk.EightSinksMatchTheFullWalk",
       "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
       "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
     ]
   },
@@ -7451,12 +7457,18 @@
     "new": "",
     "kills": [
       {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
         "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
         "needle": "the changed-sink walk makes the full walk's calls",
         "arm": "acmp_walk"
       }
     ],
     "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
       "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
     ]
   },
@@ -7587,6 +7599,154 @@
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
         "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-bind-second-word-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tbool sw",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tif (k < 32u) {\n\t\tmark(a, k);\n\t}\n\tbool sw",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-unbind-second-word-unmarked",
+    "path": "src/acmp.c",
+    "old": "\tstruct acmp_sink *s = &a->sinks[k];\n\tmark(a, k);\n\tif (s->state",
+    "new": "\tstruct acmp_sink *s = &a->sinks[k];\n\tif (k < 32u) {\n\t\tmark(a, k);\n\t}\n\tif (s->state",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-release-second-word-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "\t\t\t\t\tif (k < 32u) {\n\t\t\t\t\t\tmark(a, k);\n\t\t\t\t\t}\n\t\t\t\t\ta->sinks[k].change_owed--;",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-probe-left-second-word-unmarked",
+    "path": "src/acmp.c",
+    "old": "\t\tmark(a, o->probe_of - 1u);\n",
+    "new": "\t\tif (o->probe_of - 1u < 32u) {\n\t\t\tmark(a, o->probe_of - 1u);\n\t\t}\n",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-marks-never-cleared",
+    "path": "src/acmp.c",
+    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no sink marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "a completed entry leaves no sink marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no sink marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no sink marked",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-interface-marks-never-cleared",
+    "path": "src/acmp.c",
+    "old": "\ta->dirty_if = 0u;\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no interface marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.OneSinkMatchesTheFullWalk",
+        "needle": "a completed entry leaves no interface marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no interface marked",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no interface marked",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.OneSinkMatchesTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-clear-first-word-only",
+    "path": "src/acmp.c",
+    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);",
+    "new": "\tmemset(a->dirty, 0, sizeof a->dirty[0]);",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "a completed entry leaves no sink marked",
         "arm": "acmp_walk"
       }
     ],
