@@ -2852,7 +2852,7 @@
     "name": "owed-entry-widened",
     "path": "include/acmp.h",
     "old": "\tuint8_t probe_of;\n\tuint32_t release[ACMP_RELEASE_WORDS];",
-    "new": "\tuint8_t probe_of;\n\tuint64_t release[ACMP_RELEASE_WORDS];",
+    "new": "\tuint8_t probe_of;\n\tuint32_t widened;\n\tuint32_t release[ACMP_RELEASE_WORDS];",
     "kills": [
       {
         "test": "AcmpOwed.OwedSetIsEightFramesOfEightyBytes",
