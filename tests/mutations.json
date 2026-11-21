@@ -6637,12 +6637,24 @@
   {
     "name": "g-expiry-skipped-invalid-da",
     "path": "src/acmp.c",
-    "old": "if (s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n\tstruct acmp_source_state st;\n\tmemset(&st, 0, sizeof st);\n\tp_source(a, source, &st);\n",
-    "new": "struct acmp_source_state st;\n\tmemset(&st, 0, sizeof st);\n\tp_source(a, source, &st);\n\tif (st.dest_mac_valid && s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n",
+    "old": "if (s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n\tstruct acmp_source_state st;\n\tst.dest_mac_valid = false;\n\tp_source(a, source, &st);\n",
+    "new": "struct acmp_source_state st;\n\tst.dest_mac_valid = false;\n\tp_source(a, source, &st);\n\tif (st.dest_mac_valid && s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms) {\n\t\ts->answered = false;\n\t}\n",
     "kills": [
       {
         "test": "AcmpFresh.StaleProbeAfterInvalidAddressWrap",
         "needle": "destination recovery after a serviced full wrap cannot revive an expired probe"
+      }
+    ]
+  },
+  {
+    "name": "declaring-unfilled-destination-valid",
+    "path": "src/acmp.c",
+    "old": "st.dest_mac_valid = false;\n\tp_source(a, source, &st);\n\treturn",
+    "new": "st.dest_mac_valid = true;\n\tp_source(a, source, &st);\n\treturn",
+    "kills": [
+      {
+        "test": "AcmpFresh.UnfilledDestinationReadsInvalid",
+        "needle": "a source port that writes no destination declares nothing"
       }
     ]
   },

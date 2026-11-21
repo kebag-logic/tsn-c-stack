@@ -1350,7 +1350,7 @@ bool acmp_declaring(struct acmp *a, unsigned source)
 		s->answered = false;
 	}
 	struct acmp_source_state st;
-	memset(&st, 0, sizeof st);
+	st.dest_mac_valid = false;
 	p_source(a, source, &st);
 	return st.dest_mac_valid && (s->answered || s->listener_registered);
 }

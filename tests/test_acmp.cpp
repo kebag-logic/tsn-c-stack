@@ -2438,6 +2438,17 @@ TEST_F(AcmpFresh, FreshProbeAfterListenerWithdrawal) {
 }
 
 // REQ: ACMP-11
+TEST_F(AcmpFresh, UnfilledDestinationReadsInvalid) {
+    static const acmp_env unfilled = {nullptr, f_locked,
+        [](void*, unsigned, acmp_source_state*) {}, f_srp, f_persist, f_changed};
+    ASSERT_TRUE(acmp_init(&a, &cfg, &kPorts, &unfilled));
+    answer();
+    ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
+    EXPECT_FALSE(acmp_declaring(&a, 0))
+        << "a source port that writes no destination declares nothing";
+}
+
+// REQ: ACMP-11
 TEST_F(AcmpFresh, InitClearsListener) {
     ASSERT_TRUE(acmp_listener_registered(&a, 0, 0, true));
     ASSERT_TRUE(a.sources[0].listener_registered)
