@@ -348,6 +348,7 @@ An accepted `acmp_poll` marks each sink its frame releases and the sink of a pro
 A GET_RX_STATE, a refused command and a talker command mark nothing.
 Completion then publishes, admits, persists and reports only the marked sinks, and re-arms only the interfaces of marked sinks and an expired one.
 The publication before each new frame reads the same marks. A sink no entry marked has no change to make, so the calls are those of a walk over every sink.
+Those walks, and an owed frame's release on its send, visit only the set bits of their mask, in ascending sink order: whole zero words, then zero octets and bits, are skipped, so each costs the marked sinks and the mask's words, not `n_sinks`.
 
 ### ACMP counters
 

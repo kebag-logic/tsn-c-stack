@@ -1845,7 +1845,7 @@
   {
     "name": "acmp-change-not-held-for-its-response",
     "path": "src/acmp.c",
-    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
+    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + 1u);",
     "new": "\t\t(void)release;",
     "kills": [
       {
@@ -2946,8 +2946,8 @@
   {
     "name": "acmp-first-owed-releases-every-change",
     "path": "src/acmp.c",
-    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {\n\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;\n\t\t\t\t}",
-    "new": "\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed = 0u;",
+    "old": "for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t\t\t     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed = 0u;",
     "kills": [
       {
         "test": "AcmpCore.A19TwoOwedResponsesForOneSinkReleaseTogether",
@@ -6929,8 +6929,8 @@
   {
     "name": "acmp-wide-owed-count-word-ignored",
     "path": "src/acmp.c",
-    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
-    "new": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[0] >> (k % 32u)) & 1u));",
+    "old": "for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {\n\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + 1u);",
+    "new": "for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[0] >> (k % 32u)) & 1u));",
     "kills": [
       {
         "test": "AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree",
@@ -6951,8 +6951,8 @@
   {
     "name": "acmp-wide-release-loop-word-ignored",
     "path": "src/acmp.c",
-    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {",
-    "new": "\t\t\t\tif (((o->release[0] >> (k % 32u)) & 1u) != 0u) {",
+    "old": "for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t\t\t     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\t\t\tif (((o->release[0] >> (k % 32u)) & 1u) == 0u) {\n\t\t\t\t\tcontinue;\n\t\t\t\t}\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
     "kills": [
       {
         "test": "AcmpWide.OwedResponsesHoldOnlyTheirOwnSinksChanges",
@@ -6989,8 +6989,8 @@
   {
     "name": "acmp-wide-owed-count-word-off-by-one",
     "path": "src/acmp.c",
-    "old": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));",
-    "new": "\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u));",
+    "old": "for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {\n\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + 1u);",
+    "new": "for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\ta->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u));",
     "kills": [
       {
         "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
@@ -7017,8 +7017,8 @@
   {
     "name": "acmp-wide-release-loop-word-off-by-one",
     "path": "src/acmp.c",
-    "old": "\t\t\t\tif (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {",
-    "new": "\t\t\t\tif (((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u) != 0u) {",
+    "old": "for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t\t\t     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {\n\t\t\t\tif (((o->release[(k + 1u) / 32u] >> (k % 32u)) & 1u) == 0u) {\n\t\t\t\t\tcontinue;\n\t\t\t\t}\n\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
     "kills": [
       {
         "test": "AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses",
@@ -7431,8 +7431,8 @@
   {
     "name": "walk-release-unmarked",
     "path": "src/acmp.c",
-    "old": "\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;",
-    "new": "\t\t\t\t\ta->sinks[k].change_owed--;",
+    "old": "\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "\t\t\t\ta->sinks[k].change_owed--;",
     "kills": [
       {
         "test": "AcmpWalk.EightSinksMatchTheFullWalk",
@@ -7605,8 +7605,8 @@
   {
     "name": "walk-marked-word-zero",
     "path": "src/acmp.c",
-    "old": "return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;",
-    "new": "return ((a->dirty[0] >> (k % 32u)) & 1u) != 0u;",
+    "old": "uint32_t w = set[k / 32u] >> (k % 32u);",
+    "new": "uint32_t w = set[0] >> (k % 32u);",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
@@ -7653,8 +7653,8 @@
   {
     "name": "walk-release-second-word-unmarked",
     "path": "src/acmp.c",
-    "old": "\t\t\t\t\tmark(a, k);\n\t\t\t\t\ta->sinks[k].change_owed--;",
-    "new": "\t\t\t\t\tif (k < 32u) {\n\t\t\t\t\t\tmark(a, k);\n\t\t\t\t\t}\n\t\t\t\t\ta->sinks[k].change_owed--;",
+    "old": "\t\t\t\tmark(a, k);\n\t\t\t\ta->sinks[k].change_owed--;",
+    "new": "\t\t\t\tif (k < 32u) {\n\t\t\t\t\tmark(a, k);\n\t\t\t\t}\n\t\t\t\ta->sinks[k].change_owed--;",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
@@ -7763,6 +7763,100 @@
       }
     ],
     "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-next-set-byte-step",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\tw >>= 8;\n\t\t\t\tk += 8u;",
+    "new": "\t\t\t\tw >>= 8;\n\t\t\t\tk += 9u;",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-next-set-bit-step",
+    "path": "src/acmp.c",
+    "old": "\t\t\t\tw >>= 1;\n\t\t\t\tk++;",
+    "new": "\t\t\t\tw >>= 1;\n\t\t\t\tk += 2u;",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-next-set-word-step",
+    "path": "src/acmp.c",
+    "old": "k = (k / 32u + 1u) * 32u;",
+    "new": "k = (k / 32u + 2u) * 32u;",
+    "kills": [
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
+    ]
+  },
+  {
+    "name": "walk-publish-skips-the-next-sink",
+    "path": "src/acmp.c",
+    "old": "static void publish(struct acmp *a)\n{\n\tfor (unsigned k = next_set(a->dirty, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t     k = next_set(a->dirty, k + 1u, a->cfg.n_sinks)) {",
+    "new": "static void publish(struct acmp *a)\n{\n\tfor (unsigned k = next_set(a->dirty, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;\n\t     k = next_set(a->dirty, k + 2u, a->cfg.n_sinks)) {",
+    "kills": [
+      {
+        "test": "AcmpWalk.EightSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      },
+      {
+        "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
+        "needle": "the changed-sink walk makes the full walk's calls",
+        "arm": "acmp_walk"
+      }
+    ],
+    "original_tests": [
+      "AcmpWalk.EightSinksMatchTheFullWalk",
+      "AcmpWalk.ThirtyTwoSinksMatchTheFullWalk",
       "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk"
     ]
   },

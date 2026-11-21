@@ -213,18 +213,32 @@ static void mark(struct acmp *a, unsigned k)
 	a->dirty_if |= 1u << a->sinks[k].interface;
 }
 
-static bool marked(const struct acmp *a, unsigned k)
+// REQ: ACMP-13
+static unsigned next_set(const uint32_t *set, unsigned k, unsigned n)
 {
-	return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;
+	while (k < n) {
+		uint32_t w = set[k / 32u] >> (k % 32u);
+		if (w != 0u) {
+			while ((w & 0xFFu) == 0u) {
+				w >>= 8;
+				k += 8u;
+			}
+			while ((w & 1u) == 0u) {
+				w >>= 1;
+				k++;
+			}
+			return k;
+		}
+		k = (k / 32u + 1u) * 32u;
+	}
+	return k;
 }
 
 // REQ: ACMP-10, ACMP-13
 static void publish(struct acmp *a)
 {
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
-			continue;
-		}
+	for (unsigned k = next_set(a->dirty, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;
+	     k = next_set(a->dirty, k + 1u, a->cfg.n_sinks)) {
 		struct acmp_sink *s = &a->sinks[k];
 		bool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
 		uint64_t stream = settled ? s->stream.stream_id : 0u;
@@ -329,8 +343,9 @@ static enum sent transmit(struct acmp *a, unsigned interface, const uint8_t *fra
 	memcpy(o->frame, frame, ACMP_FRAME_BYTES);
 	a->owed_count++;
 	a->deferred_sends++;
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		a->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + ((o->release[k / 32u] >> (k % 32u)) & 1u));
+	for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;
+	     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {
+		a->sinks[k].change_owed = (uint8_t)(a->sinks[k].change_owed + 1u);
 	}
 	return OWED;
 }
@@ -510,10 +525,8 @@ static bool same_record(const uint8_t *x, const uint8_t *y)
 // REQ: ACMP-13
 static void admit(struct acmp *a)
 {
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
-			continue;
-		}
+	for (unsigned k = next_set(a->dirty, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;
+	     k = next_set(a->dirty, k + 1u, a->cfg.n_sinks)) {
 		struct acmp_sink *s = &a->sinks[k];
 		uint64_t talker = s->binding.talker_entity_id;
 		if (s->bound != s->admitted || (s->bound && talker != s->admitted_talker)) {
@@ -532,10 +545,8 @@ static void finish(struct acmp *a)
 	publish(a);
 	rearm(a);
 	admit(a);
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
-			continue;
-		}
+	for (unsigned k = next_set(a->dirty, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;
+	     k = next_set(a->dirty, k + 1u, a->cfg.n_sinks)) {
 		struct acmp_sink *s = &a->sinks[k];
 		uint8_t record[ACMP_BINDING_BYTES];
 		record_of(s, record);
@@ -1307,11 +1318,10 @@ bool acmp_poll(struct acmp *a)
 	if (a->owed_count != 0u) {
 		const struct acmp_owed *o = &a->owed[a->owed_head];
 		if (p_send(a, o->interface, o->frame)) {
-			for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-				if (((o->release[k / 32u] >> (k % 32u)) & 1u) != 0u) {
-					mark(a, k);
-					a->sinks[k].change_owed--;
-				}
+			for (unsigned k = next_set(o->release, 0u, a->cfg.n_sinks); k < a->cfg.n_sinks;
+			     k = next_set(o->release, k + 1u, a->cfg.n_sinks)) {
+				mark(a, k);
+				a->sinks[k].change_owed--;
 			}
 			probe_left(a, o);
 			a->owed_head = (a->owed_head + 1u) % ACMP_OWED_MAX;
