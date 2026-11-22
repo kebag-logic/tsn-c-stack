@@ -136,6 +136,9 @@ void core_schedule(void) {
         << "A2 the next cycle carries index 1 and the grandmaster sampled at build";
     adp_set_current_configuration(&a, 0x0103);
     adp_gm_change(&a);
+    EXPECT_TRUE(a.state == ADP_STATE_DELAY && a.last_draw == ADP_DRAW_DELAY && fk.last_delay == a.last_draw_ms &&
+                fk.last_delay <= 4000u)
+        << "A2 GM_CHANGE in WAITING: DELAY with a 0..4 s draw (5.6.3.5.7)";
     adp_timer_expired(&a);
     EXPECT_EQ(fk.sends, 3) << "A2 GM_CHANGE in WAITING re-advertises (5.6.3.5.7)";
     EXPECT_EQ(wire_be16(fk.last + 64), 0x0103) << "A2 with the new current_configuration_index (6.2.2.18)";
