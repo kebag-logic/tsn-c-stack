@@ -441,7 +441,7 @@
   {
     "name": "draw-kinds-merged",
     "path": "src/adp.c",
-    "old": "\tuint32_t max_ms = ADP_DELAY_MAX_MS;\n\tif (kind == ADP_DRAW_STARTUP) {\n\t\tmax_ms = ADP_DELAY_STARTUP_MAX_MS;\n\t} else if (kind == ADP_DRAW_LINK_UP) {\n\t\tmax_ms = ADP_DELAY_LINK_UP_MAX_MS;\n\t}\n",
+    "old": "\tuint32_t max_ms = ADP_DELAY_MAX_MS;\n\tif (kind == ADP_DRAW_STARTUP) {\n\t\tmax_ms = ADP_DELAY_STARTUP_MAX_MS;\n\t}\n\tif (kind == ADP_DRAW_LINK_UP) {\n\t\tmax_ms = ADP_DELAY_LINK_UP_MAX_MS;\n\t}\n",
     "new": "\tuint32_t max_ms = ADP_DELAY_MAX_MS;\n",
     "kills": [
       {

@@ -55,7 +55,8 @@ static uint32_t draw_ms(struct adp *a, enum adp_draw kind)
 	uint32_t max_ms = ADP_DELAY_MAX_MS;
 	if (kind == ADP_DRAW_STARTUP) {
 		max_ms = ADP_DELAY_STARTUP_MAX_MS;
-	} else if (kind == ADP_DRAW_LINK_UP) {
+	}
+	if (kind == ADP_DRAW_LINK_UP) {
 		max_ms = ADP_DELAY_LINK_UP_MAX_MS;
 	}
 	uint32_t r16 = rng_next(a) >> 16;
