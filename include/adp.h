@@ -84,7 +84,8 @@ extern "C" {
 #define ADP_VALID_TIME 10u              // Milan v1.2 5.6.2
 #define ADP_ADVERTISE_MS 5000u          // Milan v1.2 Table 5.50
 #define ADP_DELAY_MAX_MS 4000u          // Milan v1.2 Table 5.50
-#define ADP_DELAY_STARTUP_MAX_MS 2000u  // Milan v1.2 5.6.3.5.2
+#define ADP_DELAY_STARTUP_MAX_MS 500u   // Milan v1.2 5.6.3.5.2
+#define ADP_DELAY_LINK_UP_MAX_MS 500u   // Milan v1.2 5.6.3.5.3
 #define ADP_DEPARTING_OWED_MAX 2u
 
 // IEEE 1722.1-2021 Table 6-1
@@ -112,6 +113,7 @@ enum adp_draw {
 	ADP_DRAW_NONE = 0,
 	ADP_DRAW_STARTUP,       // Milan v1.2 5.6.3.5.2
 	ADP_DRAW_DELAY,
+	ADP_DRAW_LINK_UP,       // Milan v1.2 5.6.3.5.3
 };
 
 

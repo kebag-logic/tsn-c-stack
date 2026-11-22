@@ -308,14 +308,14 @@
   {
     "id": "MFDISC-01",
     "origin": "milan-fpga FR-DISC-01",
-    "text": "Advertise with the Milan schedule and valid_time 10. Advance available_index after an accepted advertisement. Initialization and departure reset the next advertisement index under [DEV-02](DEVIATIONS.md).",
+    "text": "Advertise with the Milan schedule and valid_time 10. Draw the delay of an interface leaving DOWN, at startup with the link up and on LINK_UP, from 0 to 500 ms, so its first advertisement leaves within one second of its link-up; draw every other delay from 0 to 4 s. Advance available_index after an accepted advertisement. Initialization and departure reset the next advertisement index under [DEV-02](DEVIATIONS.md).",
     "clauses": [
       {
         "text": "IEEE 1722.1-2021 6.2.2.5 and 6.2.2.15",
         "url": "https://standards.ieee.org/ieee/1722.1/6670/"
       },
       {
-        "text": "Milan v1.2 5.6.2 and 5.6.3.5",
+        "text": "Milan v1.2 5.6.2, 5.6.3.5, 5.6.3.5.2, 5.6.3.5.3 and Table 5.50",
         "url": "https://avnu.org/resource/milan-specification/"
       }
     ],

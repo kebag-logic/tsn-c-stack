@@ -184,11 +184,16 @@ The `link_up` callback returns the current link level. The `seed` callback suppl
 | `available_owed` | An ENTITY_AVAILABLE due in DELAY that has not been accepted. |
 | `departing_owed` | Number of unaccepted departures, from zero through `ADP_DEPARTING_OWED_MAX`. |
 | `departing_index` | The available index carried by the oldest owed departure. |
-| `ADP_DRAW_STARTUP` | Startup delay draw from zero to two seconds. |
+| `ADP_DRAW_STARTUP` | Startup delay draw, with the link up, from zero to `ADP_DELAY_STARTUP_MAX_MS` (half a second). |
+| `ADP_DRAW_LINK_UP` | LINK_UP delay draw from zero to `ADP_DELAY_LINK_UP_MAX_MS` (half a second). |
 | `ADP_DRAW_DELAY` | Other delay draws from zero to four seconds. |
 | `ADP_DRAW_NONE` | No delay draw recorded yet. |
 
-The delay rules trace to [Milan v1.2 5.6.3.5.2 and Table 5.50](https://avnu.org/resource/milan-specification/).
+The delay rules trace to [Milan v1.2 5.6.3.5.2, 5.6.3.5.3 and Table 5.50](https://avnu.org/resource/milan-specification/).
+An interface leaving DOWN, at startup with its link up or on LINK_UP, draws from zero to half a second.
+That is within both clauses' ranges, zero to two and zero to four seconds, so its first ENTITY_AVAILABLE leaves within a second of its link-up ([milan-fpga #970](https://github.com/kebag-logic/milan-fpga/issues/970)).
+DISCOVER, TMR_ADVERTISE and GM_CHANGE in WAITING draw from zero to four seconds.
+A GM_CHANGE in DELAY is ignored, as Table 5.51 states: the advertisement that DELAY sends samples the grandmaster when it is built.
 `adp_set_enable` starts or shuts down the machine. `adp_set_current_configuration` changes the next ADPDU's configuration index.
 `adp_rx`, `adp_timer_expired`, `adp_link_change` and `adp_gm_change` deliver the respective input events.
 `adp_build` writes the current ADPDU into a caller buffer of at least `ADP_FRAME_BYTES` bytes.

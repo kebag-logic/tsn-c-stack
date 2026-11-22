@@ -52,6 +52,7 @@ REQUIRED = {
     'ADP callbacks and public fields': (
         'ADP_DEPARTING_OWED_MAX',
         'ADP_DRAW_DELAY',
+        'ADP_DRAW_LINK_UP',
         'ADP_DRAW_NONE',
         'ADP_DRAW_STARTUP',
         'ADP_FRAME_BYTES',

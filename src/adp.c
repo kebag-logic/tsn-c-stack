@@ -52,7 +52,12 @@ static uint32_t rng_next(struct adp *a)
 
 static uint32_t draw_ms(struct adp *a, enum adp_draw kind)
 {
-	uint32_t max_ms = kind == ADP_DRAW_STARTUP ? ADP_DELAY_STARTUP_MAX_MS : ADP_DELAY_MAX_MS;
+	uint32_t max_ms = ADP_DELAY_MAX_MS;
+	if (kind == ADP_DRAW_STARTUP) {
+		max_ms = ADP_DELAY_STARTUP_MAX_MS;
+	} else if (kind == ADP_DRAW_LINK_UP) {
+		max_ms = ADP_DELAY_LINK_UP_MAX_MS;
+	}
 	uint32_t r16 = rng_next(a) >> 16;
 	uint32_t ms = (r16 * (max_ms + 1u)) >> 16;
 	a->draws++;
@@ -256,7 +261,7 @@ void adp_link_change(struct adp *a, bool up)
 	}
 	if (up) {
 		if (a->state == ADP_STATE_DOWN) {
-			enter_delay(a, ADP_DRAW_DELAY);                 // Milan v1.2 5.6.3.5.3
+			enter_delay(a, ADP_DRAW_LINK_UP);               // Milan v1.2 5.6.3.5.3
 		}
 		return;
 	}
