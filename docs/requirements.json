@@ -1,10 +1,10 @@
 [
   {
     "id": "ADP-01",
-    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls.",
+    "text": "Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version and frames shorter than 82 bytes. A control_data_length below 56 is discarded; a longer PDU is read by its first 56 octets. Count each refusal in discarded without other state changes or port calls.",
     "clauses": [
       {
-        "text": "IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6",
+        "text": "IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3, 6.2.2.6 and 6.2.7.1.3",
         "url": "https://standards.ieee.org/ieee/1722.1/6670/"
       },
       {
@@ -12,7 +12,7 @@
         "url": "https://standards.ieee.org/ieee/1722/5979/"
       },
       {
-        "text": "Milan v1.2 5.6.3.1",
+        "text": "Milan v1.2 5.6.3.1 and Table 5.50",
         "url": "https://avnu.org/resource/milan-specification/"
       }
     ]

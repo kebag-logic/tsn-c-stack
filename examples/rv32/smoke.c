@@ -141,13 +141,15 @@ static int adp_smoke(void)
 
 // IEEE 1722.1-2021 Figure 6-1
 // IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
+// IEEE 1722.1-2021 6.2.7.1.3
 // IEEE 1722-2016 4.4.3.4 and 4.4.5.4
+// Milan v1.2 5.6.3.1
 // Milan v1.2 Table 5.51
 // REQ: ADP-01, ADP-02
 static int adp_discovery_smoke(void)
 {
     for (unsigned state = 0; state < 5; ++state) {
-        for (unsigned control = 0; control < 4; ++control) {
+        for (unsigned control = 0; control < 5; ++control) {
             struct port p = {.room = true};
             const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
             const struct adp_entity entity = {.entity_id = 1};
@@ -161,20 +163,22 @@ static int adp_discovery_smoke(void)
             wire_put_be(frame + 12, 0x22f0, 2);
             frame[14] = 0xfa;
             frame[15] = control == 1 ? 0x12 : 0x02;
-            frame[17] = control == 3 ? 0 : 56;
+            const unsigned lengths[] = {56, 56, 56, 0, 256};
+            const bool refused = control != 0 && control != 4;
+            wire_put_be(frame + 16, lengths[control], 2);
             wire_put_be(frame + 18, 1, 8);
             memcpy(&expected, &core, sizeof expected);
             const unsigned calls = p.calls, sends = p.sends, starts = p.starts, stops = p.stops;
             adp_rx(&core, frame, control == 2 ? 26 : sizeof frame);
-            if (control != 0) ++expected.discarded;
-            if (control != 0 || state != 4) {
+            if (refused) ++expected.discarded;
+            if (refused || state != 4) {
                 const uint8_t *actual = (const uint8_t *)&core;
                 const uint8_t *saved = (const uint8_t *)&expected;
-                for (size_t i = 0; i < sizeof core; ++i) CHECK(actual[i] == saved[i], 40 + control);
-                CHECK(p.calls == calls, 44 + control);
+                for (size_t i = 0; i < sizeof core; ++i) CHECK(actual[i] == saved[i], 60 + control);
+                CHECK(p.calls == calls, 65 + control);
             } else {
-                CHECK(core.state == ADP_STATE_DELAY && core.timer == ADP_TIMER_DELAY && core.discarded == 0, 48);
-                CHECK(p.starts == starts + 1 && p.stops == stops + 1 && p.sends == sends, 49);
+                CHECK(core.state == ADP_STATE_DELAY && core.timer == ADP_TIMER_DELAY && core.discarded == 0, 70 + control);
+                CHECK(p.starts == starts + 1 && p.stops == stops + 1 && p.sends == sends, 75 + control);
             }
         }
     }

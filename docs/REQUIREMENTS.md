@@ -17,7 +17,7 @@ Build, memory and testing policies are local decisions. They have source links r
 
 | ID | Required behavior | Clause |
 |---|---|---|
-| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version, frames shorter than 82 bytes and control_data_length other than 56. Count each refusal in discarded without other state changes or port calls. | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1](https://avnu.org/resource/milan-specification/) |
+| ADP-01 | Encode entity fields. Reject wrong EtherType, subtype, message nibble or target, nonzero AVTP version and frames shorter than 82 bytes. A control_data_length below 56 is discarded; a longer PDU is read by its first 56 octets. Count each refusal in discarded without other state changes or port calls. | [IEEE 1722.1-2021 6.2.2, Figure 6-1, 6.2.2.3, 6.2.2.6 and 6.2.7.1.3](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/); [Milan v1.2 5.6.3.1 and Table 5.50](https://avnu.org/resource/milan-specification/) |
 | ADP-02 | Follow advertise, discover, link, grandmaster and shutdown transitions. | [Milan v1.2 5.6.3.5, Table 5.51](https://avnu.org/resource/milan-specification/); [IEEE 1722.1-2021 6.2.2.15](https://standards.ieee.org/ieee/1722.1/6670/) |
 | ADP-03 | Keep refused departures ordered before an advertisement. Bound storage and count coalescing. | [IEEE 1722.1-2021 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/); [Local transport contract](PORTING.md) |
 | PORT-01 | Serialize input. Refuse synchronous callback re-entry. Preserve state on refusal. | [Local port contract supporting Milan v1.2 5.5.3.5 and 5.6.3.5](https://avnu.org/resource/milan-specification/); [IEEE 1722-2016 B.3](https://standards.ieee.org/ieee/1722/5979/) |
@@ -101,7 +101,12 @@ Each refused frame increments `discarded` once. Other core storage and all port 
 |---|---|
 | AVTP version 1 through 7 | [IEEE 1722.1-2021 6.2.2.3](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.3.4](https://standards.ieee.org/ieee/1722/5979/) |
 | Fewer than 82 bytes, including the 14-byte untagged Ethernet header and 68-byte ADPDU | [IEEE 1722.1-2021 Figure 6-1 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/) |
-| Any 11-bit `control_data_length` other than 56, including zero | [IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) |
+| Any 11-bit `control_data_length` below 56, including zero | [IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/); [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) |
+
+A `control_data_length` above 56 is no reason to refuse a frame. The core reads the first 56 octets after `entity_id` and ignores the rest, whether or not the buffer holds them; the 82-byte minimum still applies.
+[IEEE 1722.1-2021 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/) fixes the value a sender writes, and the core always sends 56.
+On receipt [6.2.7.1.3](https://standards.ieee.org/ieee/1722.1/6670/) sets no length condition on an ENTITY_DISCOVER, [IEEE 1722-2016 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/) defines the field as a payload length, and
+[Milan v1.2 5.6.3.1 and Table 5.50](https://avnu.org/resource/milan-specification/) discard an ENTITY_DISCOVER only for an `entity_id` that is neither zero nor the local entity.
 
 A complete valid discovery for zero or the local entity enters DELAY from WAITING.
 Other states preserve their timers and pending output under [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
@@ -109,6 +114,7 @@ Trailing buffer bytes are permitted. The adapter supplies the actual readable le
 The [hosted input controls](../tests/test_adp.cpp) and [RV32 smoke checks](../examples/rv32/smoke.c) cover these rules.
 The [porting contract](PORTING.md#adp-input-validation) retains framing and interface duties.
 This resolves the inherited input deviation under the [issue 3 assignment](https://github.com/kebag-logic/tsn-c-stack/issues/3#issuecomment-6085285119).
+[Issue 37](https://github.com/kebag-logic/tsn-c-stack/issues/37) replaced the exact-length rule of issue 3: a value above 56 is read by its first 56 octets.
 
 ## Clause checks
 

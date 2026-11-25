@@ -125,16 +125,17 @@ See [ACMP-12](REQUIREMENTS.md#acmp-owed-bound).
 Supply the actual readable buffer length to `adp_rx` on the correct interface.
 Keep the [untagged frame and buffer contract](#frames-and-buffers).
 The core checks the complete 82-byte frame minimum before reading header or target fields.
-It requires AVTP version zero and the 11-bit `control_data_length` value 56.
+It requires AVTP version zero and an 11-bit `control_data_length` of at least 56.
+A longer PDU is read by its first 56 octets after `entity_id`; the surplus is ignored, whether or not the buffer holds it.
 It also checks EtherType, subtype, discovery message type and target.
 Each refusal increments `discarded` once, with no other state change or port call.
 This applies in DOWN, DELAY and WAITING, including disabled input and an owed advertisement.
 Valid discovery for zero or the local entity starts a delay only in enabled WAITING.
 Extra trailing bytes are accepted. Destination filtering and interface selection remain adapter duties.
 See [ADP-01](REQUIREMENTS.md#adp-input-validation) and the [input controls](../tests/test_adp.cpp).
-The format authorities are [IEEE 1722.1-2021 Figure 6-1, 6.2.2.3 and 6.2.2.6](https://standards.ieee.org/ieee/1722.1/6670/)
+The format authorities are [IEEE 1722.1-2021 Figure 6-1, 6.2.2.3, 6.2.2.6 and 6.2.7.1.3](https://standards.ieee.org/ieee/1722.1/6670/)
 and [IEEE 1722-2016 4.4.3.4 and 4.4.5.4](https://standards.ieee.org/ieee/1722/5979/).
-Target and state handling follow [Milan v1.2 5.6.3.1 and Table 5.51](https://avnu.org/resource/milan-specification/).
+Target and state handling follow [Milan v1.2 5.6.3.1, Table 5.50 and Table 5.51](https://avnu.org/resource/milan-specification/).
 
 ## Callback checklist
 
