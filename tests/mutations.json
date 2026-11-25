@@ -6585,6 +6585,146 @@
     ]
   },
   {
+    "name": "adp-control-length-mask-0x03ff",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x03FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-control-length-mask-0x01ff",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x01FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-control-length-mask-0x00ff",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x00FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-control-length-mask-0x007f",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x007Fu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-long-control-length-reads-surplus",
+    "path": "src/adp.c",
+    "old": "\tuint64_t target = wire_be64(frame + ADP_HEADER_BYTES + 4u);\n",
+    "new": "\tif ((wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) > ADP_CONTROL_DATA_LENGTH) {\n\t\tvolatile uint8_t surplus = frame[ADP_FRAME_BYTES];\n\t\t(void)surplus;\n\t}\n\tuint64_t target = wire_be64(frame + ADP_HEADER_BYTES + 4u);\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/0",
+        "needle": "discovery of every length is read within its 82 octets"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/1",
+        "needle": "discovery of every length is read within its 82 octets"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/2",
+        "needle": "discovery of every length is read within its 82 octets"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/3",
+        "needle": "discovery of every length is read within its 82 octets"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/4",
+        "needle": "discovery of every length is read within its 82 octets"
+      }
+    ]
+  },
+  {
     "name": "x-zero-never-expires",
     "path": "src/acmp.c",
     "old": "s->answered && (uint32_t)(now(a) - s->answered_at) >= a->cfg.da_fresh_ms",

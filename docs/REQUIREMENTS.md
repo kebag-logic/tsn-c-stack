@@ -114,6 +114,7 @@ Trailing buffer bytes are permitted. The adapter supplies the actual readable le
 The [hosted input controls](../tests/test_adp.cpp) and [RV32 smoke checks](../examples/rv32/smoke.c) cover these rules.
 The [porting contract](PORTING.md#adp-input-validation) retains framing and interface duties.
 This resolves the inherited input deviation under the [issue 3 assignment](https://github.com/kebag-logic/tsn-c-stack/issues/3#issuecomment-6085285119).
+[Issue 37](https://github.com/kebag-logic/tsn-c-stack/issues/37) replaced the exact-length rule of issue 3: a value above 56 is read by its first 56 octets.
 
 ## Clause checks
 

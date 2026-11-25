@@ -7,9 +7,13 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <tuple>
 #include <vector>
+
+#include <sys/mman.h>
+#include <unistd.h>
 
 #include "adp.h"
 #include "wire.h"
@@ -757,6 +761,25 @@ void accepted_discovery(unsigned state, const uint8_t* frame, size_t length) {
     }
 }
 
+[[noreturn]] void read_up_to_a_protected_page(unsigned state) {
+    const auto page = static_cast<size_t>(sysconf(_SC_PAGESIZE));
+    void* pages = mmap(nullptr, 2 * page, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (pages == MAP_FAILED || mprotect(static_cast<uint8_t*>(pages) + page, page, PROT_NONE) != 0) std::_Exit(2);
+    uint8_t* frame = static_cast<uint8_t*>(pages) + page - 82;
+    for (uint64_t target : {UINT64_C(0), entity.entity_id, entity.entity_id ^ UINT64_C(1)}) {
+        for (unsigned valid_time : {0u, 31u}) {
+            for (unsigned length = 0; length < 2048; ++length) {
+                adp a;
+                discovery_state(&a, state);
+                discover(frame, 2u, target);
+                wire_put_be(frame + 16, (valid_time << 11) | length, 2);
+                adp_rx(&a, frame, 82u);
+            }
+        }
+    }
+    std::_Exit(0);
+}
+
 // IEEE 1722.1-2021 6.2.2.3
 // IEEE 1722-2016 4.4.3.4
 // REQ: ADP-01
@@ -816,16 +839,31 @@ TEST_P(AdpInputControl, RejectsShortControlDataLength) {
 // REQ: ADP-01
 TEST_P(AdpInputControl, AcceptsLongControlDataLength) {
     for (uint64_t target : {UINT64_C(0), entity.entity_id}) {
-        for (unsigned length : {57u, 84u, 2047u}) {
-            std::vector<uint8_t> frame(26u + length, 0xFF);
-            discover(frame.data(), 2u, target);
-            for (unsigned valid_time : {0u, 31u}) {
-                wire_put_be(frame.data() + 16, (valid_time << 11) | length, 2);
-                accepted_discovery(GetParam(), frame.data(), 82u);
-                accepted_discovery(GetParam(), frame.data(), frame.size());
+        for (unsigned valid_time : {0u, 31u}) {
+            for (unsigned length = 57; length < 2048; ++length) {
+                std::vector<uint8_t> bare(82);
+                discover(bare.data(), 2u, target);
+                wire_put_be(bare.data() + 16, (valid_time << 11) | length, 2);
+                accepted_discovery(GetParam(), bare.data(), bare.size());
+                if (HasFailure()) return;
+            }
+            for (unsigned length : {57u, 84u, 2047u}) {
+                std::vector<uint8_t> whole(26u + length, 0xFF);
+                discover(whole.data(), 2u, target);
+                wire_put_be(whole.data() + 16, (valid_time << 11) | length, 2);
+                accepted_discovery(GetParam(), whole.data(), whole.size());
+                if (HasFailure()) return;
             }
         }
     }
+}
+
+// IEEE 1722.1-2021 Figure 6-1
+// IEEE 1722.1-2021 6.2.2.6
+// REQ: ADP-01
+TEST_P(AdpInputControl, ReadsNoOctetPastTheFrame) {
+    EXPECT_EXIT(read_up_to_a_protected_page(GetParam()), ::testing::ExitedWithCode(0), "")
+        << "discovery of every length is read within its 82 octets";
 }
 
 // Milan v1.2 5.6.3.1
