@@ -453,8 +453,8 @@
   {
     "name": "link-up-draws-startup-kind",
     "path": "src/adp.c",
-    "old": "\t\tif (a->state == ADP_STATE_DOWN) {\n\t\t\tenter_delay(a, ADP_DRAW_DELAY);                 // Milan v1.2 5.6.3.5.3\n\t\t}\n",
-    "new": "\t\tif (a->state == ADP_STATE_DOWN) {\n\t\t\tenter_delay(a, ADP_DRAW_STARTUP);               // Milan v1.2 5.6.3.5.3\n\t\t}\n",
+    "old": "\t\tif (a->state == ADP_STATE_DOWN) {\n\t\t\tleave_down(a, ADP_DRAW_DELAY);                  // Milan v1.2 5.6.3.5.3\n\t\t}\n",
+    "new": "\t\tif (a->state == ADP_STATE_DOWN) {\n\t\t\tleave_down(a, ADP_DRAW_STARTUP);                // Milan v1.2 5.6.3.5.3\n\t\t}\n",
     "kills": [
       {
         "test": "AdpCore.A0toA2Schedule",
@@ -528,12 +528,12 @@
   {
     "name": "seed-left-at-zero",
     "path": "src/adp.c",
-    "old": "0x9E3779B9u;\n\tif (a->rng == 0u) {\n\t\ta->rng = 1u;\n\t}\n",
-    "new": "0x9E3779B9u;\n",
+    "old": "a->rng = x != 0u ? x : 1u;",
+    "new": "a->rng = x;",
     "kills": [
       {
         "test": "AdpCore.A22GeneratorNeverStuckAtZero",
-        "needle": "A22 an entity id whose words cancel the seed constant"
+        "needle": "A22 a seed that mixes to zero starts the generator at 1"
       }
     ],
     "original_tests": [
@@ -6722,6 +6722,322 @@
         "test": "AllStates/AdpInputControl.ReadsNoOctetPastTheFrame/4",
         "needle": "discovery of every length is read within its 82 octets"
       }
+    ]
+  },
+  {
+    "name": "adp-link-up-not-reseeded",
+    "path": "src/adp.c",
+    "old": "leave_down(a, ADP_DRAW_DELAY);",
+    "new": "enter_delay(a, ADP_DRAW_DELAY);",
+    "kills": [
+      {
+        "test": "AdpCore.A28EachLeaveOfDownTakesAFreshSample",
+        "needle": "A28 one sample is taken at LINK_UP and none with the link down"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A28EachLeaveOfDownTakesAFreshSample"
+    ]
+  },
+  {
+    "name": "adp-startup-not-reseeded",
+    "path": "src/adp.c",
+    "old": "leave_down(a, ADP_DRAW_STARTUP);",
+    "new": "enter_delay(a, ADP_DRAW_STARTUP);",
+    "kills": [
+      {
+        "test": "AdpCore.A28EachLeaveOfDownTakesAFreshSample",
+        "needle": "A28 one sample is taken at startup with the link up"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A28EachLeaveOfDownTakesAFreshSample"
+    ]
+  },
+  {
+    "name": "adp-every-draw-reseeded",
+    "path": "src/adp.c",
+    "old": "static void enter_delay(struct adp *a, enum adp_draw kind)\n{\n",
+    "new": "static void enter_delay(struct adp *a, enum adp_draw kind)\n{\n\tport_active = true;\n\ta->rng ^= a->ports->seed(a->ports->ctx);\n\tport_active = false;\n",
+    "kills": [
+      {
+        "test": "AdpCore.A28EachLeaveOfDownTakesAFreshSample",
+        "needle": "A28 a draw outside DOWN takes no sample"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A28EachLeaveOfDownTakesAFreshSample"
+    ]
+  },
+  {
+    "name": "adp-seed-sample-ignored",
+    "path": "src/adp.c",
+    "old": "uint32_t sample = a->ports->seed(a->ports->ctx);",
+    "new": "uint32_t sample = a->ports->seed(a->ports->ctx) & 0u;",
+    "kills": [
+      {
+        "test": "AdpCore.A25FirstDrawsAreUniformOverSamples",
+        "needle": "A25 one host's first draws over neighbouring samples are uniform (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A25FirstDrawsAreUniformOverSamples"
+    ]
+  },
+  {
+    "name": "adp-seed-unmixed",
+    "path": "src/adp.c",
+    "old": "uint32_t x = mix(mix(a->rng ^ sum) ^ id ^ ((uint32_t)a->interface << 24));",
+    "new": "uint32_t x = mix(0u) ^ a->rng ^ sum ^ id ^ ((uint32_t)a->interface << 24);",
+    "kills": [
+      {
+        "test": "AdpCore.A25FirstDrawsAreUniformOverSamples",
+        "needle": "A25 one host's first draws over neighbouring samples are uniform (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A25FirstDrawsAreUniformOverSamples"
+    ]
+  },
+  {
+    "name": "adp-seed-one-round",
+    "path": "src/adp.c",
+    "old": "mix(mix(a->rng ^ sum) ^ id",
+    "new": "mix((a->rng ^ sum) ^ id",
+    "kills": [
+      {
+        "test": "AdpCore.A26NeighbouringHostsDrawUniformly",
+        "needle": "A26 neighbouring hosts started together draw uniformly (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A26NeighbouringHostsDrawUniformly"
+    ]
+  },
+  {
+    "name": "adp-seed-without-interface",
+    "path": "src/adp.c",
+    "old": " ^ ((uint32_t)a->interface << 24)",
+    "new": "",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 two interfaces sampled together draw apart"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-without-entity-id-low",
+    "path": "src/adp.c",
+    "old": "(uint32_t)e->entity_id ^ (uint32_t)(e->entity_id >> 32)",
+    "new": "(uint32_t)(e->entity_id >> 32)",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 the low word of the entity ID is mixed in"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-without-entity-id-high",
+    "path": "src/adp.c",
+    "old": "(uint32_t)e->entity_id ^ (uint32_t)(e->entity_id >> 32)",
+    "new": "(uint32_t)e->entity_id",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 the high word of the entity ID is mixed in"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-without-mac",
+    "path": "src/adp.c",
+    "old": "(uint32_t)e->mac + sample",
+    "new": "sample",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 the MAC address is in the seed"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-mac-not-summed",
+    "path": "src/adp.c",
+    "old": "(uint32_t)e->mac + sample",
+    "new": "(uint32_t)e->mac ^ sample",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 the seed is the sum of MAC address and clock (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-carry-dropped",
+    "path": "src/adp.c",
+    "old": "\tsum += sum < sample;\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 the sum carries end around (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-forgets-state",
+    "path": "src/adp.c",
+    "old": "mix(a->rng ^ sum)",
+    "new": "mix(sum)",
+    "kills": [
+      {
+        "test": "AdpCore.A28EachLeaveOfDownTakesAFreshSample",
+        "needle": "A28 a stopped clock does not repeat the state"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A28EachLeaveOfDownTakesAFreshSample"
+    ]
+  },
+  {
+    "name": "adp-sequence-not-maximal",
+    "path": "src/adp.c",
+    "old": "x ^= x >> 17;",
+    "new": "x ^= x >> 16;",
+    "kills": [
+      {
+        "test": "AdpCore.A29SequenceIsOfMaximumLength",
+        "needle": "A29 the sequence returns after 2^32 - 1 draws"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A29SequenceIsOfMaximumLength"
+    ]
+  },
+  {
+    "name": "adp-sequence-a-third",
+    "path": "src/adp.c",
+    "old": "\tuint32_t x = a->rng;\n\tx ^= x << 13;\n",
+    "new": "\tuint32_t x = a->rng;\n\tx ^= x << 13;\n\tx ^= x >> 17;\n\tx ^= x << 5;\n\tx ^= x << 13;\n\tx ^= x >> 17;\n\tx ^= x << 5;\n\tx ^= x << 13;\n",
+    "kills": [
+      {
+        "test": "AdpCore.A29SequenceIsOfMaximumLength",
+        "needle": "A29 and not before: its length is 2^32 - 1 (6.2.4.2.2)"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A29SequenceIsOfMaximumLength"
+    ]
+  },
+  {
+    "name": "adp-step-not-linear",
+    "path": "src/adp.c",
+    "old": "\ta->rng = x;\n\treturn x;",
+    "new": "\ta->rng = x + 0x9E3779B9u;\n\treturn x;",
+    "kills": [
+      {
+        "test": "AdpCore.A29SequenceIsOfMaximumLength",
+        "needle": "A29 one draw is one linear step"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A29SequenceIsOfMaximumLength"
+    ]
+  },
+  {
+    "name": "adp-seed-port-unflagged",
+    "path": "src/adp.c",
+    "old": "\tport_active = true;\n\tuint32_t sample = a->ports->seed(a->ports->ctx);\n\tport_active = false;\n",
+    "new": "\tuint32_t sample = a->ports->seed(a->ports->ctx);\n",
+    "kills": [
+      {
+        "test": "AllPorts/AdpPortEntry.RefusesBeforeTouchingState/",
+        "needle": "each port callback is counted",
+        "arm": "adp_release"
+      }
+    ],
+    "original_tests": [
+      "AllPorts/AdpPortEntry.RefusesBeforeTouchingState/"
+    ]
+  },
+  {
+    "name": "adp-later-rise-not-sampled",
+    "path": "src/adp.c",
+    "old": "leave_down(a, ADP_DRAW_DELAY);",
+    "new": "(a->draws == 0u ? leave_down : enter_delay)(a, ADP_DRAW_DELAY);",
+    "kills": [
+      {
+        "test": "AdpCore.A30EachQualifiedRiseTakesOneSample",
+        "needle": "A30 each qualified LINK_UP takes one sample"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A30EachQualifiedRiseTakesOneSample"
+    ]
+  },
+  {
+    "name": "adp-duplicate-up-sampled",
+    "path": "src/adp.c",
+    "old": "\tif (!a->enabled || up == was) {\n\t\treturn;\n\t}\n",
+    "new": "\tif (up && up == was) {\n\t\t(void)a->ports->seed(a->ports->ctx);\n\t}\n\tif (!a->enabled || up == was) {\n\t\treturn;\n\t}\n",
+    "kills": [
+      {
+        "test": "AdpCore.A30EachQualifiedRiseTakesOneSample",
+        "needle": "A30 a duplicate LINK_UP takes no sample"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A30EachQualifiedRiseTakesOneSample"
+    ]
+  },
+  {
+    "name": "adp-disabled-up-sampled",
+    "path": "src/adp.c",
+    "old": "\tif (!a->enabled || up == was) {\n\t\treturn;\n\t}\n",
+    "new": "\tif (up && !a->enabled) {\n\t\t(void)a->ports->seed(a->ports->ctx);\n\t}\n\tif (!a->enabled || up == was) {\n\t\treturn;\n\t}\n",
+    "kills": [
+      {
+        "test": "AdpCore.A30EachQualifiedRiseTakesOneSample",
+        "needle": "A30 a LINK_UP while disabled takes no sample"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A30EachQualifiedRiseTakesOneSample"
+    ]
+  },
+  {
+    "name": "adp-later-sample-ignored",
+    "path": "src/adp.c",
+    "old": "\tuint32_t sample = a->ports->seed(a->ports->ctx);\n",
+    "new": "\tuint32_t sample = a->ports->seed(a->ports->ctx) & (a->draws == 0u ? 0xFFFFFFFFu : 0u);\n",
+    "kills": [
+      {
+        "test": "AdpCore.A31TheLinkUpsSampleSetsItsDraw",
+        "needle": "A31 boots that differ only in the sample at a LINK_UP draw apart"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A31TheLinkUpsSampleSetsItsDraw"
     ]
   },
   {

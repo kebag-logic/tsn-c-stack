@@ -19,14 +19,14 @@
   },
   {
     "id": "ADP-02",
-    "text": "Follow advertise, discover, link, grandmaster and shutdown transitions.",
+    "text": "Follow advertise, discover, link, grandmaster and shutdown transitions. Draw each delay uniformly from a sequence of 2^32 - 1 states. Seed it with one fresh sample on each transition out of DOWN (a startup with the link up, a LINK_UP from DOWN) and at no duplicate or disabled LINK_UP: the sum of the MAC address and the local clock, mixed with the entity ID, the interface and the earlier state.",
     "clauses": [
       {
         "text": "Milan v1.2 5.6.3.5, Table 5.51",
         "url": "https://avnu.org/resource/milan-specification/"
       },
       {
-        "text": "IEEE 1722.1-2021 6.2.2.15",
+        "text": "IEEE 1722.1-2021 6.2.2.15 and 6.2.4.2.2",
         "url": "https://standards.ieee.org/ieee/1722.1/6670/"
       }
     ]

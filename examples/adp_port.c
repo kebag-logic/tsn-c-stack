@@ -46,7 +46,7 @@ static bool link_up(void *ctx, unsigned interface)
 static uint32_t seed(void *ctx)
 {
     const struct example_adp_port *p = ctx;
-    return p->now_ms ^ (uint32_t)p->entity.mac;
+    return p->now_ms;
 }
 
 void example_adp_init(struct example_adp_port *p, const struct adp_entity *entity)

@@ -172,7 +172,9 @@ The `send` callback uses the supplied interface and follows the [buffer contract
 The `timer_start` callback replaces the interface's timer and delivers `adp_timer_expired` once after `delay_ms`.
 The `timer_stop` callback cancels it. Zero-delay expiries still require a later dispatch.
 The `gptp` callback returns the current grandmaster identity and domain for that interface.
-The `link_up` callback returns the current link level. The `seed` callback supplies entropy when the machine starts.
+The `link_up` callback returns the current link level. The `seed` callback returns the least significant 32 bits of the local clock, at its finest resolution, as it is asked.
+The core asks on each transition out of DOWN, startup with the link up and LINK_UP, and at no other draw.
+It adds the sample to the low word of `mac` with an end-around carry and mixes in `entity_id`, the `interface` and the earlier `rng` state.
 
 | Public field or value | Meaning |
 |---|---|
