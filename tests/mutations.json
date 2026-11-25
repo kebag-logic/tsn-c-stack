@@ -870,8 +870,8 @@
   {
     "name": "acmp-nothing-persisted",
     "path": "src/acmp.c",
-    "old": "\t\t\tmemcpy(s->saved, record, ACMP_BINDING_BYTES);\n\t\t\tp_persist(a, k);",
-    "new": "\t\t\tmemcpy(s->saved, record, ACMP_BINDING_BYTES);\n\t\t\t(void)p_persist;",
+    "old": "\t\t\trecord_of(s, s->saved);\n\t\t\tp_persist(a, k);",
+    "new": "\t\t\trecord_of(s, s->saved);\n\t\t\t(void)p_persist;",
     "kills": [
       {
         "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
@@ -886,8 +886,8 @@
   {
     "name": "acmp-unbind-not-persisted",
     "path": "src/acmp.c",
-    "old": "\t\tif (!same_record(record, s->saved)) {",
-    "new": "\t\tif (!same_record(record, s->saved) && s->bound) {",
+    "old": "\t\tif (record_moved(s)) {",
+    "new": "\t\tif (record_moved(s) && s->bound) {",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -902,8 +902,8 @@
   {
     "name": "acmp-rebind-not-persisted",
     "path": "src/acmp.c",
-    "old": "\t\tif (!same_record(record, s->saved)) {",
-    "new": "\t\tif (!same_record(record, s->saved) && (s->saved[0] & 0x01u) == 0u) {",
+    "old": "\t\tif (record_moved(s)) {",
+    "new": "\t\tif (record_moved(s) && (s->saved[0] & 0x01u) == 0u) {",
     "kills": [
       {
         "test": "AcmpCore.A6BindAnotherSourceRestartsTheSink",
@@ -3795,8 +3795,8 @@
   {
     "name": "acmp-discovery-notifies",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)(x->registering_failed != y->registering_failed);",
-    "new": "\t\t\t(uint64_t)(x->registering_failed != y->registering_failed) |\n\t\t\t(uint64_t)(x->talker_discovered != y->talker_discovered);",
+    "old": "\t\t\t(uint64_t)((registered && s->tk_failed) != y->registering_failed);",
+    "new": "\t\t\t(uint64_t)((registered && s->tk_failed) != y->registering_failed) |\n\t\t\t(uint64_t)(s->discovered != y->talker_discovered);",
     "kills": [
       {
         "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
@@ -3811,8 +3811,8 @@
   {
     "name": "acmp-status-not-notified",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)(x->acmp_status ^ y->acmp_status) | (uint64_t)(x->bound != y->bound) |",
-    "new": "\t\t\t(uint64_t)(x->bound != y->bound) |",
+    "old": "\t\t\t(uint64_t)(s->acmp_status ^ y->acmp_status) | (uint64_t)(s->bound != y->bound) |",
+    "new": "\t\t\t(uint64_t)(s->bound != y->bound) |",
     "kills": [
       {
         "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
@@ -3826,7 +3826,7 @@
   {
     "name": "acmp-probing-status-not-notified",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)((unsigned)x->probing_status ^ (unsigned)y->probing_status) |\n",
+    "old": "\t\t\t(uint64_t)((unsigned)s->probing ^ (unsigned)y->probing_status) |\n",
     "new": "",
     "kills": [
       {
@@ -7900,8 +7900,8 @@
   {
     "name": "walk-marked-word-zero",
     "path": "src/acmp.c",
-    "old": "return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;",
-    "new": "return ((a->dirty[0] >> (k % 32u)) & 1u) != 0u;",
+    "old": "\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
+    "new": "\t\t\tbits = a->dirty[0];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
@@ -7980,7 +7980,7 @@
   {
     "name": "walk-marks-never-cleared",
     "path": "src/acmp.c",
-    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);\n",
+    "old": "\t\ta->dirty[w] = 0u;\n",
     "new": "",
     "kills": [
       {
@@ -8048,8 +8048,8 @@
   {
     "name": "walk-clear-first-word-only",
     "path": "src/acmp.c",
-    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);",
-    "new": "\tmemset(a->dirty, 0, sizeof a->dirty[0]);",
+    "old": "\tfor (unsigned w = 0; w < ACMP_DIRTY_WORDS; ++w) {\n\t\ta->dirty[w] = 0u;",
+    "new": "\tfor (unsigned w = 0; w < 1u; ++w) {\n\t\ta->dirty[w] = 0u;",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
