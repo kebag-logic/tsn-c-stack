@@ -164,10 +164,11 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L618) | frame-sources-from-sinks | ADP-01, ADP-02, MFDISC-04 |
 | [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L596) | link-down-departs | ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01 |
 | [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L677) | advertise-period-wrong | ADP-02, PORT-01 |
-| [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L757) | adp-short-frame-accepted | ADP-01 |
-| [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L740) | adp-unsupported-version-accepted | ADP-01 |
-| [AdpInputControl.RejectsWrongControlDataLength](../tests/test_adp.cpp#L774) | adp-wrong-control-length-accepted | ADP-01 |
-| [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L792) | own-discover-discarded | ADP-01, ADP-02, MFDISC-02 |
+| [AdpInputControl.AcceptsLongControlDataLength](../tests/test_adp.cpp#L817) | adp-long-control-length-refused; adp-long-control-length-needs-surplus | ADP-01 |
+| [AdpInputControl.RejectsShortControlDataLength](../tests/test_adp.cpp#L797) | adp-short-control-length-accepted; adp-control-length-off-by-one; adp-control-length-includes-valid-time | ADP-01 |
+| [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L780) | adp-short-frame-accepted | ADP-01 |
+| [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L763) | adp-unsupported-version-accepted | ADP-01 |
+| [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L834) | own-discover-discarded; adp-minimum-control-length-refused | ADP-01, ADP-02, MFDISC-02 |
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |

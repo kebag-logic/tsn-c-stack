@@ -6417,30 +6417,170 @@
     ]
   },
   {
-    "name": "adp-wrong-control-length-accepted",
+    "name": "adp-short-control-length-accepted",
     "path": "src/adp.c",
-    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||\n",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
     "new": "",
     "kills": [
       {
-        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/0",
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/0",
         "needle": "malformed discovery increments discarded exactly once"
       },
       {
-        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/1",
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/1",
         "needle": "malformed discovery increments discarded exactly once"
       },
       {
-        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/2",
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/2",
         "needle": "malformed discovery increments discarded exactly once"
       },
       {
-        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/3",
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/3",
         "needle": "malformed discovery increments discarded exactly once"
       },
       {
-        "test": "AllStates/AdpInputControl.RejectsWrongControlDataLength/4",
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/4",
         "needle": "malformed discovery increments discarded exactly once"
+      }
+    ]
+  },
+  {
+    "name": "adp-control-length-off-by-one",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH - 1u ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/0",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/1",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/2",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/3",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/4",
+        "needle": "malformed discovery increments discarded exactly once"
+      }
+    ]
+  },
+  {
+    "name": "adp-control-length-includes-valid-time",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    wire_be16(frame + ADP_HEADER_BYTES + 2u) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/0",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/1",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/2",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/3",
+        "needle": "malformed discovery increments discarded exactly once"
+      },
+      {
+        "test": "AllStates/AdpInputControl.RejectsShortControlDataLength/4",
+        "needle": "malformed discovery increments discarded exactly once"
+      }
+    ]
+  },
+  {
+    "name": "adp-long-control-length-refused",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) != ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-long-control-length-needs-surplus",
+    "path": "src/adp.c",
+    "old": "len < ADP_FRAME_BYTES ||",
+    "new": "len < ADP_FRAME_BYTES || len < ADP_HEADER_BYTES + 12u + (size_t)(wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) ||",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.AcceptsLongControlDataLength/4",
+        "needle": "valid discovery is never discarded"
+      }
+    ]
+  },
+  {
+    "name": "adp-minimum-control-length-refused",
+    "path": "src/adp.c",
+    "old": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) < ADP_CONTROL_DATA_LENGTH ||\n",
+    "new": "\t    (wire_be16(frame + ADP_HEADER_BYTES + 2u) & 0x07FFu) <= ADP_CONTROL_DATA_LENGTH ||\n",
+    "kills": [
+      {
+        "test": "AllStates/AdpInputControl.ValidDiscovery/0",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ValidDiscovery/1",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ValidDiscovery/2",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ValidDiscovery/3",
+        "needle": "valid discovery is never discarded"
+      },
+      {
+        "test": "AllStates/AdpInputControl.ValidDiscovery/4",
+        "needle": "valid discovery is never discarded"
       }
     ]
   },
