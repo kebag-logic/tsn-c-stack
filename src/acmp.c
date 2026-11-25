@@ -449,13 +449,18 @@ static void view_of(const struct acmp_sink *s, struct acmp_sink_view *v)
 	memset(v, 0, sizeof *v);
 	v->state = s->state;
 	v->bound = s->bound;
-	v->binding = s->binding;
+	v->binding.talker_entity_id = s->binding.talker_entity_id;
+	v->binding.controller_entity_id = s->binding.controller_entity_id;
+	v->binding.talker_unique_id = s->binding.talker_unique_id;
+	v->binding.streaming_wait = s->binding.streaming_wait;
 	v->started = s->started;
 	v->probing_status = s->probing;
 	v->acmp_status = s->acmp_status;
 	v->settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
 	if (v->settled) {
-		v->stream = s->stream;
+		v->stream.stream_id = s->stream.stream_id;
+		v->stream.dest_mac = s->stream.dest_mac;
+		v->stream.vlan_id = s->stream.vlan_id;
 	}
 	v->talker_registered = s->state == ACMP_SETTLED_RSV_OK;
 	v->registering_failed = v->talker_registered && s->tk_failed;
@@ -510,8 +515,16 @@ static bool record_moved(const struct acmp_sink *s)
 	uint16_t unique = b ? s->binding.talker_unique_id : 0u;
 	uint64_t talker = b ? s->binding.talker_entity_id : 0u;
 	uint64_t controller = b ? s->binding.controller_entity_id : 0u;
-	uint64_t diff = (uint64_t)(p[0] ^ flags) | p[1] | (uint64_t)(wire_be16(p + 2) ^ unique) |
-			(wire_be64(p + 4) ^ talker) | (wire_be64(p + 12) ^ controller);
+	uint32_t th = (uint32_t)(talker >> 32);
+	uint32_t tl = (uint32_t)talker;
+	uint32_t ch = (uint32_t)(controller >> 32);
+	uint32_t cl = (uint32_t)controller;
+	uint32_t diff = (uint32_t)(p[0] ^ flags) | p[1] | (uint32_t)(p[2] ^ (unique >> 8)) |
+			(uint32_t)(p[3] ^ (unique & 0xFFu)) |
+			(p[4] ^ (th >> 24)) | (p[5] ^ ((th >> 16) & 0xFFu)) | (p[6] ^ ((th >> 8) & 0xFFu)) | (p[7] ^ (th & 0xFFu)) |
+			(p[8] ^ (tl >> 24)) | (p[9] ^ ((tl >> 16) & 0xFFu)) | (p[10] ^ ((tl >> 8) & 0xFFu)) | (p[11] ^ (tl & 0xFFu)) |
+			(p[12] ^ (ch >> 24)) | (p[13] ^ ((ch >> 16) & 0xFFu)) | (p[14] ^ ((ch >> 8) & 0xFFu)) | (p[15] ^ (ch & 0xFFu)) |
+			(p[16] ^ (cl >> 24)) | (p[17] ^ ((cl >> 16) & 0xFFu)) | (p[18] ^ ((cl >> 8) & 0xFFu)) | (p[19] ^ (cl & 0xFFu));
 	return diff != 0u;
 }
 
