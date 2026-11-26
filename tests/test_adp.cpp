@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
@@ -490,23 +491,301 @@ void core_draws(void) {
 }
 
 uint32_t seed_value;
+unsigned seed_calls;
 
 uint32_t chosen_seed(void* ctx) {
     static_cast<void>(ctx);
+    ++seed_calls;
     return seed_value;
 }
 
-void core_rng_never_zero(void) {
-    static const adp_entity cancelling = {0x000000009E3779B9ull, 1u, 2u, 3u, 1u, 1u, 1u, 1u, 0u};
-    static const adp_ports seeded = {nullptr, fake_send, fake_start, fake_stop, fake_gptp, fake_link, chosen_seed};
-    struct adp a;
-    fresh(&a, true);
-    adp_init(&a, &cancelling, &seeded, 0, 0);
-    EXPECT_EQ(a.rng, 1u) << "A22 an entity id whose words cancel the seed constant starts the generator at 1";
-    seed_value = a.rng;
+const adp_ports chosen = {nullptr, fake_send, fake_start, fake_stop, fake_gptp, fake_link, chosen_seed};
+
+struct Boot {
+    adp_entity e = entity;
+    unsigned interface = 0;
+    uint32_t sample = 0;
+    bool startup = false;
+};
+
+adp first_draw(const Boot& b) {
+    adp a;
+    fresh(&a, b.startup);
+    adp_init(&a, &b.e, &chosen, b.interface, 0);
+    seed_value = b.sample;
     adp_set_enable(&a, true);
-    EXPECT_TRUE(a.rng != 0u && a.state == ADP_STATE_DELAY && a.draws == 1u)
-        << "A22 a start seed equal to the state leaves it at 1 and the startup draw is made";
+    if (!b.startup) {
+        adp_link_change(&a, true);
+    }
+    return a;
+}
+
+uint32_t chi_square_x16(const std::vector<uint32_t>& draws, uint32_t max_ms) {
+    uint32_t bins[16] = {};
+    for (const auto ms : draws) {
+        const uint32_t bin = (ms * 16u) / (max_ms + 1u);
+        ++bins[bin < 16u ? bin : 15u];
+    }
+    const auto expected = static_cast<uint32_t>(draws.size() / 16u);
+    uint32_t sum = 0;
+    for (const auto n : bins) {
+        const uint32_t d = n > expected ? n - expected : expected - n;
+        sum += d * d;
+    }
+    return (sum * 16u) / expected;
+}
+
+constexpr uint32_t kChiSquareX16 = 490;
+constexpr uint32_t kHosts = 4096;
+
+void core_rng_never_zero(void) {
+    Boot b;
+    b.startup = true;
+    b.sample = 0xDE81995Du;
+    const adp a = first_draw(b);
+    EXPECT_EQ(a.rng, 0x42021u) << "A22 a seed that mixes to zero starts the generator at 1";
+    EXPECT_TRUE(a.state == ADP_STATE_DELAY && a.draws == 1u) << "A22 and the startup draw is made";
+}
+
+void core_uniform_over_samples(void) {
+    for (const bool startup : {false, true}) {
+        const uint32_t max_ms = startup ? 2000u : 4000u;
+        for (const uint32_t step : {1u, 1000u}) {
+            std::vector<uint32_t> draws;
+            for (uint32_t k = 0; k < kHosts; ++k) {
+                Boot b;
+                b.startup = startup;
+                b.sample = 40000u + k * step;
+                draws.push_back(first_draw(b).last_draw_ms);
+            }
+            EXPECT_LE(chi_square_x16(draws, max_ms), kChiSquareX16)
+                << "A25 one host's first draws over neighbouring samples are uniform (6.2.4.2.2)";
+        }
+    }
+}
+
+void core_uniform_over_hosts(void) {
+    for (const bool startup : {false, true}) {
+        const uint32_t max_ms = startup ? 2000u : 4000u;
+        for (const uint32_t sample : {0u, 40000u}) {
+            std::vector<uint32_t> draws;
+            for (uint32_t k = 0; k < kHosts; ++k) {
+                Boot b;
+                b.startup = startup;
+                b.sample = sample;
+                b.e.mac = 0x001B92112000ull + k;
+                b.e.entity_id = 0x001B92FFFE112000ull + k;
+                draws.push_back(first_draw(b).last_draw_ms);
+            }
+            EXPECT_LE(chi_square_x16(draws, max_ms), kChiSquareX16)
+                << "A26 neighbouring hosts started together draw uniformly (6.2.4.2.2)";
+        }
+    }
+}
+
+void core_seed_terms(void) {
+    for (const bool startup : {false, true}) {
+        Boot b;
+        b.startup = startup;
+        b.sample = 40000u;
+        const uint32_t base = first_draw(b).rng;
+        Boot other = b;
+        std::vector<uint32_t> interfaces;
+        for (const unsigned i : {0u, 1u, 2u, 255u}) {
+            other.interface = i;
+            interfaces.push_back(first_draw(other).rng);
+        }
+        std::sort(interfaces.begin(), interfaces.end());
+        EXPECT_TRUE(std::unique(interfaces.begin(), interfaces.end()) == interfaces.end())
+            << "A27 interfaces 0, 1, 2 and 255 sampled together draw apart";
+        other = b;
+        other.e.entity_id ^= 1u;
+        EXPECT_NE(first_draw(other).rng, base) << "A27 the low word of the entity ID is mixed in";
+        other = b;
+        other.e.entity_id ^= 1ull << 32;
+        EXPECT_NE(first_draw(other).rng, base) << "A27 the high word of the entity ID is mixed in";
+        other = b;
+        other.e.mac += 1u;
+        EXPECT_NE(first_draw(other).rng, base) << "A27 the MAC address is in the seed";
+        other.sample -= 1u;
+        EXPECT_EQ(first_draw(other).rng, base) << "A27 the seed is the sum of MAC address and clock (6.2.4.2.2)";
+        Boot wrapped = b;
+        wrapped.e.mac = 0xFFFFFFFFull;
+        wrapped.sample = 5u;
+        Boot modular = b;
+        modular.e.mac = 0;
+        modular.sample = 4u;
+        EXPECT_EQ(first_draw(wrapped).rng, first_draw(modular).rng)
+            << "A27 the seed is the sum's least significant 32 bits, modulo 2^32 (6.2.4.2.2)";
+    }
+}
+
+void core_fresh_sample(void) {
+    Boot b;
+    b.sample = 40000u;
+    seed_calls = 0;
+    adp a = first_draw(b);
+    EXPECT_EQ(seed_calls, 1u) << "A28 one sample is taken at LINK_UP and none with the link down";
+    adp_timer_expired(&a);
+    adp_gm_change(&a);
+    adp_timer_expired(&a);
+    adp_timer_expired(&a);
+    EXPECT_EQ(a.state, ADP_STATE_DELAY);
+    EXPECT_EQ(seed_calls, 1u) << "A28 a draw outside DOWN takes no sample";
+    adp_link_change(&a, false);
+    adp later = a;
+    adp same = a;
+    adp_link_change(&a, true);
+    EXPECT_EQ(seed_calls, 2u) << "A28 the next LINK_UP takes a fresh sample";
+    adp_link_change(&same, true);
+    EXPECT_EQ(same.rng, a.rng);
+    seed_value += 1u;
+    adp_link_change(&later, true);
+    EXPECT_NE(later.rng, a.rng) << "A28 the next LINK_UP mixes its sample in";
+    b.startup = true;
+    seed_calls = 0;
+    adp on = first_draw(b);
+    EXPECT_EQ(seed_calls, 1u) << "A28 one sample is taken at startup with the link up";
+    const uint32_t first = on.rng;
+    adp_link_change(&on, false);
+    adp_link_change(&on, true);
+    adp_link_change(&on, false);
+    const uint32_t second = on.rng;
+    adp_link_change(&on, true);
+    EXPECT_TRUE(second != first && on.rng != second) << "A28 a stopped clock does not repeat the state";
+}
+
+void core_samples_per_rise(void) {
+    adp a;
+    adp other;
+    fresh(&a, false);
+    adp_init(&a, &entity, &chosen, 0, 0);
+    adp_init(&other, &entity, &chosen, 1, 0);
+    seed_value = 40000u;
+    seed_calls = 0;
+    adp_set_enable(&a, true);
+    adp_set_enable(&other, true);
+    EXPECT_EQ(seed_calls, 0u) << "A30 an enable with the link down takes no sample";
+    for (unsigned rise = 1; rise <= 3u; ++rise) {
+        const uint32_t draws = a.draws;
+        adp_link_change(&a, true);
+        EXPECT_TRUE(seed_calls == rise && a.draws == draws + 1u) << "A30 each qualified LINK_UP takes one sample";
+        adp_link_change(&a, true);
+        EXPECT_TRUE(seed_calls == rise && a.draws == draws + 1u) << "A30 a duplicate LINK_UP takes no sample";
+        adp_link_change(&a, false);
+    }
+    const uint32_t untouched = other.rng;
+    adp_link_change(&other, true);
+    EXPECT_TRUE(seed_calls == 4u && other.rng != untouched && other.last_draw == ADP_DRAW_DELAY)
+        << "A30 the other interface's LINK_UP takes its own sample";
+    adp_set_enable(&a, false);
+    adp_link_change(&a, true);
+    adp_link_change(&a, false);
+    EXPECT_EQ(seed_calls, 4u) << "A30 a LINK_UP while disabled takes no sample";
+    adp_link_change(&a, true);
+    fk.link = true;
+    adp_set_enable(&a, true);
+    EXPECT_TRUE(seed_calls == 5u && a.last_draw == ADP_DRAW_STARTUP) << "A30 the startup draw takes one sample";
+}
+
+void core_link_time_sample(void) {
+    for (const bool startup : {false, true}) {
+        std::vector<uint32_t> first;
+        for (uint32_t k = 0; k < kHosts; ++k) {
+            Boot b;
+            b.startup = startup;
+            b.sample = 40000u;
+            adp a = first_draw(b);
+            if (startup) {
+                adp_link_change(&a, false);
+            }
+            seed_value = 90000u + k;
+            adp_link_change(&a, startup);
+            if (!startup) {
+                adp_link_change(&a, false);
+                adp_link_change(&a, true);
+            }
+            first.push_back(a.last_draw_ms);
+        }
+        std::vector<uint32_t> sorted = first;
+        std::sort(sorted.begin(), sorted.end());
+        const auto distinct = static_cast<uint32_t>(std::unique(sorted.begin(), sorted.end()) - sorted.begin());
+        EXPECT_GE(distinct, 2400u) << "A31 boots that differ only in the sample at a LINK_UP draw apart";
+        EXPECT_LE(chi_square_x16(first, 4000u), kChiSquareX16)
+            << "A31 and draw uniformly from the sample taken at that LINK_UP";
+    }
+}
+
+void core_discover_takes_no_sample(void) {
+    Boot b;
+    b.sample = 40000u;
+    seed_calls = 0;
+    adp a = first_draw(b);
+    uint8_t f[ADP_FRAME_BYTES];
+    for (const uint64_t target : {entity.entity_id, uint64_t{0}}) {
+        adp_timer_expired(&a);
+        ASSERT_EQ(a.state, ADP_STATE_WAITING) << "A32 the machine waits before the discovery";
+        const uint32_t draws = a.draws;
+        discover(f, ADP_MSG_ENTITY_DISCOVER, target);
+        adp_rx(&a, f, sizeof f);
+        EXPECT_TRUE(a.state == ADP_STATE_DELAY && a.draws == draws + 1u && seed_calls == 1u)
+            << "A32 an ENTITY_DISCOVER in WAITING draws its delay and takes no sample";
+    }
+}
+
+using Columns = std::vector<uint32_t>;
+
+uint32_t times(const Columns& m, uint32_t x) {
+    uint32_t y = 0;
+    for (unsigned k = 0; k < 32u; ++k) {
+        if ((x >> k & 1u) != 0u) {
+            y ^= m[k];
+        }
+    }
+    return y;
+}
+
+Columns power(Columns m, uint32_t n) {
+    Columns r;
+    for (unsigned k = 0; k < 32u; ++k) {
+        r.push_back(1u << k);
+    }
+    for (; n != 0u; n >>= 1) {
+        if ((n & 1u) != 0u) {
+            for (auto& c : r) {
+                c = times(m, c);
+            }
+        }
+        Columns squared;
+        for (const auto c : m) {
+            squared.push_back(times(m, c));
+        }
+        m = squared;
+    }
+    return r;
+}
+
+uint32_t step_from(uint32_t state) {
+    adp a;
+    fresh(&a, true);
+    adp_set_enable(&a, true);
+    adp_timer_expired(&a);
+    a.rng = state;
+    adp_gm_change(&a);
+    return a.rng;
+}
+
+void core_period(void) {
+    Columns m;
+    for (unsigned k = 0; k < 32u; ++k) {
+        m.push_back(step_from(1u << k));
+    }
+    EXPECT_EQ(step_from(0xC0000001u), step_from(0xC0000000u) ^ step_from(1u)) << "A29 one draw is one linear step";
+    const Columns identity = power(m, 0);
+    EXPECT_EQ(power(m, 0xFFFFFFFFu), identity) << "A29 the sequence returns after 2^32 - 1 draws";
+    for (const uint32_t prime : {3u, 5u, 17u, 257u, 65537u}) {
+        EXPECT_NE(power(m, 0xFFFFFFFFu / prime), identity) << "A29 and not before: its length is 2^32 - 1 (6.2.4.2.2)";
+    }
 }
 
 void core_enable_idempotent(void) {
@@ -595,6 +874,22 @@ TEST(AdpCore, A22GeneratorNeverStuckAtZero) { core_rng_never_zero(); }
 TEST(AdpCore, A23RepeatedEnableOrDisableChangesNothing) { core_enable_idempotent(); }
 // REQ: ADP-01, ADP-02
 TEST(AdpCore, A24OtherEtherTypeOrSubtypeDiscarded) { core_discard_kinds(); }
+// REQ: ADP-02, PORT-01, MFDISC-01
+TEST(AdpCore, A25FirstDrawsAreUniformOverSamples) { core_uniform_over_samples(); }
+// REQ: ADP-02, PORT-01, MFDISC-01
+TEST(AdpCore, A26NeighbouringHostsDrawUniformly) { core_uniform_over_hosts(); }
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, A27EverySeedTermIsMixedIn) { core_seed_terms(); }
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, A28EachLeaveOfDownTakesAFreshSample) { core_fresh_sample(); }
+// REQ: ADP-02
+TEST(AdpCore, A29SequenceIsOfMaximumLength) { core_period(); }
+// REQ: ADP-02, PORT-01, MFDISC-01
+TEST(AdpCore, A30EachQualifiedRiseTakesOneSample) { core_samples_per_rise(); }
+// REQ: ADP-02, PORT-01, MFDISC-01
+TEST(AdpCore, A31TheLinkUpsSampleSetsItsDraw) { core_link_time_sample(); }
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, A32ADiscoverDrawTakesNoSample) { core_discover_takes_no_sample(); }
 
 // REQ: ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01
 TEST(AdpCore, LinkLevelsAndDisabledInputs) {
@@ -693,8 +988,8 @@ TEST(AdpCore, MockedPortOrder) {
     adp a;
     adp_init(&a, &entity, &ports, 0, 0);
     InSequence sequence;
-    EXPECT_CALL(mock, Seed()).WillOnce(Return(1u));
     EXPECT_CALL(mock, Link()).WillOnce(Return(true));
+    EXPECT_CALL(mock, Seed()).WillOnce(Return(1u));
     EXPECT_CALL(mock, Start(Le(2000u)));
     adp_set_enable(&a, true);
     EXPECT_CALL(mock, Gptp(_, _)).WillOnce(DoAll(SetArgPointee<0>(1u), SetArgPointee<1>(0u)));

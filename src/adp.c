@@ -84,6 +84,31 @@ static void enter_delay(struct adp *a, enum adp_draw kind)
 	a->state = ADP_STATE_DELAY;
 }
 
+static uint32_t mix(uint32_t x)
+{
+	x = ~x + (x << 15);
+	x ^= x >> 12;
+	x += x << 2;
+	x ^= x >> 4;
+	x += (x << 3) + (x << 11);
+	return x ^ (x >> 16);
+}
+
+// Milan v1.2 5.6.3.5.2; Milan v1.2 5.6.3.5.3
+// IEEE 1722.1-2021 6.2.4.2.2
+static void leave_down(struct adp *a, enum adp_draw kind)
+{
+	const struct adp_entity *e = a->entity;
+	port_active = true;
+	uint32_t sample = a->ports->seed(a->ports->ctx);
+	port_active = false;
+	uint32_t sum = (uint32_t)e->mac + sample;
+	uint32_t id = (uint32_t)e->entity_id ^ (uint32_t)(e->entity_id >> 32);
+	uint32_t x = mix(mix(a->rng ^ sum) ^ id ^ ((uint32_t)a->interface << 24));
+	a->rng = x != 0u ? x : 1u;
+	enter_delay(a, kind);
+}
+
 void adp_build(const struct adp *a, uint8_t message_type, uint32_t available_index, uint8_t *frame)
 {
 	if (reject_reentry()) {
@@ -176,10 +201,6 @@ void adp_init(struct adp *a, const struct adp_entity *entity, const struct adp_p
 	a->interface = (uint8_t)interface;
 	a->state = ADP_STATE_DOWN;
 	a->current_configuration_index = current_configuration_index;
-	a->rng = (uint32_t)entity->entity_id ^ (uint32_t)(entity->entity_id >> 32) ^ 0x9E3779B9u;
-	if (a->rng == 0u) {
-		a->rng = 1u;
-	}
 }
 
 void adp_set_current_configuration(struct adp *a, uint16_t index)
@@ -229,16 +250,10 @@ void adp_set_enable(struct adp *a, bool enable)
 	}
 	a->enabled = true;
 	port_active = true;
-	a->rng ^= a->ports->seed(a->ports->ctx);
-	port_active = false;
-	if (a->rng == 0u) {
-		a->rng = 1u;
-	}
-	port_active = true;
 	a->link_up = a->ports->link_up(a->ports->ctx, a->interface);
 	port_active = false;
 	if (a->link_up) {
-		enter_delay(a, ADP_DRAW_STARTUP);                       // Milan v1.2 5.6.3.5.2
+		leave_down(a, ADP_DRAW_STARTUP);                        // Milan v1.2 5.6.3.5.2
 	} else {
 		a->state = ADP_STATE_DOWN;                              // Milan v1.2 5.6.3.5.1
 	}
@@ -256,7 +271,7 @@ void adp_link_change(struct adp *a, bool up)
 	}
 	if (up) {
 		if (a->state == ADP_STATE_DOWN) {
-			enter_delay(a, ADP_DRAW_DELAY);                 // Milan v1.2 5.6.3.5.3
+			leave_down(a, ADP_DRAW_DELAY);                  // Milan v1.2 5.6.3.5.3
 		}
 		return;
 	}
