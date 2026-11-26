@@ -141,7 +141,7 @@ Target and state handling follow [Milan v1.2 5.6.3.1, Table 5.50 and Table 5.51]
 
 | Core | Integrator supplies |
 |---|---|
-| [ADP](../include/adp.h) | Frame send; relative timer start/stop; link level; grandmaster/domain; entropy seed. Supply link and grandmaster change events. |
+| [ADP](../include/adp.h) | Frame send; relative timer start/stop; link level; grandmaster/domain; a local clock sample at each transition out of DOWN. Supply link and grandmaster change events. |
 | [ACMP](../include/acmp.h) | Frame send; monotonic milliseconds; per-interface absolute timer; grandmaster/domain; entropy; bound-talker admission; sink-state publication. Environment ports supply lock owner and live source state, SRP requests, persist requests and changed notifications. |
 | [MAAP](../include/maap.h) | Frame send; relative timer start/stop; tentative or valid range publication; clock entropy. Supply operational link edges once per change. |
 
@@ -172,7 +172,9 @@ The `send` callback uses the supplied interface and follows the [buffer contract
 The `timer_start` callback replaces the interface's timer and delivers `adp_timer_expired` once after `delay_ms`.
 The `timer_stop` callback cancels it. Zero-delay expiries still require a later dispatch.
 The `gptp` callback returns the current grandmaster identity and domain for that interface.
-The `link_up` callback returns the current link level. The `seed` callback supplies entropy when the machine starts.
+The `link_up` callback returns the current link level. The `seed` callback returns the least significant 32 bits of the local clock, at its finest resolution, as it is asked.
+The core asks on each transition out of DOWN, startup with the link up and LINK_UP, and at no other draw.
+It takes the least significant 32 bits of the sum of `mac` and the sample, modulo 2^32, and mixes in `entity_id`, the `interface` and the earlier `rng` state.
 
 | Public field or value | Meaning |
 |---|---|

@@ -106,7 +106,7 @@ struct Rig {
         auto& r = *static_cast<Rig*>(ctx);
         r.callback(Port::Seed);
 
-        return r.a.rng ^ 1u;
+        return r.a.rng ^ 0xDA0DB1D5u;
     }
     void expire() {
         running = false;
