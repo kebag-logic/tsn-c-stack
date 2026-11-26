@@ -541,7 +541,7 @@ constexpr uint32_t kHosts = 4096;
 void core_rng_never_zero(void) {
     Boot b;
     b.startup = true;
-    b.sample = 0xDE81995Cu;
+    b.sample = 0xDE81995Du;
     const adp a = first_draw(b);
     EXPECT_EQ(a.rng, 0x42021u) << "A22 a seed that mixes to zero starts the generator at 1";
     EXPECT_TRUE(a.state == ADP_STATE_DELAY && a.draws == 1u) << "A22 and the startup draw is made";
@@ -590,8 +590,14 @@ void core_seed_terms(void) {
         b.sample = 40000u;
         const uint32_t base = first_draw(b).rng;
         Boot other = b;
-        other.interface = 1;
-        EXPECT_NE(first_draw(other).rng, base) << "A27 two interfaces sampled together draw apart";
+        std::vector<uint32_t> interfaces;
+        for (const unsigned i : {0u, 1u, 2u, 255u}) {
+            other.interface = i;
+            interfaces.push_back(first_draw(other).rng);
+        }
+        std::sort(interfaces.begin(), interfaces.end());
+        EXPECT_TRUE(std::unique(interfaces.begin(), interfaces.end()) == interfaces.end())
+            << "A27 interfaces 0, 1, 2 and 255 sampled together draw apart";
         other = b;
         other.e.entity_id ^= 1u;
         EXPECT_NE(first_draw(other).rng, base) << "A27 the low word of the entity ID is mixed in";
@@ -606,10 +612,11 @@ void core_seed_terms(void) {
         Boot wrapped = b;
         wrapped.e.mac = 0xFFFFFFFFull;
         wrapped.sample = 5u;
-        Boot carried = b;
-        carried.e.mac = 0;
-        carried.sample = 5u;
-        EXPECT_EQ(first_draw(wrapped).rng, first_draw(carried).rng) << "A27 the sum carries end around (6.2.4.2.2)";
+        Boot modular = b;
+        modular.e.mac = 0;
+        modular.sample = 4u;
+        EXPECT_EQ(first_draw(wrapped).rng, first_draw(modular).rng)
+            << "A27 the seed is the sum's least significant 32 bits, modulo 2^32 (6.2.4.2.2)";
     }
 }
 
@@ -706,6 +713,23 @@ void core_link_time_sample(void) {
         EXPECT_GE(distinct, 2400u) << "A31 boots that differ only in the sample at a LINK_UP draw apart";
         EXPECT_LE(chi_square_x16(first, 4000u), kChiSquareX16)
             << "A31 and draw uniformly from the sample taken at that LINK_UP";
+    }
+}
+
+void core_discover_takes_no_sample(void) {
+    Boot b;
+    b.sample = 40000u;
+    seed_calls = 0;
+    adp a = first_draw(b);
+    uint8_t f[ADP_FRAME_BYTES];
+    for (const uint64_t target : {entity.entity_id, uint64_t{0}}) {
+        adp_timer_expired(&a);
+        ASSERT_EQ(a.state, ADP_STATE_WAITING) << "A32 the machine waits before the discovery";
+        const uint32_t draws = a.draws;
+        discover(f, ADP_MSG_ENTITY_DISCOVER, target);
+        adp_rx(&a, f, sizeof f);
+        EXPECT_TRUE(a.state == ADP_STATE_DELAY && a.draws == draws + 1u && seed_calls == 1u)
+            << "A32 an ENTITY_DISCOVER in WAITING draws its delay and takes no sample";
     }
 }
 
@@ -864,6 +888,8 @@ TEST(AdpCore, A29SequenceIsOfMaximumLength) { core_period(); }
 TEST(AdpCore, A30EachQualifiedRiseTakesOneSample) { core_samples_per_rise(); }
 // REQ: ADP-02, PORT-01, MFDISC-01
 TEST(AdpCore, A31TheLinkUpsSampleSetsItsDraw) { core_link_time_sample(); }
+// REQ: ADP-02, PORT-01
+TEST(AdpCore, A32ADiscoverDrawTakesNoSample) { core_discover_takes_no_sample(); }
 
 // REQ: ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01
 TEST(AdpCore, LinkLevelsAndDisabledInputs) {

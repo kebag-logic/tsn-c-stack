@@ -6822,7 +6822,22 @@
     "kills": [
       {
         "test": "AdpCore.A27EverySeedTermIsMixedIn",
-        "needle": "A27 two interfaces sampled together draw apart"
+        "needle": "A27 interfaces 0, 1, 2 and 255 sampled together draw apart"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-seed-interface-low-bit-only",
+    "path": "src/adp.c",
+    "old": "((uint32_t)a->interface << 24)",
+    "new": "((uint32_t)(a->interface & 1u) << 24)",
+    "kills": [
+      {
+        "test": "AdpCore.A27EverySeedTermIsMixedIn",
+        "needle": "A27 interfaces 0, 1, 2 and 255 sampled together draw apart"
       }
     ],
     "original_tests": [
@@ -6890,18 +6905,33 @@
     ]
   },
   {
-    "name": "adp-seed-carry-dropped",
+    "name": "adp-seed-end-around-carry-added",
     "path": "src/adp.c",
-    "old": "\tsum += sum < sample;\n",
-    "new": "",
+    "old": "\tuint32_t sum = (uint32_t)e->mac + sample;\n",
+    "new": "\tuint32_t sum = (uint32_t)e->mac + sample;\n\tsum += sum < sample;\n",
     "kills": [
       {
         "test": "AdpCore.A27EverySeedTermIsMixedIn",
-        "needle": "A27 the sum carries end around (6.2.4.2.2)"
+        "needle": "A27 the seed is the sum's least significant 32 bits, modulo 2^32 (6.2.4.2.2)"
       }
     ],
     "original_tests": [
       "AdpCore.A27EverySeedTermIsMixedIn"
+    ]
+  },
+  {
+    "name": "adp-discover-draw-sampled",
+    "path": "src/adp.c",
+    "old": "\ttimer_stop(a);                                                  // Milan v1.2 5.6.3.5.4\n\tenter_delay(a, ADP_DRAW_DELAY);\n",
+    "new": "\ttimer_stop(a);                                                  // Milan v1.2 5.6.3.5.4\n\tleave_down(a, ADP_DRAW_DELAY);\n",
+    "kills": [
+      {
+        "test": "AdpCore.A32ADiscoverDrawTakesNoSample",
+        "needle": "A32 an ENTITY_DISCOVER in WAITING draws its delay and takes no sample"
+      }
+    ],
+    "original_tests": [
+      "AdpCore.A32ADiscoverDrawTakesNoSample"
     ]
   },
   {

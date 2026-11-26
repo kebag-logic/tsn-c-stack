@@ -103,7 +103,6 @@ static void leave_down(struct adp *a, enum adp_draw kind)
 	uint32_t sample = a->ports->seed(a->ports->ctx);
 	port_active = false;
 	uint32_t sum = (uint32_t)e->mac + sample;
-	sum += sum < sample;
 	uint32_t id = (uint32_t)e->entity_id ^ (uint32_t)(e->entity_id >> 32);
 	uint32_t x = mix(mix(a->rng ^ sum) ^ id ^ ((uint32_t)a->interface << 24));
 	a->rng = x != 0u ? x : 1u;

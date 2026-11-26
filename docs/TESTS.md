@@ -145,38 +145,39 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AcmpWide.ProbeInTheSlotOfSinkThirtyTwosResponseHoldsNoSink](../tests/test_acmp_wide.cpp#L185) | acmp-owed-release-not-cleared; acmp-wide-release-clears-one-word | ACMP-09 |
 | [AcmpWide.SinkZerosOwedResponseLeavesSinkThirtyTwoFree](../tests/test_acmp_wide.cpp#L127) | acmp-wide-owed-count-word-ignored; acmp-wide-release-loop-word-ignored | ACMP-09 |
 | [AcmpWide.SinksThirtyOneAndThirtyTwoWaitOnlyForTheirOwnResponses](../tests/test_acmp_wide.cpp#L140) | acmp-wide-release-word-off-by-one; acmp-wide-owed-count-word-off-by-one; acmp-wide-release-loop-word-off-by-one | ACMP-09 |
-| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L800) | gm-change-ignored; gm-change-draws-startup-kind; gm-change-rearms-without-a-draw; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
-| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L816) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
-| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L820) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
-| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L824) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
-| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L828) | available-passes-owed-departing | ADP-03, ADP-02 |
-| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L832) | link-loss-drops-owed-departing | ADP-03, ADP-02, MFDISC-03 |
-| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L836) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
-| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L840) | link-loss-keeps-owed-available | ADP-03, ADP-02, MFDISC-03 |
-| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L844) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
-| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L848) | seed-left-at-zero | ADP-02, PORT-01 |
-| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L850) | enable-not-idempotent | ADP-02, PORT-01 |
-| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L852) | other-subtype-accepted | ADP-01, ADP-02 |
-| [AdpCore.A25FirstDrawsAreUniformOverSamples](../tests/test_adp.cpp#L854) | adp-seed-sample-ignored; adp-seed-unmixed | ADP-02, PORT-01, MFDISC-01 |
-| [AdpCore.A26NeighbouringHostsDrawUniformly](../tests/test_adp.cpp#L856) | adp-seed-one-round | ADP-02, PORT-01, MFDISC-01 |
-| [AdpCore.A27EverySeedTermIsMixedIn](../tests/test_adp.cpp#L858) | adp-seed-without-interface; adp-seed-without-entity-id-low; adp-seed-without-entity-id-high; adp-seed-without-mac; adp-seed-mac-not-summed; adp-seed-carry-dropped | ADP-02, PORT-01 |
-| [AdpCore.A28EachLeaveOfDownTakesAFreshSample](../tests/test_adp.cpp#L860) | adp-link-up-not-reseeded; adp-startup-not-reseeded; adp-every-draw-reseeded; adp-seed-forgets-state | ADP-02, PORT-01 |
-| [AdpCore.A29SequenceIsOfMaximumLength](../tests/test_adp.cpp#L862) | adp-sequence-not-maximal; adp-sequence-a-third; adp-step-not-linear | ADP-02 |
-| [AdpCore.A30EachQualifiedRiseTakesOneSample](../tests/test_adp.cpp#L864) | adp-later-rise-not-sampled; adp-duplicate-up-sampled; adp-disabled-up-sampled | ADP-02, PORT-01, MFDISC-01 |
-| [AdpCore.A31TheLinkUpsSampleSetsItsDraw](../tests/test_adp.cpp#L866) | adp-later-sample-ignored | ADP-02, PORT-01, MFDISC-01 |
-| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L804) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02, MFDISC-02 |
-| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L808) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
-| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L812) | draw-kinds-merged | ADP-02, PORT-01, MFDISC-01 |
-| [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L907) | adp-config-entity-id; adp-config-model-id; adp-config-entity-capabilities; adp-config-talker-count; adp-config-talker-capabilities; adp-config-listener-count; adp-config-listener-capabilities; adp-config-grandmaster; adp-config-domain; adp-config-identify-index; adp-config-interface-index | ADP-01, MFDISC-04 |
-| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L891) | frame-sources-from-sinks | ADP-01, ADP-02, MFDISC-04 |
-| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L869) | link-down-departs | ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01 |
-| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L950) | advertise-period-wrong | ADP-02, PORT-01 |
-| [AdpInputControl.AcceptsLongControlDataLength](../tests/test_adp.cpp#L1109) | adp-long-control-length-refused; adp-long-control-length-needs-surplus; adp-control-length-mask-0x03ff; adp-control-length-mask-0x01ff; adp-control-length-mask-0x00ff; adp-control-length-mask-0x007f | ADP-01 |
-| [AdpInputControl.ReadsNoOctetPastTheFrame](../tests/test_adp.cpp#L1133) | adp-long-control-length-reads-surplus | ADP-01 |
-| [AdpInputControl.RejectsShortControlDataLength](../tests/test_adp.cpp#L1089) | adp-short-control-length-accepted; adp-control-length-off-by-one; adp-control-length-includes-valid-time | ADP-01 |
-| [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L1072) | adp-short-frame-accepted | ADP-01 |
-| [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L1055) | adp-unsupported-version-accepted | ADP-01 |
-| [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L1141) | own-discover-discarded; adp-minimum-control-length-refused | ADP-01, ADP-02, MFDISC-02 |
+| [AdpCore.A0toA2Schedule](../tests/test_adp.cpp#L824) | gm-change-ignored; gm-change-draws-startup-kind; gm-change-rearms-without-a-draw; advertise-expiry-skips-delay; advertise-period-wrong; link-up-draws-startup-kind; frame-misses-config-index | ADP-02, PORT-01, MFDISC-01, MFDISC-04, MFRECOVERY-01 |
+| [AdpCore.A10toA14DepartingIndex](../tests/test_adp.cpp#L840) | departing-sends-zero | ADP-03, ADP-02, MFDISC-01, MFDISC-03 |
+| [AdpCore.A15OwedDepartingAcrossARestart](../tests/test_adp.cpp#L844) | available-replaces-owed-departing | ADP-03, ADP-02, MFDISC-03 |
+| [AdpCore.A16SecondShutdownQueuesItsOwn](../tests/test_adp.cpp#L848) | second-departing-dropped; second-shutdown-overwrites-index | ADP-03, ADP-02 |
+| [AdpCore.A17RoomBackBeforeAPoll](../tests/test_adp.cpp#L852) | available-passes-owed-departing | ADP-03, ADP-02 |
+| [AdpCore.A18LinkLossKeepsTheOwedDeparting](../tests/test_adp.cpp#L856) | link-loss-drops-owed-departing | ADP-03, ADP-02, MFDISC-03 |
+| [AdpCore.A19IgnoredInputsKeepTheOwedAvailable](../tests/test_adp.cpp#L860) | gm-change-drops-owed-available; discover-drops-owed-available; stray-expiry-drops-owed-available | ADP-03, ADP-02 |
+| [AdpCore.A20LinkLossDropsTheOwedAvailable](../tests/test_adp.cpp#L864) | link-loss-keeps-owed-available | ADP-03, ADP-02, MFDISC-03 |
+| [AdpCore.A21DepartingCapacity](../tests/test_adp.cpp#L868) | departing-queue-unbounded; coalesced-departing-uncounted; coalesce-drops-queued-departing; coalesce-overwrites-oldest-index | ADP-03, ADP-02 |
+| [AdpCore.A22GeneratorNeverStuckAtZero](../tests/test_adp.cpp#L872) | seed-left-at-zero | ADP-02, PORT-01 |
+| [AdpCore.A23RepeatedEnableOrDisableChangesNothing](../tests/test_adp.cpp#L874) | enable-not-idempotent | ADP-02, PORT-01 |
+| [AdpCore.A24OtherEtherTypeOrSubtypeDiscarded](../tests/test_adp.cpp#L876) | other-subtype-accepted | ADP-01, ADP-02 |
+| [AdpCore.A25FirstDrawsAreUniformOverSamples](../tests/test_adp.cpp#L878) | adp-seed-sample-ignored; adp-seed-unmixed | ADP-02, PORT-01, MFDISC-01 |
+| [AdpCore.A26NeighbouringHostsDrawUniformly](../tests/test_adp.cpp#L880) | adp-seed-one-round | ADP-02, PORT-01, MFDISC-01 |
+| [AdpCore.A27EverySeedTermIsMixedIn](../tests/test_adp.cpp#L882) | adp-seed-without-interface; adp-seed-interface-low-bit-only; adp-seed-without-entity-id-low; adp-seed-without-entity-id-high; adp-seed-without-mac; adp-seed-mac-not-summed; adp-seed-end-around-carry-added | ADP-02, PORT-01 |
+| [AdpCore.A28EachLeaveOfDownTakesAFreshSample](../tests/test_adp.cpp#L884) | adp-link-up-not-reseeded; adp-startup-not-reseeded; adp-every-draw-reseeded; adp-seed-forgets-state | ADP-02, PORT-01 |
+| [AdpCore.A29SequenceIsOfMaximumLength](../tests/test_adp.cpp#L886) | adp-sequence-not-maximal; adp-sequence-a-third; adp-step-not-linear | ADP-02 |
+| [AdpCore.A30EachQualifiedRiseTakesOneSample](../tests/test_adp.cpp#L888) | adp-later-rise-not-sampled; adp-duplicate-up-sampled; adp-disabled-up-sampled | ADP-02, PORT-01, MFDISC-01 |
+| [AdpCore.A31TheLinkUpsSampleSetsItsDraw](../tests/test_adp.cpp#L890) | adp-later-sample-ignored | ADP-02, PORT-01, MFDISC-01 |
+| [AdpCore.A32ADiscoverDrawTakesNoSample](../tests/test_adp.cpp#L892) | adp-discover-draw-sampled | ADP-02, PORT-01 |
+| [AdpCore.A3toA5DiscoverAndDiscard](../tests/test_adp.cpp#L828) | own-discover-discarded; down-answers-discover; foreign-discover-answered | ADP-01, ADP-02, MFDISC-02 |
+| [AdpCore.A6toA8DeferredSends](../tests/test_adp.cpp#L832) | departing-keeps-index; delay-ignores-link-down; shutdown-in-down-departs | ADP-03, ADP-02 |
+| [AdpCore.A9DrawKinds](../tests/test_adp.cpp#L836) | draw-kinds-merged | ADP-02, PORT-01, MFDISC-01 |
+| [AdpCore.AdvertisementFieldsMatchCaller](../tests/test_adp.cpp#L933) | adp-config-entity-id; adp-config-model-id; adp-config-entity-capabilities; adp-config-talker-count; adp-config-talker-capabilities; adp-config-listener-count; adp-config-listener-capabilities; adp-config-grandmaster; adp-config-domain; adp-config-identify-index; adp-config-interface-index | ADP-01, MFDISC-04 |
+| [AdpCore.EntityFieldsUseIndependentCounts](../tests/test_adp.cpp#L917) | frame-sources-from-sinks | ADP-01, ADP-02, MFDISC-04 |
+| [AdpCore.LinkLevelsAndDisabledInputs](../tests/test_adp.cpp#L895) | link-down-departs | ADP-02, PORT-01, MFDISC-03, MFRECOVERY-01 |
+| [AdpCore.MockedPortOrder](../tests/test_adp.cpp#L976) | advertise-period-wrong | ADP-02, PORT-01 |
+| [AdpInputControl.AcceptsLongControlDataLength](../tests/test_adp.cpp#L1135) | adp-long-control-length-refused; adp-long-control-length-needs-surplus; adp-control-length-mask-0x03ff; adp-control-length-mask-0x01ff; adp-control-length-mask-0x00ff; adp-control-length-mask-0x007f | ADP-01 |
+| [AdpInputControl.ReadsNoOctetPastTheFrame](../tests/test_adp.cpp#L1159) | adp-long-control-length-reads-surplus | ADP-01 |
+| [AdpInputControl.RejectsShortControlDataLength](../tests/test_adp.cpp#L1115) | adp-short-control-length-accepted; adp-control-length-off-by-one; adp-control-length-includes-valid-time | ADP-01 |
+| [AdpInputControl.RejectsShortFrame](../tests/test_adp.cpp#L1098) | adp-short-frame-accepted | ADP-01 |
+| [AdpInputControl.RejectsUnsupportedVersion](../tests/test_adp.cpp#L1081) | adp-unsupported-version-accepted | ADP-01 |
+| [AdpInputControl.ValidDiscovery](../tests/test_adp.cpp#L1167) | own-discover-discarded; adp-minimum-control-length-refused | ADP-01, ADP-02, MFDISC-02 |
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored; adp-seed-port-unflagged | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
