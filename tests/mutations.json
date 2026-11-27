@@ -870,8 +870,8 @@
   {
     "name": "acmp-nothing-persisted",
     "path": "src/acmp.c",
-    "old": "\t\t\tmemcpy(s->saved, record, ACMP_BINDING_BYTES);\n\t\t\tp_persist(a, k);",
-    "new": "\t\t\tmemcpy(s->saved, record, ACMP_BINDING_BYTES);\n\t\t\t(void)p_persist;",
+    "old": "\t\t\trecord_of(s, s->saved);\n\t\t\tp_persist(a, k);",
+    "new": "\t\t\trecord_of(s, s->saved);\n\t\t\t(void)p_persist;",
     "kills": [
       {
         "test": "AcmpCore.A1BindFromUnboundRespondsThenProbes",
@@ -886,8 +886,8 @@
   {
     "name": "acmp-unbind-not-persisted",
     "path": "src/acmp.c",
-    "old": "\t\tif (!same_record(record, s->saved)) {",
-    "new": "\t\tif (!same_record(record, s->saved) && s->bound) {",
+    "old": "\t\tif (record_moved(s)) {",
+    "new": "\t\tif (record_moved(s) && s->bound) {",
     "kills": [
       {
         "test": "AcmpCore.A3UnbindInEveryState",
@@ -902,8 +902,8 @@
   {
     "name": "acmp-rebind-not-persisted",
     "path": "src/acmp.c",
-    "old": "\t\tif (!same_record(record, s->saved)) {",
-    "new": "\t\tif (!same_record(record, s->saved) && (s->saved[0] & 0x01u) == 0u) {",
+    "old": "\t\tif (record_moved(s)) {",
+    "new": "\t\tif (record_moved(s) && (s->saved[0] & 0x01u) == 0u) {",
     "kills": [
       {
         "test": "AcmpCore.A6BindAnotherSourceRestartsTheSink",
@@ -3795,8 +3795,8 @@
   {
     "name": "acmp-discovery-notifies",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)(x->registering_failed != y->registering_failed);",
-    "new": "\t\t\t(uint64_t)(x->registering_failed != y->registering_failed) |\n\t\t\t(uint64_t)(x->talker_discovered != y->talker_discovered);",
+    "old": "\t\t\t(uint64_t)((registered && s->tk_failed) != y->registering_failed);",
+    "new": "\t\t\t(uint64_t)((registered && s->tk_failed) != y->registering_failed) |\n\t\t\t(uint64_t)(s->discovered != y->talker_discovered);",
     "kills": [
       {
         "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
@@ -3811,8 +3811,8 @@
   {
     "name": "acmp-status-not-notified",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)(x->acmp_status ^ y->acmp_status) | (uint64_t)(x->bound != y->bound) |",
-    "new": "\t\t\t(uint64_t)(x->bound != y->bound) |",
+    "old": "\t\t\t(uint64_t)(s->acmp_status ^ y->acmp_status) | (uint64_t)(s->bound != y->bound) |",
+    "new": "\t\t\t(uint64_t)(s->bound != y->bound) |",
     "kills": [
       {
         "test": "AcmpCore.A25OnlyTable522ItemsAreReported",
@@ -3826,7 +3826,7 @@
   {
     "name": "acmp-probing-status-not-notified",
     "path": "src/acmp.c",
-    "old": "\t\t\t(uint64_t)((unsigned)x->probing_status ^ (unsigned)y->probing_status) |\n",
+    "old": "\t\t\t(uint64_t)((unsigned)s->probing ^ (unsigned)y->probing_status) |\n",
     "new": "",
     "kills": [
       {
@@ -8246,8 +8246,8 @@
   {
     "name": "walk-marked-word-zero",
     "path": "src/acmp.c",
-    "old": "return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;",
-    "new": "return ((a->dirty[0] >> (k % 32u)) & 1u) != 0u;",
+    "old": "\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
+    "new": "\t\t\tbits = a->dirty[0];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
@@ -8326,7 +8326,7 @@
   {
     "name": "walk-marks-never-cleared",
     "path": "src/acmp.c",
-    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);\n",
+    "old": "\t\ta->dirty[w] = 0u;\n",
     "new": "",
     "kills": [
       {
@@ -8394,8 +8394,8 @@
   {
     "name": "walk-clear-first-word-only",
     "path": "src/acmp.c",
-    "old": "\tmemset(a->dirty, 0, sizeof a->dirty);",
-    "new": "\tmemset(a->dirty, 0, sizeof a->dirty[0]);",
+    "old": "\tfor (unsigned w = 0; w < ACMP_DIRTY_WORDS; ++w) {\n\t\ta->dirty[w] = 0u;",
+    "new": "\tfor (unsigned w = 0; w < 1u; ++w) {\n\t\ta->dirty[w] = 0u;",
     "kills": [
       {
         "test": "AcmpWalk.ThirtyThreeSinksMatchTheFullWalk",
@@ -8437,6 +8437,158 @@
     ],
     "original_tests": [
       "Wire.W1PutBeWritesTheLowBytesMostSignificantFirst"
+    ]
+  },
+  {
+    "name": "record-omit-talker-top-octet",
+    "path": "src/acmp.c",
+    "old": "(p[4] ^ (th >> 24))",
+    "new": "0u",
+    "kills": [
+      {
+        "test": "AcmpCore.P1RebindChangingOnlyTheTalkerTopOctetIsSaved",
+        "needle": "P1 a rebind changing only the Talker ID's top octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P1RebindChangingOnlyTheTalkerTopOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-omit-controller-top-octet",
+    "path": "src/acmp.c",
+    "old": "(p[12] ^ (ch >> 24))",
+    "new": "0u",
+    "kills": [
+      {
+        "test": "AcmpCore.P2RebindChangingOnlyTheControllerTopOctetIsSaved",
+        "needle": "P2 a rebind changing only the controller ID's top octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P2RebindChangingOnlyTheControllerTopOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-omit-unique-high-octet",
+    "path": "src/acmp.c",
+    "old": "(uint32_t)(p[2] ^ (unique >> 8))",
+    "new": "0u",
+    "kills": [
+      {
+        "test": "AcmpCore.P3RebindChangingOnlyTheUniqueIdHighOctetIsSaved",
+        "needle": "P3 a rebind changing only the unique ID's high octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P3RebindChangingOnlyTheUniqueIdHighOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-drop-unique",
+    "path": "src/acmp.c",
+    "old": "uint16_t unique = b ? s->binding.talker_unique_id : 0u;",
+    "new": "uint16_t unique = wire_be16(p + 2);",
+    "kills": [
+      {
+        "test": "AcmpCore.P3RebindChangingOnlyTheUniqueIdHighOctetIsSaved",
+        "needle": "P3 a rebind changing only the unique ID's high octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P3RebindChangingOnlyTheUniqueIdHighOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-drop-talker",
+    "path": "src/acmp.c",
+    "old": "uint64_t talker = b ? s->binding.talker_entity_id : 0u;",
+    "new": "uint64_t talker = wire_be64(p + 4);",
+    "kills": [
+      {
+        "test": "AcmpCore.P1RebindChangingOnlyTheTalkerTopOctetIsSaved",
+        "needle": "P1 a rebind changing only the Talker ID's top octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P1RebindChangingOnlyTheTalkerTopOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-drop-controller",
+    "path": "src/acmp.c",
+    "old": "uint64_t controller = b ? s->binding.controller_entity_id : 0u;",
+    "new": "uint64_t controller = wire_be64(p + 12);",
+    "kills": [
+      {
+        "test": "AcmpCore.P2RebindChangingOnlyTheControllerTopOctetIsSaved",
+        "needle": "P2 a rebind changing only the controller ID's top octet is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P2RebindChangingOnlyTheControllerTopOctetIsSaved"
+    ]
+  },
+  {
+    "name": "record-omit-talker-low-octet",
+    "path": "src/acmp.c",
+    "old": "(p[11] ^ (tl & 0xFFu))",
+    "new": "0u",
+    "kills": [
+      {
+        "test": "AcmpCore.P4EachIdOctetChangedAloneIsSaved",
+        "needle": "P4 a rebind changing one octet of the record's IDs alone is saved"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P4EachIdOctetChangedAloneIsSaved"
+    ]
+  },
+  {
+    "name": "walk-publish-no-reload",
+    "path": "src/acmp.c",
+    "old": "\t\tif (k % 32u == 0u) {\n\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
+    "new": "\t\tif (k == 0u) {\n\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tbool settled",
+    "kills": [
+      {
+        "test": "AcmpWide.SinkThirtyTwoBoundAloneIsPublishedAndAdmitted",
+        "needle": "W6 sink 32 bound alone is published from the second mark word",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinkThirtyTwoBoundAloneIsPublishedAndAdmitted"
+    ]
+  },
+  {
+    "name": "walk-admit-no-reload",
+    "path": "src/acmp.c",
+    "old": "\t\tif (k % 32u == 0u) {\n\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tuint64_t talker = s->binding.talker_entity_id;",
+    "new": "\t\tif (k == 0u) {\n\t\t\tbits = a->dirty[k / 32u];\n\t\t}\n\t\tif ((bits & 1u) == 0u) {\n\t\t\tcontinue;\n\t\t}\n\t\tstruct acmp_sink *s = &a->sinks[k];\n\t\tuint64_t talker = s->binding.talker_entity_id;",
+    "kills": [
+      {
+        "test": "AcmpWide.SinkThirtyTwoBoundAloneIsPublishedAndAdmitted",
+        "needle": "W6 sink 32 bound alone is admitted from the second mark word",
+        "arm": "acmp_wide"
+      }
+    ],
+    "original_tests": [
+      "AcmpWide.SinkThirtyTwoBoundAloneIsPublishedAndAdmitted"
+    ]
+  },
+  {
+    "name": "view-drop-streaming-wait",
+    "path": "src/acmp.c",
+    "old": "\tv->binding.streaming_wait = s->binding.streaming_wait;\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "AcmpCore.P5TheViewCarriesTheBindingsStreamingWait",
+        "needle": "P5 acmp_view reports a STREAMING_WAIT bind's flag set"
+      }
+    ],
+    "original_tests": [
+      "AcmpCore.P5TheViewCarriesTheBindingsStreamingWait"
     ]
   },
   {

@@ -213,16 +213,15 @@ static void mark(struct acmp *a, unsigned k)
 	a->dirty_if |= 1u << a->sinks[k].interface;
 }
 
-static bool marked(const struct acmp *a, unsigned k)
-{
-	return ((a->dirty[k / 32u] >> (k % 32u)) & 1u) != 0u;
-}
-
 // REQ: ACMP-10, ACMP-13
 static void publish(struct acmp *a)
 {
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
+	uint32_t bits = 0u;
+	for (unsigned k = 0; k < a->cfg.n_sinks; ++k, bits >>= 1) {
+		if (k % 32u == 0u) {
+			bits = a->dirty[k / 32u];
+		}
+		if ((bits & 1u) == 0u) {
 			continue;
 		}
 		struct acmp_sink *s = &a->sinks[k];
@@ -450,13 +449,18 @@ static void view_of(const struct acmp_sink *s, struct acmp_sink_view *v)
 	memset(v, 0, sizeof *v);
 	v->state = s->state;
 	v->bound = s->bound;
-	v->binding = s->binding;
+	v->binding.talker_entity_id = s->binding.talker_entity_id;
+	v->binding.controller_entity_id = s->binding.controller_entity_id;
+	v->binding.talker_unique_id = s->binding.talker_unique_id;
+	v->binding.streaming_wait = s->binding.streaming_wait;
 	v->started = s->started;
 	v->probing_status = s->probing;
 	v->acmp_status = s->acmp_status;
 	v->settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
 	if (v->settled) {
-		v->stream = s->stream;
+		v->stream.stream_id = s->stream.stream_id;
+		v->stream.dest_mac = s->stream.dest_mac;
+		v->stream.vlan_id = s->stream.vlan_id;
 	}
 	v->talker_registered = s->state == ACMP_SETTLED_RSV_OK;
 	v->registering_failed = v->talker_registered && s->tk_failed;
@@ -468,15 +472,21 @@ static void view_of(const struct acmp_sink *s, struct acmp_sink_view *v)
 
 
 
-static bool view_equal(const struct acmp_sink_view *x, const struct acmp_sink_view *y)
+// REQ: ACMP-13
+static bool view_moved(const struct acmp_sink *s, const struct acmp_sink_view *y)
 {
-	uint64_t diff = (x->stream.stream_id ^ y->stream.stream_id) | (x->stream.dest_mac ^ y->stream.dest_mac) |
-			(uint64_t)(x->stream.vlan_id ^ y->stream.vlan_id) |
-			(uint64_t)((unsigned)x->probing_status ^ (unsigned)y->probing_status) |
-			(uint64_t)(x->acmp_status ^ y->acmp_status) | (uint64_t)(x->bound != y->bound) |
-			(uint64_t)(x->started != y->started) | (uint64_t)(x->talker_registered != y->talker_registered) |
-			(uint64_t)(x->registering_failed != y->registering_failed);
-	return diff == 0u;
+	bool settled = s->state == ACMP_SETTLED_NO_RSV || s->state == ACMP_SETTLED_RSV_OK;
+	bool registered = s->state == ACMP_SETTLED_RSV_OK;
+	uint64_t stream_id = settled ? s->stream.stream_id : 0u;
+	uint64_t dest_mac = settled ? s->stream.dest_mac : 0u;
+	uint16_t vlan_id = settled ? s->stream.vlan_id : 0u;
+	uint64_t diff = (stream_id ^ y->stream.stream_id) | (dest_mac ^ y->stream.dest_mac) |
+			(uint64_t)(vlan_id ^ y->stream.vlan_id) |
+			(uint64_t)((unsigned)s->probing ^ (unsigned)y->probing_status) |
+			(uint64_t)(s->acmp_status ^ y->acmp_status) | (uint64_t)(s->bound != y->bound) |
+			(uint64_t)(s->started != y->started) | (uint64_t)(registered != y->talker_registered) |
+			(uint64_t)((registered && s->tk_failed) != y->registering_failed);
+	return diff != 0u;
 }
 
 // Milan v1.2 5.5.3.5.8
@@ -495,13 +505,27 @@ static void record_of(const struct acmp_sink *s, uint8_t payload[ACMP_BINDING_BY
 
 
 
-static bool same_record(const uint8_t *x, const uint8_t *y)
+// REQ: ACMP-13
+static bool record_moved(const struct acmp_sink *s)
 {
-	uint8_t diff = 0;
-	for (unsigned i = 0; i < ACMP_BINDING_BYTES; ++i) {
-		diff |= (uint8_t)(x[i] ^ y[i]);
-	}
-	return diff == 0u;
+	const uint8_t *p = s->saved;
+	bool b = s->bound;
+	uint8_t flags = (uint8_t)(b ? (BIND_VALID | (s->started ? BIND_STARTED : 0u) |
+				       (s->binding.streaming_wait ? BIND_STREAMING_WAIT : 0u)) : 0u);
+	uint16_t unique = b ? s->binding.talker_unique_id : 0u;
+	uint64_t talker = b ? s->binding.talker_entity_id : 0u;
+	uint64_t controller = b ? s->binding.controller_entity_id : 0u;
+	uint32_t th = (uint32_t)(talker >> 32);
+	uint32_t tl = (uint32_t)talker;
+	uint32_t ch = (uint32_t)(controller >> 32);
+	uint32_t cl = (uint32_t)controller;
+	uint32_t diff = (uint32_t)(p[0] ^ flags) | p[1] | (uint32_t)(p[2] ^ (unique >> 8)) |
+			(uint32_t)(p[3] ^ (unique & 0xFFu)) |
+			(p[4] ^ (th >> 24)) | (p[5] ^ ((th >> 16) & 0xFFu)) | (p[6] ^ ((th >> 8) & 0xFFu)) | (p[7] ^ (th & 0xFFu)) |
+			(p[8] ^ (tl >> 24)) | (p[9] ^ ((tl >> 16) & 0xFFu)) | (p[10] ^ ((tl >> 8) & 0xFFu)) | (p[11] ^ (tl & 0xFFu)) |
+			(p[12] ^ (ch >> 24)) | (p[13] ^ ((ch >> 16) & 0xFFu)) | (p[14] ^ ((ch >> 8) & 0xFFu)) | (p[15] ^ (ch & 0xFFu)) |
+			(p[16] ^ (cl >> 24)) | (p[17] ^ ((cl >> 16) & 0xFFu)) | (p[18] ^ ((cl >> 8) & 0xFFu)) | (p[19] ^ (cl & 0xFFu));
+	return diff != 0u;
 }
 
 // Milan v1.2 5.6.4.1
@@ -510,8 +534,12 @@ static bool same_record(const uint8_t *x, const uint8_t *y)
 // REQ: ACMP-13
 static void admit(struct acmp *a)
 {
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
+	uint32_t bits = 0u;
+	for (unsigned k = 0; k < a->cfg.n_sinks; ++k, bits >>= 1) {
+		if (k % 32u == 0u) {
+			bits = a->dirty[k / 32u];
+		}
+		if ((bits & 1u) == 0u) {
 			continue;
 		}
 		struct acmp_sink *s = &a->sinks[k];
@@ -532,25 +560,27 @@ static void finish(struct acmp *a)
 	publish(a);
 	rearm(a);
 	admit(a);
-	for (unsigned k = 0; k < a->cfg.n_sinks; ++k) {
-		if (!marked(a, k)) {
+	uint32_t bits = 0u;
+	for (unsigned k = 0; k < a->cfg.n_sinks; ++k, bits >>= 1) {
+		if (k % 32u == 0u) {
+			bits = a->dirty[k / 32u];
+		}
+		if ((bits & 1u) == 0u) {
 			continue;
 		}
 		struct acmp_sink *s = &a->sinks[k];
-		uint8_t record[ACMP_BINDING_BYTES];
-		record_of(s, record);
-		if (!same_record(record, s->saved)) {
-			memcpy(s->saved, record, ACMP_BINDING_BYTES);
+		if (record_moved(s)) {
+			record_of(s, s->saved);
 			p_persist(a, k);
 		}
-		struct acmp_sink_view v;
-		view_of(s, &v);
-		if (s->change_owed == 0u && !view_equal(&v, &s->reported)) {
-			s->reported = v;
+		if (s->change_owed == 0u && view_moved(s, &s->reported)) {
+			view_of(s, &s->reported);
 			p_changed(a, k);
 		}
 	}
-	memset(a->dirty, 0, sizeof a->dirty);
+	for (unsigned w = 0; w < ACMP_DIRTY_WORDS; ++w) {
+		a->dirty[w] = 0u;
+	}
 	a->dirty_if = 0u;
 }
 

@@ -543,6 +543,75 @@ TEST_F(AcmpCore, A6TheSameTalkerAnotherSourceIsANewBinding) {
         << "A6 the binding and the probe name the new source (step 2 compares both fields)";
 }
 
+// REQ: ACMP-13
+TEST_F(AcmpCore, P1RebindChangingOnlyTheTalkerTopOctetIsSaved) {
+    bind(0, kTkA, 1, kCtl1);
+    fk.clear();
+    bind(0, kTkA ^ (std::uint64_t{0x02} << 56), 1, kCtl1);
+    std::uint8_t latch[spec::BINDING_BYTES] = {};
+    ASSERT_TRUE(acmp_binding_latch(&a, 0, latch));
+    EXPECT_EQ(fk.count(Call::PERSIST), 1u) << "P1 a rebind changing only the Talker ID's top octet is saved";
+    EXPECT_EQ(std::memcmp(a.sinks[0].saved, latch, spec::BINDING_BYTES), 0)
+        << "P1 the saved record then holds the new Talker ID's top octet";
+}
+
+// REQ: ACMP-13
+TEST_F(AcmpCore, P2RebindChangingOnlyTheControllerTopOctetIsSaved) {
+    bind(0, kTkA, 1, kCtl1);
+    fk.clear();
+    bind(0, kTkA, 1, kCtl1 ^ (std::uint64_t{0x02} << 56));
+    std::uint8_t latch[spec::BINDING_BYTES] = {};
+    ASSERT_TRUE(acmp_binding_latch(&a, 0, latch));
+    EXPECT_EQ(fk.count(Call::PERSIST), 1u) << "P2 a rebind changing only the controller ID's top octet is saved";
+    EXPECT_EQ(std::memcmp(a.sinks[0].saved, latch, spec::BINDING_BYTES), 0)
+        << "P2 the saved record then holds the new controller ID's top octet";
+}
+
+// REQ: ACMP-13
+TEST_F(AcmpCore, P3RebindChangingOnlyTheUniqueIdHighOctetIsSaved) {
+    bind(0, kTkA, 0x0001u, kCtl1);
+    fk.clear();
+    bind(0, kTkA, 0x0101u, kCtl1);
+    std::uint8_t latch[spec::BINDING_BYTES] = {};
+    ASSERT_TRUE(acmp_binding_latch(&a, 0, latch));
+    EXPECT_EQ(fk.count(Call::PERSIST), 1u) << "P3 a rebind changing only the unique ID's high octet is saved";
+    EXPECT_EQ(std::memcmp(a.sinks[0].saved, latch, spec::BINDING_BYTES), 0)
+        << "P3 the saved record then holds the new unique ID's high octet";
+}
+
+// REQ: ACMP-13
+TEST_F(AcmpCore, P4EachIdOctetChangedAloneIsSaved) {
+    for (unsigned j = 0; j < 18u; ++j) {
+        SetUp();
+        std::uint16_t uid = 0x0001u;
+        std::uint64_t talker = kTkA;
+        std::uint64_t controller = kCtl1;
+        bind(0, talker, uid, controller);
+        if (j < 2u) {
+            uid = static_cast<std::uint16_t>(uid ^ (0x5Au << (8u * (1u - j))));
+        } else if (j < 10u) {
+            talker ^= std::uint64_t{0x5A} << (8u * (9u - j));
+        } else {
+            controller ^= std::uint64_t{0x5A} << (8u * (17u - j));
+        }
+        fk.clear();
+        bind(0, talker, uid, controller);
+        std::uint8_t latch[spec::BINDING_BYTES] = {};
+        ASSERT_TRUE(acmp_binding_latch(&a, 0, latch));
+        EXPECT_TRUE(fk.count(Call::PERSIST) == 1u &&
+                    std::memcmp(a.sinks[0].saved, latch, spec::BINDING_BYTES) == 0)
+            << "P4 a rebind changing one octet of the record's IDs alone is saved, record octet " << (j + 2u);
+    }
+}
+
+// REQ: ACMP-13
+TEST_F(AcmpCore, P5TheViewCarriesTheBindingsStreamingWait) {
+    bind(0, kTkA, 1, kCtl1, true);
+    bind(1, kTkA, 1, kCtl1, false);
+    EXPECT_TRUE(view(0).binding.streaming_wait) << "P5 acmp_view reports a STREAMING_WAIT bind's flag set";
+    EXPECT_FALSE(view(1).binding.streaming_wait) << "P5 acmp_view reports a plain bind's flag clear";
+}
+
 // Milan v1.2 5.5.3.1; Milan v1.2 5.5.3.5.18
 
 // REQ: ACMP-04

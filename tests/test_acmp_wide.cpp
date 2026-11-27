@@ -98,6 +98,22 @@ class AcmpWide : public ::testing::Test {
     acmp_config cfg{};
 };
 
+// REQ: ACMP-13
+TEST_F(AcmpWide, SinkThirtyTwoBoundAloneIsPublishedAndAdmitted) {
+    fk.clear();
+    bind(kLast);
+    bool published = false;
+    for (const Fake::Pub& p : fk.pubs) {
+        published = published || (p.sink == kLast && p.bound);
+    }
+    bool admitted = false;
+    for (const Call& c : fk.calls) {
+        admitted = admitted || (c.kind == Call::ADMIT && c.index == kLast && c.flag);
+    }
+    EXPECT_TRUE(published) << "W6 sink 32 bound alone is published from the second mark word";
+    EXPECT_TRUE(admitted) << "W6 sink 32 bound alone is admitted from the second mark word";
+}
+
 // REQ: ACMP-09
 TEST_F(AcmpWide, OwedResponsesHoldOnlyTheirOwnSinksChanges) {
     fk.room = false;
