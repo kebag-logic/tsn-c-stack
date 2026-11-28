@@ -13,7 +13,8 @@ PATTERNS = [re.compile(r"(?i)\b" + re.escape(word)) for word in WORDS]
 PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users", "data", "tmp")]
 PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
 OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
-# Merges of #29 (d7e6a2a1) and #41 (5a07d9b7) were recorded with a second message paragraph; they are exempt from the one-line rule only, since main's published history is not rewritten.
+# Merge of #29 (d7e6a2a1) was recorded with a second message paragraph; it is exempt from the one-line rule only, since main's published history is not rewritten.
+# Merge of PR #41 (5a07d9b7) was recorded with a second message paragraph; it is exempt on the same terms.
 TWO_LINE_MERGES = {"d7e6a2a19a57a8277cd26042557a8c99f2ee5496", "5a07d9b7d87298f04b15aa28f0304ec88b0aef81"}
 IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
 WEB_FLOW = ["hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>", "GitHub <noreply@github.com>"]
@@ -50,15 +51,17 @@ def selftest():
         ("web-flow-two-lines", WEB_FLOW + ["Subject", "", "Body"], False),
         ("holder-two-lines", [IDENTITY, IDENTITY, "Subject", "", "Body"], False),
         ("foreign", ["someone <a@b.c>", "someone <a@b.c>", "Subject"], False),
-        ("two-line-merge", WEB_FLOW + ["Merge (#29)", "", "Body"], True),
-        ("two-line-merge-foreign", ["someone <a@b.c>", "someone <a@b.c>", "Merge (#29)", "", "Body"], False),
-        ("two-line-merge-near-miss", WEB_FLOW + ["Merge (#29)", "", "Body"], False),
     ]
+    cases = [(name, OWNER_SQUASH if name == "owner-squash" else "0" * 40, lines, want) for name, lines, want in cases]
+    for merge in sorted(TWO_LINE_MERGES):
+        near = merge[:-1] + ("0" if merge[-1] != "0" else "1")
+        cases += [
+            ("two-line-merge " + merge[:8], merge, WEB_FLOW + ["Merge", "", "Body"], True),
+            ("two-line-merge-foreign " + merge[:8], merge, ["someone <a@b.c>", "someone <a@b.c>", "Merge", "", "Body"], False),
+            ("two-line-merge-near-miss " + merge[:8], near, WEB_FLOW + ["Merge", "", "Body"], False),
+        ]
     bad = []
-    for name, lines, want in cases:
-        commit = OWNER_SQUASH if name == "owner-squash" else "0" * 40
-        commit = next(iter(TWO_LINE_MERGES)) if name.startswith("two-line-merge") else commit
-        commit = commit[:-1] + ("0" if commit[-1] != "0" else "1") if name.endswith("near-miss") else commit
+    for name, commit, lines, want in cases:
         if (not commit_errors(commit, lines)) != want:
             bad.append(name)
     print("privacy selftest: " + ("fail " + ", ".join(bad) if bad else f"{len(cases)} commit controls pass"))
