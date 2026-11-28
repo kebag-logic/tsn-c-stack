@@ -52,9 +52,10 @@ Channels past a port's clusters are unmapped ([Milan v1.2 5.3.10.1][milan]).
 
 The board's descriptors come from an end-station configuration and milan-fpga's generator.
 That 4x4 + CRF configuration is not yet published in the board support repository.
-Its published branches still hold the earlier one-input shape.
+Of its published branches, only `pb2-aecp-1` holds an end-station configuration, the earlier one-input shape.
 The facts it states are on this page: the streams, formats, clusters, maps, clock sources and the locale `en-US`.
 [milan-fpga at 58f7673b](https://github.com/kebag-logic/milan-fpga/tree/58f7673b8c57a80230e716bc1774ff9cc2f71ddc) generates the image from them.
+It needs its `protocol-processor` submodule at `801ef228`, which holds the descriptor image builder.
 Its hash-derived model ID, `0x001BC5C52E47A158`, depends on the shape, not on the strings.
 The [configuration here](../configs/pocketbeagle.yaml) restates only the ADP, ACMP and MAAP facts, with that model ID.
 
@@ -62,7 +63,7 @@ The [AEM model](../include/pbaem.h) serves the same 84 descriptors from this lib
 `pbaem_descriptor` copies one descriptor into a caller buffer and refuses a short one without writing.
 `pbaem_set_input_format` and `pbaem_set_clock_source` accept only what the model advertises.
 With the generator's identity, its descriptors equal the generated image byte for byte.
-That identity is entity ID `0x020000FFFE000001`, MAC `02:00:00:00:00:01`, name `PocketBeagle 2 bridge` and firmware version `3.96.0`.
+That identity is entity ID `0x020000FFFE000001`, MAC `02:00:00:00:00:01`, name `PocketBeagle 2 bridge`, firmware version `3.96.0`, clock identity equal to the entity ID, and empty serial number and group name.
 The [golden](../examples/entity_roundtrip.c) is the CRC-32, `0xD891CD2F`, of the 84 descriptors in type and index order (8105 octets).
 It is checked on Linux and on RV32. A generator change that moves any descriptor needs a new golden.
 
