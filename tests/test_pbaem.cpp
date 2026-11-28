@@ -237,6 +237,21 @@ TEST_F(Pbaem, AafFieldRefusals)
             << "the high bit of the subtype octet is refused";
         EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0205022002006001)))
             << "a nonzero reserved low bit is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0205022002006800)))
+            << "reserved bit 11 is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0225022002006000)))
+            << "reserved bit 53 of the rate octet is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0245022002006000)))
+            << "reserved bit 54 of the rate octet is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0285022002006000)))
+            << "reserved bit 55 of the rate octet is refused";
+        for (unsigned bit = 0; bit < 64; ++bit) {
+            if (bit >= 22 && bit <= 31) {
+                continue;
+            }
+            EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0205022002006000) ^ (UINT64_C(1) << bit)))
+                << "a one-bit change outside the channel count is refused, bit " << bit;
+        }
     }
 }
 

@@ -8882,6 +8882,84 @@
     ]
   },
   {
+    "name": "pbaem-ignore-reserved-bit-11",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~UINT64_C(0xffe)) == (AAF_BASE & ~UINT64_C(0xffe))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 11 is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-53",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 53)) == (AAF_BASE & ~(UINT64_C(1) << 53))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 53 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-54",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 54)) == (AAF_BASE & ~(UINT64_C(1) << 54))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 54 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-55",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 55)) == (AAF_BASE & ~(UINT64_C(1) << 55))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 55 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-bit-depth",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xff) << 32)) == (AAF_BASE & ~(UINT64_C(0xff) << 32))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "24-bit depth is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-ut",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 52)) == (AAF_BASE & ~(UINT64_C(1) << 52))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "the family entry is not a stream format",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
     "name": "pbaem-absent-input-bound",
     "path": "src/pbaem.c",
     "old": "\tif (stream >= PBAEM_STREAMS) {\n\t\treturn false;\n\t}",
