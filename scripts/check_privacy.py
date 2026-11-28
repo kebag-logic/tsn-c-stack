@@ -13,8 +13,8 @@ PATTERNS = [re.compile(r"(?i)\b" + re.escape(word)) for word in WORDS]
 PATTERNS += [re.compile(re.escape("/" + name + "/")) for name in ("home", "Users", "data", "tmp")]
 PATTERNS += [re.compile(r"gh[pousr]_[A-Za-z0-9]{20,}"), re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")]
 OWNER_SQUASH = "ae982af85ec97286bd35b39403926d8f0eaec81d"
-# Merge of #29 (d7e6a2a1) was recorded with a second message paragraph; it is exempt from the one-line rule only, since main's published history is not rewritten.
-TWO_LINE_MERGES = {"d7e6a2a19a57a8277cd26042557a8c99f2ee5496"}
+# Merges of #29 (d7e6a2a1) and #41 (5a07d9b7) were recorded with a second message paragraph; they are exempt from the one-line rule only, since main's published history is not rewritten.
+TWO_LINE_MERGES = {"d7e6a2a19a57a8277cd26042557a8c99f2ee5496", "5a07d9b7d87298f04b15aa28f0304ec88b0aef81"}
 IDENTITY = "hackerman-kl <hackerman-kl@kebag-logic.com>"
 WEB_FLOW = ["hackerman-kl <161579364+Mister-M-alt@users.noreply.github.com>", "GitHub <noreply@github.com>"]
 
@@ -80,7 +80,7 @@ def main():
     if OWNER_SQUASH in commits:
         print("privacy: exact owner squash metadata exception; content scanning remains enabled")
     if TWO_LINE_MERGES & set(commits):
-        print("privacy: exact #29 merge one-line exception; identity and content checks remain enabled")
+        print("privacy: exact #29 and #41 merge one-line exceptions; identity and content checks remain enabled")
     objects = git("rev-list", "--objects", "HEAD").decode().splitlines()
     unique = {line.split(" ", 1)[0] for line in objects}
     blobs = 0
