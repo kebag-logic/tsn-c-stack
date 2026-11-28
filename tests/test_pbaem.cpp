@@ -217,7 +217,7 @@ TEST_F(Pbaem, ClockSourcesAndControl)
     const uint8_t value[] = {0x00, 0xff, 0xff, 0x00, 0xff, 0x00, 0x00, 0xff, 0xff};
     EXPECT_EQ(std::memcmp(bytes.data() + 104, value, sizeof value), 0) << "identify range, default and current value";
     ASSERT_EQ(read(0x000c), 72u);
-    EXPECT_EQ(std::memcmp(bytes.data() + 4, "en-EN", 6), 0) << "one English locale";
+    EXPECT_EQ(std::memcmp(bytes.data() + 4, "en-US", 6), 0) << "one English locale for the United States (7.2.11)";
     ASSERT_EQ(read(0x000d), 452u);
     EXPECT_EQ(std::memcmp(bytes.data() + 132, "Kebag Logic", 12), 0) << "string two is the vendor";
 }

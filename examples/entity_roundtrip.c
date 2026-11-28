@@ -311,7 +311,7 @@ int entity_check_aem(void)
         }
     }
     CHECK(count == 84 && bytes == 8105, 91);
-    CHECK((crc ^ UINT32_C(0xffffffff)) == UINT32_C(0x1e668fba), 92);
+    CHECK((crc ^ UINT32_C(0xffffffff)) == UINT32_C(0xd891cd2f), 92);
     CHECK(pbaem_descriptor(&model, 0x0005, 5, d, sizeof d) == 0, 93);
     return 0;
 }

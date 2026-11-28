@@ -122,7 +122,7 @@ static void number(uint8_t *d, unsigned at, unsigned n)
 	d[at] = (uint8_t)('0' + n % 10u);
 }
 
-// IEEE 1722.1-2021 7.2.2
+// IEEE 1722.1-2021 7.3.7
 static void named(uint8_t *d, const char *name, unsigned suffix, bool numbered, uint16_t localized)
 {
 	text(d, 4u, name);
@@ -187,7 +187,7 @@ static size_t audio_unit(uint8_t *d)
 	return 148u;
 }
 
-// IEEE 1722.1-2021 7.2.6; Milan v1.2 5.3.6 and 6.4
+// IEEE 1722.1-2021 7.2.6; Milan v1.2 5.3.3.4 and 6.4
 static size_t stream(const struct pbaem *m, uint8_t *d, bool input, unsigned k)
 {
 	bool clock = k == PBAEM_AAF_STREAMS;
@@ -211,7 +211,7 @@ static size_t stream(const struct pbaem *m, uint8_t *d, bool input, unsigned k)
 	return length;
 }
 
-// IEEE 1722.1-2021 7.2.8; Milan v1.2 5.3.4
+// IEEE 1722.1-2021 7.2.8; Milan v1.2 5.3.3.5
 static size_t avb_interface(const struct pbaem *m, uint8_t *d)
 {
 	named(d, "AVB Interface ", 0u, true, 0xffffu);
@@ -228,7 +228,7 @@ static size_t avb_interface(const struct pbaem *m, uint8_t *d)
 	return 102u;
 }
 
-// IEEE 1722.1-2021 7.2.9; Milan v1.2 5.3.5
+// IEEE 1722.1-2021 7.2.9; Milan v1.2 5.3.3.6
 static size_t clock_source(uint8_t *d, unsigned k)
 {
 	if (k == 0u) {
@@ -248,7 +248,7 @@ static size_t clock_source(uint8_t *d, unsigned k)
 // IEEE 1722.1-2021 7.2.11 and 7.2.12
 static size_t locale(uint8_t *d)
 {
-	text(d, 4u, "en-EN");
+	text(d, 4u, "en-US");
 	put(d, 68u, 1u, 2u);
 	return 72u;
 }
@@ -261,7 +261,7 @@ static size_t strings(uint8_t *d)
 	return 452u;
 }
 
-// IEEE 1722.1-2021 7.2.13; Milan v1.2 5.3.3.9
+// IEEE 1722.1-2021 7.2.13; Milan v1.2 5.3.3.7 and 5.3.3.9
 static size_t stream_port(uint8_t *d, bool input, unsigned k)
 {
 	put(d, 6u, input ? 1u : 0u, 2u);
@@ -298,7 +298,7 @@ static size_t audio_map(uint8_t *d, unsigned k)
 	return 8u + 8u * channels[k];
 }
 
-// IEEE 1722.1-2021 7.2.22 and 7.3.5; Milan v1.2 5.3.11
+// IEEE 1722.1-2021 7.2.22 and 7.3.5; Milan v1.2 5.3.3.10 and 5.3.12
 static size_t control(const struct pbaem *m, uint8_t *d)
 {
 	named(d, "Identify", 0u, false, 0xffffu);
@@ -316,7 +316,7 @@ static size_t control(const struct pbaem *m, uint8_t *d)
 	return 113u;
 }
 
-// IEEE 1722.1-2021 7.2.32; Milan v1.2 5.3.2
+// IEEE 1722.1-2021 7.2.32; Milan v1.2 5.3.3.11
 static size_t clock_domain(const struct pbaem *m, uint8_t *d)
 {
 	named(d, "Clock Reference Format", 0u, false, 0xffffu);
