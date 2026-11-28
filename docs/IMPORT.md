@@ -134,6 +134,7 @@ The [privacy gate](../scripts/check_privacy.py) exempts that exact commit from i
 It still scans that commit's content and every reachable blob.
 The [merge of #29](https://github.com/kebag-logic/tsn-c-stack/commit/d7e6a2a19a57a8277cd26042557a8c99f2ee5496) was recorded with a second message paragraph.
 The gate exempts that exact commit from the one-line rule only. Its identity and content are still checked.
+The [merge of #41](https://github.com/kebag-logic/tsn-c-stack/commit/5a07d9b7d87298f04b15aa28f0304ec88b0aef81) was also recorded with a second message paragraph, and is exempt on the same terms.
 Main's published history is not rewritten, so the exemption stands in place of a corrected message.
 Later pull requests are squash-merged on GitHub. Their commits carry the account's noreply author and GitHub as committer.
 Every new commit must use one of these two identity pairs and a one-line subject:
