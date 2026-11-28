@@ -37,13 +37,14 @@ Build, memory and testing policies are local decisions. They have source links r
 
 ## PocketBeagle AEM model
 
+AEM-01 originates from [issue #42](https://github.com/kebag-logic/tsn-c-stack/issues/42).
 AEM-01 is the PocketBeagle USB bridge's descriptor model: four AAF streams and one CRF stream each way, 24 mono clusters each way, and six clock sources.
 The [model](../include/pbaem.h) reproduces, for any caller identity, the descriptors of the bridge's generated AEM image.
 Its [design](POCKETBEAGLE.md) gives the stream layout. Both Linux and bare-metal RV32 are required.
 
 | ID | Required behavior | Clause |
 |---|---|---|
-| AEM-01 | Serve each of the 84 descriptors of the PocketBeagle model with the caller's identity, refusing absent types, absent indices and short destinations without writing. Accept on an AAF input each 48 kHz PCM32 base format of 1 to 8 channels and on the CRF input the CRF format alone. Accept clock sources 0 to 5 only. | [IEEE 1722.1-2021 7.2 and 7.4.23](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.3, 6.2, 6.4 and 7.3.2](https://avnu.org/resource/milan-specification/) |
+| AEM-01 | Serve each of the 84 descriptors of the PocketBeagle model with the caller's identity, refusing absent types, absent indices and short destinations without writing. Accept on an AAF input each 48 kHz PCM32 AAF format of 1 to 8 channels with six samples per PDU, which includes every 48 kHz Base format, and on the CRF input the CRF format alone. Accept clock sources 0 to 5 only. | [IEEE 1722.1-2021 7.2 and 7.4.23](https://standards.ieee.org/ieee/1722.1/6670/); [Milan v1.2 5.3, 6.2, 6.4 and 7.3.2](https://avnu.org/resource/milan-specification/) |
 
 ## ACMP changed-sink walk
 
