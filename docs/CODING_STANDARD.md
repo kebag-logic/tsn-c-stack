@@ -98,6 +98,7 @@ They have no `#else`. These filename-based guard names preserve the imported hea
 | [acmp.h](../include/acmp.h) | `ACMP_H` |
 | [maap.h](../include/maap.h) | `CTRL_MAAP_H` |
 | [wire.h](../include/wire.h) | `CTRL_WIRE_H` |
+| [pbaem.h](../include/pbaem.h) | `PBAEM_H` |
 | [acmp_fake.hpp](../tests/acmp_fake.hpp) | `ACMP_FAKE_HPP` |
 | [adp_port.h](../examples/adp_port.h) | `EXAMPLE_ADP_PORT_H` |
 | [assert.h](../examples/rv32/include/assert.h) | `TSN_PORT_ASSERT_H` |
@@ -106,4 +107,5 @@ They have no `#else`. These filename-based guard names preserve the imported hea
 | [talker/entity_config.h](../examples/entities/talker/entity_config.h) | `TALKER_ENTITY_CONFIG_V1_0_0_H` |
 | [duplex/entity_config.h](../examples/entities/duplex/entity_config.h) | `DUPLEX_ENTITY_CONFIG_V1_0_0_H` |
 | [ax7101/entity_config.h](../examples/entities/ax7101/entity_config.h) | `AX7101_ENTITY_CONFIG_V1_0_0_H` |
+| [pocketbeagle/entity_config.h](../examples/entities/pocketbeagle/entity_config.h) | `POCKETBEAGLE_ENTITY_CONFIG_V1_0_0_H` |
 | [entity_roundtrip.h](../examples/entity_roundtrip.h) | `EXAMPLE_ENTITY_ROUNDTRIP_H` |

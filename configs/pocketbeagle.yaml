@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: MIT
+schema_version: 1.0.0
+identity:
+  entity_id: mac-derived
+  model_id: 7817275046863192
+  name: PocketBeagle 2 bridge
+  vendor_name: Kebag Logic
+  serial_number: ''
+  group_name: ''
+capabilities:
+  entity: 50568
+  identify_control_index: 0
+interfaces:
+- mac: 02:00:00:00:00:01
+inputs:
+- name: Stream In 0
+  interface: 0
+  kind: audio
+- name: Stream In 1
+  interface: 0
+  kind: audio
+- name: Stream In 2
+  interface: 0
+  kind: audio
+- name: Stream In 3
+  interface: 0
+  kind: audio
+- name: CRF
+  interface: 0
+  kind: clock
+outputs:
+- name: Stream Out 0
+  interface: 0
+  kind: audio
+- name: Stream Out 1
+  interface: 0
+  kind: audio
+- name: Stream Out 2
+  interface: 0
+  kind: audio
+- name: Stream Out 3
+  interface: 0
+  kind: audio
+- name: CRF
+  interface: 0
+  kind: clock
+maap:
+- interface: 0
+  preferred: 0

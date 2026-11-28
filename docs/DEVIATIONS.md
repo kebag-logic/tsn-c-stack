@@ -7,7 +7,7 @@ covered clauses. The [traceability matrix](TRACEABILITY.md) names their tests.
 
 | ID | Clause | Decision and rationale |
 |---|---|---|
-| DEV-01 | [Milan v1.2 5.5 and 5.6](https://avnu.org/resource/milan-specification/) | Implement the Milan connection and discovery profile. Generic controller operations, AEM enumeration and media transport are outside these cores. |
+| DEV-01 | [Milan v1.2 5.5 and 5.6](https://avnu.org/resource/milan-specification/) | Implement the Milan connection and discovery profile. Generic controller operations, AECP enumeration and media transport are outside these cores. The [PocketBeagle AEM model](POCKETBEAGLE.md#design) supplies descriptors only. |
 | DEV-02 | [IEEE 1722.1-2021 6.2.2.15 and 6.2.5.2.2](https://standards.ieee.org/ieee/1722.1/6670/) | A departing frame carries the current index. Reset affects the next advertisement. This preserves the source interpretation of departure construction. |
 | DEV-03 | [Milan v1.2 5.6.3.5.8 and 5.6.3.5.11](https://avnu.org/resource/milan-specification/) | Two departures may be owed. Further identical zero-index departures coalesce and increment a diagnostic. This bounds storage during repeated shutdowns. |
 | DEV-04 | [Milan v1.2 Table 5.50 and Table 5.29](https://avnu.org/resource/milan-specification/) | ADP and ACMP use finite-resolution pseudorandom delays. The integrator supplies a clock sample (ADP) or entropy (ACMP). This is not a security random source. |

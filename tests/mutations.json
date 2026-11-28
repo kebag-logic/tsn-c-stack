@@ -8592,6 +8592,470 @@
     ]
   },
   {
+    "name": "pbaem-family-dropped",
+    "path": "src/pbaem.c",
+    "old": "\tif (formats == 2u) {",
+    "new": "\tif (formats == 3u) {",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "an AAF input lists 1 to 8 channels (Milan 6.4)",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-crf-input-any",
+    "path": "src/pbaem.c",
+    "old": "\t\treturn format == CRF_FORMAT;",
+    "new": "\t\treturn true;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "the CRF input refuses AAF",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-nine-channels",
+    "path": "src/pbaem.c",
+    "old": "count >= 1u && count <= 8u;",
+    "new": "count >= 1u && count <= 9u;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "nine channels are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-zero-channels",
+    "path": "src/pbaem.c",
+    "old": "count >= 1u && count <= 8u;",
+    "new": "count <= 8u;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "zero channels are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-other-rate",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xf) << 48)) == (AAF_BASE & ~(UINT64_C(0xf) << 48))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "44.1 kHz is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-clock-bound",
+    "path": "src/pbaem.c",
+    "old": "\tif (source >= PBAEM_CLOCK_SOURCES) {",
+    "new": "\tif (source > PBAEM_CLOCK_SOURCES) {",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "a seventh source is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-short-write",
+    "path": "src/pbaem.c",
+    "old": "\tif (capacity < length) {",
+    "new": "\tif (capacity + 1u < length) {",
+    "kills": [
+      {
+        "test": "Pbaem.DescriptorBounds",
+        "needle": "a short destination is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-absent-index",
+    "path": "src/pbaem.c",
+    "old": "\tif (index >= pbaem_count(type)) {",
+    "new": "\tif (index > pbaem_count(type)) {",
+    "kills": [
+      {
+        "test": "Pbaem.DescriptorBounds",
+        "needle": "the first index past a count is absent",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-clock-identity",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 78u, m->identity.clock_identity, 8u);",
+    "new": "\tput(d, 78u, m->identity.entity_id, 8u);",
+    "kills": [
+      {
+        "test": "Pbaem.EntityFromIdentity",
+        "needle": "AVB_INTERFACE clock_identity is the caller's own",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-cluster-signal",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 70u, output ? AUDIO_UNIT : 0xffffu, 2u);",
+    "new": "\tput(d, 70u, AUDIO_UNIT, 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "output clusters come from the audio unit",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-output-port-base",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 14u, (input ? 0u : 24u) + cluster_base[k], 2u);",
+    "new": "\tput(d, 14u, cluster_base[k], 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "output clusters follow the USB playback channels",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-input-port-map",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 16u, input ? 0u : 1u, 2u);",
+    "new": "\tput(d, 16u, 1u, 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "an input port has no static map (Milan v1.2 5.3.3.9)",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-crf-source-location",
+    "path": "src/pbaem.c",
+    "old": "k == 1u ? PBAEM_AAF_STREAMS : k - 2u",
+    "new": "k == 1u ? 0u : k - 2u",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "CRF is STREAM_INPUT four, AAF k is k",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-output-buffer",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 128u, input ? 2126000u : 0u, 4u);",
+    "new": "\tput(d, 128u, 2126000u, 4u);",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "an output has no receive buffer",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-identify-value",
+    "path": "src/pbaem.c",
+    "old": "\td[108] = m->identify;",
+    "new": "\td[108] = (uint8_t)(m->identify & 0u);",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "identify range, default and current value",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-format-code",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xff) << 40)) == (AAF_BASE & ~(UINT64_C(0xff) << 40))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "an AAF format code other than INT_32BIT is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-samples-per-frame",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x3ff) << 12)) == (AAF_BASE & ~(UINT64_C(0x3ff) << 12))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "twelve samples per frame are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-subtype",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x7f) << 56)) == (AAF_BASE & ~(UINT64_C(0x7f) << 56))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "a subtype other than AAF is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-subtype-high-bit",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x80) << 56)) == (AAF_BASE & ~(UINT64_C(0x80) << 56))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "the high bit of the subtype octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~UINT64_C(0xfff)) == (AAF_BASE & ~UINT64_C(0xfff))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "a nonzero reserved low bit is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-11",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~UINT64_C(0xffe)) == (AAF_BASE & ~UINT64_C(0xffe))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 11 is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-53",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 53)) == (AAF_BASE & ~(UINT64_C(1) << 53))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 53 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-54",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 54)) == (AAF_BASE & ~(UINT64_C(1) << 54))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 54 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved-bit-55",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 55)) == (AAF_BASE & ~(UINT64_C(1) << 55))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "reserved bit 55 of the rate octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-bit-depth",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xff) << 32)) == (AAF_BASE & ~(UINT64_C(0xff) << 32))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "24-bit depth is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-ut",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(1) << 52)) == (AAF_BASE & ~(UINT64_C(1) << 52))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "the family entry is not a stream format",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-absent-input-bound",
+    "path": "src/pbaem.c",
+    "old": "\tif (stream >= PBAEM_STREAMS) {\n\t\treturn false;\n\t}",
+    "new": "\tif (stream > PBAEM_STREAMS) {\n\t\treturn false;\n\t}",
+    "kills": [
+      {
+        "test": "Pbaem.AbsentInputRefusesEverything",
+        "needle": "the absent sixth input refuses every AAF format",
+        "arm": "pbaem"
+      },
+      {
+        "test": "Pbaem.AbsentInputRefusesEverything",
+        "needle": "a refused absent input leaves the model whole",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-model-id-constant",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 12u, id->model_id, 8u);",
+    "new": "\tput(d, 12u, UINT64_C(0x001bc5c52e47a158), 8u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "entity_model_id is the caller's own value",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-name-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 48u, id->name, 64u);",
+    "new": "\tmemcpy(d + 48u, id->name, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated entity_name",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-firmware-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 116u, id->firmware, 64u);",
+    "new": "\tmemcpy(d + 116u, id->firmware, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated firmware_version",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-group-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 180u, id->group, 64u);",
+    "new": "\tmemcpy(d + 180u, id->group, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated group_name",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-serial-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 244u, id->serial, 64u);",
+    "new": "\tmemcpy(d + 244u, id->serial, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated serial_number",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-init-keeps-state",
+    "path": "src/pbaem.c",
+    "old": "\tmemset(model, 0, sizeof *model);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "Pbaem.InitResetsHeldState",
+        "needle": "init clears an earlier available_index",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
     "name": "entity-wrong-count",
     "path": "examples/entities/ax7101/entity_config.c",
     "old": "        .talker_stream_sources = 2u,",
@@ -8626,6 +9090,19 @@
       {
         "test": "EntityYaml.MaapRoundTrip",
         "needle": "generated MAAP arguments preserve range and interface ownership",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "entity-dropped-clock-sink",
+    "path": "examples/entities/pocketbeagle/entity_config.c",
+    "old": "    .n_sinks = 5u,",
+    "new": "    .n_sinks = 4u,",
+    "kills": [
+      {
+        "test": "EntityYaml.AcmpRoundTrip",
+        "needle": "generated ACMP interfaces preserve binding admission routes",
         "arm": "entity"
       }
     ]

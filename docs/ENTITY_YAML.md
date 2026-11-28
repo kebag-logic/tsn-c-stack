@@ -23,6 +23,8 @@ For an integrator, start with the [listener](../configs/listener.yaml),
 [talker](../configs/talker.yaml), or [duplex](../configs/duplex.yaml) example.
 The duplex has two interfaces. Its first input uses interface 1.
 The [AX7101 example](../configs/ax7101.yaml) preserves the mapped firmware identity.
+The [PocketBeagle example](../configs/pocketbeagle.yaml) is the USB bridge's shape: four audio streams and one clock stream each way on one interface.
+Its model ID is the bridge's pinned AEM model. See the [PocketBeagle entity](POCKETBEAGLE.md).
 Example identities are demonstration values. Assign unique production identities.
 The vendor owns model identity when the complete descriptor model changes.
 
@@ -128,7 +130,7 @@ A planted stale header fails compilation. Both C11 and C++20 header modes are in
 The prefix option chooses C symbol names. It accepts a lower-case letter followed by lower-case letters, digits or underscores.
 Do not link two configurations with the same prefix.
 
-The [round-trip checks](../examples/entity_roundtrip.c) run through all three cores for all four examples.
+The [round-trip checks](../examples/entity_roundtrip.c) run through all three cores for all five examples.
 The hosted [GoogleTest cases](../tests/test_entity.cpp) and the [RV32 smoke image](../examples/rv32/smoke.c) call the same checks.
 Their oracles spell expected fields independently of the generated structs.
 ADP checks transmitted fields. ACMP restores bindings and checks interface admission.
@@ -136,7 +138,7 @@ The freshness round trip checks the generated 15000 ms value and one accepted
 probe opening the declaration gate on both targets. The hosted ACMP tests cover
 the individual predicate terms, exact window edge and clock wrap.
 MAAP checks probes, counts, preferred ranges, validity and withdrawal.
-The [mutation campaign](../tests/mutations.json) plants four configuration defects:
+The [mutation campaign](../tests/mutations.json) plants five configuration defects:
 
 | Plant | Changed configuration | Required catch |
 |---|---|---|
@@ -144,8 +146,9 @@ The [mutation campaign](../tests/mutations.json) plants four configuration defec
 | `entity-swapped-interface` | Duplex sink interfaces are exchanged. | `EntityYaml.AcmpRoundTrip` |
 | `entity-dropped-field` | Talker MAAP preferred field is removed. C supplies zero. | `EntityYaml.MaapRoundTrip` |
 | `dafresh-generated-window` | Talker freshness interval becomes 15001 ms. | `EntityYaml.DaFreshRoundTrip` |
+| `entity-dropped-clock-sink` | PocketBeagle ACMP sink count becomes four, dropping the clock input. | `EntityYaml.AcmpRoundTrip` |
 
-All four plants still compile. Each must fail its named assertion in a completed run.
+All five plants still compile. Each must fail its named assertion in a completed run.
 The golden test also refuses each planted file as drift.
 
 The schema tests also register 13 mapper plants.

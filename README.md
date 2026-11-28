@@ -1,6 +1,7 @@
 # tsn-c-stack
 
-Portable C11 cores for ADP advertising, Milan ACMP and MAAP allocation.
+Portable C11 cores for ADP advertising, Milan ACMP and MAAP allocation,
+and the PocketBeagle USB bridge's AEM descriptor model.
 The library uses fixed storage and callbacks. It needs no heap or operating system.
 It has no mailbox, register-map or image dependency.
 
@@ -52,6 +53,7 @@ See [port obligations](docs/PORTING.md#target-builds) and [validation limits](do
 |---|---|
 | Developer | Read the [architecture](docs/ARCHITECTURE.md), [coding standard](docs/CODING_STANDARD.md), and [contribution rules](CONTRIBUTING.md). |
 | Integrator | Read the [port contract](docs/PORTING.md) and run the [example port](examples/adp_port.c). |
+| Board integrator | Read the [PocketBeagle USB entity](docs/POCKETBEAGLE.md): its streams, formats and clock sources. |
 | Tester | Run the [verification commands](docs/VERIFICATION.md). Check [traceability](docs/TRACEABILITY.md) and [test defects](docs/TESTS.md). |
 | Manager | Review the [requirements](docs/REQUIREMENTS.md), [deviations](docs/DEVIATIONS.md), [change log](CHANGELOG.md), and two independent reviews. |
 

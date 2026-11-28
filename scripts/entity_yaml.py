@@ -10,7 +10,7 @@ import yaml
 
 VERSION = '1.0.0'
 ROOT = Path(__file__).resolve().parents[1]
-PERSONAS = ('listener', 'talker', 'duplex', 'ax7101')
+PERSONAS = ('listener', 'talker', 'duplex', 'ax7101', 'pocketbeagle')
 POOL_BASE = 0x91E0F0000000
 POOL_END = POOL_BASE + 0xFE00
 SPDX = '// SPDX-License-Identifier: MIT\n'
