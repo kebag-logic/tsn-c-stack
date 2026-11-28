@@ -37,25 +37,38 @@ All streams run at 48 kHz. AAF streams carry 32-bit PCM, six samples per channel
 |---|---|---|
 | AAF output 0, 1 | `0x0205022002006000`, 8 channels | That format only. |
 | AAF output 2, 3 | `0x0205022001006000`, 4 channels | That format only. |
-| AAF input 0, 1 | 8 channels | Every 48 kHz base format, 1 to 8 channels ([Milan v1.2 6.4][milan]). |
-| AAF input 2, 3 | 4 channels | Every 48 kHz base format, 1 to 8 channels. |
+| AAF input 0, 1 | 8 channels | Every 48 kHz PCM32 format of 1 to 8 channels with six samples per PDU ([Milan v1.2 6.4][milan]). |
+| AAF input 2, 3 | 4 channels | The same: every 48 kHz PCM32 format of 1 to 8 channels with six samples per PDU. |
 | CRF, both ways | `0x041060010000BB80` | That format only: one timestamp every 96 samples ([Milan v1.2 7.3.2][milan]). |
 
-An input refuses a format that drops a mapped channel ([Milan v1.2 5.4.2.7][milan]).
+Those formats include every 48 kHz Base format: 1, 2, 4, 6 and 8 channels ([Milan v1.2 6.2][milan]).
+The model accepts 3, 5 and 7 channels too, which its family entry advertises ([Milan v1.2 6.5][milan]).
+
+The firmware's AECP also refuses a format that drops a mapped channel ([Milan v1.2 5.4.2.7][milan]).
+The model has no map state, so `pbaem_set_input_format` does not make that check.
 Channels past a port's clusters are unmapped ([Milan v1.2 5.3.10.1][milan]).
 
 ## Design
 
-The descriptors come from one end-station configuration in the board support repository.
-milan-fpga's generator turns it into the AEM image, the ADP fields and the SRP shape.
-The [configuration here](../configs/pocketbeagle.yaml) restates only the ADP, ACMP and MAAP facts.
-Its model ID is the AEM image's pinned model ID, `0x001BC5C52E47A158`.
+The board's descriptors come from an end-station configuration and milan-fpga's generator.
+That 4x4 + CRF configuration is not yet published in the board support repository.
+Its published branches still hold the earlier one-input shape.
+The facts it states are on this page: the streams, formats, clusters, maps, clock sources and the locale `en-US`.
+[milan-fpga at 58f7673b](https://github.com/kebag-logic/milan-fpga/tree/58f7673b8c57a80230e716bc1774ff9cc2f71ddc) generates the image from them.
+Its hash-derived model ID, `0x001BC5C52E47A158`, depends on the shape, not on the strings.
+The [configuration here](../configs/pocketbeagle.yaml) restates only the ADP, ACMP and MAAP facts, with that model ID.
 
 The [AEM model](../include/pbaem.h) serves the same 84 descriptors from this library, for any identity.
 `pbaem_descriptor` copies one descriptor into a caller buffer and refuses a short one without writing.
 `pbaem_set_input_format` and `pbaem_set_clock_source` accept only what the model advertises.
-With the board's identity, its descriptors equal the generated image byte for byte.
-A golden CRC of all of them is checked on Linux and on RV32.
+With the generator's identity, its descriptors equal the generated image byte for byte.
+That identity is entity ID `0x020000FFFE000001`, MAC `02:00:00:00:00:01`, name `PocketBeagle 2 bridge` and firmware version `3.96.0`.
+The [golden](../examples/entity_roundtrip.c) is the CRC-32, `0xD891CD2F`, of the 84 descriptors in type and index order (8105 octets).
+It is checked on Linux and on RV32. A generator change that moves any descriptor needs a new golden.
+
+The caller writes `available_index` and `identify` in the model directly.
+Identity strings are 64 octets, zero padded and copied verbatim; they need no terminator.
+`pbaem_descriptor` stages a descriptor on the stack: about 500 octets on RV32.
 
 ```mermaid
 flowchart LR
@@ -85,10 +98,11 @@ All five talkers together reserve 59.648 Mb/s, under the 75% class A limit of a 
 | [IEEE 1722.1-2021][atdecc] 8, Milan v1.2 5.5 (ACMP) | This library | [ACMP tests](../tests/test_acmp.cpp) and the entity round trip with five sinks and five sources. |
 | [IEEE 1722-2016][avtp] Annex B (MAAP) | This library | [MAAP tests](../tests/test_maap.cpp) and the entity round trip with five addresses. |
 | IEEE 1722.1-2021 7, Milan v1.2 5.3 (AEM) | This library and the firmware | [AEM model tests](../tests/test_pbaem.cpp) and the image golden on both targets ([AEM-01](REQUIREMENTS.md#pocketbeagle-aem-model)). |
-| IEEE 1722.1-2021 9, Milan v1.2 5.4 (AECP) | Firmware | The board support repository's AECP suite at this shape. |
-| Milan v1.2 6 and 7, IEEE 1722-2016 7 and 10 (AAF, CRF) | Media plane | The board support repository's talker, listener and counter suites. |
-| [IEEE 802.1Q-2018][dot1q] 35, Milan v1.2 4.3.3 (SRP) | Firmware with lwSRP | The board support repository's SRP suite. |
+| IEEE 1722.1-2021 9, Milan v1.2 5.4 (AECP) | Firmware | Not yet published: the board support repository's AECP suite at this shape is pending. |
+| Milan v1.2 6 and 7, IEEE 1722-2016 7 and 10 (AAF, CRF) | Media plane | Not yet published at this shape: the board support repository's talker, listener and counter suites. |
+| [IEEE 802.1Q-2018][dot1q] 35, Milan v1.2 4.3.3 (SRP) | Firmware with lwSRP | Not yet published: the board support repository's SRP suite is pending. |
 
+Rows marked not yet published have no public evidence today.
 This page claims no certification. Board measurements are recorded with the board image, not here.
 
 ## Validate

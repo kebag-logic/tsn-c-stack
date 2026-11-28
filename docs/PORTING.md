@@ -515,6 +515,15 @@ Derive and store that identity outside the cores. Supply the same identity to AD
 Test the application identity across cold starts and configuration changes.
 The library neither derives identity nor reads device storage.
 
+## PocketBeagle AEM model
+
+The [PocketBeagle AEM model](POCKETBEAGLE.md#design) has no callbacks. The caller owns one `struct pbaem`.
+Initialize it with `pbaem_init` and the entity's identity. Identity strings are 64 octets, zero padded, copied verbatim.
+Write `available_index` and `identify` in the model directly, from the same state ADP and the Identify control use.
+Change input formats and the clock source only through their setters, which refuse what the model does not advertise.
+`pbaem_descriptor` needs valid pointers. It stages one descriptor on the stack: about 500 octets on RV32.
+An AECP implementation answers READ_DESCRIPTOR from it. AECP itself remains outside this library.
+
 ## Reservation and datapath
 
 The [reservation requirements](REQUIREMENTS.md#mfsrp-01) split core signaling from external protocol work.
