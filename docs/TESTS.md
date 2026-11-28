@@ -211,9 +211,13 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [MaapCore.StalledOutputRetainsOrderAndOriginalExpiry](../tests/test_maap.cpp#L361) | maap-expiry-forgotten-on-stall; maap-allocation-before-commit; maap-probe-announce-reordered; maap-stall-unqueued | MAAP-04 |
 | [MaapCore.UniformDrawRejectsIncompleteBucket](../tests/test_maap.cpp#L209) | maap-biased-random-bucket | MAAP-02 |
 | [MaapDebug.SynchronousExpiryAsserts](../tests/test_maap_debug.cpp#L9) | maap-debug-no-assert | PORT-01 |
-| [Pbaem.ClockSourcesAndControl](../tests/test_pbaem.cpp#L193) | pbaem-clock-bound; pbaem-crf-source-location; pbaem-identify-value | AEM-01 |
-| [Pbaem.ConfigurationAndAudioUnit](../tests/test_pbaem.cpp#L95) | pbaem-cluster-signal; pbaem-output-port-base; pbaem-input-port-map | AEM-01 |
-| [Pbaem.DescriptorBounds](../tests/test_pbaem.cpp#L39) | pbaem-short-write; pbaem-absent-index | AEM-01 |
-| [Pbaem.EntityFromIdentity](../tests/test_pbaem.cpp#L69) | pbaem-clock-identity | AEM-01 |
-| [Pbaem.StreamFormats](../tests/test_pbaem.cpp#L140) | pbaem-family-dropped; pbaem-crf-input-any; pbaem-nine-channels; pbaem-zero-channels; pbaem-other-rate; pbaem-output-buffer | AEM-01 |
+| [Pbaem.AafFieldRefusals](../tests/test_pbaem.cpp#L227) | pbaem-ignore-format-code; pbaem-ignore-samples-per-frame; pbaem-ignore-subtype; pbaem-ignore-subtype-high-bit; pbaem-ignore-reserved | AEM-01 |
+| [Pbaem.AbsentInputRefusesEverything](../tests/test_pbaem.cpp#L244) | pbaem-absent-input-bound | AEM-01 |
+| [Pbaem.ClockSourcesAndControl](../tests/test_pbaem.cpp#L194) | pbaem-clock-bound; pbaem-crf-source-location; pbaem-identify-value | AEM-01 |
+| [Pbaem.ConfigurationAndAudioUnit](../tests/test_pbaem.cpp#L96) | pbaem-cluster-signal; pbaem-output-port-base; pbaem-input-port-map | AEM-01 |
+| [Pbaem.DescriptorBounds](../tests/test_pbaem.cpp#L40) | pbaem-short-write; pbaem-absent-index | AEM-01 |
+| [Pbaem.EntityFromIdentity](../tests/test_pbaem.cpp#L70) | pbaem-clock-identity | AEM-01 |
+| [Pbaem.InitResetsHeldState](../tests/test_pbaem.cpp#L286) | pbaem-init-keeps-state | AEM-01 |
+| [Pbaem.StreamFormats](../tests/test_pbaem.cpp#L141) | pbaem-family-dropped; pbaem-crf-input-any; pbaem-nine-channels; pbaem-zero-channels; pbaem-other-rate; pbaem-output-buffer | AEM-01 |
+| [PbaemIdentity.FullWidthStringsAndModel](../tests/test_pbaem.cpp#L260) | pbaem-model-id-constant; pbaem-name-truncated; pbaem-firmware-truncated; pbaem-group-truncated; pbaem-serial-truncated | AEM-01 |
 | [Wire.W1PutBeWritesTheLowBytesMostSignificantFirst](../tests/test_acmp.cpp#L3667) | wire-put-be-skips-an-odd-field-first-byte; wire-put-be-writes-past-an-odd-field | ACMP-02 |

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include <gtest/gtest.h>
 #include <array>
+#include <cstdio>
 #include <cstring>
 #include "pbaem.h"
 #include "wire.h"
@@ -220,4 +221,78 @@ TEST_F(Pbaem, ClockSourcesAndControl)
     EXPECT_EQ(std::memcmp(bytes.data() + 4, "en-US", 6), 0) << "one English locale for the United States (7.2.11)";
     ASSERT_EQ(read(0x000d), 452u);
     EXPECT_EQ(std::memcmp(bytes.data() + 132, "Kebag Logic", 12), 0) << "string two is the vendor";
+}
+
+// REQ: AEM-01
+TEST_F(Pbaem, AafFieldRefusals)
+{
+    for (unsigned k = 0; k < 4; ++k) {
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0205012002006000)))
+            << "an AAF format code other than INT_32BIT is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x020502200200c000)))
+            << "twelve samples per frame are refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0305022002006000)))
+            << "a subtype other than AAF is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x8205022002006000)))
+            << "the high bit of the subtype octet is refused";
+        EXPECT_FALSE(pbaem_input_format_supported(k, UINT64_C(0x0205022002006001)))
+            << "a nonzero reserved low bit is refused";
+    }
+}
+
+// REQ: AEM-01
+TEST_F(Pbaem, AbsentInputRefusesEverything)
+{
+    const uint64_t eight = UINT64_C(0x0205022002006000);
+    for (unsigned ch = 1; ch <= 8; ++ch) {
+        EXPECT_FALSE(pbaem_input_format_supported(5, UINT64_C(0x0205022000006000) | (uint64_t{ch} << 22)))
+            << "the absent sixth input refuses every AAF format";
+    }
+    model.available_index = 7;
+    model.clock_source = 3;
+    model.identify = 1;
+    const auto before = model;
+    EXPECT_FALSE(pbaem_set_input_format(&model, 5, eight)) << "setting a format on the absent input is refused";
+    EXPECT_EQ(std::memcmp(&model, &before, sizeof model), 0) << "a refused absent input leaves the model whole";
+}
+
+// REQ: AEM-01
+TEST(PbaemIdentity, FullWidthStringsAndModel)
+{
+    pbaem_identity id{};
+    id.entity_id = UINT64_C(0x0211223344556677);
+    id.model_id = UINT64_C(0x0123456789abcdef);
+    id.mac = UINT64_C(0x021122334455);
+    id.clock_identity = UINT64_C(0x0211220000556677);
+    for (unsigned i = 0; i < 64; ++i) {
+        id.name[i] = static_cast<char>('A' + i % 26);
+        id.firmware[i] = static_cast<char>('a' + i % 26);
+        id.group[i] = static_cast<char>('0' + i % 10);
+        id.serial[i] = static_cast<char>('!' + i % 15);
+    }
+    pbaem model{};
+    pbaem_init(&model, &id);
+    std::array<uint8_t, 512> d{};
+    ASSERT_EQ(pbaem_descriptor(&model, 0x0000, 0, d.data(), d.size()), 312u);
+    EXPECT_EQ(wire_be64(d.data() + 12), UINT64_C(0x0123456789abcdef)) << "entity_model_id is the caller's own value";
+    EXPECT_EQ(std::memcmp(d.data() + 48, id.name, 64), 0) << "all 64 octets of an unterminated entity_name";
+    EXPECT_EQ(std::memcmp(d.data() + 116, id.firmware, 64), 0) << "all 64 octets of an unterminated firmware_version";
+    EXPECT_EQ(std::memcmp(d.data() + 180, id.group, 64), 0) << "all 64 octets of an unterminated group_name";
+    EXPECT_EQ(std::memcmp(d.data() + 244, id.serial, 64), 0) << "all 64 octets of an unterminated serial_number";
+    EXPECT_EQ(wire_be16(d.data() + 112), 2u) << "a full entity_name still precedes the vendor string reference";
+}
+
+// REQ: AEM-01
+TEST_F(Pbaem, InitResetsHeldState)
+{
+    model.available_index = 9;
+    model.clock_source = 4;
+    model.identify = 0xff;
+    ASSERT_TRUE(pbaem_set_input_format(&model, 0, UINT64_C(0x0205022000806000)));
+    const pbaem_identity id = model.identity;
+    pbaem_init(&model, &id);
+    EXPECT_EQ(model.available_index, 0u) << "init clears an earlier available_index";
+    EXPECT_EQ(model.clock_source, 0u) << "init selects the internal clock source again";
+    EXPECT_EQ(model.identify, 0u) << "init turns identify off again";
+    EXPECT_EQ(model.input_formats[0], UINT64_C(0x0205022002006000)) << "init restores the model's input formats";
 }

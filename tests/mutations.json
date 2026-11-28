@@ -8817,6 +8817,167 @@
     ]
   },
   {
+    "name": "pbaem-ignore-format-code",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xff) << 40)) == (AAF_BASE & ~(UINT64_C(0xff) << 40))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "an AAF format code other than INT_32BIT is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-samples-per-frame",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x3ff) << 12)) == (AAF_BASE & ~(UINT64_C(0x3ff) << 12))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "twelve samples per frame are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-subtype",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x7f) << 56)) == (AAF_BASE & ~(UINT64_C(0x7f) << 56))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "a subtype other than AAF is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-subtype-high-bit",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0x80) << 56)) == (AAF_BASE & ~(UINT64_C(0x80) << 56))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "the high bit of the subtype octet is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-ignore-reserved",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~UINT64_C(0xfff)) == (AAF_BASE & ~UINT64_C(0xfff))",
+    "kills": [
+      {
+        "test": "Pbaem.AafFieldRefusals",
+        "needle": "a nonzero reserved low bit is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-absent-input-bound",
+    "path": "src/pbaem.c",
+    "old": "\tif (stream >= PBAEM_STREAMS) {\n\t\treturn false;\n\t}",
+    "new": "\tif (stream > PBAEM_STREAMS) {\n\t\treturn false;\n\t}",
+    "kills": [
+      {
+        "test": "Pbaem.AbsentInputRefusesEverything",
+        "needle": "the absent sixth input refuses every AAF format",
+        "arm": "pbaem"
+      },
+      {
+        "test": "Pbaem.AbsentInputRefusesEverything",
+        "needle": "a refused absent input leaves the model whole",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-model-id-constant",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 12u, id->model_id, 8u);",
+    "new": "\tput(d, 12u, UINT64_C(0x001bc5c52e47a158), 8u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "entity_model_id is the caller's own value",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-name-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 48u, id->name, 64u);",
+    "new": "\tmemcpy(d + 48u, id->name, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated entity_name",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-firmware-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 116u, id->firmware, 64u);",
+    "new": "\tmemcpy(d + 116u, id->firmware, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated firmware_version",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-group-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 180u, id->group, 64u);",
+    "new": "\tmemcpy(d + 180u, id->group, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated group_name",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-serial-truncated",
+    "path": "src/pbaem.c",
+    "old": "\tmemcpy(d + 244u, id->serial, 64u);",
+    "new": "\tmemcpy(d + 244u, id->serial, 32u);",
+    "kills": [
+      {
+        "test": "PbaemIdentity.FullWidthStringsAndModel",
+        "needle": "all 64 octets of an unterminated serial_number",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-init-keeps-state",
+    "path": "src/pbaem.c",
+    "old": "\tmemset(model, 0, sizeof *model);\n",
+    "new": "",
+    "kills": [
+      {
+        "test": "Pbaem.InitResetsHeldState",
+        "needle": "init clears an earlier available_index",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
     "name": "entity-wrong-count",
     "path": "examples/entities/ax7101/entity_config.c",
     "old": "        .talker_stream_sources = 2u,",
