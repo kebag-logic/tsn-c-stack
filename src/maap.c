@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 Kebag Logic
 // SPDX-License-Identifier: MIT
-// Annex B state transitions with bounded output storage and deferred service.
+// IEEE 1722-2016 Annex B
 #include "maap.h"
 
 #ifndef NDEBUG
@@ -29,7 +29,7 @@ static bool pool_range(uint64_t base, uint16_t count)
 	       base <= MAAP_POOL_BASE + MAAP_POOL_SIZE - count;
 }
 
-// Maximal-period xorshift32. Seed is the low sum of MAC and clock (B.3.6.1).
+// IEEE 1722-2016 B.3.6.1
 static uint32_t random_word(struct maap *m)
 {
 	uint32_t x = m->rng;
@@ -42,9 +42,9 @@ static uint32_t random_word(struct maap *m)
 
 static uint32_t draw(struct maap *m, uint32_t size)
 {
-	// The source cycles over 1..UINT32_MAX. Reject the incomplete bucket
-	// rather than biasing pool addresses. At most size draws are required:
-	// at most size-1 distinct source words are outside the complete buckets.
+
+
+
 	uint32_t limit = UINT32_MAX - UINT32_MAX % size;
 	uint32_t word;
 	do {
@@ -70,7 +70,7 @@ static void start_timer(struct maap *m, bool announce)
 {
 	uint32_t base = announce ? MAAP_ANNOUNCE_BASE_MS : MAAP_PROBE_BASE_MS;
 	uint32_t variation = announce ? MAAP_ANNOUNCE_VARIATION_MS : MAAP_PROBE_VARIATION_MS;
-	// B.3.4 strict endpoints. Reserve 10 ms at both ends for service jitter.
+	// IEEE 1722-2016 B.3.4
 	m->last_delay_ms = base + MAAP_SERVICE_MS + 1u + draw(m, variation - 2u * MAAP_SERVICE_MS - 1u);
 	m->timer_running = true;
 	m->ports->timer_start(m->ports->ctx, m->interface, m->last_delay_ms);
@@ -90,8 +90,8 @@ static void enqueue(struct maap *m, uint8_t type, uint64_t dst, uint64_t request
 	wire_put_be(f + 12, 0x22f0u, 2);
 	f[14] = 0xfeu;
 	f[15] = type;
-	f[16] = 0x08u; // maap_version=1, B.2.3; stream_id remains zero, B.2.4
-	f[17] = 16u;   // B.2.1: control_data_length, not total PDU length
+	f[16] = 0x08u; // IEEE 1722-2016 B.2.3; IEEE 1722-2016 B.2.4
+	f[17] = 16u;   // IEEE 1722-2016 B.2.1
 	wire_put_be(f + 26, requested, 6);
 	wire_put_be(f + 32, count, 2);
 	wire_put_be(f + 34, conflict, 6);
@@ -106,18 +106,18 @@ static void request(struct maap *m, uint8_t type)
 static void reserve(struct maap *m, uint64_t preferred)
 {
 	m->base = preferred != 0u ? preferred : MAAP_POOL_BASE + draw(m, MAAP_POOL_SIZE - m->count + 1u);
-	m->preferred = 0; // Table B.7 note a applies once, never to conflict Restart!
+	m->preferred = 0; // IEEE 1722-2016 Table B.7
 	m->probe_count = MAAP_PROBE_RETRANSMITS;
 	publish(m, m->count, false);
 	start_timer(m, false);
-	request(m, MAAP_MSG_PROBE); // Table B.7 ReserveAddress!: initial send
+	request(m, MAAP_MSG_PROBE); // IEEE 1722-2016 Table B.7
 	m->state = MAAP_PROBE;
 }
 
 static void restart(struct maap *m)
 {
 	stop_timer(m);
-	m->queued = 0; // old allocation's output must not advertise a lost range
+	m->queued = 0;
 	m->state = MAAP_INITIAL;
 	reserve(m, 0);
 }
@@ -129,7 +129,7 @@ static void expire(struct maap *m)
 	if (m->state == MAAP_PROBE) {
 		start_timer(m, false);
 		request(m, MAAP_MSG_PROBE);
-		m->probe_count--; // B.3.6.3: only a retransmission decrements
+		m->probe_count--; // IEEE 1722-2016 B.3.6.3
 		if (m->probe_count == 0u) {
 			stop_timer(m);
 			start_timer(m, true);
@@ -232,9 +232,9 @@ void maap_port_operational(struct maap *m, bool up)
 	if (m->enabled) {
 		if (up) {
 			if (m->preferred != 0u) {
-				reserve(m, m->preferred); // Begin! accepted before the port was operational
+				reserve(m, m->preferred);
 			} else {
-				restart(m); // Table B.7 PortOperational! in every state
+				restart(m); // IEEE 1722-2016 Table B.7
 			}
 			(void)pump(m);
 		} else {
@@ -294,7 +294,7 @@ void maap_rx(struct maap *m, const uint8_t *f, size_t len)
 			} else if ((m->state == MAAP_PROBE && type != MAAP_MSG_PROBE) ||
 				   reverse_mac(m->mac) >= reverse_mac(peer)) {
 				m->conflicts++;
-				restart(m); // B.3.2/Table B.7; B.3.6.4 tie break only where named
+				restart(m); // IEEE 1722-2016 B.3.2; IEEE 1722-2016 Table B.7; IEEE 1722-2016 B.3.6.4
 			}
 		}
 		(void)pump(m);

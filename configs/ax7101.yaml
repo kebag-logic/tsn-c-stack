@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MIT
+schema_version: 1.0.0
+identity:
+  entity_id: mac-derived
+  model_id: 7817259562603489
+  name: Milan FPGA 1x1 TDM8
+  vendor_name: Kebag Logic
+  serial_number: AX7101-0001
+  group_name: ''
+capabilities:
+  entity: 50568
+  identify_control_index: 0
+interfaces:
+- mac: 02:00:00:00:00:01
+inputs:
+- name: Stream In 0
+  interface: 0
+  kind: audio
+- name: CRF input
+  interface: 0
+  kind: clock
+outputs:
+- name: Stream Out 0
+  interface: 0
+  kind: audio
+- name: CRF output
+  interface: 0
+  kind: clock
+maap:
+- interface: 0
+  preferred: 0

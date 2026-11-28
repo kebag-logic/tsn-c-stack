@@ -1,0 +1,416 @@
+// SPDX-License-Identifier: MIT
+#include "adp.h"
+#include "acmp.h"
+#include "maap.h"
+#include "wire.h"
+#include "entity_roundtrip.h"
+#include <string.h>
+
+#define CHECK(expression, code) do { if (!(expression)) return (code); } while (0)
+
+struct port {
+    uint8_t frame[ADP_FRAME_BYTES];
+    size_t length;
+    unsigned sends, starts, stops, admissions, calls;
+    uint32_t delay;
+    bool room, valid;
+};
+
+static bool send_frame(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
+{
+    struct port *p = ctx;
+    (void)interface;
+    ++p->calls;
+    if (!p->room || length > sizeof p->frame) return false;
+    memcpy(p->frame, frame, length);
+    p->length = length;
+    ++p->sends;
+    return true;
+}
+
+static void start(void *ctx, unsigned interface, uint32_t delay)
+{
+    struct port *p = ctx;
+    (void)interface;
+    ++p->calls;
+    p->delay = delay;
+    ++p->starts;
+}
+
+static void stop(void *ctx, unsigned interface)
+{
+    (void)interface;
+    ++((struct port *)ctx)->calls;
+    ++((struct port *)ctx)->stops;
+}
+
+static void gptp(void *ctx, unsigned interface, uint64_t *gm, uint8_t *domain)
+{
+    ++((struct port *)ctx)->calls;
+    (void)interface;
+    *gm = UINT64_C(0x0102030405060708);
+    *domain = 0;
+}
+
+static bool link_up(void *ctx, unsigned interface)
+{
+    ++((struct port *)ctx)->calls;
+    (void)interface;
+    return true;
+}
+
+static uint32_t clock_ms(void *ctx)
+{
+    ++((struct port *)ctx)->calls;
+    return 123;
+}
+
+static void timer(void *ctx, unsigned interface, bool armed, uint32_t deadline)
+{
+    if (armed) start(ctx, interface, deadline);
+    else stop(ctx, interface);
+}
+
+static void admit(void *ctx, unsigned interface, unsigned sink, bool bound, uint64_t talker)
+{
+    (void)interface;
+    (void)sink;
+    (void)talker;
+    if (bound) ++((struct port *)ctx)->admissions;
+}
+
+static bool locked(void *ctx, uint64_t *controller)
+{
+    (void)ctx;
+    *controller = 0;
+    return false;
+}
+
+static void source(void *ctx, unsigned index, struct acmp_source_state *out)
+{
+    (void)ctx;
+    (void)index;
+    memset(out, 0, sizeof *out);
+}
+
+static void srp(void *ctx, unsigned sink, const struct acmp_stream *stream)
+{
+    (void)ctx;
+    (void)sink;
+    (void)stream;
+}
+
+static void notify(void *ctx, unsigned sink)
+{
+    (void)ctx;
+    (void)sink;
+}
+
+static void range(void *ctx, unsigned interface, uint64_t base, uint16_t count, bool valid)
+{
+    (void)interface;
+    (void)base;
+    ((struct port *)ctx)->valid = valid && count != 0;
+}
+
+// REQ: ADP-01, ADP-02, ADP-03, PORT-01
+static int adp_smoke(void)
+{
+    struct port p = {.room = true};
+    const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
+    const struct adp_entity entity = {.entity_id = 1, .mac = UINT64_C(0x020000000001)};
+    struct adp core;
+    uint8_t frame[ADP_FRAME_BYTES];
+    adp_init(&core, &entity, &ports, 0, 0);
+    adp_set_enable(&core, true);
+    CHECK(core.state == ADP_STATE_DELAY && p.sends == 0 && p.starts == 1, 1);
+    adp_timer_expired(&core);
+    CHECK(core.state == ADP_STATE_WAITING && p.sends == 1 && p.delay == 5000, 2);
+    CHECK(p.length == ADP_FRAME_BYTES && p.frame[15] == 0 && wire_be64(p.frame + 18) == 1, 3);
+    adp_build(&core, ADP_MSG_ENTITY_DISCOVER, 0, frame);
+    adp_rx(&core, frame, sizeof frame);
+    CHECK(core.state == ADP_STATE_DELAY && core.discarded == 0, 4);
+    adp_timer_expired(&core);
+    p.room = false;
+    adp_set_enable(&core, false);
+    CHECK(core.departing_owed == 1 && core.available_index == 0, 5);
+    p.room = true;
+    CHECK(!adp_poll(&core) && p.frame[15] == 1 && core.departing_owed == 0, 6);
+    return 0;
+}
+
+// IEEE 1722.1-2021 Figure 6-1
+// IEEE 1722.1-2021 6.2.2.3 and 6.2.2.6
+// IEEE 1722.1-2021 6.2.7.1.3
+// IEEE 1722-2016 4.4.3.4 and 4.4.5.4
+// Milan v1.2 5.6.3.1
+// Milan v1.2 Table 5.51
+// REQ: ADP-01, ADP-02
+static int adp_discovery_smoke(void)
+{
+    for (unsigned state = 0; state < 5; ++state) {
+        for (unsigned control = 0; control < 5; ++control) {
+            struct port p = {.room = true};
+            const struct adp_ports ports = {&p, send_frame, start, stop, gptp, link_up, clock_ms};
+            const struct adp_entity entity = {.entity_id = 1};
+            struct adp core, expected;
+            uint8_t frame[82] = {0};
+            adp_init(&core, &entity, &ports, 0, 0);
+            if (state != 0) adp_set_enable(&core, true);
+            if (state == 1) adp_link_change(&core, false);
+            if (state == 3) p.room = false;
+            if (state >= 3) adp_timer_expired(&core);
+            wire_put_be(frame + 12, 0x22f0, 2);
+            frame[14] = 0xfa;
+            frame[15] = control == 1 ? 0x12 : 0x02;
+            const unsigned lengths[] = {56, 56, 56, 0, 256};
+            const bool refused = control != 0 && control != 4;
+            wire_put_be(frame + 16, lengths[control], 2);
+            wire_put_be(frame + 18, 1, 8);
+            memcpy(&expected, &core, sizeof expected);
+            const unsigned calls = p.calls, sends = p.sends, starts = p.starts, stops = p.stops;
+            adp_rx(&core, frame, control == 2 ? 26 : sizeof frame);
+            if (refused) ++expected.discarded;
+            if (refused || state != 4) {
+                const uint8_t *actual = (const uint8_t *)&core;
+                const uint8_t *saved = (const uint8_t *)&expected;
+                for (size_t i = 0; i < sizeof core; ++i) CHECK(actual[i] == saved[i], 60 + control);
+                CHECK(p.calls == calls, 65 + control);
+            } else {
+                CHECK(core.state == ADP_STATE_DELAY && core.timer == ADP_TIMER_DELAY && core.discarded == 0, 70 + control);
+                CHECK(p.starts == starts + 1 && p.stops == stops + 1 && p.sends == sends, 75 + control);
+            }
+        }
+    }
+    return 0;
+}
+
+struct acmp_port {
+    struct port io;
+    unsigned publications, interface, sink, admissions_before;
+    bool bound, started, moved, ordering_error;
+    uint64_t stream;
+    uint32_t now, at;
+    bool armed;
+    unsigned logged;
+    uint8_t msg[ACMP_OWED_MAX + 4];
+    uint16_t uid[ACMP_OWED_MAX + 4];
+    uint32_t sent_at[ACMP_OWED_MAX + 4];
+};
+
+static void publish(void *ctx, unsigned interface, unsigned sink, bool bound, bool started,
+                    uint64_t stream, bool moved)
+{
+    struct acmp_port *p = ctx;
+    ++p->publications;
+    p->interface = interface;
+    p->sink = sink;
+    p->bound = bound;
+    p->started = started;
+    p->stream = stream;
+    p->moved = moved;
+    p->admissions_before = p->io.admissions;
+}
+
+static bool acmp_send(void *ctx, unsigned interface, const uint8_t *frame, size_t length)
+{
+    struct acmp_port *p = ctx;
+    if (frame[15] == 7) {
+        if (!p->bound || p->started != ((wire_be16(frame + 64) & 8u) == 0)) p->ordering_error = true;
+    } else if (frame[15] == 9) {
+        if (p->bound || p->started || p->stream != 0) p->ordering_error = true;
+    }
+    if (!send_frame(&p->io, interface, frame, length)) return false;
+    if (p->logged < sizeof p->msg) {
+        p->msg[p->logged] = frame[15];
+        p->uid[p->logged] = wire_be16(frame + 52);
+        p->sent_at[p->logged] = p->now;
+        ++p->logged;
+    }
+    return true;
+}
+
+static uint32_t owed_clock(void *ctx)
+{
+    struct acmp_port *p = ctx;
+    ++p->io.calls;
+    return p->now;
+}
+
+static void owed_timer(void *ctx, unsigned interface, bool armed, uint32_t deadline)
+{
+    struct acmp_port *p = ctx;
+    p->armed = armed;
+    p->at = deadline;
+    timer(ctx, interface, armed, deadline);
+}
+
+static void egress(struct acmp_port *p, bool room)
+{
+    p->io.room = room;
+}
+
+// REQ: ACMP-12
+static void owed_pass(struct acmp *core, struct acmp_port *p, const uint8_t *kept, bool *keeping)
+{
+    ++p->now;
+    (void)acmp_poll(core);
+    if (*keeping && acmp_rx(core, 0, kept, ACMP_FRAME_BYTES)) *keeping = false;
+    if (p->armed && (int32_t)(p->now - p->at) >= 0) acmp_timer_expired(core, 0);
+}
+
+// REQ: ACMP-01, ACMP-07, ACMP-10, PORT-01
+static int acmp_smoke(void)
+{
+    struct acmp_port p = {.io = {.room = true}};
+    const struct acmp_ports ports = {&p, acmp_send, clock_ms, timer, gptp, clock_ms, admit, publish};
+    const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+    const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 1};
+    struct acmp core;
+    struct acmp_sink_view view;
+    uint8_t record[ACMP_BINDING_BYTES] = {1, 0, 0x12, 0x34};
+    uint8_t saved[ACMP_BINDING_BYTES];
+    wire_put_be(record + 4, UINT64_C(0x0102030405060708), 8);
+    wire_put_be(record + 12, UINT64_C(0x1112131415161718), 8);
+    CHECK(acmp_init(&core, &config, &ports, &env), 10);
+    CHECK(acmp_restore_binding(&core, 0, record, sizeof record) == ACMP_RESTORE_APPLIED, 11);
+    CHECK(acmp_view(&core, 0, &view) && view.state == ACMP_PRB_W_AVAIL && view.bound, 12);
+    CHECK(view.binding.talker_unique_id == 0x1234 && view.binding.talker_entity_id == wire_be64(record + 4), 13);
+    CHECK(p.publications == 0, 30);
+    acmp_open(&core);
+    CHECK(p.publications == 1 && p.bound && !p.started && p.stream == 0 && !p.moved, 31);
+    CHECK(p.interface == 0 && p.sink == 0 && p.admissions_before == 0, 32);
+    CHECK(p.io.admissions == 1 && acmp_binding_latch(&core, 0, saved), 14);
+    for (unsigned i = 0; i < sizeof record; ++i) CHECK(saved[i] == record[i], 15);
+    acmp_restore_rollback(&core);
+    CHECK(acmp_view(&core, 0, &view) && !view.bound && view.state == ACMP_UNBOUND, 16);
+    CHECK(p.publications == 1, 33);
+    acmp_open(&core);
+    CHECK(p.publications == 2 && !p.bound && !p.started && p.stream == 0, 34);
+    acmp_open(&core);
+    CHECK(p.publications == 2, 35);
+    uint8_t frame[ACMP_FRAME_BYTES] = {0};
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    frame[15] = 6;
+    wire_put_be(frame + 26, UINT64_C(0x1112131415161718), 8);
+    wire_put_be(frame + 34, UINT64_C(0x0102030405060708), 8);
+    wire_put_be(frame + 42, 1, 8);
+    wire_put_be(frame + 64, 8, 2);
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 3 && p.bound && !p.started && !p.ordering_error, 36);
+    CHECK(p.io.sends == 2 && p.io.frame[15] == 0, 37);
+    memcpy(frame, p.io.frame, sizeof frame);
+    frame[15] = 1;
+    wire_put_be(frame + 18, UINT64_C(0x5544332211002233), 8);
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 4 && p.stream == UINT64_C(0x5544332211002233) && p.moved, 38);
+    CHECK(acmp_set_started(&core, 0, true), 39);
+    CHECK(p.publications == 5 && p.started && !p.moved, 40);
+    CHECK(acmp_set_started(&core, 0, false), 41);
+    CHECK(p.publications == 6 && !p.started && !p.moved, 42);
+    CHECK(acmp_set_started(&core, 0, false) && p.publications == 6, 43);
+    frame[15] = 8;
+    acmp_rx(&core, 0, frame, sizeof frame);
+    CHECK(p.publications == 7 && !p.bound && p.stream == 0 && p.moved && !p.ordering_error, 44);
+    CHECK(p.io.frame[15] == 9, 45);
+    return 0;
+}
+
+// Milan v1.2 Table 5.26
+// REQ: ACMP-12, ACMP-09
+static int acmp_owed_smoke(void)
+{
+    struct acmp_port p = {.io = {.room = false}, .now = 123};
+    const struct acmp_ports ports = {&p, acmp_send, owed_clock, owed_timer, gptp, clock_ms, admit, publish};
+    const struct acmp_env env = {&p, locked, source, srp, notify, notify};
+    const struct acmp_config config = {.entity_id = 1, .n_interfaces = 1, .n_sinks = 2};
+    struct acmp core;
+    uint8_t frame[ACMP_FRAME_BYTES] = {0};
+    uint8_t bind_rx[ACMP_FRAME_BYTES];
+    bool keeping = true;
+    CHECK(acmp_init(&core, &config, &ports, &env), 90);
+    wire_put_be(frame + 12, 0x22f0, 2);
+    frame[14] = 0xfc;
+    frame[15] = 10;
+    wire_put_be(frame + 42, 1, 8);
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        wire_put_be(frame + 62, k, 2);
+        CHECK(acmp_rx_ready(&core) == (k + 2 <= ACMP_OWED_MAX) && acmp_rx(&core, 0, frame, sizeof frame), 91);
+    }
+    const unsigned calls = p.io.calls;
+    wire_put_be(frame + 62, ACMP_OWED_MAX, 2);
+    CHECK(!acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 92);
+    CHECK(core.busy_declined == 1 && core.owed_count == ACMP_OWED_MAX && p.io.calls == calls, 93);
+    p.io.room = true;
+    CHECK(acmp_poll(&core) && acmp_rx(&core, 0, frame, sizeof frame), 94);
+    frame[15] = 6;
+    wire_put_be(frame + 62, ACMP_OWED_MAX + 1, 2);
+    CHECK(acmp_poll(&core) && !acmp_rx_ready(&core) && !acmp_rx(&core, 0, frame, sizeof frame), 97);
+    CHECK(acmp_poll(&core) && acmp_rx_ready(&core) && acmp_rx(&core, 0, frame, sizeof frame), 98);
+    CHECK(core.busy_declined == 2 && core.owed_count == ACMP_OWED_MAX && core.probes_lost == 0, 99);
+    for (unsigned n = 0; n < ACMP_OWED_MAX && core.owed_count > 2 && acmp_poll(&core); ++n) {
+    }
+    CHECK(core.owed_count == 2 && p.io.sends == ACMP_OWED_MAX + 1, 95);
+    CHECK(p.io.frame[15] == 11 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX && (p.io.frame[16] >> 3) == 0, 96);
+    CHECK(acmp_poll(&core) && p.io.frame[15] == 7 && wire_be16(p.io.frame + 62) == ACMP_OWED_MAX + 1, 100);
+    CHECK(!acmp_poll(&core) && p.io.frame[15] == 0 && core.probes_lost == 0, 101);
+    frame[15] = 10;
+    egress(&p, false);
+    for (unsigned k = 0; k < ACMP_OWED_MAX; ++k) {
+        wire_put_be(frame + 62, 0x20 + k, 2);
+        CHECK(acmp_rx(&core, 0, frame, sizeof frame), 102);
+    }
+    memcpy(bind_rx, frame, sizeof frame);
+    bind_rx[15] = 6;
+    wire_put_be(bind_rx + 52, 1, 2);
+    wire_put_be(bind_rx + 62, 0x20 + ACMP_OWED_MAX, 2);
+    CHECK(!acmp_rx(&core, 0, bind_rx, sizeof bind_rx) && core.sinks[0].state == ACMP_PRB_W_RESP, 103);
+    p.now = core.sinks[0].timer_deadline - 1;
+    const uint32_t released = p.now;
+    egress(&p, true);
+    p.logged = 0;
+    owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(keeping && core.owed_count == ACMP_OWED_MAX - 1 && core.sinks[0].probe_held && core.probes_held == 1, 104);
+    owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(!keeping && core.owed_count == ACMP_OWED_MAX && core.sinks[1].bound && core.sinks[0].probe_held, 105);
+    for (unsigned n = 0; n < 4 * ACMP_OWED_MAX && core.owed_count != 0; ++n) owed_pass(&core, &p, bind_rx, &keeping);
+    CHECK(core.owed_count == 0 && p.logged == ACMP_OWED_MAX + 3 && core.probes_lost == 0 && core.probes_held == 2, 106);
+    CHECK(p.msg[ACMP_OWED_MAX] == 7 && p.uid[ACMP_OWED_MAX] == 1 && p.sent_at[ACMP_OWED_MAX] - released == ACMP_OWED_MAX + 1, 107);
+    CHECK(p.msg[ACMP_OWED_MAX + 1] == 0 && p.uid[ACMP_OWED_MAX + 1] == 1, 108);
+    CHECK(p.msg[ACMP_OWED_MAX + 2] == 0 && p.uid[ACMP_OWED_MAX + 2] == 0 && core.sinks[0].state == ACMP_PRB_W_RESP2, 109);
+    return 0;
+}
+
+// REQ: MAAP-02, MAAP-04, PORT-01
+static int maap_smoke(void)
+{
+    struct port p = {.room = true};
+    const struct maap_ports ports = {&p, send_frame, start, stop, range, clock_ms};
+    struct maap core;
+    CHECK(maap_init(&core, &ports, 0, UINT64_C(0x020000000001), 8), 20);
+    maap_port_operational(&core, true);
+    CHECK(!maap_begin(&core, MAAP_POOL_BASE + 0xfdf9), 21);
+    CHECK(maap_begin(&core, MAAP_POOL_BASE + 0xfdf8), 22);
+    CHECK(core.state == MAAP_PROBE && p.sends == 1 && !p.valid, 23);
+    for (unsigned i = 0; i < MAAP_PROBE_RETRANSMITS; ++i) maap_timer_expired(&core);
+    CHECK(core.state == MAAP_DEFEND && p.sends == 5 && p.valid, 24);
+    CHECK(p.length == MAAP_FRAME_BYTES && p.frame[15] == MAAP_MSG_ANNOUNCE, 25);
+    maap_release(&core);
+    CHECK(!p.valid && !maap_poll(&core), 26);
+    return 0;
+}
+
+int main(void)
+{
+    int result = adp_smoke();
+    if (!result) result = adp_discovery_smoke();
+    if (!result) result = acmp_smoke();
+    if (!result) result = acmp_owed_smoke();
+    if (!result) result = maap_smoke();
+    if (!result) result = entity_check_adp();
+    if (!result) result = entity_check_acmp();
+    if (!result) result = entity_check_dafresh();
+    if (!result) result = entity_check_maap();
+    return result;
+}

@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MIT
+schema_version: 1.0.0
+identity:
+  entity_id: mac-derived
+  model_id: 7816428161859585
+  name: Example listener
+  vendor_name: Example vendor
+  serial_number: EXAMPLE-0001
+  group_name: ''
+capabilities:
+  entity: 50568
+  identify_control_index: 0
+interfaces:
+- mac: 02:00:00:00:00:01
+inputs:
+- name: Audio input
+  interface: 0
+  kind: audio
+outputs: []
+maap: []

@@ -1,0 +1,863 @@
+{
+  "source_commit": "5603c353137e90c1fa95429f6d00ef7a2298d9ee",
+  "rows": [
+    {
+      "origin": "milan-fpga FR-DISC-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L187",
+      "disposition": "ported",
+      "requirements": [
+        "MFDISC-01"
+      ],
+      "reason": "Ported schedule and index handling. Transport acceptance remains subject to the existing departure interpretation and service obligation."
+    },
+    {
+      "origin": "milan-fpga FR-DISC-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L188",
+      "disposition": "ported",
+      "requirements": [
+        "MFDISC-02"
+      ],
+      "reason": "Ported both discovery target forms and the Milan state-dependent delay rule."
+    },
+    {
+      "origin": "milan-fpga FR-DISC-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L189",
+      "disposition": "ported",
+      "requirements": [
+        "MFDISC-03"
+      ],
+      "reason": "Changed the proposed shutdown/link-down equivalence. [Milan v1.2 5.6.3.5.6 and 5.6.3.5.10](https://avnu.org/resource/milan-specification/) stop timers on link down; 5.6.3.5.8 and 5.6.3.5.11 send departure on shutdown."
+    },
+    {
+      "origin": "milan-fpga FR-DISC-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L190",
+      "disposition": "ported",
+      "requirements": [
+        "MFDISC-04",
+        "MFENTITY-01"
+      ],
+      "reason": "Split encoding from descriptor consistency. Grandmaster identity is live per-interface port data, not a stored ENTITY descriptor field."
+    },
+    {
+      "origin": "milan-fpga FR-DISC-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L191",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFENTITY-02"
+      ],
+      "reason": "Moved identity derivation and stability to the caller. The library has no device identity store."
+    },
+    {
+      "origin": "milan-fpga FR-ENUM-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L196",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AEM descriptors and enumeration are outside the ADP, ACMP and MAAP cores."
+    },
+    {
+      "origin": "milan-fpga FR-ENUM-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L197",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AEM descriptors and enumeration are outside the ADP, ACMP and MAAP cores."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L198",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L199",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L200",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L201",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L202",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-CTRL-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L203",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AECP command handling, locks, notifications and counter serving are outside these cores. ACMP consumes external lock and change callbacks."
+    },
+    {
+      "origin": "milan-fpga FR-MVU-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L208",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "The Milan vendor-unique responder and its product feature policy are outside these cores."
+    },
+    {
+      "origin": "milan-fpga FR-MVU-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L209",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "The Milan vendor-unique responder and its product feature policy are outside these cores."
+    },
+    {
+      "origin": "milan-fpga FR-MVU-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L210",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "The Milan vendor-unique responder and its product feature policy are outside these cores."
+    },
+    {
+      "origin": "milan-fpga FR-CONN-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L215",
+      "disposition": "ported",
+      "requirements": [
+        "MFCONN-01"
+      ],
+      "reason": "Changed legacy CONNECT names to the Milan bind/probe profile under [Milan v1.2 5.5.2.1 and 5.5.2.2](https://avnu.org/resource/milan-specification/). Generic controller sequences are excluded."
+    },
+    {
+      "origin": "milan-fpga FR-CONN-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L216",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFCONN-02"
+      ],
+      "reason": "Datapath programming remains a port obligation, as proposed."
+    },
+    {
+      "origin": "milan-fpga FR-CONN-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L217",
+      "disposition": "ported",
+      "requirements": [
+        "MFCONN-03"
+      ],
+      "reason": "Ported restore, discovery and reprobe. Cold boot and real link delivery remain integration duties."
+    },
+    {
+      "origin": "milan-fpga FR-CONN-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L218",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFCONN-04"
+      ],
+      "reason": "Durable storage remains a port obligation. The existing codec, latch and rollback tests support it."
+    },
+    {
+      "origin": "milan-fpga FR-MAAP-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L223",
+      "disposition": "ported",
+      "requirements": [
+        "MFMAAP-01",
+        "MFMAAP-02"
+      ],
+      "reason": "Ported allocation and defense. Split downstream destination assignment into a port obligation."
+    },
+    {
+      "origin": "milan-fpga FR-SRP-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L224",
+      "disposition": "ported",
+      "requirements": [
+        "MFSRP-01",
+        "MFSRP-02"
+      ],
+      "reason": "Split tested ACMP callbacks from external lwSRP declarations and admission."
+    },
+    {
+      "origin": "milan-fpga FR-SRP-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L225",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFSRP-03"
+      ],
+      "reason": "MVRP belongs to lwSRP and the port; the core exposes stream VLAN parameters."
+    },
+    {
+      "origin": "milan-fpga FR-SRP-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L226",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFSRP-04"
+      ],
+      "reason": "Added as a port obligation because admission and shaping share the proposed FR-CONN-02 boundary."
+    },
+    {
+      "origin": "milan-fpga FR-CLK-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L250",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "gPTP, PHC, timestamps and media-clock recovery belong to the time and media implementation. The port supplies current GM data."
+    },
+    {
+      "origin": "milan-fpga FR-CLK-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L251",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "gPTP, PHC, timestamps and media-clock recovery belong to the time and media implementation. The port supplies current GM data."
+    },
+    {
+      "origin": "milan-fpga FR-CLK-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L252",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "gPTP, PHC, timestamps and media-clock recovery belong to the time and media implementation. The port supplies current GM data."
+    },
+    {
+      "origin": "milan-fpga FR-CLK-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L253",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "gPTP, PHC, timestamps and media-clock recovery belong to the time and media implementation. The port supplies current GM data."
+    },
+    {
+      "origin": "milan-fpga FR-CLK-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L254",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "gPTP, PHC, timestamps and media-clock recovery belong to the time and media implementation. The port supplies current GM data."
+    },
+    {
+      "origin": "milan-fpga FR-STR-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L269",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L270",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L271",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-03a",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L272",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-03b",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L273",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L274",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-STR-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L275",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "AAF media, audio formats, channel maps and stream counters are outside a control library."
+    },
+    {
+      "origin": "milan-fpga FR-QOS-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L280",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Queue classification, shaping and bandwidth scheduling belong to the datapath."
+    },
+    {
+      "origin": "milan-fpga FR-QOS-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L281",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Queue classification, shaping and bandwidth scheduling belong to the datapath."
+    },
+    {
+      "origin": "milan-fpga FR-QOS-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L282",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Queue classification, shaping and bandwidth scheduling belong to the datapath."
+    },
+    {
+      "origin": "milan-fpga FR-MGT-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L287",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Identify outputs, AEM names and factory reset belong to product management."
+    },
+    {
+      "origin": "milan-fpga FR-MGT-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L288",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Identify outputs, AEM names and factory reset belong to product management."
+    },
+    {
+      "origin": "milan-fpga NFR-PERF-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L297",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Line rate and media packet rate need a real datapath and transport."
+    },
+    {
+      "origin": "milan-fpga NFR-PERF-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L298",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Line rate and media packet rate need a real datapath and transport."
+    },
+    {
+      "origin": "milan-fpga NFR-LAT-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L299",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Capture-to-render latency belongs to the media implementation."
+    },
+    {
+      "origin": "milan-fpga NFR-LAT-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L300",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFLATENCY-01"
+      ],
+      "reason": "Added the applicable ACMP timing duty. AECP response timing is outside the cores."
+    },
+    {
+      "origin": "milan-fpga NFR-DET-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L301",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Media determinism is a datapath property."
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L306",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Time synchronization, media-clock accuracy and PHC adjustment are outside these cores."
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L307",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Time synchronization, media-clock accuracy and PHC adjustment are outside these cores."
+    },
+    {
+      "origin": "milan-fpga NFR-TIME-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L308",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Time synchronization, media-clock accuracy and PHC adjustment are outside these cores."
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L313",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product shape generation, audio scale and device resource budgets are outside this library. Fixed core capacities remain explicit."
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L314",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product shape generation, audio scale and device resource budgets are outside this library. Fixed core capacities remain explicit."
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L315",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product shape generation, audio scale and device resource budgets are outside this library. Fixed core capacities remain explicit."
+    },
+    {
+      "origin": "milan-fpga NFR-SCUP-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L316",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product shape generation, audio scale and device resource budgets are outside this library. Fixed core capacities remain explicit."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L321",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Hardware ownership, register ABI, future replicated endpoints and resource scaling are product duties."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L322",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFOWNER-01"
+      ],
+      "reason": "Ported one-owner dispatch. Excluded build-selectable hardware placement, mailbox filters, AECP, SRP internals, time and media ownership."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L323",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFSERVICE-01"
+      ],
+      "reason": "Ported the per-action 10 ms figure and applicable hooks as measurable port obligations. Excluded platform bus and audio/gPTP timing proofs."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L324",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Hardware ownership, register ABI, future replicated endpoints and resource scaling are product duties."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L325",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Hardware ownership, register ABI, future replicated endpoints and resource scaling are product duties."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L326",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Hardware ownership, register ABI, future replicated endpoints and resource scaling are product duties."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-07",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L327",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Hardware ownership, register ABI, future replicated endpoints and resource scaling are product duties."
+    },
+    {
+      "origin": "milan-fpga NFR-SCOUT-08",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L328",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Excluded the platform mailbox filter and bus-adapter campaign, as proposed. The portable input contract does not implement that hardware."
+    },
+    {
+      "origin": "milan-fpga NFR-RES-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L464",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Device utilization and headroom need a hardware implementation."
+    },
+    {
+      "origin": "milan-fpga NFR-REL-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L465",
+      "disposition": "ported",
+      "requirements": [
+        "MFRECOVERY-01",
+        "MFRECOVERY-02"
+      ],
+      "reason": "Split tested core recovery from event detection, complete counters and media recovery at the port."
+    },
+    {
+      "origin": "milan-fpga NFR-REL-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L466",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Whole-system liveness monitors and restart policy belong to the application."
+    },
+    {
+      "origin": "milan-fpga NFR-OBS-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L467",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "CSR, MAC, gPTP and AVDECC counter exposure are outside this library. Core diagnostics remain documented."
+    },
+    {
+      "origin": "milan-fpga NFR-MAINT-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L468",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "The shared hardware/software entity generator is outside this library. Caller data must satisfy the entity port contract."
+    },
+    {
+      "origin": "milan-fpga NFR-PORT-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L469",
+      "disposition": "ported",
+      "requirements": [
+        "MFBUILD-01"
+      ],
+      "reason": "Extended bare-metal portability to mandatory Linux and RV32 builds under the assignment."
+    },
+    {
+      "origin": "milan-fpga NFR-SEC-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/docs/reference/FR_NFR.md#L470",
+      "disposition": "port obligation",
+      "requirements": [
+        "MFENTITY-03"
+      ],
+      "reason": "Moved advertisement authentication policy to the caller-supplied entity configuration. Safe unauthenticated AECP behavior remains with the application; AECP is outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L128",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Register maps, interrupts and clock-domain crossings are product hardware contracts."
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L132",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Register maps, interrupts and clock-domain crossings are product hardware contracts."
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L135",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Register maps, interrupts and clock-domain crossings are product hardware contracts."
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L138",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Register maps, interrupts and clock-domain crossings are product hardware contracts."
+    },
+    {
+      "origin": "milan-fpga REQ-CSR-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L140",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Register maps, interrupts and clock-domain crossings are product hardware contracts."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L146",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L148",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L150",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L152",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L154",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L156",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-07",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L165",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-08",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L167",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-PTP-09",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L170",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "PHC, gPTP, timestamps and AVTP uncertainty are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L241",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L243",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L245",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L247",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L249",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L251",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-07",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L253",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CBS-08",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L255",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Credit-based shaper hardware and its verification are outside these cores."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L265",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L267",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L268",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L270",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L272",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L274",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-07",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L276",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-08",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L278",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-09",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L280",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-CLS-10",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L282",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Packet classifiers and egress queues belong to the transport. Core framing preconditions remain port duties."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L288",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L290",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L292",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L294",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L297",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L298",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-07",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L300",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-MAC-08",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L302",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "MAC, PHY, MDIO, interrupts and hardware statistics belong to the transport."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-01",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L307",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product RTL, image builders, board acceptance and release campaigns are outside portable-core verification."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-02",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L309",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product RTL, image builders, board acceptance and release campaigns are outside portable-core verification."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-03",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L311",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product RTL, image builders, board acceptance and release campaigns are outside portable-core verification."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-04",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L314",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Excluded the product-wide bare-metal-only and generated-platform gates. This library instead requires its own full gates on Linux and RV32."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-05",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L317",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product RTL, image builders, board acceptance and release campaigns are outside portable-core verification."
+    },
+    {
+      "origin": "milan-fpga REQ-VER-06",
+      "url": "https://github.com/kebag-logic/milan-fpga/blob/5603c353137e90c1fa95429f6d00ef7a2298d9ee/REQUIREMENTS.md#L322",
+      "disposition": "excluded",
+      "requirements": [],
+      "reason": "Product RTL, image builders, board acceptance and release campaigns are outside portable-core verification."
+    },
+    {
+      "origin": "milan-fpga #665 memory",
+      "url": "https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-5992455815",
+      "disposition": "ported",
+      "requirements": [
+        "MFMEMORY-01"
+      ],
+      "reason": "Ported no heap, static state, portable C11 and no OS in the cores. No platform allocator is imported."
+    },
+    {
+      "origin": "milan-fpga #665 testing",
+      "url": "https://github.com/kebag-logic/milan-fpga/issues/665#issuecomment-6008744385",
+      "disposition": "ported",
+      "requirements": [
+        "MFQUALITY-01"
+      ],
+      "reason": "Ported host GoogleTest/GMock, coverage and mutation requirements. Platform suites and upstream lwSRP tests stay with their owners."
+    }
+  ]
+}
