@@ -35,7 +35,7 @@ def build(work, kind, jobs):
     (directory / 'build.log').write_text(output)
     entries = json.loads((directory / 'compile_commands.json').read_text())
     core = [e for e in entries if Path(e['file']).parent == ROOT / 'src']
-    if not ({Path(e['file']).name for e in core} == {'adp.c', 'acmp.c', 'maap.c'}):
+    if not ({Path(e['file']).name for e in core} == {'adp.c', 'acmp.c', 'maap.c', 'pbaem.c'}):
         raise RuntimeError('freestanding build must compile all three cores')
     flags = compile_flags(core[0])
     compiler = flags[0]
@@ -91,7 +91,7 @@ def build(work, kind, jobs):
     return {'configuration': kind, 'rc': 0, 'elf_sha256': hashlib.sha256(elf.read_bytes()).hexdigest(),
             'elf_bytes': elf.stat().st_size, 'core_objects': objects, 'core_imports': sorted(imports),
             'generated_objects': generated_objects, 'unresolved_final': [],
-            'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; five generated entity round trips'}
+            'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; five generated entity round trips; the PocketBeagle AEM image'}
 
 
 def main():

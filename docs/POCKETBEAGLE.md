@@ -51,6 +51,12 @@ milan-fpga's generator turns it into the AEM image, the ADP fields and the SRP s
 The [configuration here](../configs/pocketbeagle.yaml) restates only the ADP, ACMP and MAAP facts.
 Its model ID is the AEM image's pinned model ID, `0x001BC5C52E47A158`.
 
+The [AEM model](../include/pbaem.h) serves the same 84 descriptors from this library, for any identity.
+`pbaem_descriptor` copies one descriptor into a caller buffer and refuses a short one without writing.
+`pbaem_set_input_format` and `pbaem_set_clock_source` accept only what the model advertises.
+With the board's identity, its descriptors equal the generated image byte for byte.
+A golden CRC of all of them is checked on Linux and on RV32.
+
 ```mermaid
 flowchart LR
   host[USB host] <--> gadget[24 x 24 USB audio]
@@ -78,7 +84,8 @@ All five talkers together reserve 59.648 Mb/s, under the 75% class A limit of a 
 | [IEEE 1722.1-2021][atdecc] 6.2, Milan v1.2 5.6 (ADP) | This library | [ADP tests](../tests/test_adp.cpp) and the [entity round trip](../examples/entity_roundtrip.c) on both targets. |
 | [IEEE 1722.1-2021][atdecc] 8, Milan v1.2 5.5 (ACMP) | This library | [ACMP tests](../tests/test_acmp.cpp) and the entity round trip with five sinks and five sources. |
 | [IEEE 1722-2016][avtp] Annex B (MAAP) | This library | [MAAP tests](../tests/test_maap.cpp) and the entity round trip with five addresses. |
-| IEEE 1722.1-2021 7, Milan v1.2 5.3 and 5.4 (AEM, AECP) | Firmware | The board support repository's AECP suite at this shape. |
+| IEEE 1722.1-2021 7, Milan v1.2 5.3 (AEM) | This library and the firmware | [AEM model tests](../tests/test_pbaem.cpp) and the image golden on both targets ([AEM-01](REQUIREMENTS.md#pocketbeagle-aem-model)). |
+| IEEE 1722.1-2021 9, Milan v1.2 5.4 (AECP) | Firmware | The board support repository's AECP suite at this shape. |
 | Milan v1.2 6 and 7, IEEE 1722-2016 7 and 10 (AAF, CRF) | Media plane | The board support repository's talker, listener and counter suites. |
 | [IEEE 802.1Q-2018][dot1q] 35, Milan v1.2 4.3.3 (SRP) | Firmware with lwSRP | The board support repository's SRP suite. |
 

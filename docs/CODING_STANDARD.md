@@ -98,6 +98,7 @@ They have no `#else`. These filename-based guard names preserve the imported hea
 | [acmp.h](../include/acmp.h) | `ACMP_H` |
 | [maap.h](../include/maap.h) | `CTRL_MAAP_H` |
 | [wire.h](../include/wire.h) | `CTRL_WIRE_H` |
+| [pbaem.h](../include/pbaem.h) | `PBAEM_H` |
 | [acmp_fake.hpp](../tests/acmp_fake.hpp) | `ACMP_FAKE_HPP` |
 | [adp_port.h](../examples/adp_port.h) | `EXAMPLE_ADP_PORT_H` |
 | [assert.h](../examples/rv32/include/assert.h) | `TSN_PORT_ASSERT_H` |

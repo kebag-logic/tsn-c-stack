@@ -412,5 +412,6 @@ int main(void)
     if (!result) result = entity_check_acmp();
     if (!result) result = entity_check_dafresh();
     if (!result) result = entity_check_maap();
+    if (!result) result = entity_check_aem();
     return result;
 }

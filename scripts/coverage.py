@@ -351,9 +351,9 @@ def main():
         for n, line in source.lines.items():
             if line.count == 0 or any(a == 0 for a in line.arcs):
                 errors.append(f"{file}:{n}: count={line.count}, arcs={line.arcs}")
-    expected = {"src/adp.c", "src/acmp.c", "src/maap.c", "include/wire.h"}
+    expected = {"src/adp.c", "src/acmp.c", "src/maap.c", "src/pbaem.c", "include/wire.h"}
     if set(measured) != expected:
-        errors.append("measured source set differs from the four required files")
+        errors.append("measured source set differs from the five required files")
     ratchet = ROOT / "tests/coverage.ratchet"
     if ratchet.exists():
         errors += compare(measured, read_ratchet(ratchet.read_text()))

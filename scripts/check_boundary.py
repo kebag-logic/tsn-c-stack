@@ -103,6 +103,7 @@ def selftest(work, jobs):
     (root / 'outside.h').write_text('')
     (root / 'src/acmp.c').write_text('int second(void) { return 0; }\n')
     (root / 'src/maap.c').write_text('int third(void) { return 0; }\n')
+    (root / 'src/pbaem.c').write_text('int fourth(void) { return 0; }\n')
     controls = {
         'owned-and-standard': ('#include "own.h"\n#include <stdlib.h>\nuint32_t value(void) { return 1; }', False),
         'standard-digraph': ('%:include <stdint.h>\nuint32_t value(void) { return 1; }', False),

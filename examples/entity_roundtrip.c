@@ -3,6 +3,7 @@
 #include "adp.h"
 #include "acmp.h"
 #include "maap.h"
+#include "pbaem.h"
 #include "wire.h"
 #include "entities/listener/entity_config.h"
 #include "entities/talker/entity_config.h"
@@ -269,6 +270,49 @@ static int check_range(unsigned interface, uint64_t mac, uint16_t count, uint64_
     CHECK(p.sends == 5 && p.valid && core.state == MAAP_DEFEND, 58);
     maap_release(&core);
     CHECK(!p.valid, 59);
+    return 0;
+}
+
+static uint32_t crc32(uint32_t crc, const uint8_t *data, size_t length)
+{
+    for (size_t i = 0; i < length; ++i) {
+        crc ^= data[i];
+        for (unsigned bit = 0; bit < 8; ++bit) crc = (crc >> 1) ^ (UINT32_C(0xedb88320) & (0u - (crc & 1u)));
+    }
+    return crc;
+}
+
+// REQ: AEM-01
+int entity_check_aem(void)
+{
+    static const uint16_t types[] = {0x0000, 0x0001, 0x0002, 0x0005, 0x0006, 0x0009, 0x000a, 0x000c,
+                                     0x000d, 0x000e, 0x000f, 0x0014, 0x0017, 0x001a, 0x0024};
+    struct pbaem_identity id;
+    memset(&id, 0, sizeof id);
+    id.entity_id = UINT64_C(0x020000fffe000001);
+    id.model_id = pocketbeagle_adp[0].entity_model_id;
+    id.mac = pocketbeagle_acmp.mac[0];
+    id.clock_identity = id.entity_id;
+    memcpy(id.name, pocketbeagle_identity.name, 21);
+    memcpy(id.firmware, "3.96.0", 6);
+    struct pbaem model;
+    pbaem_init(&model, &id);
+    uint8_t d[PBAEM_DESCRIPTOR_BYTES];
+    uint32_t crc = UINT32_C(0xffffffff);
+    size_t bytes = 0;
+    unsigned count = 0;
+    for (unsigned t = 0; t < sizeof types / sizeof types[0]; ++t) {
+        for (unsigned i = 0; i < pbaem_count(types[t]); ++i) {
+            size_t n = pbaem_descriptor(&model, types[t], (uint16_t)i, d, sizeof d);
+            CHECK(n >= 4 && wire_be16(d) == types[t] && wire_be16(d + 2) == i, 90);
+            crc = crc32(crc, d, n);
+            bytes += n;
+            ++count;
+        }
+    }
+    CHECK(count == 84 && bytes == 8105, 91);
+    CHECK((crc ^ UINT32_C(0xffffffff)) == UINT32_C(0x1e668fba), 92);
+    CHECK(pbaem_descriptor(&model, 0x0005, 5, d, sizeof d) == 0, 93);
     return 0;
 }
 

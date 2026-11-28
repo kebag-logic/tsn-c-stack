@@ -8592,6 +8592,231 @@
     ]
   },
   {
+    "name": "pbaem-family-dropped",
+    "path": "src/pbaem.c",
+    "old": "\tif (formats == 2u) {",
+    "new": "\tif (formats == 3u) {",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "an AAF input lists 1 to 8 channels (Milan 6.4)",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-crf-input-any",
+    "path": "src/pbaem.c",
+    "old": "\t\treturn format == CRF_FORMAT;",
+    "new": "\t\treturn true;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "the CRF input refuses AAF",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-nine-channels",
+    "path": "src/pbaem.c",
+    "old": "count >= 1u && count <= 8u;",
+    "new": "count >= 1u && count <= 9u;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "nine channels are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-zero-channels",
+    "path": "src/pbaem.c",
+    "old": "count >= 1u && count <= 8u;",
+    "new": "count <= 8u;",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "zero channels are refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-other-rate",
+    "path": "src/pbaem.c",
+    "old": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT)) == AAF_BASE",
+    "new": "\treturn (format & ~(AAF_CHANNEL_MASK << AAF_CHANNEL_SHIFT) & ~(UINT64_C(0xf) << 48)) == (AAF_BASE & ~(UINT64_C(0xf) << 48))",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "44.1 kHz is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-clock-bound",
+    "path": "src/pbaem.c",
+    "old": "\tif (source >= PBAEM_CLOCK_SOURCES) {",
+    "new": "\tif (source > PBAEM_CLOCK_SOURCES) {",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "a seventh source is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-short-write",
+    "path": "src/pbaem.c",
+    "old": "\tif (capacity < length) {",
+    "new": "\tif (capacity + 1u < length) {",
+    "kills": [
+      {
+        "test": "Pbaem.DescriptorBounds",
+        "needle": "a short destination is refused",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-absent-index",
+    "path": "src/pbaem.c",
+    "old": "\tif (index >= pbaem_count(type)) {",
+    "new": "\tif (index > pbaem_count(type)) {",
+    "kills": [
+      {
+        "test": "Pbaem.DescriptorBounds",
+        "needle": "the first index past a count is absent",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-clock-identity",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 78u, m->identity.clock_identity, 8u);",
+    "new": "\tput(d, 78u, m->identity.entity_id, 8u);",
+    "kills": [
+      {
+        "test": "Pbaem.EntityFromIdentity",
+        "needle": "AVB_INTERFACE clock_identity is the caller's own",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-cluster-signal",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 70u, output ? AUDIO_UNIT : 0xffffu, 2u);",
+    "new": "\tput(d, 70u, AUDIO_UNIT, 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "output clusters come from the audio unit",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-output-port-base",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 14u, (input ? 0u : 24u) + cluster_base[k], 2u);",
+    "new": "\tput(d, 14u, cluster_base[k], 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "output clusters follow the USB playback channels",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-input-port-map",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 16u, input ? 0u : 1u, 2u);",
+    "new": "\tput(d, 16u, 1u, 2u);",
+    "kills": [
+      {
+        "test": "Pbaem.ConfigurationAndAudioUnit",
+        "needle": "an input port has no static map (Milan v1.2 5.3.3.9)",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-crf-source-location",
+    "path": "src/pbaem.c",
+    "old": "k == 1u ? PBAEM_AAF_STREAMS : k - 2u",
+    "new": "k == 1u ? 0u : k - 2u",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "CRF is STREAM_INPUT four, AAF k is k",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-output-buffer",
+    "path": "src/pbaem.c",
+    "old": "\tput(d, 128u, input ? 2126000u : 0u, 4u);",
+    "new": "\tput(d, 128u, 2126000u, 4u);",
+    "kills": [
+      {
+        "test": "Pbaem.StreamFormats",
+        "needle": "an output has no receive buffer",
+        "arm": "pbaem"
+      },
+      {
+        "test": "EntityYaml.AemImageRoundTrip",
+        "needle": "PocketBeagle descriptors equal the bridge image golden on both targets",
+        "arm": "entity"
+      }
+    ]
+  },
+  {
+    "name": "pbaem-identify-value",
+    "path": "src/pbaem.c",
+    "old": "\td[108] = m->identify;",
+    "new": "\td[108] = (uint8_t)(m->identify & 0u);",
+    "kills": [
+      {
+        "test": "Pbaem.ClockSourcesAndControl",
+        "needle": "identify range, default and current value",
+        "arm": "pbaem"
+      }
+    ]
+  },
+  {
     "name": "entity-wrong-count",
     "path": "examples/entities/ax7101/entity_config.c",
     "old": "        .talker_stream_sources = 2u,",

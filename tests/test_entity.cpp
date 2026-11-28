@@ -26,6 +26,12 @@ TEST(EntityYaml, DaFreshRoundTrip)
     EXPECT_EQ(entity_check_dafresh(), 0) << "generated freshness configuration survives both target round trips";
 }
 
+// REQ: AEM-01
+TEST(EntityYaml, AemImageRoundTrip)
+{
+    EXPECT_EQ(entity_check_aem(), 0) << "PocketBeagle descriptors equal the bridge image golden on both targets";
+}
+
 // REQ: ENTITY-01, MAAP-02
 TEST(EntityYaml, MaapRoundTrip)
 {
