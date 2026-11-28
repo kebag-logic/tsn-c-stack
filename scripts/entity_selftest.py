@@ -47,8 +47,9 @@ class EntityTests(unittest.TestCase):
                                  {n: s.encode('ascii') for n, s in first.items()})
 
     def test_golden_planted_drift(self):
-        plants = json.loads((ROOT / 'tests/mutations.json').read_text())[-3:]
-        self.assertEqual({p['name'] for p in plants}, {'entity-wrong-count', 'entity-swapped-interface', 'entity-dropped-field'})
+        plants = json.loads((ROOT / 'tests/mutations.json').read_text())[-4:]
+        self.assertEqual({p['name'] for p in plants}, {'entity-wrong-count', 'entity-swapped-interface', 'entity-dropped-field',
+                                                       'entity-dropped-clock-sink'})
         for plant in plants:
             with self.subTest(plant=plant['name']):
                 persona = Path(plant['path']).parent.name

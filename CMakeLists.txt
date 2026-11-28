@@ -22,7 +22,8 @@ target_include_directories(tsn PUBLIC include)
 if(TSN_TESTS OR TSN_FREESTANDING)
   add_library(entity_examples STATIC examples/entity_roundtrip.c
     examples/entities/listener/entity_config.c examples/entities/talker/entity_config.c
-    examples/entities/duplex/entity_config.c examples/entities/ax7101/entity_config.c)
+    examples/entities/duplex/entity_config.c examples/entities/ax7101/entity_config.c
+    examples/entities/pocketbeagle/entity_config.c)
   target_include_directories(entity_examples PUBLIC examples include)
 endif()
 if(TSN_FREESTANDING)

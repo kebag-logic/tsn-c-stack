@@ -15,6 +15,7 @@ GUARDS = {'include/adp.h': 'ADP_H', 'include/acmp.h': 'ACMP_H',
           'examples/entities/talker/entity_config.h': 'TALKER_ENTITY_CONFIG_V1_0_0_H',
           'examples/entities/duplex/entity_config.h': 'DUPLEX_ENTITY_CONFIG_V1_0_0_H',
           'examples/entities/ax7101/entity_config.h': 'AX7101_ENTITY_CONFIG_V1_0_0_H',
+          'examples/entities/pocketbeagle/entity_config.h': 'POCKETBEAGLE_ENTITY_CONFIG_V1_0_0_H',
           }
 DIRECTIVES = {'define', 'undef', 'include', 'ifdef', 'ifndef', 'else', 'endif',
               'if', 'elif', 'elifdef', 'elifndef', 'pragma', 'error', 'warning', 'line'}

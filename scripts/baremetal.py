@@ -61,8 +61,8 @@ def build(work, kind, jobs):
         imports |= symbols
         objects[source.name] = hashlib.sha256(obj.read_bytes()).hexdigest()
     generated = [e for e in entries if Path(e['file']).name == 'entity_config.c']
-    if len(generated) != 4:
-        raise RuntimeError('freestanding build must compile all four generated entities')
+    if len(generated) != 5:
+        raise RuntimeError('freestanding build must compile all five generated entities')
     for entry in generated:
         source = Path(entry['file'])
         flags = compile_flags(entry)
@@ -91,7 +91,7 @@ def build(work, kind, jobs):
     return {'configuration': kind, 'rc': 0, 'elf_sha256': hashlib.sha256(elf.read_bytes()).hexdigest(),
             'elf_bytes': elf.stat().st_size, 'core_objects': objects, 'core_imports': sorted(imports),
             'generated_objects': generated_objects, 'unresolved_final': [],
-            'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; four generated entity round trips'}
+            'smoke': 'ADP discovery and backpressure; ACMP restore and rollback; MAAP timers and range bounds; five generated entity round trips'}
 
 
 def main():

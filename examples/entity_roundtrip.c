@@ -8,6 +8,7 @@
 #include "entities/talker/entity_config.h"
 #include "entities/duplex/entity_config.h"
 #include "entities/ax7101/entity_config.h"
+#include "entities/pocketbeagle/entity_config.h"
 #include <string.h>
 
 #define CHECK(expression, code) do { if (!(expression)) return (code); } while (0)
@@ -144,7 +145,7 @@ struct entity_case {
     unsigned interfaces, sinks, sources;
     uint16_t listener_caps, talker_caps;
     uint64_t model;
-    uint8_t sink_interface[2], source_interface[2];
+    uint8_t sink_interface[5], source_interface[5];
 };
 
 static const struct entity_case cases[] = {
@@ -152,6 +153,8 @@ static const struct entity_case cases[] = {
     {talker_adp, &talker_acmp, 1, 0, 1, 0, 0x4001, UINT64_C(0x001bc50000000002), {0, 0}, {0, 0}},
     {duplex_adp, &duplex_acmp, 2, 2, 2, 0x4801, 0x4801, UINT64_C(0x001bc50000000003), {1, 0}, {0, 1}},
     {ax7101_adp, &ax7101_acmp, 1, 2, 2, 0x4801, 0x4801, UINT64_C(0x001bc5c1935893e1), {0, 0}, {0, 0}},
+    {pocketbeagle_adp, &pocketbeagle_acmp, 1, 5, 5, 0x4801, 0x4801, UINT64_C(0x001bc5c52e47a158),
+     {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}},
 };
 
 // REQ: ENTITY-01, ADP-01
@@ -177,6 +180,8 @@ int entity_check_adp(void)
         }
     }
     CHECK(ax7101_identity.name[0] == 'M' && ax7101_identity.serial_number[10] == '1', 39);
+    CHECK(pocketbeagle_identity.name[0] == 'P' && pocketbeagle_identity.name[20] == 'e' &&
+          pocketbeagle_identity.name[21] == 0 && pocketbeagle_identity.serial_number[0] == 0, 30);
     return 0;
 }
 
@@ -279,6 +284,9 @@ int entity_check_maap(void)
                              duplex_maap[i].preferred, i, 1, UINT64_C(0x91e0f0000010) + i * UINT64_C(16));
         if (result) return result;
     }
-    return check_range(ax7101_maap[0].interface, ax7101_maap[0].mac, ax7101_maap[0].count,
-                       ax7101_maap[0].preferred, 0, 2, 0);
+    result = check_range(ax7101_maap[0].interface, ax7101_maap[0].mac, ax7101_maap[0].count,
+                         ax7101_maap[0].preferred, 0, 2, 0);
+    if (result) return result;
+    return check_range(pocketbeagle_maap[0].interface, pocketbeagle_maap[0].mac, pocketbeagle_maap[0].count,
+                       pocketbeagle_maap[0].preferred, 0, 5, 0);
 }

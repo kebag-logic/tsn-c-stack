@@ -142,7 +142,7 @@ def main():
     def extra(arm):
         return ([str(baseline / "port_extra.o")] if arm == "port" else []) + wide(arm)
     entity_sources = ['src/adp.c', 'src/acmp.c', 'src/maap.c', 'examples/entity_roundtrip.c'] + [
-        f'examples/entities/{persona}/entity_config.c' for persona in ('listener', 'talker', 'duplex', 'ax7101')]
+        f'examples/entities/{persona}/entity_config.c' for persona in ('listener', 'talker', 'duplex', 'ax7101', 'pocketbeagle')]
     entity_objects = {path: baseline / ('entity_' + str(index) + '.o')
                       for index, path in enumerate(entity_sources)}
     def prepare(arm):

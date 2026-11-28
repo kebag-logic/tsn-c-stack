@@ -8629,5 +8629,18 @@
         "arm": "entity"
       }
     ]
+  },
+  {
+    "name": "entity-dropped-clock-sink",
+    "path": "examples/entities/pocketbeagle/entity_config.c",
+    "old": "    .n_sinks = 5u,",
+    "new": "    .n_sinks = 4u,",
+    "kills": [
+      {
+        "test": "EntityYaml.AcmpRoundTrip",
+        "needle": "generated ACMP interfaces preserve binding admission routes",
+        "arm": "entity"
+      }
+    ]
   }
 ]

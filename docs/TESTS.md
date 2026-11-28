@@ -187,7 +187,7 @@ In the `AcmpOwed` fixture, `pass()` is one pass of the port the [ACMP owed bound
 | [AdpPortEntry.RefusesBeforeTouchingState](../tests/test_adp_reentry.cpp#L188) | reentry-not-ignored; adp-seed-port-unflagged | PORT-01 |
 | [AdpReentry.AdvertiseInlineExpiry](../tests/test_adp_reentry.cpp#L132) | reentry-guard-removed; reentry-uncounted | PORT-01 |
 | [AdpReentry.DelayInlineExpiryOnGmChange](../tests/test_adp_reentry.cpp#L160) | reentry-guard-removed | PORT-01 |
-| [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface | ENTITY-01, ACMP-01, ACMP-07, ACMP-10 |
+| [EntityYaml.AcmpRoundTrip](../tests/test_entity.cpp#L18) | entity-swapped-interface; entity-dropped-clock-sink | ENTITY-01, ACMP-01, ACMP-07, ACMP-10 |
 | [EntityYaml.AdpRoundTrip](../tests/test_entity.cpp#L12) | entity-wrong-count | ENTITY-01, ADP-01 |
 | [EntityYaml.DaFreshRoundTrip](../tests/test_entity.cpp#L24) | dafresh-generated-window | ENTITY-01, ACMP-11 |
 | [EntityYaml.MaapRoundTrip](../tests/test_entity.cpp#L30) | entity-dropped-field | ENTITY-01, MAAP-02 |
